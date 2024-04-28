@@ -2,10 +2,10 @@ import {
   getAllCategories,
   getAllPoints,
   getAllSubcategories,
-  getAllUsers,
+  getAllStudents,
   getProviders,
 } from "../api";
-import { Category, Points, Subcategory, User } from "../utils";
+import { Category, Points, Subcategory, Student } from "../utils";
 
 type categoryMockDataRequests = {
   name: string;
@@ -14,7 +14,7 @@ type categoryMockDataRequests = {
 
 type Request = {
   name: string;
-  func: () => (Category | Subcategory | Points | User)[];
+  func: () => (Category | Subcategory | Points | Student)[];
 };
 const categoryMockDataRequestsRequests: categoryMockDataRequests[] = [
   { name: "categories", requests: [{ name: "get", func: getAllCategories }] },
@@ -23,7 +23,7 @@ const categoryMockDataRequestsRequests: categoryMockDataRequests[] = [
     name: "subcategories",
     requests: [{ name: "get", func: getAllSubcategories }],
   },
-  { name: "users", requests: [{ name: "get", func: getAllUsers }] },
+  { name: "students", requests: [{ name: "get", func: getAllStudents }] },
   { name: "providers", requests: [{ name: "get", func: getProviders }] },
 ];
 
