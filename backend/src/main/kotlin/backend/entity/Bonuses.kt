@@ -18,7 +18,7 @@ class Bonuses (
 
     @ManyToOne
     @JoinColumn(name = "forWhat")
-    val forWhat: ChestHistory
+    var forWhat: ChestHistory
 ){
     constructor():this(
         pointsId = Points(),

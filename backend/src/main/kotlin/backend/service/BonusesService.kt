@@ -1,0 +1,42 @@
+package backend.service
+
+import backend.entity.Bonuses
+import backend.entity.Points
+import backend.entity.ChestAward
+import backend.entity.ChestHistory
+import jakarta.persistence.EntityManager
+import jakarta.transaction.Transactional
+import org.springframework.stereotype.Service
+
+@Service
+class BonusService(
+    private val entityManager: EntityManager
+) {
+    @Transactional
+    fun createBonus(pointsId: Points, awardId: ChestAward, forWhat: ChestHistory): Bonuses {
+        val bonus = Bonuses(pointsId = pointsId, awardId = awardId, forWhat = forWhat)
+        entityManager.persist(bonus)
+        return bonus
+    }
+
+    @Transactional
+    fun updateBonus(bonusId: Long, pointsId: Points, awardId: ChestAward, forWhat: ChestHistory): Bonuses? {
+        val bonus = entityManager.find(Bonuses::class.java, bonusId) ?: return null
+        bonus.pointsId = pointsId
+        bonus.awardId = awardId
+        bonus.forWhat = forWhat
+        return entityManager.merge(bonus)
+    }
+
+    @Transactional
+    fun findBonusById(bonusId: Long): Bonuses? {
+        return entityManager.find(Bonuses::class.java, bonusId)
+    }
+
+    @Transactional
+    fun deleteBonus(bonusId: Long): Boolean {
+        val bonus = entityManager.find(Bonuses::class.java, bonusId) ?: return false
+        entityManager.remove(bonus)
+        return true
+    }
+}
