@@ -9,9 +9,13 @@ export const routes = createBrowserRouter([
     element: <Root />,
     children: [
       {
-        path: paths.Welcome,
+        path: paths.Default,
         element: <Welcome />,
         index: true,
+      },
+      {
+        path: paths.Welcome,
+        element: <Welcome />,
       },
       {
         path: paths.MockData,
