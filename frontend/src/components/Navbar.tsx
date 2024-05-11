@@ -1,23 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { paths } from "../router";
-
-type NavbarItem = {
-  title: string;
-  path: string;
-};
+import { navigationItems } from "../router";
 
 export const Navbar = () => {
   const navigate = useNavigate();
-  const navbarItems: NavbarItem[] = [
-    {
-      title: "welcome",
-      path: paths.Welcome,
-    },
-    {
-      title: "mock-data",
-      path: paths.MockData,
-    },
-  ];
+
   return (
     <div
       style={{
@@ -27,7 +13,7 @@ export const Navbar = () => {
         borderBottom: "1px solid black",
       }}
     >
-      {navbarItems.map((item, index) => (
+      {navigationItems.map((item, index) => (
         <div
           key={index}
           onClick={() => navigate(item.path)}
