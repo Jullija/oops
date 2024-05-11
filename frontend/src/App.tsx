@@ -1,10 +1,10 @@
-// import "./App.css";
-import { MockData } from "./components/MockData";
+import { RouterProvider } from "react-router-dom";
+import { routes } from "./router";
 
 function App() {
   return (
     <>
-      <MockData />
+      <RouterProvider router={routes} />
     </>
   );
 }
