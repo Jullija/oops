@@ -1,10 +1,10 @@
 import { Student } from "../utils";
 
-export const getAllStudents = (): Student[] => {
-  return users;
+export const getStudents = (): Student[] => {
+  return students;
 };
 
-const users: Student[] = [
+const students: Student[] = [
   { id: "1", name: "Anna Cichocka" },
   { id: "2", name: "Julia Smerdel" },
 ];

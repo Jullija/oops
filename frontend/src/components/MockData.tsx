@@ -1,8 +1,8 @@
 import {
-  getAllCategories,
-  getAllPoints,
-  getAllSubcategories,
-  getAllStudents,
+  getCategories,
+  getPoints,
+  getSubcategories,
+  getStudents,
   getProviders,
 } from "../api";
 import { Category, Points, Subcategory, Student } from "../utils";
@@ -17,13 +17,13 @@ type Request = {
   func: () => (Category | Subcategory | Points | Student)[];
 };
 const categoryMockDataRequestsRequests: categoryMockDataRequests[] = [
-  { name: "categories", requests: [{ name: "get", func: getAllCategories }] },
-  { name: "points", requests: [{ name: "get", func: getAllPoints }] },
+  { name: "categories", requests: [{ name: "get", func: getCategories }] },
+  { name: "points", requests: [{ name: "get", func: getPoints }] },
   {
     name: "subcategories",
-    requests: [{ name: "get", func: getAllSubcategories }],
+    requests: [{ name: "get", func: getSubcategories }],
   },
-  { name: "students", requests: [{ name: "get", func: getAllStudents }] },
+  { name: "students", requests: [{ name: "get", func: getStudents }] },
   { name: "providers", requests: [{ name: "get", func: getProviders }] },
 ];
 

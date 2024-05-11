@@ -22,7 +22,7 @@ export type Subcategory = {
 export type Points = {
   id: string;
   subcategoryId: string;
-  userId: string;
+  studentId: string;
   providerId: string;
   number: number;
 };

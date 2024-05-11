@@ -1,6 +1,6 @@
 import { Category } from "../utils";
 
-export const getAllCategories = (): Category[] => {
+export const getCategories = (): Category[] => {
   return categories;
 };
 

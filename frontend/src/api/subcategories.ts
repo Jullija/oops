@@ -1,10 +1,12 @@
 import { Subcategory } from "../utils/types";
 
-export const getAllSubcategories = (): Subcategory[] => {
+export const getSubcategories = (): Subcategory[] => {
   return subcategories;
 };
 
-export const getSubcategories = (categoryId: string): Subcategory[] => {
+export const getSubcategoriesByCategory = (
+  categoryId: string
+): Subcategory[] => {
   return subcategories.filter(
     (subcategory) => subcategory.categoryId === categoryId
   );
