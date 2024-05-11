@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   getCategories,
   getPoints,
+  getProviders,
   getSubcategoriesByCategory,
 } from "../../api";
 import { Points, Subcategory } from "../../utils";
@@ -13,42 +14,48 @@ type PointFormProps = {
 export const PointsForm = ({ handleAdd }: PointFormProps) => {
   const categories = getCategories();
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
+  const providers = getProviders();
 
-  const [categoryInput, setCategoryInput] = useState<string>();
-  const [subcategoryInput, setSubcategoryInput] = useState<string>();
+  const [categoryId, setCategoryId] = useState<string>();
+  const [subcategoryId, setSubcategoryId] = useState<string>();
   const [points, setPoints] = useState<number>();
+  const [providerId, setId] = useState<string>();
 
   useEffect(() => {
-    const subcategories = categoryInput
-      ? getSubcategoriesByCategory(categoryInput)
+    const subcategories = categoryId
+      ? getSubcategoriesByCategory(categoryId)
       : [];
     setSubcategories(subcategories);
-    setSubcategoryInput(
+    setSubcategoryId(
       subcategories.length > 0 ? subcategories[0].id : undefined
     );
-  }, [categoryInput]);
+  }, [categoryId]);
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCategoryInput(e.target.value);
+    setCategoryId(e.target.value);
   };
 
   const handleSubcategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     console.log(e.target.value);
-    setSubcategoryInput(e.target.value);
+    setSubcategoryId(e.target.value);
   };
 
   const handlePointsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPoints(parseFloat(e.target.value));
   };
 
+  const handleProviderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setId(e.target.value);
+  };
+
   const handleSubmit = () => {
     const userId = "1";
-    if (subcategoryInput && points) {
+    if (subcategoryId && points && providerId) {
       const p: Points = {
         id: getPoints().length.toString(),
-        subcategoryId: subcategoryInput,
+        subcategoryId: subcategoryId,
         studentId: userId,
-        providerId: "TODO",
+        providerId: providerId,
         number: points,
       };
       console.log(p);
@@ -60,7 +67,8 @@ export const PointsForm = ({ handleAdd }: PointFormProps) => {
     <div>
       <div>
         <label>category</label>
-        <select defaultValue={categories[0].id} onChange={handleCategoryChange}>
+        <select onChange={handleCategoryChange}>
+          <option value="">-</option> {/* Empty option */}
           {categories.map((category, index) => (
             <option value={category.id} key={index}>
               {category.name}
@@ -72,6 +80,7 @@ export const PointsForm = ({ handleAdd }: PointFormProps) => {
       <div>
         <label>subcategory</label>
         <select onChange={handleSubcategoryChange}>
+          <option value="">-</option> {/* Empty option */}
           {subcategories.map((subcategory, index) => (
             <option value={subcategory.id} key={index}>
               {subcategory.name}
@@ -85,6 +94,17 @@ export const PointsForm = ({ handleAdd }: PointFormProps) => {
         <input type="number" onChange={handlePointsChange} />
       </div>
 
+      <div>
+        <label>provider</label>
+        <select onChange={handleProviderChange}>
+          <option value="">-</option>
+          {providers.map((provider, index) => (
+            <option value={provider.id} key={index}>
+              {provider.name}
+            </option>
+          ))}
+        </select>
+      </div>
       <button onClick={handleSubmit}>add grade</button>
     </div>
   );

@@ -1,14 +1,12 @@
-import { GetPointsByStudent } from "../../../api";
-import { Student } from "../../../utils";
+import { Points } from "../../../utils";
 import "./tableStyles.css";
 
 type PointsTableProps = {
-  student: Student;
+  pointsList: Points[];
 };
 
-export const PointsTable = ({ student }: PointsTableProps) => {
+export const PointsTable = ({ pointsList: points }: PointsTableProps) => {
   const headers = ["subcategory", "points", "provider"];
-  const points = GetPointsByStudent(student.id);
 
   return (
     <div className="points-table">
