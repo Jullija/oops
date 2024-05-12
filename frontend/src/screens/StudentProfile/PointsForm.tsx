@@ -1,73 +1,62 @@
-import { useEffect, useState } from "react";
 import {
   getCategories,
   getPoints,
   getProviders,
   getSubcategoriesByCategory,
 } from "../../api";
-import { Points, Subcategory } from "../../utils";
+import { useFormik, FormikErrors } from "formik";
+import { Points } from "../../utils";
 
 type PointFormProps = {
+  studentId: string;
   handleAdd: (points: Points) => void;
 };
 
-export const PointsForm = ({ handleAdd }: PointFormProps) => {
+type FormValues = {
+  categoryId: string;
+  providerId: string;
+  points: number;
+};
+
+export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
   const categories = getCategories();
-  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const providers = getProviders();
 
-  const [categoryId, setCategoryId] = useState<string>();
-  const [subcategoryId, setSubcategoryId] = useState<string>();
-  const [points, setPoints] = useState<number>();
-  const [providerId, setId] = useState<string>();
-
-  useEffect(() => {
-    const subcategories = categoryId
-      ? getSubcategoriesByCategory(categoryId)
-      : [];
-    setSubcategories(subcategories);
-    setSubcategoryId(
-      subcategories.length > 0 ? subcategories[0].id : undefined
-    );
-  }, [categoryId]);
-
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCategoryId(e.target.value);
-  };
-
-  const handleSubcategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target.value);
-    setSubcategoryId(e.target.value);
-  };
-
-  const handlePointsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPoints(parseFloat(e.target.value));
-  };
-
-  const handleProviderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setId(e.target.value);
-  };
-
-  const handleSubmit = () => {
-    const userId = "1";
-    if (subcategoryId && points && providerId) {
-      const p: Points = {
+  const formik = useFormik({
+    initialValues: {
+      categoryId: "",
+      points: 0,
+      providerId: "",
+    },
+    validate: (values: FormValues) => {
+      const errors: FormikErrors<FormValues> = {};
+      if (!values.categoryId) errors.categoryId = "Required";
+      if (!values.points) errors.points = "Required";
+      if (!values.providerId) errors.providerId = "Required";
+      return errors;
+    },
+    onSubmit: (values: FormValues) => {
+      alert(JSON.stringify(values, null, 2));
+      const points: Points = {
         id: getPoints().length.toString(),
-        subcategoryId: subcategoryId,
-        studentId: userId,
-        providerId: providerId,
-        number: points,
+        studentId: studentId,
+        providerId: values.providerId,
+        number: values.points,
+        subcategoryId: getSubcategoriesByCategory(values.categoryId)[0].id,
       };
-      console.log(p);
-      handleAdd(p);
-    }
-  };
+      handleAdd(points);
+    },
+  });
 
   return (
-    <div>
+    <form onSubmit={formik.handleSubmit}>
       <div>
         <label>category</label>
-        <select onChange={handleCategoryChange}>
+        <select
+          name="categoryId"
+          onChange={formik.handleChange}
+          value={formik.values.categoryId}
+        >
           <option value="">-</option> {/* Empty option */}
           {categories.map((category, index) => (
             <option value={category.id} key={index}>
@@ -75,28 +64,29 @@ export const PointsForm = ({ handleAdd }: PointFormProps) => {
             </option>
           ))}
         </select>
-      </div>
-
-      <div>
-        <label>subcategory</label>
-        <select onChange={handleSubcategoryChange}>
-          <option value="">-</option> {/* Empty option */}
-          {subcategories.map((subcategory, index) => (
-            <option value={subcategory.id} key={index}>
-              {subcategory.name}
-            </option>
-          ))}
-        </select>
+        {formik.errors.categoryId ? (
+          <div>{formik.errors.categoryId}</div>
+        ) : null}
       </div>
 
       <div>
         <label>points</label>
-        <input type="number" onChange={handlePointsChange} />
+        <input
+          name="points"
+          type="number"
+          onChange={formik.handleChange}
+          value={formik.values.points}
+        />
+        {formik.errors.points ? <div>{formik.errors.points}</div> : null}
       </div>
 
       <div>
         <label>provider</label>
-        <select onChange={handleProviderChange}>
+        <select
+          name="providerId"
+          onChange={formik.handleChange}
+          value={formik.values.providerId}
+        >
           <option value="">-</option>
           {providers.map((provider, index) => (
             <option value={provider.id} key={index}>
@@ -104,8 +94,11 @@ export const PointsForm = ({ handleAdd }: PointFormProps) => {
             </option>
           ))}
         </select>
+        {formik.errors.providerId ? (
+          <div>{formik.errors.providerId}</div>
+        ) : null}
       </div>
-      <button onClick={handleSubmit}>add grade</button>
-    </div>
+      <button type="submit">add grade</button>
+    </form>
   );
 };
