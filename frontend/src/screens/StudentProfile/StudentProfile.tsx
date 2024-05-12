@@ -2,7 +2,7 @@ import { useState } from "react";
 import { GetPointsByStudent, getStudents } from "../../api";
 import { Points } from "../../utils";
 import { PointsForm } from "./PointsForm";
-import { PointsTable } from "./PointsTable/PointsTable";
+import { StudentPoints } from "./StudentPoints";
 
 export const StudentProfile = () => {
   const student = getStudents()[0];
@@ -15,7 +15,7 @@ export const StudentProfile = () => {
 
   return (
     <div style={{ display: "flex", flexDirection: "row", gap: 20 }}>
-      <PointsTable pointsList={pointsList} />
+      <StudentPoints pointsList={pointsList} />
       <PointsForm studentId={student.id} handleAdd={handleAdd} />
     </div>
   );

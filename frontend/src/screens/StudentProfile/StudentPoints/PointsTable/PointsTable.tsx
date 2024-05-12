@@ -1,4 +1,4 @@
-import { Points } from "../../../utils";
+import { Points } from "../../../../utils";
 import "./tableStyles.css";
 
 type PointsTableProps = {
