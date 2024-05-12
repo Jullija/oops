@@ -16,7 +16,7 @@ export const StudentProfile = () => {
   return (
     <div style={{ display: "flex", flexDirection: "row", gap: 20 }}>
       <PointsTable pointsList={pointsList} />
-      <PointsForm handleAdd={handleAdd} />
+      <PointsForm studentId={student.id} handleAdd={handleAdd} />
     </div>
   );
 };

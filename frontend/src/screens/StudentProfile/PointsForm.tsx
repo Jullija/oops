@@ -5,8 +5,9 @@ import {
   getSubcategoriesByCategory,
 } from "../../api";
 import { useFormik } from "formik";
-import { Points } from "../../utils";
+import { Points, Subcategory } from "../../utils";
 import { ZodError, z } from "zod";
+import { useState } from "react";
 
 type PointFormProps = {
   studentId: string;
@@ -15,6 +16,7 @@ type PointFormProps = {
 
 const ValidationSchema = z.object({
   categoryId: z.string().min(1, "required"),
+  subcategoryId: z.string().min(1, "required"),
   providerId: z.string().min(1, "required"),
   points: z
     .number()
@@ -26,9 +28,19 @@ type PointsFormValues = z.infer<typeof ValidationSchema>;
 
 export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
   const categories = getCategories();
+  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const providers = getProviders();
 
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const categoryId = e.target.value;
+    const categorySubcategories = getSubcategoriesByCategory(categoryId);
+    setSubcategories(categorySubcategories);
+    formik.setFieldValue("categoryId", categoryId);
+    formik.setFieldValue("subcategoryId", "");
+  };
+
   const validate = (values: PointsFormValues) => {
+    console.log(values);
     try {
       ValidationSchema.parse(values);
     } catch (error) {
@@ -53,6 +65,7 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
   const formik = useFormik({
     initialValues: {
       categoryId: "",
+      subcategoryId: "",
       points: 0,
       providerId: "",
     },
@@ -66,7 +79,7 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
         <label>category</label>
         <select
           name="categoryId"
-          onChange={formik.handleChange}
+          onChange={handleCategoryChange}
           onBlur={formik.handleBlur}
           value={formik.values.categoryId}
         >
@@ -79,6 +92,26 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
         </select>
         {formik.errors.categoryId && formik.touched.categoryId ? (
           <div>{formik.errors.categoryId}</div>
+        ) : null}
+      </div>
+
+      <div>
+        <label>subcategory</label>
+        <select
+          name="subcategoryId"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.subcategoryId}
+        >
+          <option value="">-</option>
+          {subcategories.map((subcategory, index) => (
+            <option value={subcategory.id} key={index}>
+              {subcategory.name}
+            </option>
+          ))}
+        </select>
+        {formik.errors.subcategoryId && formik.touched.subcategoryId ? (
+          <div>{formik.errors.subcategoryId}</div>
         ) : null}
       </div>
 
