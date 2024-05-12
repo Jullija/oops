@@ -15,6 +15,7 @@ export const GetPointsByStudent = (studentId: string): Points[] => {
 const points: Points[] = [
   {
     id: "1",
+    categoryId: "1",
     subcategoryId: "1",
     studentId: "1",
     providerId: "1",
@@ -22,6 +23,7 @@ const points: Points[] = [
   },
   {
     id: "2",
+    categoryId: "2",
     subcategoryId: "2",
     studentId: "1",
     providerId: "1",
@@ -29,6 +31,7 @@ const points: Points[] = [
   },
   {
     id: "3",
+    categoryId: "1",
     subcategoryId: "3",
     studentId: "2",
     providerId: "1",
@@ -36,6 +39,7 @@ const points: Points[] = [
   },
   {
     id: "4",
+    categoryId: "3",
     subcategoryId: "4",
     studentId: "2",
     providerId: "1",
@@ -43,6 +47,7 @@ const points: Points[] = [
   },
   {
     id: "5",
+    categoryId: "4",
     subcategoryId: "5",
     studentId: "1",
     providerId: "1",
