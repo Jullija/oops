@@ -22,11 +22,33 @@ const ValidationSchema = z.object({
     .max(12, "max number of points is 12"),
 });
 
-type FormValues = z.infer<typeof ValidationSchema>;
+type PointsFormValues = z.infer<typeof ValidationSchema>;
 
 export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
   const categories = getCategories();
   const providers = getProviders();
+
+  const validate = (values: PointsFormValues) => {
+    try {
+      ValidationSchema.parse(values);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return error.formErrors.fieldErrors;
+      }
+    }
+  };
+
+  const onSubmit = (values: PointsFormValues) => {
+    alert(JSON.stringify(values, null, 2));
+    const points: Points = {
+      id: getPoints().length.toString(),
+      studentId: studentId,
+      providerId: values.providerId,
+      number: values.points,
+      subcategoryId: getSubcategoriesByCategory(values.categoryId)[0].id,
+    };
+    handleAdd(points);
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -34,26 +56,8 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
       points: 0,
       providerId: "",
     },
-    validate: (values: FormValues) => {
-      try {
-        ValidationSchema.parse(values);
-      } catch (error) {
-        if (error instanceof ZodError) {
-          return error.formErrors.fieldErrors;
-        }
-      }
-    },
-    onSubmit: (values: FormValues) => {
-      alert(JSON.stringify(values, null, 2));
-      const points: Points = {
-        id: getPoints().length.toString(),
-        studentId: studentId,
-        providerId: values.providerId,
-        number: values.points,
-        subcategoryId: getSubcategoriesByCategory(values.categoryId)[0].id,
-      };
-      handleAdd(points);
-    },
+    validate: validate,
+    onSubmit: onSubmit,
   });
 
   return (
