@@ -21,6 +21,7 @@ export type Subcategory = {
 
 export type Points = {
   id: string;
+  categoryId: string;
   subcategoryId: string;
   studentId: string;
   providerId: string;
