@@ -4,19 +4,25 @@ import {
   getProviders,
   getSubcategoriesByCategory,
 } from "../../api";
-import { useFormik, FormikErrors } from "formik";
+import { useFormik } from "formik";
 import { Points } from "../../utils";
+import { ZodError, z } from "zod";
 
 type PointFormProps = {
   studentId: string;
   handleAdd: (points: Points) => void;
 };
 
-type FormValues = {
-  categoryId: string;
-  providerId: string;
-  points: number;
-};
+const ValidationSchema = z.object({
+  categoryId: z.string().min(1, "required"),
+  providerId: z.string().min(1, "required"),
+  points: z
+    .number()
+    .min(0, "min number of points is 0")
+    .max(12, "max number of points is 12"),
+});
+
+type FormValues = z.infer<typeof ValidationSchema>;
 
 export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
   const categories = getCategories();
@@ -29,11 +35,13 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
       providerId: "",
     },
     validate: (values: FormValues) => {
-      const errors: FormikErrors<FormValues> = {};
-      if (!values.categoryId) errors.categoryId = "Required";
-      if (!values.points) errors.points = "Required";
-      if (!values.providerId) errors.providerId = "Required";
-      return errors;
+      try {
+        ValidationSchema.parse(values);
+      } catch (error) {
+        if (error instanceof ZodError) {
+          return error.formErrors.fieldErrors;
+        }
+      }
     },
     onSubmit: (values: FormValues) => {
       alert(JSON.stringify(values, null, 2));
@@ -55,16 +63,17 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
         <select
           name="categoryId"
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           value={formik.values.categoryId}
         >
-          <option value="">-</option> {/* Empty option */}
+          <option value="">-</option>
           {categories.map((category, index) => (
             <option value={category.id} key={index}>
               {category.name}
             </option>
           ))}
         </select>
-        {formik.errors.categoryId ? (
+        {formik.errors.categoryId && formik.touched.categoryId ? (
           <div>{formik.errors.categoryId}</div>
         ) : null}
       </div>
@@ -75,9 +84,12 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
           name="points"
           type="number"
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           value={formik.values.points}
         />
-        {formik.errors.points ? <div>{formik.errors.points}</div> : null}
+        {formik.errors.points && formik.touched.points ? (
+          <div>{formik.errors.points}</div>
+        ) : null}
       </div>
 
       <div>
@@ -85,6 +97,7 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
         <select
           name="providerId"
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           value={formik.values.providerId}
         >
           <option value="">-</option>
@@ -94,7 +107,7 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
             </option>
           ))}
         </select>
-        {formik.errors.providerId ? (
+        {formik.errors.providerId && formik.touched.providerId ? (
           <div>{formik.errors.providerId}</div>
         ) : null}
       </div>
