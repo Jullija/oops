@@ -5,8 +5,8 @@ type PointsTableProps = {
   pointsList: Points[];
 };
 
-export const PointsTable = ({ pointsList: points }: PointsTableProps) => {
-  const headers = ["subcategory", "points", "provider"];
+export const PointsTable = ({ pointsList }: PointsTableProps) => {
+  const headers = ["category", "subcategory", "points", "provider"];
 
   return (
     <div className="points-table">
@@ -18,11 +18,12 @@ export const PointsTable = ({ pointsList: points }: PointsTableProps) => {
         ))}
       </div>
 
-      {points.map((points, index) => (
+      {pointsList.map((points, index) => (
         <div key={index} className="row">
-          <div className="cell">{points.subcategory.id}</div>
+          <div className="cell">{points.category.name}</div>
+          <div className="cell">{points.subcategory.name}</div>
           <div className="cell">{points.number}</div>
-          <div className="cell">{points.provider.id}</div>
+          <div className="cell">{points.provider.name}</div>
         </div>
       ))}
     </div>

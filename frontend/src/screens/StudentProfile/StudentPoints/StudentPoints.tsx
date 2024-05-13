@@ -14,7 +14,9 @@ export const StudentPoints = ({ pointsList }: StudentPointsProps) => {
   };
 
   const isInSelectedCategoryIds = (points: Points) => {
-    return selectedCategoryIds.some((selectedId) => selectedId === points.id);
+    return selectedCategoryIds.some(
+      (selectedId) => selectedId === points.category.id
+    );
   };
 
   const getFilteredItems = () => {
