@@ -20,9 +20,9 @@ export const PointsTable = ({ pointsList: points }: PointsTableProps) => {
 
       {points.map((points, index) => (
         <div key={index} className="row">
-          <div className="cell">{points.subcategoryId}</div>
+          <div className="cell">{points.subcategory.id}</div>
           <div className="cell">{points.number}</div>
-          <div className="cell">{points.providerId}</div>
+          <div className="cell">{points.provider.id}</div>
         </div>
       ))}
     </div>

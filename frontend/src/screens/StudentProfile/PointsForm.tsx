@@ -1,17 +1,17 @@
 import {
   getCategories,
-  getPoints,
   getProviders,
   getSubcategoriesByCategory,
 } from "../../api";
 import { useFormik } from "formik";
-import { Points, Subcategory } from "../../utils";
+import { Subcategory } from "../../utils";
 import { ZodError, z } from "zod";
 import { useState } from "react";
+import { FormPoints } from "./types";
 
 type PointFormProps = {
   studentId: string;
-  handleAdd: (points: Points) => void;
+  handleAdd: (formPoints: FormPoints) => void;
 };
 
 const ValidationSchema = z.object({
@@ -52,8 +52,7 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
 
   const onSubmit = (values: PointsFormValues) => {
     alert(JSON.stringify(values, null, 2));
-    const points: Points = {
-      id: getPoints().length.toString(),
+    const points: FormPoints = {
       studentId: studentId,
       providerId: values.providerId,
       number: values.points,
