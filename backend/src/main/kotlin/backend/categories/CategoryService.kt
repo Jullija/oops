@@ -8,8 +8,8 @@ class CategoryService(
 ) {
 
     @Transactional
-    fun createCategory(categoryName: String): Categories {
-        val category = Categories(categoryName = categoryName)
+    fun createCategory(categoryName: CategoriesEnum): Categories {
+        val category = Categories(categoryName = categoryName.toString())
         return categoryRepository.save(category)
     }
 }

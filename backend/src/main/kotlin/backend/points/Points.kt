@@ -16,8 +16,9 @@ class Points (
     @JoinColumn(name="userId", referencedColumnName = "userId")
     var userId: Users,
 
+    @ManyToOne
     @Column(nullable = false)
-    var fromWho: String,
+    var fromWho: Users,
 
     @Column(nullable = false)
     var howMany: Long,
@@ -28,7 +29,7 @@ class Points (
 ){
     constructor() : this(
         userId = Users(),
-        fromWho = "",
+        fromWho = Users(),
         howMany = 0,
         subcategory = Subcategories()
 

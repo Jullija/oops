@@ -2,6 +2,7 @@ package backend.bonuses
 import backend.chestAward.ChestAward
 import backend.chestHistory.ChestHistory
 import backend.points.Points
+import backend.subcategories.Subcategories
 import jakarta.persistence.*
 
 
@@ -20,12 +21,12 @@ class Bonuses (
     var awardId: ChestAward,
 
     @ManyToOne
-    @JoinColumn(name = "forWhat")
-    var forWhat: ChestHistory
+    @JoinColumn(name = "subcategory")
+    var subcategory: Subcategories
 ){
     constructor():this(
         pointsId = Points(),
         awardId = ChestAward(),
-        forWhat = ChestHistory()
+        subcategory = Subcategories()
     )
 }

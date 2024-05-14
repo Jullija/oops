@@ -11,14 +11,14 @@ class PointsService(
     private val entityManager: EntityManager
 ) {
     @Transactional
-    fun createPoints(userId: Users, fromWho: String, howMany: Long, subcategory: Subcategories): Points {
+    fun createPoints(userId: Users, fromWho: Users, howMany: Long, subcategory: Subcategories): Points {
         val points = Points(userId = userId, fromWho = fromWho, howMany = howMany, subcategory = subcategory)
         entityManager.persist(points)
         return points
     }
 
     @Transactional
-    fun updatePoints(pointsId: Long, userId: Users, fromWho: String, howMany: Long, subcategory: Subcategories): Points? {
+    fun updatePoints(pointsId: Long, userId: Users, fromWho: Users, howMany: Long, subcategory: Subcategories): Points? {
         val points = entityManager.find(Points::class.java, pointsId)
         if (points != null) {
             points.userId = userId

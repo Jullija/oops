@@ -10,7 +10,7 @@ class Subcategories(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val subcategoryId: Long = 0,
 
-    @Column(nullable = false)
+    @Column(name = "subcategoryName", nullable = false)
     var subcategoryName: String,
 
     @OneToOne

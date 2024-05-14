@@ -3,6 +3,7 @@ package backend.bonuses
 import backend.points.Points
 import backend.chestAward.ChestAward
 import backend.chestHistory.ChestHistory
+import backend.subcategories.Subcategories
 import jakarta.persistence.EntityManager
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
@@ -12,18 +13,18 @@ class BonusService(
     private val entityManager: EntityManager
 ) {
     @Transactional
-    fun createBonus(pointsId: Points, awardId: ChestAward, forWhat: ChestHistory): Bonuses {
-        val bonus = Bonuses(pointsId = pointsId, awardId = awardId, forWhat = forWhat)
+    fun createBonus(pointsId: Points, awardId: ChestAward, forWhat: Subcategories): Bonuses {
+        val bonus = Bonuses(pointsId = pointsId, awardId = awardId, subcategory = forWhat)
         entityManager.persist(bonus)
         return bonus
     }
 
     @Transactional
-    fun updateBonus(bonusId: Long, pointsId: Points, awardId: ChestAward, forWhat: ChestHistory): Bonuses? {
+    fun updateBonus(bonusId: Long, pointsId: Points, awardId: ChestAward, forWhat: Subcategories): Bonuses? {
         val bonus = entityManager.find(Bonuses::class.java, bonusId) ?: return null
         bonus.pointsId = pointsId
         bonus.awardId = awardId
-        bonus.forWhat = forWhat
+        bonus.subcategory = forWhat
         return entityManager.merge(bonus)
     }
 

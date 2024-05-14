@@ -13,7 +13,7 @@ class ChestHistoryService(
 ) {
     @Transactional
     fun createChestHistory(userId: Users, chestId: Chests, subcategoryId: Subcategories): ChestHistory {
-        val chestHistory = ChestHistory(userId = userId, chestId = chestId, forWhat = subcategoryId)
+        val chestHistory = ChestHistory(userId = userId, chestId = chestId, subcategoryId = subcategoryId)
         entityManager.persist(chestHistory)
         return chestHistory
     }
@@ -23,7 +23,7 @@ class ChestHistoryService(
         val chestHistory = entityManager.find(ChestHistory::class.java, chestHistoryId) ?: return null
         chestHistory.userId = userId
         chestHistory.chestId = chestId
-        chestHistory.forWhat = subcategoryId
+        chestHistory.subcategoryId = subcategoryId
         return entityManager.merge(chestHistory)
     }
 

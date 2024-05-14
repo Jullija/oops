@@ -23,11 +23,11 @@ class ChestHistory (
 
     @ManyToOne
     @JoinColumn(name = "subcategoryId", referencedColumnName = "subcategoryId")
-    var forWhat: Subcategories,
+    var subcategoryId: Subcategories,
 ){
     constructor() : this(
         userId = Users(),
         chestId = Chests(),
-        forWhat = Subcategories()
+        subcategoryId = Subcategories()
     )
 }

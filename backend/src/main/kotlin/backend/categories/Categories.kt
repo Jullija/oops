@@ -13,11 +13,7 @@ class Categories(
     @Column(name = "categoryName", nullable = false)
     var categoryName: String
 ) {
-
     constructor() : this(
-        categoryName = ""
+        categoryName = CategoriesEnum.LABORATORIA.toString()
     )
-
-
-
 }
