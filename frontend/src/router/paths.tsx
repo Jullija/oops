@@ -2,6 +2,7 @@ export const paths = {
   Default: "/",
   Welcome: "/welcome",
   MockData: "/mock-data",
+  HallOfFame: "/hall-of-fame",
 };
 
 type NavigationItem = {
@@ -17,5 +18,9 @@ export const navigationItems: NavigationItem[] = [
   {
     title: "mock-data",
     path: paths.MockData,
+  },
+  {
+    title: "hall-of-fame",
+    path: paths.HallOfFame,
   },
 ];
