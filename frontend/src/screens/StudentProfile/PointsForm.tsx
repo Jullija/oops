@@ -90,7 +90,7 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
           ))}
         </select>
         {formik.errors.categoryId && formik.touched.categoryId ? (
-          <div>{formik.errors.categoryId}</div>
+          <div style={{ color: "red" }}>{formik.errors.categoryId}</div>
         ) : null}
       </div>
 
@@ -110,7 +110,7 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
           ))}
         </select>
         {formik.errors.subcategoryId && formik.touched.subcategoryId ? (
-          <div>{formik.errors.subcategoryId}</div>
+          <div style={{ color: "red" }}>{formik.errors.subcategoryId}</div>
         ) : null}
       </div>
 
@@ -124,7 +124,7 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
           value={formik.values.points}
         />
         {formik.errors.points && formik.touched.points ? (
-          <div>{formik.errors.points}</div>
+          <div style={{ color: "red" }}>{formik.errors.points}</div>
         ) : null}
       </div>
 
@@ -144,7 +144,7 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
           ))}
         </select>
         {formik.errors.providerId && formik.touched.providerId ? (
-          <div>{formik.errors.providerId}</div>
+          <div style={{ color: "red" }}>{formik.errors.providerId}</div>
         ) : null}
       </div>
       <button type="submit">add grade</button>
