@@ -6,7 +6,7 @@ type HallOfFameProps = {
   studentId: string;
 };
 
-export const HallOfFame = ({ studentId = "1" }: HallOfFameProps) => {
+export const HallOfFame = ({ studentId = "6" }: HallOfFameProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const scrollToStudent = () => {
