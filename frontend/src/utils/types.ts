@@ -1,6 +1,8 @@
 export type Student = {
   id: string;
   name: string;
+  level: number;
+  experience: number;
 };
 
 export type Provider = {
@@ -26,4 +28,10 @@ export type Points = {
   student: Student;
   provider: Provider;
   number: number;
+};
+
+export type Level = {
+  level: number;
+  minExperience: number;
+  maxExperience: number;
 };
