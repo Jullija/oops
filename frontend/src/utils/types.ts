@@ -1,6 +1,7 @@
 export type Student = {
   id: string;
   name: string;
+  level: number;
 };
 
 export type Provider = {

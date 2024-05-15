@@ -3,6 +3,7 @@ export const paths = {
   Welcome: "/welcome",
   MockData: "/mock-data",
   StudentProfile: "/student-profile",
+  HallOfFame: "/hall-of-fame",
 };
 
 type NavigationItem = {
@@ -22,5 +23,9 @@ export const navigationItems: NavigationItem[] = [
   {
     title: "student-profile",
     path: paths.StudentProfile,
+  },
+  {
+    title: "hall-of-fame",
+    path: paths.HallOfFame,
   },
 ];
