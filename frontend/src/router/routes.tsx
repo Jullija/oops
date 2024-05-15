@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { HallOfFame, Welcome } from "../screens";
+import { StudentProfile, HallOfFame, Welcome } from "../screens";
 import { MockData, Root } from "../components";
 import { paths } from "./paths";
 
@@ -20,6 +20,10 @@ export const routes = createBrowserRouter([
       {
         path: paths.MockData,
         element: <MockData />,
+      },
+      {
+        path: paths.StudentProfile,
+        element: <StudentProfile />,
       },
       {
         path: paths.HallOfFame,
