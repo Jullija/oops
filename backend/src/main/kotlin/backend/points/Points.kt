@@ -13,11 +13,11 @@ class Points (
     val pointsId: Long = 0,
 
     @ManyToOne
-    @JoinColumn(name="userId", referencedColumnName = "userId")
+    @JoinColumn(name="studentId", referencedColumnName = "userId")
     var userId: Users,
 
     @ManyToOne
-    @Column(nullable = false)
+    @JoinColumn(name="teacherId", referencedColumnName = "userId")
     var fromWho: Users,
 
     @Column(nullable = false)

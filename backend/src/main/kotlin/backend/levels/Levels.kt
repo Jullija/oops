@@ -16,9 +16,8 @@ class Levels(
     @Column(name = "treshold", nullable = false)
     var threshold: Double,
 
-    @Lob
     @Column(name = "avatar", nullable = true)
-    var avatar: ByteArray? = null //image?
+    var avatar: String = "" //image?
 ) {
 
     protected constructor() : this(
@@ -31,6 +30,6 @@ class Levels(
     constructor(name: String, threshold: Double):this(
         name = name,
         threshold = threshold,
-        avatar = null
+        avatar = ""
     )
 }

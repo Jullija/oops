@@ -10,20 +10,19 @@ class LevelsService(
     private val entityManager: EntityManager
 ) {
     @Transactional
-    fun createLevel(name: String, threshold: Double, avatarStream: InputStream?): Levels {
-        val avatarBytes = avatarStream?.readAllBytes()
-        val level = Levels(name = name, threshold = threshold, avatar = avatarBytes)
+    fun createLevel(name: String, threshold: Double, avatar: String): Levels {
+        val level = Levels(name = name, threshold = threshold, avatar = avatar)
         entityManager.persist(level)
         return level
     }
 
     @Transactional
-    fun updateLevel(levelId: Long, name: String, threshold: Double, avatarStream: InputStream?): Levels? {
+    fun updateLevel(levelId: Long, name: String, threshold: Double, avatar: String): Levels? {
         val level = entityManager.find(Levels::class.java, levelId)
         if (level != null) {
             level.name = name
             level.threshold = threshold
-            level.avatar = avatarStream?.readAllBytes() // Update avatar only if stream is provided
+            level.avatar = avatar
             entityManager.merge(level)
         }
         return level
