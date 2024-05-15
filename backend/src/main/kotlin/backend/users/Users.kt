@@ -14,10 +14,10 @@ class Users (
     var nick: String,
 
     @Column(name = "role", nullable = false)
-    var role: UsersRoles,
+    var role: String,
 ){
     constructor() : this(
         nick = "",
-        role = UsersRoles.STUDENT,
+        role = UsersRoles.STUDENT.toString(),
     )
 }
