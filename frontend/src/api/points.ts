@@ -15,7 +15,7 @@ export const GetPointsByStudent = (studentId: string): Points[] => {
 const points: Points[] = [
   {
     id: "1",
-    category: { id: "1", name: "Labolatorium" },
+    category: { id: "1", name: "Laboratorium" },
     subcategory: { id: "1", categoryId: "1", name: "lab1" },
     student: { id: "1", name: "Anna Cichocka" },
     provider: { id: "1", name: "Michał Idzik" },
@@ -31,7 +31,7 @@ const points: Points[] = [
   },
   {
     id: "3",
-    category: { id: "1", name: "Labolatorium" },
+    category: { id: "1", name: "Laboratorium" },
     subcategory: { id: "3", categoryId: "1", name: "lab2" },
     student: { id: "2", name: "Julia Smerdel" },
     provider: { id: "1", name: "Michał Idzik" },

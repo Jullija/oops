@@ -12,6 +12,10 @@ export const getSubcategoriesByCategory = (
   );
 };
 
+export const getSubcategory = (id: string): Subcategory | undefined => {
+  return subcategories.find((subcategory) => subcategory.id === id);
+};
+
 const subcategories: Subcategory[] = [
   { id: "1", categoryId: "1", name: "lab1" },
   { id: "2", categoryId: "2", name: "kartkówka1" },
