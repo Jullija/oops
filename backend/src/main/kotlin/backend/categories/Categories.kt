@@ -11,9 +11,9 @@ class Categories(
     val categoryId: Long = 0,
 
     @Column(name = "categoryName", nullable = false)
-    var categoryName: String
+    var categoryName: CategoriesEnum
 ) {
     constructor() : this(
-        categoryName = CategoriesEnum.LABORATORIA.toString()
+        categoryName = CategoriesEnum.LABORATORIA
     )
 }

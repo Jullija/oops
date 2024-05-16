@@ -9,7 +9,7 @@ class CategoryService(
 
     @Transactional
     fun createCategory(categoryName: CategoriesEnum): Categories {
-        val category = Categories(categoryName = categoryName.toString())
+        val category = Categories(categoryName = categoryName)
         return categoryRepository.save(category)
     }
 }

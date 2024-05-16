@@ -4,10 +4,13 @@ import backend.chests.ChestsRepository
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.DependsOn
+import org.springframework.core.annotation.Order
 
 @Configuration
 class ChestAwardConfiguration {
     @Bean
+    @Order(2)
     fun chestAwardCommandLineRunner(chestAwardRepository: ChestAwardRepository, chestsRepository: ChestsRepository):CommandLineRunner{
         return CommandLineRunner { args ->
             if (chestAwardRepository.count() == 0L){

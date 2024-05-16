@@ -13,8 +13,8 @@ class Subcategories(
     @Column(name = "subcategoryName", nullable = false)
     var subcategoryName: String,
 
-    @OneToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "categoryId")
+    @ManyToOne
+    @JoinColumn(name = "categoryId", referencedColumnName = "categoryId")
     var category: Categories
 ) {
 

@@ -14,20 +14,20 @@ class ChestHistory (
 
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "userId")
-    var userId: Users,
+    var user: Users,
 
     @ManyToOne
     @JoinColumn(name = "chestId", referencedColumnName = "chestId")
-    var chestId: Chests,
+    var chest: Chests,
 
 
     @ManyToOne
     @JoinColumn(name = "subcategoryId", referencedColumnName = "subcategoryId")
-    var subcategoryId: Subcategories,
+    var subcategory: Subcategories,
 ){
     constructor() : this(
-        userId = Users(),
-        chestId = Chests(),
-        subcategoryId = Subcategories()
+        user = Users(),
+        chest = Chests(),
+        subcategory = Subcategories()
     )
 }

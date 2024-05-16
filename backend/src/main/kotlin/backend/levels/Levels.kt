@@ -13,8 +13,11 @@ class Levels(
     @Column(name = "name", nullable = false)
     var name: String,
 
-    @Column(name = "treshold", nullable = false)
-    var threshold: Double,
+    @Column(name = "minimumPoints", nullable = false)
+    var minimumPoints: Double,
+
+    @Column(name = "maximumPoints", nullable = false)
+    var maximumPoints: Double,
 
     @Column(name = "avatar", nullable = true)
     var avatar: String = "" //image?
@@ -22,14 +25,16 @@ class Levels(
 
     protected constructor() : this(
         name = "",
-        threshold = 0.0
+        minimumPoints = 0.0,
+        maximumPoints = 0.0
     )
 
 
     //TODO: how to pass avatar
-    constructor(name: String, threshold: Double):this(
+    constructor(name: String, minimumPoints: Double, maximumPoints: Double):this(
         name = name,
-        threshold = threshold,
+        minimumPoints = minimumPoints,
+        maximumPoints = maximumPoints,
         avatar = ""
     )
 }
