@@ -7,6 +7,7 @@ import backend.chestHistory.ChestHistoryConfiguration
 import backend.chestAward.ChestAwardRepository
 import backend.chests.Chests
 import backend.chests.ChestsConfiguration
+import backend.groups.GroupsConfiguration
 import backend.points.PointsConfiguration
 import backend.subcategories.SubcategoriesConfiguration
 import backend.users.UsersConfiguration
@@ -23,9 +24,10 @@ import org.springframework.context.annotation.Import
 	"backend.levels",
 	"backend.points",
 	"backend.subcategories",
-	"backend.users"
+	"backend.users",
+	"backend.groups"
 ])
-@Import(BonusesConfiguration::class, CategoriesConfiguration::class, ChestAwardConfiguration::class, ChestHistoryConfiguration::class, ChestsConfiguration::class, PointsConfiguration::class, SubcategoriesConfiguration::class, UsersConfiguration::class)
+@Import(BonusesConfiguration::class, CategoriesConfiguration::class, ChestAwardConfiguration::class, ChestHistoryConfiguration::class, ChestsConfiguration::class, PointsConfiguration::class, SubcategoriesConfiguration::class, UsersConfiguration::class, GroupsConfiguration::class)
 class BackendApplication
 
 fun main(args: Array<String>) {
