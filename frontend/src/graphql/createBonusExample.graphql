@@ -1,0 +1,45 @@
+# src/graphql/mutations/createBonusMyCustom.graphql
+mutation CreateBonusMyCustom(
+  $studentId: Int!
+  $teacherId: Int!
+  $howMany: Int!
+  $subcategoryId: Int!
+  $awardId: Int!
+) {
+  createBonus(
+    input: {
+      studentId: $studentId
+      teacherId: $teacherId
+      howMany: $howMany
+      subcategoryId: $subcategoryId
+      awardId: $awardId
+    }
+  ) {
+    bonusId
+    points {
+      pointsId
+      userId {
+        userId
+        nick
+      }
+      fromWho {
+        userId
+        nick
+      }
+      howMany
+      subcategory {
+        subcategoryId
+        subcategoryName
+      }
+    }
+    award {
+      awardId
+      name
+      bonus
+    }
+    subcategory {
+      subcategoryId
+      subcategoryName
+    }
+  }
+}

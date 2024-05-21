@@ -1,0 +1,6714 @@
+schema {
+  query: query_root
+  mutation: mutation_root
+  subscription: subscription_root
+}
+
+"""whether this query should be cached (Hasura Cloud only)"""
+directive @cached(
+  """refresh the cache entry"""
+  refresh: Boolean! = false
+
+  """measured in seconds"""
+  ttl: Int! = 60
+) on QUERY
+
+type Bonus {
+  award: ChestAward
+  bonusId: Int
+  points: Points
+  subcategory: Subcategories
+}
+
+"""
+Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'.
+"""
+input Boolean_comparison_exp {
+  _eq: Boolean
+  _gt: Boolean
+  _gte: Boolean
+  _in: [Boolean!]
+  _is_null: Boolean
+  _lt: Boolean
+  _lte: Boolean
+  _neq: Boolean
+  _nin: [Boolean!]
+}
+
+type ChestAward {
+  awardId: Int
+  bonus: Int
+  name: String
+}
+
+input CreateBonusInput {
+  awardId: Int!
+  howMany: Int!
+  studentId: Int!
+  subcategoryId: Int!
+  teacherId: Int!
+}
+
+"""
+Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
+"""
+input Int_comparison_exp {
+  _eq: Int
+  _gt: Int
+  _gte: Int
+  _in: [Int!]
+  _is_null: Boolean
+  _lt: Int
+  _lte: Int
+  _neq: Int
+  _nin: [Int!]
+}
+
+type Points {
+  fromWho: Users
+  howMany: Int
+  pointsId: Int
+  subcategory: Subcategories
+  userId: Users
+}
+
+"""
+Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'.
+"""
+input String_comparison_exp {
+  _eq: String
+  _gt: String
+  _gte: String
+
+  """does the column match the given case-insensitive pattern"""
+  _ilike: String
+  _in: [String!]
+
+  """
+  does the column match the given POSIX regular expression, case insensitive
+  """
+  _iregex: String
+  _is_null: Boolean
+
+  """does the column match the given pattern"""
+  _like: String
+  _lt: String
+  _lte: String
+  _neq: String
+
+  """does the column NOT match the given case-insensitive pattern"""
+  _nilike: String
+  _nin: [String!]
+
+  """
+  does the column NOT match the given POSIX regular expression, case insensitive
+  """
+  _niregex: String
+
+  """does the column NOT match the given pattern"""
+  _nlike: String
+
+  """
+  does the column NOT match the given POSIX regular expression, case sensitive
+  """
+  _nregex: String
+
+  """does the column NOT match the given SQL regular expression"""
+  _nsimilar: String
+
+  """
+  does the column match the given POSIX regular expression, case sensitive
+  """
+  _regex: String
+
+  """does the column match the given SQL regular expression"""
+  _similar: String
+}
+
+type Subcategories {
+  categoryId: Int
+  subcategoryId: Int
+  subcategoryName: String
+}
+
+type Users {
+  nick: String
+  role: String
+  userId: Int
+}
+
+type _Service {
+  sdl: String!
+}
+
+scalar bigint
+
+"""
+Boolean expression to compare columns of type "bigint". All fields are combined with logical 'AND'.
+"""
+input bigint_comparison_exp {
+  _eq: bigint
+  _gt: bigint
+  _gte: bigint
+  _in: [bigint!]
+  _is_null: Boolean
+  _lt: bigint
+  _lte: bigint
+  _neq: bigint
+  _nin: [bigint!]
+}
+
+"""
+columns and relationships of "bonuses"
+"""
+type bonuses {
+  award_id: bigint!
+  bonus_id: bigint!
+
+  """An object relationship"""
+  chest_award: chest_award!
+
+  """An object relationship"""
+  point: points!
+  points_id: bigint!
+
+  """An object relationship"""
+  subcategory: subcategories!
+  subcategory_id: bigint!
+}
+
+"""
+aggregated selection of "bonuses"
+"""
+type bonuses_aggregate {
+  aggregate: bonuses_aggregate_fields
+  nodes: [bonuses!]!
+}
+
+input bonuses_aggregate_bool_exp {
+  count: bonuses_aggregate_bool_exp_count
+}
+
+input bonuses_aggregate_bool_exp_count {
+  arguments: [bonuses_select_column!]
+  distinct: Boolean
+  filter: bonuses_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"""
+aggregate fields of "bonuses"
+"""
+type bonuses_aggregate_fields {
+  avg: bonuses_avg_fields
+  count(columns: [bonuses_select_column!], distinct: Boolean): Int!
+  max: bonuses_max_fields
+  min: bonuses_min_fields
+  stddev: bonuses_stddev_fields
+  stddev_pop: bonuses_stddev_pop_fields
+  stddev_samp: bonuses_stddev_samp_fields
+  sum: bonuses_sum_fields
+  var_pop: bonuses_var_pop_fields
+  var_samp: bonuses_var_samp_fields
+  variance: bonuses_variance_fields
+}
+
+"""
+order by aggregate values of table "bonuses"
+"""
+input bonuses_aggregate_order_by {
+  avg: bonuses_avg_order_by
+  count: order_by
+  max: bonuses_max_order_by
+  min: bonuses_min_order_by
+  stddev: bonuses_stddev_order_by
+  stddev_pop: bonuses_stddev_pop_order_by
+  stddev_samp: bonuses_stddev_samp_order_by
+  sum: bonuses_sum_order_by
+  var_pop: bonuses_var_pop_order_by
+  var_samp: bonuses_var_samp_order_by
+  variance: bonuses_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "bonuses"
+"""
+input bonuses_arr_rel_insert_input {
+  data: [bonuses_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: bonuses_on_conflict
+}
+
+"""aggregate avg on columns"""
+type bonuses_avg_fields {
+  award_id: Float
+  bonus_id: Float
+  points_id: Float
+  subcategory_id: Float
+}
+
+"""
+order by avg() on columns of table "bonuses"
+"""
+input bonuses_avg_order_by {
+  award_id: order_by
+  bonus_id: order_by
+  points_id: order_by
+  subcategory_id: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "bonuses". All fields are combined with a logical 'AND'.
+"""
+input bonuses_bool_exp {
+  _and: [bonuses_bool_exp!]
+  _not: bonuses_bool_exp
+  _or: [bonuses_bool_exp!]
+  award_id: bigint_comparison_exp
+  bonus_id: bigint_comparison_exp
+  chest_award: chest_award_bool_exp
+  point: points_bool_exp
+  points_id: bigint_comparison_exp
+  subcategory: subcategories_bool_exp
+  subcategory_id: bigint_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "bonuses"
+"""
+enum bonuses_constraint {
+  """
+  unique or primary key constraint on columns "bonus_id"
+  """
+  bonuses_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "bonuses"
+"""
+input bonuses_inc_input {
+  award_id: bigint
+  bonus_id: bigint
+  points_id: bigint
+  subcategory_id: bigint
+}
+
+"""
+input type for inserting data into table "bonuses"
+"""
+input bonuses_insert_input {
+  award_id: bigint
+  bonus_id: bigint
+  chest_award: chest_award_obj_rel_insert_input
+  point: points_obj_rel_insert_input
+  points_id: bigint
+  subcategory: subcategories_obj_rel_insert_input
+  subcategory_id: bigint
+}
+
+"""aggregate max on columns"""
+type bonuses_max_fields {
+  award_id: bigint
+  bonus_id: bigint
+  points_id: bigint
+  subcategory_id: bigint
+}
+
+"""
+order by max() on columns of table "bonuses"
+"""
+input bonuses_max_order_by {
+  award_id: order_by
+  bonus_id: order_by
+  points_id: order_by
+  subcategory_id: order_by
+}
+
+"""aggregate min on columns"""
+type bonuses_min_fields {
+  award_id: bigint
+  bonus_id: bigint
+  points_id: bigint
+  subcategory_id: bigint
+}
+
+"""
+order by min() on columns of table "bonuses"
+"""
+input bonuses_min_order_by {
+  award_id: order_by
+  bonus_id: order_by
+  points_id: order_by
+  subcategory_id: order_by
+}
+
+"""
+response of any mutation on the table "bonuses"
+"""
+type bonuses_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [bonuses!]!
+}
+
+"""
+on_conflict condition type for table "bonuses"
+"""
+input bonuses_on_conflict {
+  constraint: bonuses_constraint!
+  update_columns: [bonuses_update_column!]! = []
+  where: bonuses_bool_exp
+}
+
+"""Ordering options when selecting data from "bonuses"."""
+input bonuses_order_by {
+  award_id: order_by
+  bonus_id: order_by
+  chest_award: chest_award_order_by
+  point: points_order_by
+  points_id: order_by
+  subcategory: subcategories_order_by
+  subcategory_id: order_by
+}
+
+"""primary key columns input for table: bonuses"""
+input bonuses_pk_columns_input {
+  bonus_id: bigint!
+}
+
+"""
+select columns of table "bonuses"
+"""
+enum bonuses_select_column {
+  """column name"""
+  award_id
+
+  """column name"""
+  bonus_id
+
+  """column name"""
+  points_id
+
+  """column name"""
+  subcategory_id
+}
+
+"""
+input type for updating data in table "bonuses"
+"""
+input bonuses_set_input {
+  award_id: bigint
+  bonus_id: bigint
+  points_id: bigint
+  subcategory_id: bigint
+}
+
+"""aggregate stddev on columns"""
+type bonuses_stddev_fields {
+  award_id: Float
+  bonus_id: Float
+  points_id: Float
+  subcategory_id: Float
+}
+
+"""
+order by stddev() on columns of table "bonuses"
+"""
+input bonuses_stddev_order_by {
+  award_id: order_by
+  bonus_id: order_by
+  points_id: order_by
+  subcategory_id: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type bonuses_stddev_pop_fields {
+  award_id: Float
+  bonus_id: Float
+  points_id: Float
+  subcategory_id: Float
+}
+
+"""
+order by stddev_pop() on columns of table "bonuses"
+"""
+input bonuses_stddev_pop_order_by {
+  award_id: order_by
+  bonus_id: order_by
+  points_id: order_by
+  subcategory_id: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type bonuses_stddev_samp_fields {
+  award_id: Float
+  bonus_id: Float
+  points_id: Float
+  subcategory_id: Float
+}
+
+"""
+order by stddev_samp() on columns of table "bonuses"
+"""
+input bonuses_stddev_samp_order_by {
+  award_id: order_by
+  bonus_id: order_by
+  points_id: order_by
+  subcategory_id: order_by
+}
+
+"""
+Streaming cursor of the table "bonuses"
+"""
+input bonuses_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: bonuses_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input bonuses_stream_cursor_value_input {
+  award_id: bigint
+  bonus_id: bigint
+  points_id: bigint
+  subcategory_id: bigint
+}
+
+"""aggregate sum on columns"""
+type bonuses_sum_fields {
+  award_id: bigint
+  bonus_id: bigint
+  points_id: bigint
+  subcategory_id: bigint
+}
+
+"""
+order by sum() on columns of table "bonuses"
+"""
+input bonuses_sum_order_by {
+  award_id: order_by
+  bonus_id: order_by
+  points_id: order_by
+  subcategory_id: order_by
+}
+
+"""
+update columns of table "bonuses"
+"""
+enum bonuses_update_column {
+  """column name"""
+  award_id
+
+  """column name"""
+  bonus_id
+
+  """column name"""
+  points_id
+
+  """column name"""
+  subcategory_id
+}
+
+input bonuses_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: bonuses_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: bonuses_set_input
+
+  """filter the rows which have to be updated"""
+  where: bonuses_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type bonuses_var_pop_fields {
+  award_id: Float
+  bonus_id: Float
+  points_id: Float
+  subcategory_id: Float
+}
+
+"""
+order by var_pop() on columns of table "bonuses"
+"""
+input bonuses_var_pop_order_by {
+  award_id: order_by
+  bonus_id: order_by
+  points_id: order_by
+  subcategory_id: order_by
+}
+
+"""aggregate var_samp on columns"""
+type bonuses_var_samp_fields {
+  award_id: Float
+  bonus_id: Float
+  points_id: Float
+  subcategory_id: Float
+}
+
+"""
+order by var_samp() on columns of table "bonuses"
+"""
+input bonuses_var_samp_order_by {
+  award_id: order_by
+  bonus_id: order_by
+  points_id: order_by
+  subcategory_id: order_by
+}
+
+"""aggregate variance on columns"""
+type bonuses_variance_fields {
+  award_id: Float
+  bonus_id: Float
+  points_id: Float
+  subcategory_id: Float
+}
+
+"""
+order by variance() on columns of table "bonuses"
+"""
+input bonuses_variance_order_by {
+  award_id: order_by
+  bonus_id: order_by
+  points_id: order_by
+  subcategory_id: order_by
+}
+
+"""
+columns and relationships of "categories"
+"""
+type categories {
+  category_id: bigint!
+  category_name: String!
+
+  """An array relationship"""
+  subcategories(
+    """distinct select on columns"""
+    distinct_on: [subcategories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [subcategories_order_by!]
+
+    """filter the rows returned"""
+    where: subcategories_bool_exp
+  ): [subcategories!]!
+
+  """An aggregate relationship"""
+  subcategories_aggregate(
+    """distinct select on columns"""
+    distinct_on: [subcategories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [subcategories_order_by!]
+
+    """filter the rows returned"""
+    where: subcategories_bool_exp
+  ): subcategories_aggregate!
+}
+
+"""
+aggregated selection of "categories"
+"""
+type categories_aggregate {
+  aggregate: categories_aggregate_fields
+  nodes: [categories!]!
+}
+
+"""
+aggregate fields of "categories"
+"""
+type categories_aggregate_fields {
+  avg: categories_avg_fields
+  count(columns: [categories_select_column!], distinct: Boolean): Int!
+  max: categories_max_fields
+  min: categories_min_fields
+  stddev: categories_stddev_fields
+  stddev_pop: categories_stddev_pop_fields
+  stddev_samp: categories_stddev_samp_fields
+  sum: categories_sum_fields
+  var_pop: categories_var_pop_fields
+  var_samp: categories_var_samp_fields
+  variance: categories_variance_fields
+}
+
+"""aggregate avg on columns"""
+type categories_avg_fields {
+  category_id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "categories". All fields are combined with a logical 'AND'.
+"""
+input categories_bool_exp {
+  _and: [categories_bool_exp!]
+  _not: categories_bool_exp
+  _or: [categories_bool_exp!]
+  category_id: bigint_comparison_exp
+  category_name: String_comparison_exp
+  subcategories: subcategories_bool_exp
+  subcategories_aggregate: subcategories_aggregate_bool_exp
+}
+
+"""
+unique or primary key constraints on table "categories"
+"""
+enum categories_constraint {
+  """
+  unique or primary key constraint on columns "category_id"
+  """
+  categories_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "categories"
+"""
+input categories_inc_input {
+  category_id: bigint
+}
+
+"""
+input type for inserting data into table "categories"
+"""
+input categories_insert_input {
+  category_id: bigint
+  category_name: String
+  subcategories: subcategories_arr_rel_insert_input
+}
+
+"""aggregate max on columns"""
+type categories_max_fields {
+  category_id: bigint
+  category_name: String
+}
+
+"""aggregate min on columns"""
+type categories_min_fields {
+  category_id: bigint
+  category_name: String
+}
+
+"""
+response of any mutation on the table "categories"
+"""
+type categories_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [categories!]!
+}
+
+"""
+input type for inserting object relation for remote table "categories"
+"""
+input categories_obj_rel_insert_input {
+  data: categories_insert_input!
+
+  """upsert condition"""
+  on_conflict: categories_on_conflict
+}
+
+"""
+on_conflict condition type for table "categories"
+"""
+input categories_on_conflict {
+  constraint: categories_constraint!
+  update_columns: [categories_update_column!]! = []
+  where: categories_bool_exp
+}
+
+"""Ordering options when selecting data from "categories"."""
+input categories_order_by {
+  category_id: order_by
+  category_name: order_by
+  subcategories_aggregate: subcategories_aggregate_order_by
+}
+
+"""primary key columns input for table: categories"""
+input categories_pk_columns_input {
+  category_id: bigint!
+}
+
+"""
+select columns of table "categories"
+"""
+enum categories_select_column {
+  """column name"""
+  category_id
+
+  """column name"""
+  category_name
+}
+
+"""
+input type for updating data in table "categories"
+"""
+input categories_set_input {
+  category_id: bigint
+  category_name: String
+}
+
+"""aggregate stddev on columns"""
+type categories_stddev_fields {
+  category_id: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type categories_stddev_pop_fields {
+  category_id: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type categories_stddev_samp_fields {
+  category_id: Float
+}
+
+"""
+Streaming cursor of the table "categories"
+"""
+input categories_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: categories_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input categories_stream_cursor_value_input {
+  category_id: bigint
+  category_name: String
+}
+
+"""aggregate sum on columns"""
+type categories_sum_fields {
+  category_id: bigint
+}
+
+"""
+update columns of table "categories"
+"""
+enum categories_update_column {
+  """column name"""
+  category_id
+
+  """column name"""
+  category_name
+}
+
+input categories_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: categories_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: categories_set_input
+
+  """filter the rows which have to be updated"""
+  where: categories_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type categories_var_pop_fields {
+  category_id: Float
+}
+
+"""aggregate var_samp on columns"""
+type categories_var_samp_fields {
+  category_id: Float
+}
+
+"""aggregate variance on columns"""
+type categories_variance_fields {
+  category_id: Float
+}
+
+"""
+columns and relationships of "chest_award"
+"""
+type chest_award {
+  award_id: bigint!
+  bonus: bigint!
+
+  """An array relationship"""
+  bonuses(
+    """distinct select on columns"""
+    distinct_on: [bonuses_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [bonuses_order_by!]
+
+    """filter the rows returned"""
+    where: bonuses_bool_exp
+  ): [bonuses!]!
+
+  """An aggregate relationship"""
+  bonuses_aggregate(
+    """distinct select on columns"""
+    distinct_on: [bonuses_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [bonuses_order_by!]
+
+    """filter the rows returned"""
+    where: bonuses_bool_exp
+  ): bonuses_aggregate!
+
+  """An object relationship"""
+  chest: chests!
+  chest_id: bigint!
+  name: String!
+}
+
+"""
+aggregated selection of "chest_award"
+"""
+type chest_award_aggregate {
+  aggregate: chest_award_aggregate_fields
+  nodes: [chest_award!]!
+}
+
+input chest_award_aggregate_bool_exp {
+  count: chest_award_aggregate_bool_exp_count
+}
+
+input chest_award_aggregate_bool_exp_count {
+  arguments: [chest_award_select_column!]
+  distinct: Boolean
+  filter: chest_award_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"""
+aggregate fields of "chest_award"
+"""
+type chest_award_aggregate_fields {
+  avg: chest_award_avg_fields
+  count(columns: [chest_award_select_column!], distinct: Boolean): Int!
+  max: chest_award_max_fields
+  min: chest_award_min_fields
+  stddev: chest_award_stddev_fields
+  stddev_pop: chest_award_stddev_pop_fields
+  stddev_samp: chest_award_stddev_samp_fields
+  sum: chest_award_sum_fields
+  var_pop: chest_award_var_pop_fields
+  var_samp: chest_award_var_samp_fields
+  variance: chest_award_variance_fields
+}
+
+"""
+order by aggregate values of table "chest_award"
+"""
+input chest_award_aggregate_order_by {
+  avg: chest_award_avg_order_by
+  count: order_by
+  max: chest_award_max_order_by
+  min: chest_award_min_order_by
+  stddev: chest_award_stddev_order_by
+  stddev_pop: chest_award_stddev_pop_order_by
+  stddev_samp: chest_award_stddev_samp_order_by
+  sum: chest_award_sum_order_by
+  var_pop: chest_award_var_pop_order_by
+  var_samp: chest_award_var_samp_order_by
+  variance: chest_award_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "chest_award"
+"""
+input chest_award_arr_rel_insert_input {
+  data: [chest_award_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: chest_award_on_conflict
+}
+
+"""aggregate avg on columns"""
+type chest_award_avg_fields {
+  award_id: Float
+  bonus: Float
+  chest_id: Float
+}
+
+"""
+order by avg() on columns of table "chest_award"
+"""
+input chest_award_avg_order_by {
+  award_id: order_by
+  bonus: order_by
+  chest_id: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "chest_award". All fields are combined with a logical 'AND'.
+"""
+input chest_award_bool_exp {
+  _and: [chest_award_bool_exp!]
+  _not: chest_award_bool_exp
+  _or: [chest_award_bool_exp!]
+  award_id: bigint_comparison_exp
+  bonus: bigint_comparison_exp
+  bonuses: bonuses_bool_exp
+  bonuses_aggregate: bonuses_aggregate_bool_exp
+  chest: chests_bool_exp
+  chest_id: bigint_comparison_exp
+  name: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "chest_award"
+"""
+enum chest_award_constraint {
+  """
+  unique or primary key constraint on columns "award_id"
+  """
+  chest_award_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "chest_award"
+"""
+input chest_award_inc_input {
+  award_id: bigint
+  bonus: bigint
+  chest_id: bigint
+}
+
+"""
+input type for inserting data into table "chest_award"
+"""
+input chest_award_insert_input {
+  award_id: bigint
+  bonus: bigint
+  bonuses: bonuses_arr_rel_insert_input
+  chest: chests_obj_rel_insert_input
+  chest_id: bigint
+  name: String
+}
+
+"""aggregate max on columns"""
+type chest_award_max_fields {
+  award_id: bigint
+  bonus: bigint
+  chest_id: bigint
+  name: String
+}
+
+"""
+order by max() on columns of table "chest_award"
+"""
+input chest_award_max_order_by {
+  award_id: order_by
+  bonus: order_by
+  chest_id: order_by
+  name: order_by
+}
+
+"""aggregate min on columns"""
+type chest_award_min_fields {
+  award_id: bigint
+  bonus: bigint
+  chest_id: bigint
+  name: String
+}
+
+"""
+order by min() on columns of table "chest_award"
+"""
+input chest_award_min_order_by {
+  award_id: order_by
+  bonus: order_by
+  chest_id: order_by
+  name: order_by
+}
+
+"""
+response of any mutation on the table "chest_award"
+"""
+type chest_award_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [chest_award!]!
+}
+
+"""
+input type for inserting object relation for remote table "chest_award"
+"""
+input chest_award_obj_rel_insert_input {
+  data: chest_award_insert_input!
+
+  """upsert condition"""
+  on_conflict: chest_award_on_conflict
+}
+
+"""
+on_conflict condition type for table "chest_award"
+"""
+input chest_award_on_conflict {
+  constraint: chest_award_constraint!
+  update_columns: [chest_award_update_column!]! = []
+  where: chest_award_bool_exp
+}
+
+"""Ordering options when selecting data from "chest_award"."""
+input chest_award_order_by {
+  award_id: order_by
+  bonus: order_by
+  bonuses_aggregate: bonuses_aggregate_order_by
+  chest: chests_order_by
+  chest_id: order_by
+  name: order_by
+}
+
+"""primary key columns input for table: chest_award"""
+input chest_award_pk_columns_input {
+  award_id: bigint!
+}
+
+"""
+select columns of table "chest_award"
+"""
+enum chest_award_select_column {
+  """column name"""
+  award_id
+
+  """column name"""
+  bonus
+
+  """column name"""
+  chest_id
+
+  """column name"""
+  name
+}
+
+"""
+input type for updating data in table "chest_award"
+"""
+input chest_award_set_input {
+  award_id: bigint
+  bonus: bigint
+  chest_id: bigint
+  name: String
+}
+
+"""aggregate stddev on columns"""
+type chest_award_stddev_fields {
+  award_id: Float
+  bonus: Float
+  chest_id: Float
+}
+
+"""
+order by stddev() on columns of table "chest_award"
+"""
+input chest_award_stddev_order_by {
+  award_id: order_by
+  bonus: order_by
+  chest_id: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type chest_award_stddev_pop_fields {
+  award_id: Float
+  bonus: Float
+  chest_id: Float
+}
+
+"""
+order by stddev_pop() on columns of table "chest_award"
+"""
+input chest_award_stddev_pop_order_by {
+  award_id: order_by
+  bonus: order_by
+  chest_id: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type chest_award_stddev_samp_fields {
+  award_id: Float
+  bonus: Float
+  chest_id: Float
+}
+
+"""
+order by stddev_samp() on columns of table "chest_award"
+"""
+input chest_award_stddev_samp_order_by {
+  award_id: order_by
+  bonus: order_by
+  chest_id: order_by
+}
+
+"""
+Streaming cursor of the table "chest_award"
+"""
+input chest_award_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: chest_award_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input chest_award_stream_cursor_value_input {
+  award_id: bigint
+  bonus: bigint
+  chest_id: bigint
+  name: String
+}
+
+"""aggregate sum on columns"""
+type chest_award_sum_fields {
+  award_id: bigint
+  bonus: bigint
+  chest_id: bigint
+}
+
+"""
+order by sum() on columns of table "chest_award"
+"""
+input chest_award_sum_order_by {
+  award_id: order_by
+  bonus: order_by
+  chest_id: order_by
+}
+
+"""
+update columns of table "chest_award"
+"""
+enum chest_award_update_column {
+  """column name"""
+  award_id
+
+  """column name"""
+  bonus
+
+  """column name"""
+  chest_id
+
+  """column name"""
+  name
+}
+
+input chest_award_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: chest_award_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: chest_award_set_input
+
+  """filter the rows which have to be updated"""
+  where: chest_award_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type chest_award_var_pop_fields {
+  award_id: Float
+  bonus: Float
+  chest_id: Float
+}
+
+"""
+order by var_pop() on columns of table "chest_award"
+"""
+input chest_award_var_pop_order_by {
+  award_id: order_by
+  bonus: order_by
+  chest_id: order_by
+}
+
+"""aggregate var_samp on columns"""
+type chest_award_var_samp_fields {
+  award_id: Float
+  bonus: Float
+  chest_id: Float
+}
+
+"""
+order by var_samp() on columns of table "chest_award"
+"""
+input chest_award_var_samp_order_by {
+  award_id: order_by
+  bonus: order_by
+  chest_id: order_by
+}
+
+"""aggregate variance on columns"""
+type chest_award_variance_fields {
+  award_id: Float
+  bonus: Float
+  chest_id: Float
+}
+
+"""
+order by variance() on columns of table "chest_award"
+"""
+input chest_award_variance_order_by {
+  award_id: order_by
+  bonus: order_by
+  chest_id: order_by
+}
+
+"""
+columns and relationships of "chest_history"
+"""
+type chest_history {
+  """An object relationship"""
+  chest: chests!
+  chest_history_id: bigint!
+  chest_id: bigint!
+
+  """An object relationship"""
+  subcategory: subcategories!
+  subcategory_id: bigint!
+
+  """An object relationship"""
+  user: users!
+  user_id: bigint!
+}
+
+"""
+aggregated selection of "chest_history"
+"""
+type chest_history_aggregate {
+  aggregate: chest_history_aggregate_fields
+  nodes: [chest_history!]!
+}
+
+input chest_history_aggregate_bool_exp {
+  count: chest_history_aggregate_bool_exp_count
+}
+
+input chest_history_aggregate_bool_exp_count {
+  arguments: [chest_history_select_column!]
+  distinct: Boolean
+  filter: chest_history_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"""
+aggregate fields of "chest_history"
+"""
+type chest_history_aggregate_fields {
+  avg: chest_history_avg_fields
+  count(columns: [chest_history_select_column!], distinct: Boolean): Int!
+  max: chest_history_max_fields
+  min: chest_history_min_fields
+  stddev: chest_history_stddev_fields
+  stddev_pop: chest_history_stddev_pop_fields
+  stddev_samp: chest_history_stddev_samp_fields
+  sum: chest_history_sum_fields
+  var_pop: chest_history_var_pop_fields
+  var_samp: chest_history_var_samp_fields
+  variance: chest_history_variance_fields
+}
+
+"""
+order by aggregate values of table "chest_history"
+"""
+input chest_history_aggregate_order_by {
+  avg: chest_history_avg_order_by
+  count: order_by
+  max: chest_history_max_order_by
+  min: chest_history_min_order_by
+  stddev: chest_history_stddev_order_by
+  stddev_pop: chest_history_stddev_pop_order_by
+  stddev_samp: chest_history_stddev_samp_order_by
+  sum: chest_history_sum_order_by
+  var_pop: chest_history_var_pop_order_by
+  var_samp: chest_history_var_samp_order_by
+  variance: chest_history_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "chest_history"
+"""
+input chest_history_arr_rel_insert_input {
+  data: [chest_history_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: chest_history_on_conflict
+}
+
+"""aggregate avg on columns"""
+type chest_history_avg_fields {
+  chest_history_id: Float
+  chest_id: Float
+  subcategory_id: Float
+  user_id: Float
+}
+
+"""
+order by avg() on columns of table "chest_history"
+"""
+input chest_history_avg_order_by {
+  chest_history_id: order_by
+  chest_id: order_by
+  subcategory_id: order_by
+  user_id: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "chest_history". All fields are combined with a logical 'AND'.
+"""
+input chest_history_bool_exp {
+  _and: [chest_history_bool_exp!]
+  _not: chest_history_bool_exp
+  _or: [chest_history_bool_exp!]
+  chest: chests_bool_exp
+  chest_history_id: bigint_comparison_exp
+  chest_id: bigint_comparison_exp
+  subcategory: subcategories_bool_exp
+  subcategory_id: bigint_comparison_exp
+  user: users_bool_exp
+  user_id: bigint_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "chest_history"
+"""
+enum chest_history_constraint {
+  """
+  unique or primary key constraint on columns "chest_history_id"
+  """
+  chest_history_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "chest_history"
+"""
+input chest_history_inc_input {
+  chest_history_id: bigint
+  chest_id: bigint
+  subcategory_id: bigint
+  user_id: bigint
+}
+
+"""
+input type for inserting data into table "chest_history"
+"""
+input chest_history_insert_input {
+  chest: chests_obj_rel_insert_input
+  chest_history_id: bigint
+  chest_id: bigint
+  subcategory: subcategories_obj_rel_insert_input
+  subcategory_id: bigint
+  user: users_obj_rel_insert_input
+  user_id: bigint
+}
+
+"""aggregate max on columns"""
+type chest_history_max_fields {
+  chest_history_id: bigint
+  chest_id: bigint
+  subcategory_id: bigint
+  user_id: bigint
+}
+
+"""
+order by max() on columns of table "chest_history"
+"""
+input chest_history_max_order_by {
+  chest_history_id: order_by
+  chest_id: order_by
+  subcategory_id: order_by
+  user_id: order_by
+}
+
+"""aggregate min on columns"""
+type chest_history_min_fields {
+  chest_history_id: bigint
+  chest_id: bigint
+  subcategory_id: bigint
+  user_id: bigint
+}
+
+"""
+order by min() on columns of table "chest_history"
+"""
+input chest_history_min_order_by {
+  chest_history_id: order_by
+  chest_id: order_by
+  subcategory_id: order_by
+  user_id: order_by
+}
+
+"""
+response of any mutation on the table "chest_history"
+"""
+type chest_history_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [chest_history!]!
+}
+
+"""
+on_conflict condition type for table "chest_history"
+"""
+input chest_history_on_conflict {
+  constraint: chest_history_constraint!
+  update_columns: [chest_history_update_column!]! = []
+  where: chest_history_bool_exp
+}
+
+"""Ordering options when selecting data from "chest_history"."""
+input chest_history_order_by {
+  chest: chests_order_by
+  chest_history_id: order_by
+  chest_id: order_by
+  subcategory: subcategories_order_by
+  subcategory_id: order_by
+  user: users_order_by
+  user_id: order_by
+}
+
+"""primary key columns input for table: chest_history"""
+input chest_history_pk_columns_input {
+  chest_history_id: bigint!
+}
+
+"""
+select columns of table "chest_history"
+"""
+enum chest_history_select_column {
+  """column name"""
+  chest_history_id
+
+  """column name"""
+  chest_id
+
+  """column name"""
+  subcategory_id
+
+  """column name"""
+  user_id
+}
+
+"""
+input type for updating data in table "chest_history"
+"""
+input chest_history_set_input {
+  chest_history_id: bigint
+  chest_id: bigint
+  subcategory_id: bigint
+  user_id: bigint
+}
+
+"""aggregate stddev on columns"""
+type chest_history_stddev_fields {
+  chest_history_id: Float
+  chest_id: Float
+  subcategory_id: Float
+  user_id: Float
+}
+
+"""
+order by stddev() on columns of table "chest_history"
+"""
+input chest_history_stddev_order_by {
+  chest_history_id: order_by
+  chest_id: order_by
+  subcategory_id: order_by
+  user_id: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type chest_history_stddev_pop_fields {
+  chest_history_id: Float
+  chest_id: Float
+  subcategory_id: Float
+  user_id: Float
+}
+
+"""
+order by stddev_pop() on columns of table "chest_history"
+"""
+input chest_history_stddev_pop_order_by {
+  chest_history_id: order_by
+  chest_id: order_by
+  subcategory_id: order_by
+  user_id: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type chest_history_stddev_samp_fields {
+  chest_history_id: Float
+  chest_id: Float
+  subcategory_id: Float
+  user_id: Float
+}
+
+"""
+order by stddev_samp() on columns of table "chest_history"
+"""
+input chest_history_stddev_samp_order_by {
+  chest_history_id: order_by
+  chest_id: order_by
+  subcategory_id: order_by
+  user_id: order_by
+}
+
+"""
+Streaming cursor of the table "chest_history"
+"""
+input chest_history_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: chest_history_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input chest_history_stream_cursor_value_input {
+  chest_history_id: bigint
+  chest_id: bigint
+  subcategory_id: bigint
+  user_id: bigint
+}
+
+"""aggregate sum on columns"""
+type chest_history_sum_fields {
+  chest_history_id: bigint
+  chest_id: bigint
+  subcategory_id: bigint
+  user_id: bigint
+}
+
+"""
+order by sum() on columns of table "chest_history"
+"""
+input chest_history_sum_order_by {
+  chest_history_id: order_by
+  chest_id: order_by
+  subcategory_id: order_by
+  user_id: order_by
+}
+
+"""
+update columns of table "chest_history"
+"""
+enum chest_history_update_column {
+  """column name"""
+  chest_history_id
+
+  """column name"""
+  chest_id
+
+  """column name"""
+  subcategory_id
+
+  """column name"""
+  user_id
+}
+
+input chest_history_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: chest_history_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: chest_history_set_input
+
+  """filter the rows which have to be updated"""
+  where: chest_history_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type chest_history_var_pop_fields {
+  chest_history_id: Float
+  chest_id: Float
+  subcategory_id: Float
+  user_id: Float
+}
+
+"""
+order by var_pop() on columns of table "chest_history"
+"""
+input chest_history_var_pop_order_by {
+  chest_history_id: order_by
+  chest_id: order_by
+  subcategory_id: order_by
+  user_id: order_by
+}
+
+"""aggregate var_samp on columns"""
+type chest_history_var_samp_fields {
+  chest_history_id: Float
+  chest_id: Float
+  subcategory_id: Float
+  user_id: Float
+}
+
+"""
+order by var_samp() on columns of table "chest_history"
+"""
+input chest_history_var_samp_order_by {
+  chest_history_id: order_by
+  chest_id: order_by
+  subcategory_id: order_by
+  user_id: order_by
+}
+
+"""aggregate variance on columns"""
+type chest_history_variance_fields {
+  chest_history_id: Float
+  chest_id: Float
+  subcategory_id: Float
+  user_id: Float
+}
+
+"""
+order by variance() on columns of table "chest_history"
+"""
+input chest_history_variance_order_by {
+  chest_history_id: order_by
+  chest_id: order_by
+  subcategory_id: order_by
+  user_id: order_by
+}
+
+"""
+columns and relationships of "chests"
+"""
+type chests {
+  """An array relationship"""
+  chest_awards(
+    """distinct select on columns"""
+    distinct_on: [chest_award_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chest_award_order_by!]
+
+    """filter the rows returned"""
+    where: chest_award_bool_exp
+  ): [chest_award!]!
+
+  """An aggregate relationship"""
+  chest_awards_aggregate(
+    """distinct select on columns"""
+    distinct_on: [chest_award_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chest_award_order_by!]
+
+    """filter the rows returned"""
+    where: chest_award_bool_exp
+  ): chest_award_aggregate!
+
+  """An array relationship"""
+  chest_histories(
+    """distinct select on columns"""
+    distinct_on: [chest_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chest_history_order_by!]
+
+    """filter the rows returned"""
+    where: chest_history_bool_exp
+  ): [chest_history!]!
+
+  """An aggregate relationship"""
+  chest_histories_aggregate(
+    """distinct select on columns"""
+    distinct_on: [chest_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chest_history_order_by!]
+
+    """filter the rows returned"""
+    where: chest_history_bool_exp
+  ): chest_history_aggregate!
+  chest_id: bigint!
+  type: String!
+}
+
+"""
+aggregated selection of "chests"
+"""
+type chests_aggregate {
+  aggregate: chests_aggregate_fields
+  nodes: [chests!]!
+}
+
+"""
+aggregate fields of "chests"
+"""
+type chests_aggregate_fields {
+  avg: chests_avg_fields
+  count(columns: [chests_select_column!], distinct: Boolean): Int!
+  max: chests_max_fields
+  min: chests_min_fields
+  stddev: chests_stddev_fields
+  stddev_pop: chests_stddev_pop_fields
+  stddev_samp: chests_stddev_samp_fields
+  sum: chests_sum_fields
+  var_pop: chests_var_pop_fields
+  var_samp: chests_var_samp_fields
+  variance: chests_variance_fields
+}
+
+"""aggregate avg on columns"""
+type chests_avg_fields {
+  chest_id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "chests". All fields are combined with a logical 'AND'.
+"""
+input chests_bool_exp {
+  _and: [chests_bool_exp!]
+  _not: chests_bool_exp
+  _or: [chests_bool_exp!]
+  chest_awards: chest_award_bool_exp
+  chest_awards_aggregate: chest_award_aggregate_bool_exp
+  chest_histories: chest_history_bool_exp
+  chest_histories_aggregate: chest_history_aggregate_bool_exp
+  chest_id: bigint_comparison_exp
+  type: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "chests"
+"""
+enum chests_constraint {
+  """
+  unique or primary key constraint on columns "chest_id"
+  """
+  chests_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "chests"
+"""
+input chests_inc_input {
+  chest_id: bigint
+}
+
+"""
+input type for inserting data into table "chests"
+"""
+input chests_insert_input {
+  chest_awards: chest_award_arr_rel_insert_input
+  chest_histories: chest_history_arr_rel_insert_input
+  chest_id: bigint
+  type: String
+}
+
+"""aggregate max on columns"""
+type chests_max_fields {
+  chest_id: bigint
+  type: String
+}
+
+"""aggregate min on columns"""
+type chests_min_fields {
+  chest_id: bigint
+  type: String
+}
+
+"""
+response of any mutation on the table "chests"
+"""
+type chests_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [chests!]!
+}
+
+"""
+input type for inserting object relation for remote table "chests"
+"""
+input chests_obj_rel_insert_input {
+  data: chests_insert_input!
+
+  """upsert condition"""
+  on_conflict: chests_on_conflict
+}
+
+"""
+on_conflict condition type for table "chests"
+"""
+input chests_on_conflict {
+  constraint: chests_constraint!
+  update_columns: [chests_update_column!]! = []
+  where: chests_bool_exp
+}
+
+"""Ordering options when selecting data from "chests"."""
+input chests_order_by {
+  chest_awards_aggregate: chest_award_aggregate_order_by
+  chest_histories_aggregate: chest_history_aggregate_order_by
+  chest_id: order_by
+  type: order_by
+}
+
+"""primary key columns input for table: chests"""
+input chests_pk_columns_input {
+  chest_id: bigint!
+}
+
+"""
+select columns of table "chests"
+"""
+enum chests_select_column {
+  """column name"""
+  chest_id
+
+  """column name"""
+  type
+}
+
+"""
+input type for updating data in table "chests"
+"""
+input chests_set_input {
+  chest_id: bigint
+  type: String
+}
+
+"""aggregate stddev on columns"""
+type chests_stddev_fields {
+  chest_id: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type chests_stddev_pop_fields {
+  chest_id: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type chests_stddev_samp_fields {
+  chest_id: Float
+}
+
+"""
+Streaming cursor of the table "chests"
+"""
+input chests_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: chests_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input chests_stream_cursor_value_input {
+  chest_id: bigint
+  type: String
+}
+
+"""aggregate sum on columns"""
+type chests_sum_fields {
+  chest_id: bigint
+}
+
+"""
+update columns of table "chests"
+"""
+enum chests_update_column {
+  """column name"""
+  chest_id
+
+  """column name"""
+  type
+}
+
+input chests_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: chests_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: chests_set_input
+
+  """filter the rows which have to be updated"""
+  where: chests_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type chests_var_pop_fields {
+  chest_id: Float
+}
+
+"""aggregate var_samp on columns"""
+type chests_var_samp_fields {
+  chest_id: Float
+}
+
+"""aggregate variance on columns"""
+type chests_variance_fields {
+  chest_id: Float
+}
+
+"""ordering argument of a cursor"""
+enum cursor_ordering {
+  """ascending ordering of the cursor"""
+  ASC
+
+  """descending ordering of the cursor"""
+  DESC
+}
+
+scalar float8
+
+"""
+Boolean expression to compare columns of type "float8". All fields are combined with logical 'AND'.
+"""
+input float8_comparison_exp {
+  _eq: float8
+  _gt: float8
+  _gte: float8
+  _in: [float8!]
+  _is_null: Boolean
+  _lt: float8
+  _lte: float8
+  _neq: float8
+  _nin: [float8!]
+}
+
+"""
+columns and relationships of "flyway_schema_history"
+"""
+type flyway_schema_history {
+  checksum: Int
+  description: String!
+  execution_time: Int!
+  installed_by: String!
+  installed_on: timestamp!
+  installed_rank: Int!
+  script: String!
+  success: Boolean!
+  type: String!
+  version: String
+}
+
+"""
+aggregated selection of "flyway_schema_history"
+"""
+type flyway_schema_history_aggregate {
+  aggregate: flyway_schema_history_aggregate_fields
+  nodes: [flyway_schema_history!]!
+}
+
+"""
+aggregate fields of "flyway_schema_history"
+"""
+type flyway_schema_history_aggregate_fields {
+  avg: flyway_schema_history_avg_fields
+  count(columns: [flyway_schema_history_select_column!], distinct: Boolean): Int!
+  max: flyway_schema_history_max_fields
+  min: flyway_schema_history_min_fields
+  stddev: flyway_schema_history_stddev_fields
+  stddev_pop: flyway_schema_history_stddev_pop_fields
+  stddev_samp: flyway_schema_history_stddev_samp_fields
+  sum: flyway_schema_history_sum_fields
+  var_pop: flyway_schema_history_var_pop_fields
+  var_samp: flyway_schema_history_var_samp_fields
+  variance: flyway_schema_history_variance_fields
+}
+
+"""aggregate avg on columns"""
+type flyway_schema_history_avg_fields {
+  checksum: Float
+  execution_time: Float
+  installed_rank: Float
+}
+
+"""
+Boolean expression to filter rows from the table "flyway_schema_history". All fields are combined with a logical 'AND'.
+"""
+input flyway_schema_history_bool_exp {
+  _and: [flyway_schema_history_bool_exp!]
+  _not: flyway_schema_history_bool_exp
+  _or: [flyway_schema_history_bool_exp!]
+  checksum: Int_comparison_exp
+  description: String_comparison_exp
+  execution_time: Int_comparison_exp
+  installed_by: String_comparison_exp
+  installed_on: timestamp_comparison_exp
+  installed_rank: Int_comparison_exp
+  script: String_comparison_exp
+  success: Boolean_comparison_exp
+  type: String_comparison_exp
+  version: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "flyway_schema_history"
+"""
+enum flyway_schema_history_constraint {
+  """
+  unique or primary key constraint on columns "installed_rank"
+  """
+  flyway_schema_history_pk
+}
+
+"""
+input type for incrementing numeric columns in table "flyway_schema_history"
+"""
+input flyway_schema_history_inc_input {
+  checksum: Int
+  execution_time: Int
+  installed_rank: Int
+}
+
+"""
+input type for inserting data into table "flyway_schema_history"
+"""
+input flyway_schema_history_insert_input {
+  checksum: Int
+  description: String
+  execution_time: Int
+  installed_by: String
+  installed_on: timestamp
+  installed_rank: Int
+  script: String
+  success: Boolean
+  type: String
+  version: String
+}
+
+"""aggregate max on columns"""
+type flyway_schema_history_max_fields {
+  checksum: Int
+  description: String
+  execution_time: Int
+  installed_by: String
+  installed_on: timestamp
+  installed_rank: Int
+  script: String
+  type: String
+  version: String
+}
+
+"""aggregate min on columns"""
+type flyway_schema_history_min_fields {
+  checksum: Int
+  description: String
+  execution_time: Int
+  installed_by: String
+  installed_on: timestamp
+  installed_rank: Int
+  script: String
+  type: String
+  version: String
+}
+
+"""
+response of any mutation on the table "flyway_schema_history"
+"""
+type flyway_schema_history_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [flyway_schema_history!]!
+}
+
+"""
+on_conflict condition type for table "flyway_schema_history"
+"""
+input flyway_schema_history_on_conflict {
+  constraint: flyway_schema_history_constraint!
+  update_columns: [flyway_schema_history_update_column!]! = []
+  where: flyway_schema_history_bool_exp
+}
+
+"""Ordering options when selecting data from "flyway_schema_history"."""
+input flyway_schema_history_order_by {
+  checksum: order_by
+  description: order_by
+  execution_time: order_by
+  installed_by: order_by
+  installed_on: order_by
+  installed_rank: order_by
+  script: order_by
+  success: order_by
+  type: order_by
+  version: order_by
+}
+
+"""primary key columns input for table: flyway_schema_history"""
+input flyway_schema_history_pk_columns_input {
+  installed_rank: Int!
+}
+
+"""
+select columns of table "flyway_schema_history"
+"""
+enum flyway_schema_history_select_column {
+  """column name"""
+  checksum
+
+  """column name"""
+  description
+
+  """column name"""
+  execution_time
+
+  """column name"""
+  installed_by
+
+  """column name"""
+  installed_on
+
+  """column name"""
+  installed_rank
+
+  """column name"""
+  script
+
+  """column name"""
+  success
+
+  """column name"""
+  type
+
+  """column name"""
+  version
+}
+
+"""
+input type for updating data in table "flyway_schema_history"
+"""
+input flyway_schema_history_set_input {
+  checksum: Int
+  description: String
+  execution_time: Int
+  installed_by: String
+  installed_on: timestamp
+  installed_rank: Int
+  script: String
+  success: Boolean
+  type: String
+  version: String
+}
+
+"""aggregate stddev on columns"""
+type flyway_schema_history_stddev_fields {
+  checksum: Float
+  execution_time: Float
+  installed_rank: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type flyway_schema_history_stddev_pop_fields {
+  checksum: Float
+  execution_time: Float
+  installed_rank: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type flyway_schema_history_stddev_samp_fields {
+  checksum: Float
+  execution_time: Float
+  installed_rank: Float
+}
+
+"""
+Streaming cursor of the table "flyway_schema_history"
+"""
+input flyway_schema_history_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: flyway_schema_history_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input flyway_schema_history_stream_cursor_value_input {
+  checksum: Int
+  description: String
+  execution_time: Int
+  installed_by: String
+  installed_on: timestamp
+  installed_rank: Int
+  script: String
+  success: Boolean
+  type: String
+  version: String
+}
+
+"""aggregate sum on columns"""
+type flyway_schema_history_sum_fields {
+  checksum: Int
+  execution_time: Int
+  installed_rank: Int
+}
+
+"""
+update columns of table "flyway_schema_history"
+"""
+enum flyway_schema_history_update_column {
+  """column name"""
+  checksum
+
+  """column name"""
+  description
+
+  """column name"""
+  execution_time
+
+  """column name"""
+  installed_by
+
+  """column name"""
+  installed_on
+
+  """column name"""
+  installed_rank
+
+  """column name"""
+  script
+
+  """column name"""
+  success
+
+  """column name"""
+  type
+
+  """column name"""
+  version
+}
+
+input flyway_schema_history_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: flyway_schema_history_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: flyway_schema_history_set_input
+
+  """filter the rows which have to be updated"""
+  where: flyway_schema_history_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type flyway_schema_history_var_pop_fields {
+  checksum: Float
+  execution_time: Float
+  installed_rank: Float
+}
+
+"""aggregate var_samp on columns"""
+type flyway_schema_history_var_samp_fields {
+  checksum: Float
+  execution_time: Float
+  installed_rank: Float
+}
+
+"""aggregate variance on columns"""
+type flyway_schema_history_variance_fields {
+  checksum: Float
+  execution_time: Float
+  installed_rank: Float
+}
+
+"""
+columns and relationships of "groups"
+"""
+type groups {
+  group_name: String!
+  group_year: Int!
+  groups_id: bigint!
+  label: String
+
+  """An array relationship"""
+  user_groups(
+    """distinct select on columns"""
+    distinct_on: [user_groups_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_groups_order_by!]
+
+    """filter the rows returned"""
+    where: user_groups_bool_exp
+  ): [user_groups!]!
+
+  """An aggregate relationship"""
+  user_groups_aggregate(
+    """distinct select on columns"""
+    distinct_on: [user_groups_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_groups_order_by!]
+
+    """filter the rows returned"""
+    where: user_groups_bool_exp
+  ): user_groups_aggregate!
+}
+
+"""
+aggregated selection of "groups"
+"""
+type groups_aggregate {
+  aggregate: groups_aggregate_fields
+  nodes: [groups!]!
+}
+
+"""
+aggregate fields of "groups"
+"""
+type groups_aggregate_fields {
+  avg: groups_avg_fields
+  count(columns: [groups_select_column!], distinct: Boolean): Int!
+  max: groups_max_fields
+  min: groups_min_fields
+  stddev: groups_stddev_fields
+  stddev_pop: groups_stddev_pop_fields
+  stddev_samp: groups_stddev_samp_fields
+  sum: groups_sum_fields
+  var_pop: groups_var_pop_fields
+  var_samp: groups_var_samp_fields
+  variance: groups_variance_fields
+}
+
+"""aggregate avg on columns"""
+type groups_avg_fields {
+  group_year: Float
+  groups_id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "groups". All fields are combined with a logical 'AND'.
+"""
+input groups_bool_exp {
+  _and: [groups_bool_exp!]
+  _not: groups_bool_exp
+  _or: [groups_bool_exp!]
+  group_name: String_comparison_exp
+  group_year: Int_comparison_exp
+  groups_id: bigint_comparison_exp
+  label: String_comparison_exp
+  user_groups: user_groups_bool_exp
+  user_groups_aggregate: user_groups_aggregate_bool_exp
+}
+
+"""
+unique or primary key constraints on table "groups"
+"""
+enum groups_constraint {
+  """
+  unique or primary key constraint on columns "groups_id"
+  """
+  groups_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "groups"
+"""
+input groups_inc_input {
+  group_year: Int
+  groups_id: bigint
+}
+
+"""
+input type for inserting data into table "groups"
+"""
+input groups_insert_input {
+  group_name: String
+  group_year: Int
+  groups_id: bigint
+  label: String
+  user_groups: user_groups_arr_rel_insert_input
+}
+
+"""aggregate max on columns"""
+type groups_max_fields {
+  group_name: String
+  group_year: Int
+  groups_id: bigint
+  label: String
+}
+
+"""aggregate min on columns"""
+type groups_min_fields {
+  group_name: String
+  group_year: Int
+  groups_id: bigint
+  label: String
+}
+
+"""
+response of any mutation on the table "groups"
+"""
+type groups_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [groups!]!
+}
+
+"""
+input type for inserting object relation for remote table "groups"
+"""
+input groups_obj_rel_insert_input {
+  data: groups_insert_input!
+
+  """upsert condition"""
+  on_conflict: groups_on_conflict
+}
+
+"""
+on_conflict condition type for table "groups"
+"""
+input groups_on_conflict {
+  constraint: groups_constraint!
+  update_columns: [groups_update_column!]! = []
+  where: groups_bool_exp
+}
+
+"""Ordering options when selecting data from "groups"."""
+input groups_order_by {
+  group_name: order_by
+  group_year: order_by
+  groups_id: order_by
+  label: order_by
+  user_groups_aggregate: user_groups_aggregate_order_by
+}
+
+"""primary key columns input for table: groups"""
+input groups_pk_columns_input {
+  groups_id: bigint!
+}
+
+"""
+select columns of table "groups"
+"""
+enum groups_select_column {
+  """column name"""
+  group_name
+
+  """column name"""
+  group_year
+
+  """column name"""
+  groups_id
+
+  """column name"""
+  label
+}
+
+"""
+input type for updating data in table "groups"
+"""
+input groups_set_input {
+  group_name: String
+  group_year: Int
+  groups_id: bigint
+  label: String
+}
+
+"""aggregate stddev on columns"""
+type groups_stddev_fields {
+  group_year: Float
+  groups_id: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type groups_stddev_pop_fields {
+  group_year: Float
+  groups_id: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type groups_stddev_samp_fields {
+  group_year: Float
+  groups_id: Float
+}
+
+"""
+Streaming cursor of the table "groups"
+"""
+input groups_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: groups_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input groups_stream_cursor_value_input {
+  group_name: String
+  group_year: Int
+  groups_id: bigint
+  label: String
+}
+
+"""aggregate sum on columns"""
+type groups_sum_fields {
+  group_year: Int
+  groups_id: bigint
+}
+
+"""
+update columns of table "groups"
+"""
+enum groups_update_column {
+  """column name"""
+  group_name
+
+  """column name"""
+  group_year
+
+  """column name"""
+  groups_id
+
+  """column name"""
+  label
+}
+
+input groups_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: groups_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: groups_set_input
+
+  """filter the rows which have to be updated"""
+  where: groups_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type groups_var_pop_fields {
+  group_year: Float
+  groups_id: Float
+}
+
+"""aggregate var_samp on columns"""
+type groups_var_samp_fields {
+  group_year: Float
+  groups_id: Float
+}
+
+"""aggregate variance on columns"""
+type groups_variance_fields {
+  group_year: Float
+  groups_id: Float
+}
+
+"""
+columns and relationships of "levels"
+"""
+type levels {
+  avatar: String
+  level_id: bigint!
+  maximum_points: float8!
+  minimum_points: float8!
+  name: String!
+}
+
+"""
+aggregated selection of "levels"
+"""
+type levels_aggregate {
+  aggregate: levels_aggregate_fields
+  nodes: [levels!]!
+}
+
+"""
+aggregate fields of "levels"
+"""
+type levels_aggregate_fields {
+  avg: levels_avg_fields
+  count(columns: [levels_select_column!], distinct: Boolean): Int!
+  max: levels_max_fields
+  min: levels_min_fields
+  stddev: levels_stddev_fields
+  stddev_pop: levels_stddev_pop_fields
+  stddev_samp: levels_stddev_samp_fields
+  sum: levels_sum_fields
+  var_pop: levels_var_pop_fields
+  var_samp: levels_var_samp_fields
+  variance: levels_variance_fields
+}
+
+"""aggregate avg on columns"""
+type levels_avg_fields {
+  level_id: Float
+  maximum_points: Float
+  minimum_points: Float
+}
+
+"""
+Boolean expression to filter rows from the table "levels". All fields are combined with a logical 'AND'.
+"""
+input levels_bool_exp {
+  _and: [levels_bool_exp!]
+  _not: levels_bool_exp
+  _or: [levels_bool_exp!]
+  avatar: String_comparison_exp
+  level_id: bigint_comparison_exp
+  maximum_points: float8_comparison_exp
+  minimum_points: float8_comparison_exp
+  name: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "levels"
+"""
+enum levels_constraint {
+  """
+  unique or primary key constraint on columns "level_id"
+  """
+  levels_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "levels"
+"""
+input levels_inc_input {
+  level_id: bigint
+  maximum_points: float8
+  minimum_points: float8
+}
+
+"""
+input type for inserting data into table "levels"
+"""
+input levels_insert_input {
+  avatar: String
+  level_id: bigint
+  maximum_points: float8
+  minimum_points: float8
+  name: String
+}
+
+"""aggregate max on columns"""
+type levels_max_fields {
+  avatar: String
+  level_id: bigint
+  maximum_points: float8
+  minimum_points: float8
+  name: String
+}
+
+"""aggregate min on columns"""
+type levels_min_fields {
+  avatar: String
+  level_id: bigint
+  maximum_points: float8
+  minimum_points: float8
+  name: String
+}
+
+"""
+response of any mutation on the table "levels"
+"""
+type levels_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [levels!]!
+}
+
+"""
+on_conflict condition type for table "levels"
+"""
+input levels_on_conflict {
+  constraint: levels_constraint!
+  update_columns: [levels_update_column!]! = []
+  where: levels_bool_exp
+}
+
+"""Ordering options when selecting data from "levels"."""
+input levels_order_by {
+  avatar: order_by
+  level_id: order_by
+  maximum_points: order_by
+  minimum_points: order_by
+  name: order_by
+}
+
+"""primary key columns input for table: levels"""
+input levels_pk_columns_input {
+  level_id: bigint!
+}
+
+"""
+select columns of table "levels"
+"""
+enum levels_select_column {
+  """column name"""
+  avatar
+
+  """column name"""
+  level_id
+
+  """column name"""
+  maximum_points
+
+  """column name"""
+  minimum_points
+
+  """column name"""
+  name
+}
+
+"""
+input type for updating data in table "levels"
+"""
+input levels_set_input {
+  avatar: String
+  level_id: bigint
+  maximum_points: float8
+  minimum_points: float8
+  name: String
+}
+
+"""aggregate stddev on columns"""
+type levels_stddev_fields {
+  level_id: Float
+  maximum_points: Float
+  minimum_points: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type levels_stddev_pop_fields {
+  level_id: Float
+  maximum_points: Float
+  minimum_points: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type levels_stddev_samp_fields {
+  level_id: Float
+  maximum_points: Float
+  minimum_points: Float
+}
+
+"""
+Streaming cursor of the table "levels"
+"""
+input levels_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: levels_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input levels_stream_cursor_value_input {
+  avatar: String
+  level_id: bigint
+  maximum_points: float8
+  minimum_points: float8
+  name: String
+}
+
+"""aggregate sum on columns"""
+type levels_sum_fields {
+  level_id: bigint
+  maximum_points: float8
+  minimum_points: float8
+}
+
+"""
+update columns of table "levels"
+"""
+enum levels_update_column {
+  """column name"""
+  avatar
+
+  """column name"""
+  level_id
+
+  """column name"""
+  maximum_points
+
+  """column name"""
+  minimum_points
+
+  """column name"""
+  name
+}
+
+input levels_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: levels_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: levels_set_input
+
+  """filter the rows which have to be updated"""
+  where: levels_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type levels_var_pop_fields {
+  level_id: Float
+  maximum_points: Float
+  minimum_points: Float
+}
+
+"""aggregate var_samp on columns"""
+type levels_var_samp_fields {
+  level_id: Float
+  maximum_points: Float
+  minimum_points: Float
+}
+
+"""aggregate variance on columns"""
+type levels_variance_fields {
+  level_id: Float
+  maximum_points: Float
+  minimum_points: Float
+}
+
+"""mutation root"""
+type mutation_root {
+  createBonus(input: CreateBonusInput!): Bonus
+
+  """
+  delete data from the table: "bonuses"
+  """
+  delete_bonuses(
+    """filter the rows which have to be deleted"""
+    where: bonuses_bool_exp!
+  ): bonuses_mutation_response
+
+  """
+  delete single row from the table: "bonuses"
+  """
+  delete_bonuses_by_pk(bonus_id: bigint!): bonuses
+
+  """
+  delete data from the table: "categories"
+  """
+  delete_categories(
+    """filter the rows which have to be deleted"""
+    where: categories_bool_exp!
+  ): categories_mutation_response
+
+  """
+  delete single row from the table: "categories"
+  """
+  delete_categories_by_pk(category_id: bigint!): categories
+
+  """
+  delete data from the table: "chest_award"
+  """
+  delete_chest_award(
+    """filter the rows which have to be deleted"""
+    where: chest_award_bool_exp!
+  ): chest_award_mutation_response
+
+  """
+  delete single row from the table: "chest_award"
+  """
+  delete_chest_award_by_pk(award_id: bigint!): chest_award
+
+  """
+  delete data from the table: "chest_history"
+  """
+  delete_chest_history(
+    """filter the rows which have to be deleted"""
+    where: chest_history_bool_exp!
+  ): chest_history_mutation_response
+
+  """
+  delete single row from the table: "chest_history"
+  """
+  delete_chest_history_by_pk(chest_history_id: bigint!): chest_history
+
+  """
+  delete data from the table: "chests"
+  """
+  delete_chests(
+    """filter the rows which have to be deleted"""
+    where: chests_bool_exp!
+  ): chests_mutation_response
+
+  """
+  delete single row from the table: "chests"
+  """
+  delete_chests_by_pk(chest_id: bigint!): chests
+
+  """
+  delete data from the table: "flyway_schema_history"
+  """
+  delete_flyway_schema_history(
+    """filter the rows which have to be deleted"""
+    where: flyway_schema_history_bool_exp!
+  ): flyway_schema_history_mutation_response
+
+  """
+  delete single row from the table: "flyway_schema_history"
+  """
+  delete_flyway_schema_history_by_pk(installed_rank: Int!): flyway_schema_history
+
+  """
+  delete data from the table: "groups"
+  """
+  delete_groups(
+    """filter the rows which have to be deleted"""
+    where: groups_bool_exp!
+  ): groups_mutation_response
+
+  """
+  delete single row from the table: "groups"
+  """
+  delete_groups_by_pk(groups_id: bigint!): groups
+
+  """
+  delete data from the table: "levels"
+  """
+  delete_levels(
+    """filter the rows which have to be deleted"""
+    where: levels_bool_exp!
+  ): levels_mutation_response
+
+  """
+  delete single row from the table: "levels"
+  """
+  delete_levels_by_pk(level_id: bigint!): levels
+
+  """
+  delete data from the table: "points"
+  """
+  delete_points(
+    """filter the rows which have to be deleted"""
+    where: points_bool_exp!
+  ): points_mutation_response
+
+  """
+  delete single row from the table: "points"
+  """
+  delete_points_by_pk(points_id: bigint!): points
+
+  """
+  delete data from the table: "subcategories"
+  """
+  delete_subcategories(
+    """filter the rows which have to be deleted"""
+    where: subcategories_bool_exp!
+  ): subcategories_mutation_response
+
+  """
+  delete single row from the table: "subcategories"
+  """
+  delete_subcategories_by_pk(subcategory_id: bigint!): subcategories
+
+  """
+  delete data from the table: "user_groups"
+  """
+  delete_user_groups(
+    """filter the rows which have to be deleted"""
+    where: user_groups_bool_exp!
+  ): user_groups_mutation_response
+
+  """
+  delete single row from the table: "user_groups"
+  """
+  delete_user_groups_by_pk(group_id: bigint!, user_id: bigint!): user_groups
+
+  """
+  delete data from the table: "users"
+  """
+  delete_users(
+    """filter the rows which have to be deleted"""
+    where: users_bool_exp!
+  ): users_mutation_response
+
+  """
+  delete single row from the table: "users"
+  """
+  delete_users_by_pk(user_id: bigint!): users
+
+  """
+  insert data into the table: "bonuses"
+  """
+  insert_bonuses(
+    """the rows to be inserted"""
+    objects: [bonuses_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: bonuses_on_conflict
+  ): bonuses_mutation_response
+
+  """
+  insert a single row into the table: "bonuses"
+  """
+  insert_bonuses_one(
+    """the row to be inserted"""
+    object: bonuses_insert_input!
+
+    """upsert condition"""
+    on_conflict: bonuses_on_conflict
+  ): bonuses
+
+  """
+  insert data into the table: "categories"
+  """
+  insert_categories(
+    """the rows to be inserted"""
+    objects: [categories_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: categories_on_conflict
+  ): categories_mutation_response
+
+  """
+  insert a single row into the table: "categories"
+  """
+  insert_categories_one(
+    """the row to be inserted"""
+    object: categories_insert_input!
+
+    """upsert condition"""
+    on_conflict: categories_on_conflict
+  ): categories
+
+  """
+  insert data into the table: "chest_award"
+  """
+  insert_chest_award(
+    """the rows to be inserted"""
+    objects: [chest_award_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: chest_award_on_conflict
+  ): chest_award_mutation_response
+
+  """
+  insert a single row into the table: "chest_award"
+  """
+  insert_chest_award_one(
+    """the row to be inserted"""
+    object: chest_award_insert_input!
+
+    """upsert condition"""
+    on_conflict: chest_award_on_conflict
+  ): chest_award
+
+  """
+  insert data into the table: "chest_history"
+  """
+  insert_chest_history(
+    """the rows to be inserted"""
+    objects: [chest_history_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: chest_history_on_conflict
+  ): chest_history_mutation_response
+
+  """
+  insert a single row into the table: "chest_history"
+  """
+  insert_chest_history_one(
+    """the row to be inserted"""
+    object: chest_history_insert_input!
+
+    """upsert condition"""
+    on_conflict: chest_history_on_conflict
+  ): chest_history
+
+  """
+  insert data into the table: "chests"
+  """
+  insert_chests(
+    """the rows to be inserted"""
+    objects: [chests_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: chests_on_conflict
+  ): chests_mutation_response
+
+  """
+  insert a single row into the table: "chests"
+  """
+  insert_chests_one(
+    """the row to be inserted"""
+    object: chests_insert_input!
+
+    """upsert condition"""
+    on_conflict: chests_on_conflict
+  ): chests
+
+  """
+  insert data into the table: "flyway_schema_history"
+  """
+  insert_flyway_schema_history(
+    """the rows to be inserted"""
+    objects: [flyway_schema_history_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: flyway_schema_history_on_conflict
+  ): flyway_schema_history_mutation_response
+
+  """
+  insert a single row into the table: "flyway_schema_history"
+  """
+  insert_flyway_schema_history_one(
+    """the row to be inserted"""
+    object: flyway_schema_history_insert_input!
+
+    """upsert condition"""
+    on_conflict: flyway_schema_history_on_conflict
+  ): flyway_schema_history
+
+  """
+  insert data into the table: "groups"
+  """
+  insert_groups(
+    """the rows to be inserted"""
+    objects: [groups_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: groups_on_conflict
+  ): groups_mutation_response
+
+  """
+  insert a single row into the table: "groups"
+  """
+  insert_groups_one(
+    """the row to be inserted"""
+    object: groups_insert_input!
+
+    """upsert condition"""
+    on_conflict: groups_on_conflict
+  ): groups
+
+  """
+  insert data into the table: "levels"
+  """
+  insert_levels(
+    """the rows to be inserted"""
+    objects: [levels_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: levels_on_conflict
+  ): levels_mutation_response
+
+  """
+  insert a single row into the table: "levels"
+  """
+  insert_levels_one(
+    """the row to be inserted"""
+    object: levels_insert_input!
+
+    """upsert condition"""
+    on_conflict: levels_on_conflict
+  ): levels
+
+  """
+  insert data into the table: "points"
+  """
+  insert_points(
+    """the rows to be inserted"""
+    objects: [points_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: points_on_conflict
+  ): points_mutation_response
+
+  """
+  insert a single row into the table: "points"
+  """
+  insert_points_one(
+    """the row to be inserted"""
+    object: points_insert_input!
+
+    """upsert condition"""
+    on_conflict: points_on_conflict
+  ): points
+
+  """
+  insert data into the table: "subcategories"
+  """
+  insert_subcategories(
+    """the rows to be inserted"""
+    objects: [subcategories_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: subcategories_on_conflict
+  ): subcategories_mutation_response
+
+  """
+  insert a single row into the table: "subcategories"
+  """
+  insert_subcategories_one(
+    """the row to be inserted"""
+    object: subcategories_insert_input!
+
+    """upsert condition"""
+    on_conflict: subcategories_on_conflict
+  ): subcategories
+
+  """
+  insert data into the table: "user_groups"
+  """
+  insert_user_groups(
+    """the rows to be inserted"""
+    objects: [user_groups_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: user_groups_on_conflict
+  ): user_groups_mutation_response
+
+  """
+  insert a single row into the table: "user_groups"
+  """
+  insert_user_groups_one(
+    """the row to be inserted"""
+    object: user_groups_insert_input!
+
+    """upsert condition"""
+    on_conflict: user_groups_on_conflict
+  ): user_groups
+
+  """
+  insert data into the table: "users"
+  """
+  insert_users(
+    """the rows to be inserted"""
+    objects: [users_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: users_on_conflict
+  ): users_mutation_response
+
+  """
+  insert a single row into the table: "users"
+  """
+  insert_users_one(
+    """the row to be inserted"""
+    object: users_insert_input!
+
+    """upsert condition"""
+    on_conflict: users_on_conflict
+  ): users
+
+  """
+  update data of the table: "bonuses"
+  """
+  update_bonuses(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: bonuses_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: bonuses_set_input
+
+    """filter the rows which have to be updated"""
+    where: bonuses_bool_exp!
+  ): bonuses_mutation_response
+
+  """
+  update single row of the table: "bonuses"
+  """
+  update_bonuses_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: bonuses_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: bonuses_set_input
+    pk_columns: bonuses_pk_columns_input!
+  ): bonuses
+
+  """
+  update multiples rows of table: "bonuses"
+  """
+  update_bonuses_many(
+    """updates to execute, in order"""
+    updates: [bonuses_updates!]!
+  ): [bonuses_mutation_response]
+
+  """
+  update data of the table: "categories"
+  """
+  update_categories(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: categories_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: categories_set_input
+
+    """filter the rows which have to be updated"""
+    where: categories_bool_exp!
+  ): categories_mutation_response
+
+  """
+  update single row of the table: "categories"
+  """
+  update_categories_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: categories_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: categories_set_input
+    pk_columns: categories_pk_columns_input!
+  ): categories
+
+  """
+  update multiples rows of table: "categories"
+  """
+  update_categories_many(
+    """updates to execute, in order"""
+    updates: [categories_updates!]!
+  ): [categories_mutation_response]
+
+  """
+  update data of the table: "chest_award"
+  """
+  update_chest_award(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: chest_award_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: chest_award_set_input
+
+    """filter the rows which have to be updated"""
+    where: chest_award_bool_exp!
+  ): chest_award_mutation_response
+
+  """
+  update single row of the table: "chest_award"
+  """
+  update_chest_award_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: chest_award_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: chest_award_set_input
+    pk_columns: chest_award_pk_columns_input!
+  ): chest_award
+
+  """
+  update multiples rows of table: "chest_award"
+  """
+  update_chest_award_many(
+    """updates to execute, in order"""
+    updates: [chest_award_updates!]!
+  ): [chest_award_mutation_response]
+
+  """
+  update data of the table: "chest_history"
+  """
+  update_chest_history(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: chest_history_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: chest_history_set_input
+
+    """filter the rows which have to be updated"""
+    where: chest_history_bool_exp!
+  ): chest_history_mutation_response
+
+  """
+  update single row of the table: "chest_history"
+  """
+  update_chest_history_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: chest_history_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: chest_history_set_input
+    pk_columns: chest_history_pk_columns_input!
+  ): chest_history
+
+  """
+  update multiples rows of table: "chest_history"
+  """
+  update_chest_history_many(
+    """updates to execute, in order"""
+    updates: [chest_history_updates!]!
+  ): [chest_history_mutation_response]
+
+  """
+  update data of the table: "chests"
+  """
+  update_chests(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: chests_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: chests_set_input
+
+    """filter the rows which have to be updated"""
+    where: chests_bool_exp!
+  ): chests_mutation_response
+
+  """
+  update single row of the table: "chests"
+  """
+  update_chests_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: chests_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: chests_set_input
+    pk_columns: chests_pk_columns_input!
+  ): chests
+
+  """
+  update multiples rows of table: "chests"
+  """
+  update_chests_many(
+    """updates to execute, in order"""
+    updates: [chests_updates!]!
+  ): [chests_mutation_response]
+
+  """
+  update data of the table: "flyway_schema_history"
+  """
+  update_flyway_schema_history(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: flyway_schema_history_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: flyway_schema_history_set_input
+
+    """filter the rows which have to be updated"""
+    where: flyway_schema_history_bool_exp!
+  ): flyway_schema_history_mutation_response
+
+  """
+  update single row of the table: "flyway_schema_history"
+  """
+  update_flyway_schema_history_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: flyway_schema_history_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: flyway_schema_history_set_input
+    pk_columns: flyway_schema_history_pk_columns_input!
+  ): flyway_schema_history
+
+  """
+  update multiples rows of table: "flyway_schema_history"
+  """
+  update_flyway_schema_history_many(
+    """updates to execute, in order"""
+    updates: [flyway_schema_history_updates!]!
+  ): [flyway_schema_history_mutation_response]
+
+  """
+  update data of the table: "groups"
+  """
+  update_groups(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: groups_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: groups_set_input
+
+    """filter the rows which have to be updated"""
+    where: groups_bool_exp!
+  ): groups_mutation_response
+
+  """
+  update single row of the table: "groups"
+  """
+  update_groups_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: groups_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: groups_set_input
+    pk_columns: groups_pk_columns_input!
+  ): groups
+
+  """
+  update multiples rows of table: "groups"
+  """
+  update_groups_many(
+    """updates to execute, in order"""
+    updates: [groups_updates!]!
+  ): [groups_mutation_response]
+
+  """
+  update data of the table: "levels"
+  """
+  update_levels(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: levels_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: levels_set_input
+
+    """filter the rows which have to be updated"""
+    where: levels_bool_exp!
+  ): levels_mutation_response
+
+  """
+  update single row of the table: "levels"
+  """
+  update_levels_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: levels_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: levels_set_input
+    pk_columns: levels_pk_columns_input!
+  ): levels
+
+  """
+  update multiples rows of table: "levels"
+  """
+  update_levels_many(
+    """updates to execute, in order"""
+    updates: [levels_updates!]!
+  ): [levels_mutation_response]
+
+  """
+  update data of the table: "points"
+  """
+  update_points(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: points_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: points_set_input
+
+    """filter the rows which have to be updated"""
+    where: points_bool_exp!
+  ): points_mutation_response
+
+  """
+  update single row of the table: "points"
+  """
+  update_points_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: points_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: points_set_input
+    pk_columns: points_pk_columns_input!
+  ): points
+
+  """
+  update multiples rows of table: "points"
+  """
+  update_points_many(
+    """updates to execute, in order"""
+    updates: [points_updates!]!
+  ): [points_mutation_response]
+
+  """
+  update data of the table: "subcategories"
+  """
+  update_subcategories(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: subcategories_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: subcategories_set_input
+
+    """filter the rows which have to be updated"""
+    where: subcategories_bool_exp!
+  ): subcategories_mutation_response
+
+  """
+  update single row of the table: "subcategories"
+  """
+  update_subcategories_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: subcategories_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: subcategories_set_input
+    pk_columns: subcategories_pk_columns_input!
+  ): subcategories
+
+  """
+  update multiples rows of table: "subcategories"
+  """
+  update_subcategories_many(
+    """updates to execute, in order"""
+    updates: [subcategories_updates!]!
+  ): [subcategories_mutation_response]
+
+  """
+  update data of the table: "user_groups"
+  """
+  update_user_groups(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: user_groups_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: user_groups_set_input
+
+    """filter the rows which have to be updated"""
+    where: user_groups_bool_exp!
+  ): user_groups_mutation_response
+
+  """
+  update single row of the table: "user_groups"
+  """
+  update_user_groups_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: user_groups_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: user_groups_set_input
+    pk_columns: user_groups_pk_columns_input!
+  ): user_groups
+
+  """
+  update multiples rows of table: "user_groups"
+  """
+  update_user_groups_many(
+    """updates to execute, in order"""
+    updates: [user_groups_updates!]!
+  ): [user_groups_mutation_response]
+
+  """
+  update data of the table: "users"
+  """
+  update_users(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: users_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: users_set_input
+
+    """filter the rows which have to be updated"""
+    where: users_bool_exp!
+  ): users_mutation_response
+
+  """
+  update single row of the table: "users"
+  """
+  update_users_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: users_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: users_set_input
+    pk_columns: users_pk_columns_input!
+  ): users
+
+  """
+  update multiples rows of table: "users"
+  """
+  update_users_many(
+    """updates to execute, in order"""
+    updates: [users_updates!]!
+  ): [users_mutation_response]
+}
+
+"""column ordering options"""
+enum order_by {
+  """in ascending order, nulls last"""
+  asc
+
+  """in ascending order, nulls first"""
+  asc_nulls_first
+
+  """in ascending order, nulls last"""
+  asc_nulls_last
+
+  """in descending order, nulls first"""
+  desc
+
+  """in descending order, nulls first"""
+  desc_nulls_first
+
+  """in descending order, nulls last"""
+  desc_nulls_last
+}
+
+"""
+columns and relationships of "points"
+"""
+type points {
+  """An array relationship"""
+  bonuses(
+    """distinct select on columns"""
+    distinct_on: [bonuses_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [bonuses_order_by!]
+
+    """filter the rows returned"""
+    where: bonuses_bool_exp
+  ): [bonuses!]!
+
+  """An aggregate relationship"""
+  bonuses_aggregate(
+    """distinct select on columns"""
+    distinct_on: [bonuses_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [bonuses_order_by!]
+
+    """filter the rows returned"""
+    where: bonuses_bool_exp
+  ): bonuses_aggregate!
+  how_many: bigint!
+  points_id: bigint!
+  student_id: bigint!
+
+  """An object relationship"""
+  subcategory: subcategories!
+  subcategory_id: bigint!
+  teacher_id: bigint!
+
+  """An object relationship"""
+  user: users!
+
+  """An object relationship"""
+  userByTeacherId: users!
+}
+
+"""
+aggregated selection of "points"
+"""
+type points_aggregate {
+  aggregate: points_aggregate_fields
+  nodes: [points!]!
+}
+
+input points_aggregate_bool_exp {
+  count: points_aggregate_bool_exp_count
+}
+
+input points_aggregate_bool_exp_count {
+  arguments: [points_select_column!]
+  distinct: Boolean
+  filter: points_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"""
+aggregate fields of "points"
+"""
+type points_aggregate_fields {
+  avg: points_avg_fields
+  count(columns: [points_select_column!], distinct: Boolean): Int!
+  max: points_max_fields
+  min: points_min_fields
+  stddev: points_stddev_fields
+  stddev_pop: points_stddev_pop_fields
+  stddev_samp: points_stddev_samp_fields
+  sum: points_sum_fields
+  var_pop: points_var_pop_fields
+  var_samp: points_var_samp_fields
+  variance: points_variance_fields
+}
+
+"""
+order by aggregate values of table "points"
+"""
+input points_aggregate_order_by {
+  avg: points_avg_order_by
+  count: order_by
+  max: points_max_order_by
+  min: points_min_order_by
+  stddev: points_stddev_order_by
+  stddev_pop: points_stddev_pop_order_by
+  stddev_samp: points_stddev_samp_order_by
+  sum: points_sum_order_by
+  var_pop: points_var_pop_order_by
+  var_samp: points_var_samp_order_by
+  variance: points_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "points"
+"""
+input points_arr_rel_insert_input {
+  data: [points_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: points_on_conflict
+}
+
+"""aggregate avg on columns"""
+type points_avg_fields {
+  how_many: Float
+  points_id: Float
+  student_id: Float
+  subcategory_id: Float
+  teacher_id: Float
+}
+
+"""
+order by avg() on columns of table "points"
+"""
+input points_avg_order_by {
+  how_many: order_by
+  points_id: order_by
+  student_id: order_by
+  subcategory_id: order_by
+  teacher_id: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "points". All fields are combined with a logical 'AND'.
+"""
+input points_bool_exp {
+  _and: [points_bool_exp!]
+  _not: points_bool_exp
+  _or: [points_bool_exp!]
+  bonuses: bonuses_bool_exp
+  bonuses_aggregate: bonuses_aggregate_bool_exp
+  how_many: bigint_comparison_exp
+  points_id: bigint_comparison_exp
+  student_id: bigint_comparison_exp
+  subcategory: subcategories_bool_exp
+  subcategory_id: bigint_comparison_exp
+  teacher_id: bigint_comparison_exp
+  user: users_bool_exp
+  userByTeacherId: users_bool_exp
+}
+
+"""
+unique or primary key constraints on table "points"
+"""
+enum points_constraint {
+  """
+  unique or primary key constraint on columns "points_id"
+  """
+  points_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "points"
+"""
+input points_inc_input {
+  how_many: bigint
+  points_id: bigint
+  student_id: bigint
+  subcategory_id: bigint
+  teacher_id: bigint
+}
+
+"""
+input type for inserting data into table "points"
+"""
+input points_insert_input {
+  bonuses: bonuses_arr_rel_insert_input
+  how_many: bigint
+  points_id: bigint
+  student_id: bigint
+  subcategory: subcategories_obj_rel_insert_input
+  subcategory_id: bigint
+  teacher_id: bigint
+  user: users_obj_rel_insert_input
+  userByTeacherId: users_obj_rel_insert_input
+}
+
+"""aggregate max on columns"""
+type points_max_fields {
+  how_many: bigint
+  points_id: bigint
+  student_id: bigint
+  subcategory_id: bigint
+  teacher_id: bigint
+}
+
+"""
+order by max() on columns of table "points"
+"""
+input points_max_order_by {
+  how_many: order_by
+  points_id: order_by
+  student_id: order_by
+  subcategory_id: order_by
+  teacher_id: order_by
+}
+
+"""aggregate min on columns"""
+type points_min_fields {
+  how_many: bigint
+  points_id: bigint
+  student_id: bigint
+  subcategory_id: bigint
+  teacher_id: bigint
+}
+
+"""
+order by min() on columns of table "points"
+"""
+input points_min_order_by {
+  how_many: order_by
+  points_id: order_by
+  student_id: order_by
+  subcategory_id: order_by
+  teacher_id: order_by
+}
+
+"""
+response of any mutation on the table "points"
+"""
+type points_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [points!]!
+}
+
+"""
+input type for inserting object relation for remote table "points"
+"""
+input points_obj_rel_insert_input {
+  data: points_insert_input!
+
+  """upsert condition"""
+  on_conflict: points_on_conflict
+}
+
+"""
+on_conflict condition type for table "points"
+"""
+input points_on_conflict {
+  constraint: points_constraint!
+  update_columns: [points_update_column!]! = []
+  where: points_bool_exp
+}
+
+"""Ordering options when selecting data from "points"."""
+input points_order_by {
+  bonuses_aggregate: bonuses_aggregate_order_by
+  how_many: order_by
+  points_id: order_by
+  student_id: order_by
+  subcategory: subcategories_order_by
+  subcategory_id: order_by
+  teacher_id: order_by
+  user: users_order_by
+  userByTeacherId: users_order_by
+}
+
+"""primary key columns input for table: points"""
+input points_pk_columns_input {
+  points_id: bigint!
+}
+
+"""
+select columns of table "points"
+"""
+enum points_select_column {
+  """column name"""
+  how_many
+
+  """column name"""
+  points_id
+
+  """column name"""
+  student_id
+
+  """column name"""
+  subcategory_id
+
+  """column name"""
+  teacher_id
+}
+
+"""
+input type for updating data in table "points"
+"""
+input points_set_input {
+  how_many: bigint
+  points_id: bigint
+  student_id: bigint
+  subcategory_id: bigint
+  teacher_id: bigint
+}
+
+"""aggregate stddev on columns"""
+type points_stddev_fields {
+  how_many: Float
+  points_id: Float
+  student_id: Float
+  subcategory_id: Float
+  teacher_id: Float
+}
+
+"""
+order by stddev() on columns of table "points"
+"""
+input points_stddev_order_by {
+  how_many: order_by
+  points_id: order_by
+  student_id: order_by
+  subcategory_id: order_by
+  teacher_id: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type points_stddev_pop_fields {
+  how_many: Float
+  points_id: Float
+  student_id: Float
+  subcategory_id: Float
+  teacher_id: Float
+}
+
+"""
+order by stddev_pop() on columns of table "points"
+"""
+input points_stddev_pop_order_by {
+  how_many: order_by
+  points_id: order_by
+  student_id: order_by
+  subcategory_id: order_by
+  teacher_id: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type points_stddev_samp_fields {
+  how_many: Float
+  points_id: Float
+  student_id: Float
+  subcategory_id: Float
+  teacher_id: Float
+}
+
+"""
+order by stddev_samp() on columns of table "points"
+"""
+input points_stddev_samp_order_by {
+  how_many: order_by
+  points_id: order_by
+  student_id: order_by
+  subcategory_id: order_by
+  teacher_id: order_by
+}
+
+"""
+Streaming cursor of the table "points"
+"""
+input points_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: points_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input points_stream_cursor_value_input {
+  how_many: bigint
+  points_id: bigint
+  student_id: bigint
+  subcategory_id: bigint
+  teacher_id: bigint
+}
+
+"""aggregate sum on columns"""
+type points_sum_fields {
+  how_many: bigint
+  points_id: bigint
+  student_id: bigint
+  subcategory_id: bigint
+  teacher_id: bigint
+}
+
+"""
+order by sum() on columns of table "points"
+"""
+input points_sum_order_by {
+  how_many: order_by
+  points_id: order_by
+  student_id: order_by
+  subcategory_id: order_by
+  teacher_id: order_by
+}
+
+"""
+update columns of table "points"
+"""
+enum points_update_column {
+  """column name"""
+  how_many
+
+  """column name"""
+  points_id
+
+  """column name"""
+  student_id
+
+  """column name"""
+  subcategory_id
+
+  """column name"""
+  teacher_id
+}
+
+input points_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: points_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: points_set_input
+
+  """filter the rows which have to be updated"""
+  where: points_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type points_var_pop_fields {
+  how_many: Float
+  points_id: Float
+  student_id: Float
+  subcategory_id: Float
+  teacher_id: Float
+}
+
+"""
+order by var_pop() on columns of table "points"
+"""
+input points_var_pop_order_by {
+  how_many: order_by
+  points_id: order_by
+  student_id: order_by
+  subcategory_id: order_by
+  teacher_id: order_by
+}
+
+"""aggregate var_samp on columns"""
+type points_var_samp_fields {
+  how_many: Float
+  points_id: Float
+  student_id: Float
+  subcategory_id: Float
+  teacher_id: Float
+}
+
+"""
+order by var_samp() on columns of table "points"
+"""
+input points_var_samp_order_by {
+  how_many: order_by
+  points_id: order_by
+  student_id: order_by
+  subcategory_id: order_by
+  teacher_id: order_by
+}
+
+"""aggregate variance on columns"""
+type points_variance_fields {
+  how_many: Float
+  points_id: Float
+  student_id: Float
+  subcategory_id: Float
+  teacher_id: Float
+}
+
+"""
+order by variance() on columns of table "points"
+"""
+input points_variance_order_by {
+  how_many: order_by
+  points_id: order_by
+  student_id: order_by
+  subcategory_id: order_by
+  teacher_id: order_by
+}
+
+type query_root {
+  _service: _Service!
+
+  """An array relationship"""
+  bonuses(
+    """distinct select on columns"""
+    distinct_on: [bonuses_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [bonuses_order_by!]
+
+    """filter the rows returned"""
+    where: bonuses_bool_exp
+  ): [bonuses!]!
+
+  """An aggregate relationship"""
+  bonuses_aggregate(
+    """distinct select on columns"""
+    distinct_on: [bonuses_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [bonuses_order_by!]
+
+    """filter the rows returned"""
+    where: bonuses_bool_exp
+  ): bonuses_aggregate!
+
+  """fetch data from the table: "bonuses" using primary key columns"""
+  bonuses_by_pk(bonus_id: bigint!): bonuses
+
+  """
+  fetch data from the table: "categories"
+  """
+  categories(
+    """distinct select on columns"""
+    distinct_on: [categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [categories_order_by!]
+
+    """filter the rows returned"""
+    where: categories_bool_exp
+  ): [categories!]!
+
+  """
+  fetch aggregated fields from the table: "categories"
+  """
+  categories_aggregate(
+    """distinct select on columns"""
+    distinct_on: [categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [categories_order_by!]
+
+    """filter the rows returned"""
+    where: categories_bool_exp
+  ): categories_aggregate!
+
+  """fetch data from the table: "categories" using primary key columns"""
+  categories_by_pk(category_id: bigint!): categories
+
+  """
+  fetch data from the table: "chest_award"
+  """
+  chest_award(
+    """distinct select on columns"""
+    distinct_on: [chest_award_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chest_award_order_by!]
+
+    """filter the rows returned"""
+    where: chest_award_bool_exp
+  ): [chest_award!]!
+
+  """
+  fetch aggregated fields from the table: "chest_award"
+  """
+  chest_award_aggregate(
+    """distinct select on columns"""
+    distinct_on: [chest_award_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chest_award_order_by!]
+
+    """filter the rows returned"""
+    where: chest_award_bool_exp
+  ): chest_award_aggregate!
+
+  """fetch data from the table: "chest_award" using primary key columns"""
+  chest_award_by_pk(award_id: bigint!): chest_award
+
+  """
+  fetch data from the table: "chest_history"
+  """
+  chest_history(
+    """distinct select on columns"""
+    distinct_on: [chest_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chest_history_order_by!]
+
+    """filter the rows returned"""
+    where: chest_history_bool_exp
+  ): [chest_history!]!
+
+  """
+  fetch aggregated fields from the table: "chest_history"
+  """
+  chest_history_aggregate(
+    """distinct select on columns"""
+    distinct_on: [chest_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chest_history_order_by!]
+
+    """filter the rows returned"""
+    where: chest_history_bool_exp
+  ): chest_history_aggregate!
+
+  """fetch data from the table: "chest_history" using primary key columns"""
+  chest_history_by_pk(chest_history_id: bigint!): chest_history
+
+  """
+  fetch data from the table: "chests"
+  """
+  chests(
+    """distinct select on columns"""
+    distinct_on: [chests_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chests_order_by!]
+
+    """filter the rows returned"""
+    where: chests_bool_exp
+  ): [chests!]!
+
+  """
+  fetch aggregated fields from the table: "chests"
+  """
+  chests_aggregate(
+    """distinct select on columns"""
+    distinct_on: [chests_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chests_order_by!]
+
+    """filter the rows returned"""
+    where: chests_bool_exp
+  ): chests_aggregate!
+
+  """fetch data from the table: "chests" using primary key columns"""
+  chests_by_pk(chest_id: bigint!): chests
+
+  """
+  fetch data from the table: "flyway_schema_history"
+  """
+  flyway_schema_history(
+    """distinct select on columns"""
+    distinct_on: [flyway_schema_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [flyway_schema_history_order_by!]
+
+    """filter the rows returned"""
+    where: flyway_schema_history_bool_exp
+  ): [flyway_schema_history!]!
+
+  """
+  fetch aggregated fields from the table: "flyway_schema_history"
+  """
+  flyway_schema_history_aggregate(
+    """distinct select on columns"""
+    distinct_on: [flyway_schema_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [flyway_schema_history_order_by!]
+
+    """filter the rows returned"""
+    where: flyway_schema_history_bool_exp
+  ): flyway_schema_history_aggregate!
+
+  """
+  fetch data from the table: "flyway_schema_history" using primary key columns
+  """
+  flyway_schema_history_by_pk(installed_rank: Int!): flyway_schema_history
+
+  """
+  fetch data from the table: "groups"
+  """
+  groups(
+    """distinct select on columns"""
+    distinct_on: [groups_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [groups_order_by!]
+
+    """filter the rows returned"""
+    where: groups_bool_exp
+  ): [groups!]!
+
+  """
+  fetch aggregated fields from the table: "groups"
+  """
+  groups_aggregate(
+    """distinct select on columns"""
+    distinct_on: [groups_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [groups_order_by!]
+
+    """filter the rows returned"""
+    where: groups_bool_exp
+  ): groups_aggregate!
+
+  """fetch data from the table: "groups" using primary key columns"""
+  groups_by_pk(groups_id: bigint!): groups
+
+  """
+  fetch data from the table: "levels"
+  """
+  levels(
+    """distinct select on columns"""
+    distinct_on: [levels_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [levels_order_by!]
+
+    """filter the rows returned"""
+    where: levels_bool_exp
+  ): [levels!]!
+
+  """
+  fetch aggregated fields from the table: "levels"
+  """
+  levels_aggregate(
+    """distinct select on columns"""
+    distinct_on: [levels_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [levels_order_by!]
+
+    """filter the rows returned"""
+    where: levels_bool_exp
+  ): levels_aggregate!
+
+  """fetch data from the table: "levels" using primary key columns"""
+  levels_by_pk(level_id: bigint!): levels
+
+  """An array relationship"""
+  points(
+    """distinct select on columns"""
+    distinct_on: [points_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [points_order_by!]
+
+    """filter the rows returned"""
+    where: points_bool_exp
+  ): [points!]!
+
+  """An aggregate relationship"""
+  points_aggregate(
+    """distinct select on columns"""
+    distinct_on: [points_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [points_order_by!]
+
+    """filter the rows returned"""
+    where: points_bool_exp
+  ): points_aggregate!
+
+  """fetch data from the table: "points" using primary key columns"""
+  points_by_pk(points_id: bigint!): points
+
+  """An array relationship"""
+  subcategories(
+    """distinct select on columns"""
+    distinct_on: [subcategories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [subcategories_order_by!]
+
+    """filter the rows returned"""
+    where: subcategories_bool_exp
+  ): [subcategories!]!
+
+  """An aggregate relationship"""
+  subcategories_aggregate(
+    """distinct select on columns"""
+    distinct_on: [subcategories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [subcategories_order_by!]
+
+    """filter the rows returned"""
+    where: subcategories_bool_exp
+  ): subcategories_aggregate!
+
+  """fetch data from the table: "subcategories" using primary key columns"""
+  subcategories_by_pk(subcategory_id: bigint!): subcategories
+
+  """An array relationship"""
+  user_groups(
+    """distinct select on columns"""
+    distinct_on: [user_groups_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_groups_order_by!]
+
+    """filter the rows returned"""
+    where: user_groups_bool_exp
+  ): [user_groups!]!
+
+  """An aggregate relationship"""
+  user_groups_aggregate(
+    """distinct select on columns"""
+    distinct_on: [user_groups_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_groups_order_by!]
+
+    """filter the rows returned"""
+    where: user_groups_bool_exp
+  ): user_groups_aggregate!
+
+  """fetch data from the table: "user_groups" using primary key columns"""
+  user_groups_by_pk(group_id: bigint!, user_id: bigint!): user_groups
+
+  """
+  fetch data from the table: "users"
+  """
+  users(
+    """distinct select on columns"""
+    distinct_on: [users_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [users_order_by!]
+
+    """filter the rows returned"""
+    where: users_bool_exp
+  ): [users!]!
+
+  """
+  fetch aggregated fields from the table: "users"
+  """
+  users_aggregate(
+    """distinct select on columns"""
+    distinct_on: [users_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [users_order_by!]
+
+    """filter the rows returned"""
+    where: users_bool_exp
+  ): users_aggregate!
+
+  """fetch data from the table: "users" using primary key columns"""
+  users_by_pk(user_id: bigint!): users
+}
+
+"""
+columns and relationships of "subcategories"
+"""
+type subcategories {
+  """An array relationship"""
+  bonuses(
+    """distinct select on columns"""
+    distinct_on: [bonuses_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [bonuses_order_by!]
+
+    """filter the rows returned"""
+    where: bonuses_bool_exp
+  ): [bonuses!]!
+
+  """An aggregate relationship"""
+  bonuses_aggregate(
+    """distinct select on columns"""
+    distinct_on: [bonuses_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [bonuses_order_by!]
+
+    """filter the rows returned"""
+    where: bonuses_bool_exp
+  ): bonuses_aggregate!
+
+  """An object relationship"""
+  category: categories!
+  category_id: bigint!
+
+  """An array relationship"""
+  chest_histories(
+    """distinct select on columns"""
+    distinct_on: [chest_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chest_history_order_by!]
+
+    """filter the rows returned"""
+    where: chest_history_bool_exp
+  ): [chest_history!]!
+
+  """An aggregate relationship"""
+  chest_histories_aggregate(
+    """distinct select on columns"""
+    distinct_on: [chest_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chest_history_order_by!]
+
+    """filter the rows returned"""
+    where: chest_history_bool_exp
+  ): chest_history_aggregate!
+
+  """An array relationship"""
+  points(
+    """distinct select on columns"""
+    distinct_on: [points_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [points_order_by!]
+
+    """filter the rows returned"""
+    where: points_bool_exp
+  ): [points!]!
+
+  """An aggregate relationship"""
+  points_aggregate(
+    """distinct select on columns"""
+    distinct_on: [points_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [points_order_by!]
+
+    """filter the rows returned"""
+    where: points_bool_exp
+  ): points_aggregate!
+  subcategory_id: bigint!
+  subcategory_name: String!
+}
+
+"""
+aggregated selection of "subcategories"
+"""
+type subcategories_aggregate {
+  aggregate: subcategories_aggregate_fields
+  nodes: [subcategories!]!
+}
+
+input subcategories_aggregate_bool_exp {
+  count: subcategories_aggregate_bool_exp_count
+}
+
+input subcategories_aggregate_bool_exp_count {
+  arguments: [subcategories_select_column!]
+  distinct: Boolean
+  filter: subcategories_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"""
+aggregate fields of "subcategories"
+"""
+type subcategories_aggregate_fields {
+  avg: subcategories_avg_fields
+  count(columns: [subcategories_select_column!], distinct: Boolean): Int!
+  max: subcategories_max_fields
+  min: subcategories_min_fields
+  stddev: subcategories_stddev_fields
+  stddev_pop: subcategories_stddev_pop_fields
+  stddev_samp: subcategories_stddev_samp_fields
+  sum: subcategories_sum_fields
+  var_pop: subcategories_var_pop_fields
+  var_samp: subcategories_var_samp_fields
+  variance: subcategories_variance_fields
+}
+
+"""
+order by aggregate values of table "subcategories"
+"""
+input subcategories_aggregate_order_by {
+  avg: subcategories_avg_order_by
+  count: order_by
+  max: subcategories_max_order_by
+  min: subcategories_min_order_by
+  stddev: subcategories_stddev_order_by
+  stddev_pop: subcategories_stddev_pop_order_by
+  stddev_samp: subcategories_stddev_samp_order_by
+  sum: subcategories_sum_order_by
+  var_pop: subcategories_var_pop_order_by
+  var_samp: subcategories_var_samp_order_by
+  variance: subcategories_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "subcategories"
+"""
+input subcategories_arr_rel_insert_input {
+  data: [subcategories_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: subcategories_on_conflict
+}
+
+"""aggregate avg on columns"""
+type subcategories_avg_fields {
+  category_id: Float
+  subcategory_id: Float
+}
+
+"""
+order by avg() on columns of table "subcategories"
+"""
+input subcategories_avg_order_by {
+  category_id: order_by
+  subcategory_id: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "subcategories". All fields are combined with a logical 'AND'.
+"""
+input subcategories_bool_exp {
+  _and: [subcategories_bool_exp!]
+  _not: subcategories_bool_exp
+  _or: [subcategories_bool_exp!]
+  bonuses: bonuses_bool_exp
+  bonuses_aggregate: bonuses_aggregate_bool_exp
+  category: categories_bool_exp
+  category_id: bigint_comparison_exp
+  chest_histories: chest_history_bool_exp
+  chest_histories_aggregate: chest_history_aggregate_bool_exp
+  points: points_bool_exp
+  points_aggregate: points_aggregate_bool_exp
+  subcategory_id: bigint_comparison_exp
+  subcategory_name: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "subcategories"
+"""
+enum subcategories_constraint {
+  """
+  unique or primary key constraint on columns "subcategory_id"
+  """
+  subcategories_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "subcategories"
+"""
+input subcategories_inc_input {
+  category_id: bigint
+  subcategory_id: bigint
+}
+
+"""
+input type for inserting data into table "subcategories"
+"""
+input subcategories_insert_input {
+  bonuses: bonuses_arr_rel_insert_input
+  category: categories_obj_rel_insert_input
+  category_id: bigint
+  chest_histories: chest_history_arr_rel_insert_input
+  points: points_arr_rel_insert_input
+  subcategory_id: bigint
+  subcategory_name: String
+}
+
+"""aggregate max on columns"""
+type subcategories_max_fields {
+  category_id: bigint
+  subcategory_id: bigint
+  subcategory_name: String
+}
+
+"""
+order by max() on columns of table "subcategories"
+"""
+input subcategories_max_order_by {
+  category_id: order_by
+  subcategory_id: order_by
+  subcategory_name: order_by
+}
+
+"""aggregate min on columns"""
+type subcategories_min_fields {
+  category_id: bigint
+  subcategory_id: bigint
+  subcategory_name: String
+}
+
+"""
+order by min() on columns of table "subcategories"
+"""
+input subcategories_min_order_by {
+  category_id: order_by
+  subcategory_id: order_by
+  subcategory_name: order_by
+}
+
+"""
+response of any mutation on the table "subcategories"
+"""
+type subcategories_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [subcategories!]!
+}
+
+"""
+input type for inserting object relation for remote table "subcategories"
+"""
+input subcategories_obj_rel_insert_input {
+  data: subcategories_insert_input!
+
+  """upsert condition"""
+  on_conflict: subcategories_on_conflict
+}
+
+"""
+on_conflict condition type for table "subcategories"
+"""
+input subcategories_on_conflict {
+  constraint: subcategories_constraint!
+  update_columns: [subcategories_update_column!]! = []
+  where: subcategories_bool_exp
+}
+
+"""Ordering options when selecting data from "subcategories"."""
+input subcategories_order_by {
+  bonuses_aggregate: bonuses_aggregate_order_by
+  category: categories_order_by
+  category_id: order_by
+  chest_histories_aggregate: chest_history_aggregate_order_by
+  points_aggregate: points_aggregate_order_by
+  subcategory_id: order_by
+  subcategory_name: order_by
+}
+
+"""primary key columns input for table: subcategories"""
+input subcategories_pk_columns_input {
+  subcategory_id: bigint!
+}
+
+"""
+select columns of table "subcategories"
+"""
+enum subcategories_select_column {
+  """column name"""
+  category_id
+
+  """column name"""
+  subcategory_id
+
+  """column name"""
+  subcategory_name
+}
+
+"""
+input type for updating data in table "subcategories"
+"""
+input subcategories_set_input {
+  category_id: bigint
+  subcategory_id: bigint
+  subcategory_name: String
+}
+
+"""aggregate stddev on columns"""
+type subcategories_stddev_fields {
+  category_id: Float
+  subcategory_id: Float
+}
+
+"""
+order by stddev() on columns of table "subcategories"
+"""
+input subcategories_stddev_order_by {
+  category_id: order_by
+  subcategory_id: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type subcategories_stddev_pop_fields {
+  category_id: Float
+  subcategory_id: Float
+}
+
+"""
+order by stddev_pop() on columns of table "subcategories"
+"""
+input subcategories_stddev_pop_order_by {
+  category_id: order_by
+  subcategory_id: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type subcategories_stddev_samp_fields {
+  category_id: Float
+  subcategory_id: Float
+}
+
+"""
+order by stddev_samp() on columns of table "subcategories"
+"""
+input subcategories_stddev_samp_order_by {
+  category_id: order_by
+  subcategory_id: order_by
+}
+
+"""
+Streaming cursor of the table "subcategories"
+"""
+input subcategories_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: subcategories_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input subcategories_stream_cursor_value_input {
+  category_id: bigint
+  subcategory_id: bigint
+  subcategory_name: String
+}
+
+"""aggregate sum on columns"""
+type subcategories_sum_fields {
+  category_id: bigint
+  subcategory_id: bigint
+}
+
+"""
+order by sum() on columns of table "subcategories"
+"""
+input subcategories_sum_order_by {
+  category_id: order_by
+  subcategory_id: order_by
+}
+
+"""
+update columns of table "subcategories"
+"""
+enum subcategories_update_column {
+  """column name"""
+  category_id
+
+  """column name"""
+  subcategory_id
+
+  """column name"""
+  subcategory_name
+}
+
+input subcategories_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: subcategories_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: subcategories_set_input
+
+  """filter the rows which have to be updated"""
+  where: subcategories_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type subcategories_var_pop_fields {
+  category_id: Float
+  subcategory_id: Float
+}
+
+"""
+order by var_pop() on columns of table "subcategories"
+"""
+input subcategories_var_pop_order_by {
+  category_id: order_by
+  subcategory_id: order_by
+}
+
+"""aggregate var_samp on columns"""
+type subcategories_var_samp_fields {
+  category_id: Float
+  subcategory_id: Float
+}
+
+"""
+order by var_samp() on columns of table "subcategories"
+"""
+input subcategories_var_samp_order_by {
+  category_id: order_by
+  subcategory_id: order_by
+}
+
+"""aggregate variance on columns"""
+type subcategories_variance_fields {
+  category_id: Float
+  subcategory_id: Float
+}
+
+"""
+order by variance() on columns of table "subcategories"
+"""
+input subcategories_variance_order_by {
+  category_id: order_by
+  subcategory_id: order_by
+}
+
+type subscription_root {
+  """An array relationship"""
+  bonuses(
+    """distinct select on columns"""
+    distinct_on: [bonuses_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [bonuses_order_by!]
+
+    """filter the rows returned"""
+    where: bonuses_bool_exp
+  ): [bonuses!]!
+
+  """An aggregate relationship"""
+  bonuses_aggregate(
+    """distinct select on columns"""
+    distinct_on: [bonuses_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [bonuses_order_by!]
+
+    """filter the rows returned"""
+    where: bonuses_bool_exp
+  ): bonuses_aggregate!
+
+  """fetch data from the table: "bonuses" using primary key columns"""
+  bonuses_by_pk(bonus_id: bigint!): bonuses
+
+  """
+  fetch data from the table in a streaming manner: "bonuses"
+  """
+  bonuses_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [bonuses_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: bonuses_bool_exp
+  ): [bonuses!]!
+
+  """
+  fetch data from the table: "categories"
+  """
+  categories(
+    """distinct select on columns"""
+    distinct_on: [categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [categories_order_by!]
+
+    """filter the rows returned"""
+    where: categories_bool_exp
+  ): [categories!]!
+
+  """
+  fetch aggregated fields from the table: "categories"
+  """
+  categories_aggregate(
+    """distinct select on columns"""
+    distinct_on: [categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [categories_order_by!]
+
+    """filter the rows returned"""
+    where: categories_bool_exp
+  ): categories_aggregate!
+
+  """fetch data from the table: "categories" using primary key columns"""
+  categories_by_pk(category_id: bigint!): categories
+
+  """
+  fetch data from the table in a streaming manner: "categories"
+  """
+  categories_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [categories_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: categories_bool_exp
+  ): [categories!]!
+
+  """
+  fetch data from the table: "chest_award"
+  """
+  chest_award(
+    """distinct select on columns"""
+    distinct_on: [chest_award_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chest_award_order_by!]
+
+    """filter the rows returned"""
+    where: chest_award_bool_exp
+  ): [chest_award!]!
+
+  """
+  fetch aggregated fields from the table: "chest_award"
+  """
+  chest_award_aggregate(
+    """distinct select on columns"""
+    distinct_on: [chest_award_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chest_award_order_by!]
+
+    """filter the rows returned"""
+    where: chest_award_bool_exp
+  ): chest_award_aggregate!
+
+  """fetch data from the table: "chest_award" using primary key columns"""
+  chest_award_by_pk(award_id: bigint!): chest_award
+
+  """
+  fetch data from the table in a streaming manner: "chest_award"
+  """
+  chest_award_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [chest_award_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: chest_award_bool_exp
+  ): [chest_award!]!
+
+  """
+  fetch data from the table: "chest_history"
+  """
+  chest_history(
+    """distinct select on columns"""
+    distinct_on: [chest_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chest_history_order_by!]
+
+    """filter the rows returned"""
+    where: chest_history_bool_exp
+  ): [chest_history!]!
+
+  """
+  fetch aggregated fields from the table: "chest_history"
+  """
+  chest_history_aggregate(
+    """distinct select on columns"""
+    distinct_on: [chest_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chest_history_order_by!]
+
+    """filter the rows returned"""
+    where: chest_history_bool_exp
+  ): chest_history_aggregate!
+
+  """fetch data from the table: "chest_history" using primary key columns"""
+  chest_history_by_pk(chest_history_id: bigint!): chest_history
+
+  """
+  fetch data from the table in a streaming manner: "chest_history"
+  """
+  chest_history_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [chest_history_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: chest_history_bool_exp
+  ): [chest_history!]!
+
+  """
+  fetch data from the table: "chests"
+  """
+  chests(
+    """distinct select on columns"""
+    distinct_on: [chests_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chests_order_by!]
+
+    """filter the rows returned"""
+    where: chests_bool_exp
+  ): [chests!]!
+
+  """
+  fetch aggregated fields from the table: "chests"
+  """
+  chests_aggregate(
+    """distinct select on columns"""
+    distinct_on: [chests_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chests_order_by!]
+
+    """filter the rows returned"""
+    where: chests_bool_exp
+  ): chests_aggregate!
+
+  """fetch data from the table: "chests" using primary key columns"""
+  chests_by_pk(chest_id: bigint!): chests
+
+  """
+  fetch data from the table in a streaming manner: "chests"
+  """
+  chests_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [chests_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: chests_bool_exp
+  ): [chests!]!
+
+  """
+  fetch data from the table: "flyway_schema_history"
+  """
+  flyway_schema_history(
+    """distinct select on columns"""
+    distinct_on: [flyway_schema_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [flyway_schema_history_order_by!]
+
+    """filter the rows returned"""
+    where: flyway_schema_history_bool_exp
+  ): [flyway_schema_history!]!
+
+  """
+  fetch aggregated fields from the table: "flyway_schema_history"
+  """
+  flyway_schema_history_aggregate(
+    """distinct select on columns"""
+    distinct_on: [flyway_schema_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [flyway_schema_history_order_by!]
+
+    """filter the rows returned"""
+    where: flyway_schema_history_bool_exp
+  ): flyway_schema_history_aggregate!
+
+  """
+  fetch data from the table: "flyway_schema_history" using primary key columns
+  """
+  flyway_schema_history_by_pk(installed_rank: Int!): flyway_schema_history
+
+  """
+  fetch data from the table in a streaming manner: "flyway_schema_history"
+  """
+  flyway_schema_history_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [flyway_schema_history_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: flyway_schema_history_bool_exp
+  ): [flyway_schema_history!]!
+
+  """
+  fetch data from the table: "groups"
+  """
+  groups(
+    """distinct select on columns"""
+    distinct_on: [groups_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [groups_order_by!]
+
+    """filter the rows returned"""
+    where: groups_bool_exp
+  ): [groups!]!
+
+  """
+  fetch aggregated fields from the table: "groups"
+  """
+  groups_aggregate(
+    """distinct select on columns"""
+    distinct_on: [groups_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [groups_order_by!]
+
+    """filter the rows returned"""
+    where: groups_bool_exp
+  ): groups_aggregate!
+
+  """fetch data from the table: "groups" using primary key columns"""
+  groups_by_pk(groups_id: bigint!): groups
+
+  """
+  fetch data from the table in a streaming manner: "groups"
+  """
+  groups_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [groups_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: groups_bool_exp
+  ): [groups!]!
+
+  """
+  fetch data from the table: "levels"
+  """
+  levels(
+    """distinct select on columns"""
+    distinct_on: [levels_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [levels_order_by!]
+
+    """filter the rows returned"""
+    where: levels_bool_exp
+  ): [levels!]!
+
+  """
+  fetch aggregated fields from the table: "levels"
+  """
+  levels_aggregate(
+    """distinct select on columns"""
+    distinct_on: [levels_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [levels_order_by!]
+
+    """filter the rows returned"""
+    where: levels_bool_exp
+  ): levels_aggregate!
+
+  """fetch data from the table: "levels" using primary key columns"""
+  levels_by_pk(level_id: bigint!): levels
+
+  """
+  fetch data from the table in a streaming manner: "levels"
+  """
+  levels_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [levels_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: levels_bool_exp
+  ): [levels!]!
+
+  """An array relationship"""
+  points(
+    """distinct select on columns"""
+    distinct_on: [points_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [points_order_by!]
+
+    """filter the rows returned"""
+    where: points_bool_exp
+  ): [points!]!
+
+  """An aggregate relationship"""
+  points_aggregate(
+    """distinct select on columns"""
+    distinct_on: [points_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [points_order_by!]
+
+    """filter the rows returned"""
+    where: points_bool_exp
+  ): points_aggregate!
+
+  """fetch data from the table: "points" using primary key columns"""
+  points_by_pk(points_id: bigint!): points
+
+  """
+  fetch data from the table in a streaming manner: "points"
+  """
+  points_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [points_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: points_bool_exp
+  ): [points!]!
+
+  """An array relationship"""
+  subcategories(
+    """distinct select on columns"""
+    distinct_on: [subcategories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [subcategories_order_by!]
+
+    """filter the rows returned"""
+    where: subcategories_bool_exp
+  ): [subcategories!]!
+
+  """An aggregate relationship"""
+  subcategories_aggregate(
+    """distinct select on columns"""
+    distinct_on: [subcategories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [subcategories_order_by!]
+
+    """filter the rows returned"""
+    where: subcategories_bool_exp
+  ): subcategories_aggregate!
+
+  """fetch data from the table: "subcategories" using primary key columns"""
+  subcategories_by_pk(subcategory_id: bigint!): subcategories
+
+  """
+  fetch data from the table in a streaming manner: "subcategories"
+  """
+  subcategories_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [subcategories_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: subcategories_bool_exp
+  ): [subcategories!]!
+
+  """An array relationship"""
+  user_groups(
+    """distinct select on columns"""
+    distinct_on: [user_groups_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_groups_order_by!]
+
+    """filter the rows returned"""
+    where: user_groups_bool_exp
+  ): [user_groups!]!
+
+  """An aggregate relationship"""
+  user_groups_aggregate(
+    """distinct select on columns"""
+    distinct_on: [user_groups_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_groups_order_by!]
+
+    """filter the rows returned"""
+    where: user_groups_bool_exp
+  ): user_groups_aggregate!
+
+  """fetch data from the table: "user_groups" using primary key columns"""
+  user_groups_by_pk(group_id: bigint!, user_id: bigint!): user_groups
+
+  """
+  fetch data from the table in a streaming manner: "user_groups"
+  """
+  user_groups_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [user_groups_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: user_groups_bool_exp
+  ): [user_groups!]!
+
+  """
+  fetch data from the table: "users"
+  """
+  users(
+    """distinct select on columns"""
+    distinct_on: [users_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [users_order_by!]
+
+    """filter the rows returned"""
+    where: users_bool_exp
+  ): [users!]!
+
+  """
+  fetch aggregated fields from the table: "users"
+  """
+  users_aggregate(
+    """distinct select on columns"""
+    distinct_on: [users_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [users_order_by!]
+
+    """filter the rows returned"""
+    where: users_bool_exp
+  ): users_aggregate!
+
+  """fetch data from the table: "users" using primary key columns"""
+  users_by_pk(user_id: bigint!): users
+
+  """
+  fetch data from the table in a streaming manner: "users"
+  """
+  users_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [users_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: users_bool_exp
+  ): [users!]!
+}
+
+scalar timestamp
+
+"""
+Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'.
+"""
+input timestamp_comparison_exp {
+  _eq: timestamp
+  _gt: timestamp
+  _gte: timestamp
+  _in: [timestamp!]
+  _is_null: Boolean
+  _lt: timestamp
+  _lte: timestamp
+  _neq: timestamp
+  _nin: [timestamp!]
+}
+
+"""
+columns and relationships of "user_groups"
+"""
+type user_groups {
+  """An object relationship"""
+  group: groups!
+  group_id: bigint!
+
+  """An object relationship"""
+  user: users!
+  user_id: bigint!
+}
+
+"""
+aggregated selection of "user_groups"
+"""
+type user_groups_aggregate {
+  aggregate: user_groups_aggregate_fields
+  nodes: [user_groups!]!
+}
+
+input user_groups_aggregate_bool_exp {
+  count: user_groups_aggregate_bool_exp_count
+}
+
+input user_groups_aggregate_bool_exp_count {
+  arguments: [user_groups_select_column!]
+  distinct: Boolean
+  filter: user_groups_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"""
+aggregate fields of "user_groups"
+"""
+type user_groups_aggregate_fields {
+  avg: user_groups_avg_fields
+  count(columns: [user_groups_select_column!], distinct: Boolean): Int!
+  max: user_groups_max_fields
+  min: user_groups_min_fields
+  stddev: user_groups_stddev_fields
+  stddev_pop: user_groups_stddev_pop_fields
+  stddev_samp: user_groups_stddev_samp_fields
+  sum: user_groups_sum_fields
+  var_pop: user_groups_var_pop_fields
+  var_samp: user_groups_var_samp_fields
+  variance: user_groups_variance_fields
+}
+
+"""
+order by aggregate values of table "user_groups"
+"""
+input user_groups_aggregate_order_by {
+  avg: user_groups_avg_order_by
+  count: order_by
+  max: user_groups_max_order_by
+  min: user_groups_min_order_by
+  stddev: user_groups_stddev_order_by
+  stddev_pop: user_groups_stddev_pop_order_by
+  stddev_samp: user_groups_stddev_samp_order_by
+  sum: user_groups_sum_order_by
+  var_pop: user_groups_var_pop_order_by
+  var_samp: user_groups_var_samp_order_by
+  variance: user_groups_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "user_groups"
+"""
+input user_groups_arr_rel_insert_input {
+  data: [user_groups_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: user_groups_on_conflict
+}
+
+"""aggregate avg on columns"""
+type user_groups_avg_fields {
+  group_id: Float
+  user_id: Float
+}
+
+"""
+order by avg() on columns of table "user_groups"
+"""
+input user_groups_avg_order_by {
+  group_id: order_by
+  user_id: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "user_groups". All fields are combined with a logical 'AND'.
+"""
+input user_groups_bool_exp {
+  _and: [user_groups_bool_exp!]
+  _not: user_groups_bool_exp
+  _or: [user_groups_bool_exp!]
+  group: groups_bool_exp
+  group_id: bigint_comparison_exp
+  user: users_bool_exp
+  user_id: bigint_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "user_groups"
+"""
+enum user_groups_constraint {
+  """
+  unique or primary key constraint on columns "user_id", "group_id"
+  """
+  user_groups_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "user_groups"
+"""
+input user_groups_inc_input {
+  group_id: bigint
+  user_id: bigint
+}
+
+"""
+input type for inserting data into table "user_groups"
+"""
+input user_groups_insert_input {
+  group: groups_obj_rel_insert_input
+  group_id: bigint
+  user: users_obj_rel_insert_input
+  user_id: bigint
+}
+
+"""aggregate max on columns"""
+type user_groups_max_fields {
+  group_id: bigint
+  user_id: bigint
+}
+
+"""
+order by max() on columns of table "user_groups"
+"""
+input user_groups_max_order_by {
+  group_id: order_by
+  user_id: order_by
+}
+
+"""aggregate min on columns"""
+type user_groups_min_fields {
+  group_id: bigint
+  user_id: bigint
+}
+
+"""
+order by min() on columns of table "user_groups"
+"""
+input user_groups_min_order_by {
+  group_id: order_by
+  user_id: order_by
+}
+
+"""
+response of any mutation on the table "user_groups"
+"""
+type user_groups_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [user_groups!]!
+}
+
+"""
+on_conflict condition type for table "user_groups"
+"""
+input user_groups_on_conflict {
+  constraint: user_groups_constraint!
+  update_columns: [user_groups_update_column!]! = []
+  where: user_groups_bool_exp
+}
+
+"""Ordering options when selecting data from "user_groups"."""
+input user_groups_order_by {
+  group: groups_order_by
+  group_id: order_by
+  user: users_order_by
+  user_id: order_by
+}
+
+"""primary key columns input for table: user_groups"""
+input user_groups_pk_columns_input {
+  group_id: bigint!
+  user_id: bigint!
+}
+
+"""
+select columns of table "user_groups"
+"""
+enum user_groups_select_column {
+  """column name"""
+  group_id
+
+  """column name"""
+  user_id
+}
+
+"""
+input type for updating data in table "user_groups"
+"""
+input user_groups_set_input {
+  group_id: bigint
+  user_id: bigint
+}
+
+"""aggregate stddev on columns"""
+type user_groups_stddev_fields {
+  group_id: Float
+  user_id: Float
+}
+
+"""
+order by stddev() on columns of table "user_groups"
+"""
+input user_groups_stddev_order_by {
+  group_id: order_by
+  user_id: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type user_groups_stddev_pop_fields {
+  group_id: Float
+  user_id: Float
+}
+
+"""
+order by stddev_pop() on columns of table "user_groups"
+"""
+input user_groups_stddev_pop_order_by {
+  group_id: order_by
+  user_id: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type user_groups_stddev_samp_fields {
+  group_id: Float
+  user_id: Float
+}
+
+"""
+order by stddev_samp() on columns of table "user_groups"
+"""
+input user_groups_stddev_samp_order_by {
+  group_id: order_by
+  user_id: order_by
+}
+
+"""
+Streaming cursor of the table "user_groups"
+"""
+input user_groups_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: user_groups_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input user_groups_stream_cursor_value_input {
+  group_id: bigint
+  user_id: bigint
+}
+
+"""aggregate sum on columns"""
+type user_groups_sum_fields {
+  group_id: bigint
+  user_id: bigint
+}
+
+"""
+order by sum() on columns of table "user_groups"
+"""
+input user_groups_sum_order_by {
+  group_id: order_by
+  user_id: order_by
+}
+
+"""
+update columns of table "user_groups"
+"""
+enum user_groups_update_column {
+  """column name"""
+  group_id
+
+  """column name"""
+  user_id
+}
+
+input user_groups_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: user_groups_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: user_groups_set_input
+
+  """filter the rows which have to be updated"""
+  where: user_groups_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type user_groups_var_pop_fields {
+  group_id: Float
+  user_id: Float
+}
+
+"""
+order by var_pop() on columns of table "user_groups"
+"""
+input user_groups_var_pop_order_by {
+  group_id: order_by
+  user_id: order_by
+}
+
+"""aggregate var_samp on columns"""
+type user_groups_var_samp_fields {
+  group_id: Float
+  user_id: Float
+}
+
+"""
+order by var_samp() on columns of table "user_groups"
+"""
+input user_groups_var_samp_order_by {
+  group_id: order_by
+  user_id: order_by
+}
+
+"""aggregate variance on columns"""
+type user_groups_variance_fields {
+  group_id: Float
+  user_id: Float
+}
+
+"""
+order by variance() on columns of table "user_groups"
+"""
+input user_groups_variance_order_by {
+  group_id: order_by
+  user_id: order_by
+}
+
+"""
+columns and relationships of "users"
+"""
+type users {
+  """An array relationship"""
+  chest_histories(
+    """distinct select on columns"""
+    distinct_on: [chest_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chest_history_order_by!]
+
+    """filter the rows returned"""
+    where: chest_history_bool_exp
+  ): [chest_history!]!
+
+  """An aggregate relationship"""
+  chest_histories_aggregate(
+    """distinct select on columns"""
+    distinct_on: [chest_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chest_history_order_by!]
+
+    """filter the rows returned"""
+    where: chest_history_bool_exp
+  ): chest_history_aggregate!
+  nick: String!
+
+  """An array relationship"""
+  points(
+    """distinct select on columns"""
+    distinct_on: [points_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [points_order_by!]
+
+    """filter the rows returned"""
+    where: points_bool_exp
+  ): [points!]!
+
+  """An array relationship"""
+  pointsByTeacherId(
+    """distinct select on columns"""
+    distinct_on: [points_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [points_order_by!]
+
+    """filter the rows returned"""
+    where: points_bool_exp
+  ): [points!]!
+
+  """An aggregate relationship"""
+  pointsByTeacherId_aggregate(
+    """distinct select on columns"""
+    distinct_on: [points_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [points_order_by!]
+
+    """filter the rows returned"""
+    where: points_bool_exp
+  ): points_aggregate!
+
+  """An aggregate relationship"""
+  points_aggregate(
+    """distinct select on columns"""
+    distinct_on: [points_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [points_order_by!]
+
+    """filter the rows returned"""
+    where: points_bool_exp
+  ): points_aggregate!
+  role: String!
+
+  """An array relationship"""
+  user_groups(
+    """distinct select on columns"""
+    distinct_on: [user_groups_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_groups_order_by!]
+
+    """filter the rows returned"""
+    where: user_groups_bool_exp
+  ): [user_groups!]!
+
+  """An aggregate relationship"""
+  user_groups_aggregate(
+    """distinct select on columns"""
+    distinct_on: [user_groups_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_groups_order_by!]
+
+    """filter the rows returned"""
+    where: user_groups_bool_exp
+  ): user_groups_aggregate!
+  user_id: bigint!
+}
+
+"""
+aggregated selection of "users"
+"""
+type users_aggregate {
+  aggregate: users_aggregate_fields
+  nodes: [users!]!
+}
+
+"""
+aggregate fields of "users"
+"""
+type users_aggregate_fields {
+  avg: users_avg_fields
+  count(columns: [users_select_column!], distinct: Boolean): Int!
+  max: users_max_fields
+  min: users_min_fields
+  stddev: users_stddev_fields
+  stddev_pop: users_stddev_pop_fields
+  stddev_samp: users_stddev_samp_fields
+  sum: users_sum_fields
+  var_pop: users_var_pop_fields
+  var_samp: users_var_samp_fields
+  variance: users_variance_fields
+}
+
+"""aggregate avg on columns"""
+type users_avg_fields {
+  user_id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "users". All fields are combined with a logical 'AND'.
+"""
+input users_bool_exp {
+  _and: [users_bool_exp!]
+  _not: users_bool_exp
+  _or: [users_bool_exp!]
+  chest_histories: chest_history_bool_exp
+  chest_histories_aggregate: chest_history_aggregate_bool_exp
+  nick: String_comparison_exp
+  points: points_bool_exp
+  pointsByTeacherId: points_bool_exp
+  pointsByTeacherId_aggregate: points_aggregate_bool_exp
+  points_aggregate: points_aggregate_bool_exp
+  role: String_comparison_exp
+  user_groups: user_groups_bool_exp
+  user_groups_aggregate: user_groups_aggregate_bool_exp
+  user_id: bigint_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "users"
+"""
+enum users_constraint {
+  """
+  unique or primary key constraint on columns "user_id"
+  """
+  users_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "users"
+"""
+input users_inc_input {
+  user_id: bigint
+}
+
+"""
+input type for inserting data into table "users"
+"""
+input users_insert_input {
+  chest_histories: chest_history_arr_rel_insert_input
+  nick: String
+  points: points_arr_rel_insert_input
+  pointsByTeacherId: points_arr_rel_insert_input
+  role: String
+  user_groups: user_groups_arr_rel_insert_input
+  user_id: bigint
+}
+
+"""aggregate max on columns"""
+type users_max_fields {
+  nick: String
+  role: String
+  user_id: bigint
+}
+
+"""aggregate min on columns"""
+type users_min_fields {
+  nick: String
+  role: String
+  user_id: bigint
+}
+
+"""
+response of any mutation on the table "users"
+"""
+type users_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [users!]!
+}
+
+"""
+input type for inserting object relation for remote table "users"
+"""
+input users_obj_rel_insert_input {
+  data: users_insert_input!
+
+  """upsert condition"""
+  on_conflict: users_on_conflict
+}
+
+"""
+on_conflict condition type for table "users"
+"""
+input users_on_conflict {
+  constraint: users_constraint!
+  update_columns: [users_update_column!]! = []
+  where: users_bool_exp
+}
+
+"""Ordering options when selecting data from "users"."""
+input users_order_by {
+  chest_histories_aggregate: chest_history_aggregate_order_by
+  nick: order_by
+  pointsByTeacherId_aggregate: points_aggregate_order_by
+  points_aggregate: points_aggregate_order_by
+  role: order_by
+  user_groups_aggregate: user_groups_aggregate_order_by
+  user_id: order_by
+}
+
+"""primary key columns input for table: users"""
+input users_pk_columns_input {
+  user_id: bigint!
+}
+
+"""
+select columns of table "users"
+"""
+enum users_select_column {
+  """column name"""
+  nick
+
+  """column name"""
+  role
+
+  """column name"""
+  user_id
+}
+
+"""
+input type for updating data in table "users"
+"""
+input users_set_input {
+  nick: String
+  role: String
+  user_id: bigint
+}
+
+"""aggregate stddev on columns"""
+type users_stddev_fields {
+  user_id: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type users_stddev_pop_fields {
+  user_id: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type users_stddev_samp_fields {
+  user_id: Float
+}
+
+"""
+Streaming cursor of the table "users"
+"""
+input users_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: users_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input users_stream_cursor_value_input {
+  nick: String
+  role: String
+  user_id: bigint
+}
+
+"""aggregate sum on columns"""
+type users_sum_fields {
+  user_id: bigint
+}
+
+"""
+update columns of table "users"
+"""
+enum users_update_column {
+  """column name"""
+  nick
+
+  """column name"""
+  role
+
+  """column name"""
+  user_id
+}
+
+input users_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: users_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: users_set_input
+
+  """filter the rows which have to be updated"""
+  where: users_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type users_var_pop_fields {
+  user_id: Float
+}
+
+"""aggregate var_samp on columns"""
+type users_var_samp_fields {
+  user_id: Float
+}
+
+"""aggregate variance on columns"""
+type users_variance_fields {
+  user_id: Float
+}
