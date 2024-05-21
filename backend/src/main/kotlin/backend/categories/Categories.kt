@@ -7,10 +7,11 @@ import jakarta.persistence.*
 class Categories(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "categoryId")
+    @Column(name = "category_id")
     val categoryId: Long = 0,
 
-    @Column(name = "categoryName", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category_name", nullable = false)
     var categoryName: CategoriesEnum
 ) {
     constructor() : this(

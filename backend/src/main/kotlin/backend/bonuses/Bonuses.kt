@@ -2,28 +2,31 @@ package backend.bonuses
 
 import backend.chestAward.ChestAward
 import backend.points.Points
+import backend.points.PointsInput
 import backend.subcategories.Subcategories
 import jakarta.persistence.*
 
 @Entity
-class Bonuses (
+@Table(name = "bonuses")
+class Bonuses(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "bonus_id")
     val bonusId: Long = 0,
 
     @OneToOne
-    @JoinColumn(name = "pointsId", referencedColumnName = "pointsId")
+    @JoinColumn(name = "points_id", referencedColumnName = "points_id")
     var points: Points,
 
     @ManyToOne
-    @JoinColumn(name = "awardId", referencedColumnName = "awardId")
+    @JoinColumn(name = "award_id", referencedColumnName = "award_id")
     var award: ChestAward,
 
     @ManyToOne
-    @JoinColumn(name = "subcategoryId", referencedColumnName = "subcategoryId")
-    var subcategory: Subcategories,
+    @JoinColumn(name = "subcategory_id", referencedColumnName = "subcategory_id")
+    var subcategory: Subcategories
 ) {
-    constructor(): this(
+    constructor() : this(
         points = Points(),
         award = ChestAward(),
         subcategory = Subcategories()

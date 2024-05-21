@@ -8,16 +8,16 @@ import jakarta.persistence.*
 class Subcategories(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "subcategory_id")
     val subcategoryId: Long = 0,
 
-    @Column(name = "subcategoryName", nullable = false)
+    @Column(name = "subcategory_name", nullable = false)
     var subcategoryName: String,
 
     @ManyToOne
-    @JoinColumn(name = "categoryId", referencedColumnName = "categoryId")
+    @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     var category: Categories
 ) {
-
     constructor() : this(
         subcategoryName = "",
         category = Categories()

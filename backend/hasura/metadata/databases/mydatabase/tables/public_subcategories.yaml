@@ -1,0 +1,29 @@
+table:
+  name: subcategories
+  schema: public
+object_relationships:
+  - name: category
+    using:
+      foreign_key_constraint_on: category_id
+array_relationships:
+  - name: bonuses
+    using:
+      foreign_key_constraint_on:
+        column: subcategory_id
+        table:
+          name: bonuses
+          schema: public
+  - name: chest_histories
+    using:
+      foreign_key_constraint_on:
+        column: subcategory_id
+        table:
+          name: chest_history
+          schema: public
+  - name: points
+    using:
+      foreign_key_constraint_on:
+        column: subcategory_id
+        table:
+          name: points
+          schema: public

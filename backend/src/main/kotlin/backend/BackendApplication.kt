@@ -25,7 +25,8 @@ import org.springframework.context.annotation.Import
 	"backend.points",
 	"backend.subcategories",
 	"backend.users",
-	"backend.groups"
+	"backend.groups",
+	"backend.graphql"
 ])
 @Import(BonusesConfiguration::class, CategoriesConfiguration::class, ChestAwardConfiguration::class, ChestHistoryConfiguration::class, ChestsConfiguration::class, PointsConfiguration::class, SubcategoriesConfiguration::class, UsersConfiguration::class, GroupsConfiguration::class)
 class BackendApplication
