@@ -1,3 +1,2 @@
-export * from "./Welcome";
-export * from "./StudentProfile";
-export * from "./HallOfFame";
+export * from "./common";
+export * from "./student";

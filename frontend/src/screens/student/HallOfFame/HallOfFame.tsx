@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import { getStudents } from "../api";
-import { Student } from "../utils";
+import { getStudents } from "../../../api";
+import { Student } from "../../../utils";
 
 type HallOfFameProps = {
   studentId?: string;
