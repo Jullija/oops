@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-cd ./moxie_suite_ui && yarn type-check
+cd ./frontend && yarn type-check
