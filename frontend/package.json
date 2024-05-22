@@ -6,18 +6,32 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "postinstall": "cd .. && husky install frontend/.husky",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "type-check": "tsc --pretty --noEmit",
+    "format": "prettier --write \"**/*.tsx\" \"**/*.ts\" \"**/*.graphql\"",
+    "format:graphql": "prettier --write \"**/*.graphql*\"",
     "preview": "vite preview",
-    "codegen": "graphql-codegen"
+    "codegen": "graphql-codegen && yarn format:graphql"
   },
   "dependencies": {
     "@apollo/client": "^3.10.4",
     "formik": "^2.4.6",
     "graphql": "^16.8.1",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.4",
+    "prettier": "^3.2.5",
+    "pretty-quick": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",
     "zod": "^3.23.8"
+  },
+  "lint-staged": {
+    "!(*graphql.types).{ts,tsx}": [
+      "eslint --cache",
+      "pretty-quick --staged"
+    ]
   },
   "devDependencies": {
     "@graphql-codegen/add": "^5.0.2",

@@ -13,14 +13,6 @@ import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
-data class CreateBonusInput(
-    val studentId: Long,
-    val teacherId: Long,
-    val howMany: Long,
-    val subcategoryId: Long,
-    val awardId: Long
-)
-
 @DgsComponent
 class BonusesMutation {
 
@@ -41,21 +33,25 @@ class BonusesMutation {
 
     @DgsMutation
     @Transactional
-    fun createBonus(@InputArgument input: CreateBonusInput): Bonuses {
-        val student = usersRepository.findById(input.studentId)
+    fun createBonus(@InputArgument studentId: Long,
+                    @InputArgument teacherId: Long,
+                    @InputArgument howMany: Long,
+                    @InputArgument subcategoryId: Long,
+                    @InputArgument awardId: Long): Bonuses {
+        val student = usersRepository.findById(studentId)
             .orElseThrow { IllegalArgumentException("Student not found") }
-        val teacher = usersRepository.findById(input.teacherId)
+        val teacher = usersRepository.findById(teacherId)
             .orElseThrow { IllegalArgumentException("Teacher not found") }
-        val subcategory = subcategoriesRepository.findById(input.subcategoryId)
+        val subcategory = subcategoriesRepository.findById(subcategoryId)
             .orElseThrow { IllegalArgumentException("Subcategory not found") }
-        val award = chestAwardRepository.findById(input.awardId)
+        val award = chestAwardRepository.findById(awardId)
             .orElseThrow { IllegalArgumentException("Award not found") }
 
         // Create Points record
         val points = Points(
             userId = student,
             fromWho = teacher,
-            howMany = input.howMany,
+            howMany = howMany,
             subcategory = subcategory
         )
         pointsRepository.save(points)

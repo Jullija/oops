@@ -7,13 +7,11 @@ mutation CreateBonusMyCustom(
   $awardId: Int!
 ) {
   createBonus(
-    input: {
-      studentId: $studentId
-      teacherId: $teacherId
-      howMany: $howMany
-      subcategoryId: $subcategoryId
-      awardId: $awardId
-    }
+    studentId: $studentId
+    teacherId: $teacherId
+    howMany: $howMany
+    subcategoryId: $subcategoryId
+    awardId: $awardId
   ) {
     bonusId
     points {
