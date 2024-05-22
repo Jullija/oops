@@ -1,6 +1,32 @@
 import { useRef } from "react";
 import { getStudents } from "../api";
-import { Student } from "../utils";
+import { Student, Styles } from "../utils";
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+    margin: 12,
+  },
+  scrollButton: {
+    width: 100,
+  },
+  itemsContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+  },
+  item: {
+    display: "flex",
+    border: "1px solid black",
+    gap: 12,
+    padding: 12,
+  },
+  firstCell: {
+    width: 180,
+  },
+};
 
 type HallOfFameProps = {
   studentId: string;
@@ -20,42 +46,28 @@ export const HallOfFame = ({ studentId = "6" }: HallOfFameProps) => {
   students.sort((a: Student, b: Student) => b.level - a.level);
 
   return (
-    <>
-      <button
-        style={{ marginLeft: 12, marginBottom: 12 }}
-        onClick={scrollToStudent}
-      >
+    <div style={styles.container}>
+      <button style={styles.scrollButton} onClick={scrollToStudent}>
         scroll to me
       </button>
-      <div
-        ref={containerRef}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 12,
-          marginLeft: 12,
-          marginRight: 12,
-          marginBottom: 12,
-        }}
-      >
+      <div ref={containerRef} style={styles.itemsContainer}>
+        {/* TODO separate component */}
         {students.map((s, index) => (
           <div
             key={s.id}
             id={`student-${s.id}`}
             style={{
-              display: "flex",
+              ...styles.item,
               border: s.id === studentId ? "2px solid blue" : "1px solid black",
-              gap: 12,
-              padding: 12,
             }}
           >
-            <div style={{ width: 180 }}>
+            <div style={styles.firstCell}>
               {index + 1}. {s.name}
             </div>
             <div>{s.level}</div>
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 };

@@ -4,10 +4,16 @@ import {
   getSubcategoriesByCategory,
 } from "../../api";
 import { useFormik } from "formik";
-import { Subcategory } from "../../utils";
+import { Styles, Subcategory } from "../../utils";
 import { ZodError, z } from "zod";
 import { useState } from "react";
 import { FormPoints } from "./types";
+
+const styles: Styles = {
+  error: {
+    color: "red",
+  },
+};
 
 type PointFormProps = {
   studentId: string;
@@ -90,7 +96,7 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
           ))}
         </select>
         {formik.errors.categoryId && formik.touched.categoryId ? (
-          <div style={{ color: "red" }}>{formik.errors.categoryId}</div>
+          <div style={styles.error}>{formik.errors.categoryId}</div>
         ) : null}
       </div>
 
@@ -110,7 +116,7 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
           ))}
         </select>
         {formik.errors.subcategoryId && formik.touched.subcategoryId ? (
-          <div style={{ color: "red" }}>{formik.errors.subcategoryId}</div>
+          <div style={styles.error}>{formik.errors.subcategoryId}</div>
         ) : null}
       </div>
 
@@ -124,7 +130,7 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
           value={formik.values.points}
         />
         {formik.errors.points && formik.touched.points ? (
-          <div style={{ color: "red" }}>{formik.errors.points}</div>
+          <div style={styles.error}>{formik.errors.points}</div>
         ) : null}
       </div>
 
@@ -144,7 +150,7 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
           ))}
         </select>
         {formik.errors.providerId && formik.touched.providerId ? (
-          <div style={{ color: "red" }}>{formik.errors.providerId}</div>
+          <div style={styles.error}>{formik.errors.providerId}</div>
         ) : null}
       </div>
       <button type="submit">add grade</button>
