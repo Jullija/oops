@@ -23,8 +23,11 @@ const styles: Styles = {
     gap: 12,
     padding: 12,
   },
-  firstCell: {
+  bigCell: {
     width: 320,
+  },
+  smallCell: {
+    width: 180,
   },
 };
 
@@ -64,8 +67,8 @@ export const HallOfFame = ({ studentId = "6" }: HallOfFameProps) => {
             <div style={styles.firstCell}>
               {index + 1}. {s.name}
             </div>
-            <div style={{ width: 180 }}>lvl. {s.level}</div>
-            <div style={{ width: 180 }}>exp. {s.experience}</div>
+            <div style={styles.smallCell}>lvl. {s.level}</div>
+            <div style={styles.smallCell}>exp. {s.experience}</div>
           </div>
         ))}
       </div>

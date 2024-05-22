@@ -1,4 +1,24 @@
-import "./styles.css";
+import React from "react";
+import { Styles } from "../../../../../utils";
+
+const styles: Styles = {
+  barContainer: {
+    border: "1px solid black",
+    flex: 1,
+    height: "20px",
+    marginLeft: "12px",
+    marginRight: "12px",
+    position: "relative",
+  },
+  barFill: {
+    height: "100%",
+    backgroundColor: "lightblue",
+  },
+  progressText: {
+    position: "absolute",
+    top: 0,
+  },
+};
 
 type ProgressBarProps = {
   value: number;
@@ -13,9 +33,9 @@ export const ProgressBar = ({ value, maxValue }: ProgressBarProps) => {
 
   return (
     <div>
-      <div className="bar-container">
-        <div className="bar-fill" style={getWidthFillStyle()} />
-        <div className="progress-text">
+      <div style={styles.barContainer}>
+        <div style={{ ...styles.barFill, ...getWidthFillStyle() }} />
+        <div style={styles.progressText}>
           {value}/{maxValue}
         </div>
       </div>
