@@ -26,7 +26,7 @@ export const PointsTable = ({ pointsList }: PointsTableProps) => {
   const headers = ["category", "subcategory", "points", "provider"];
 
   return (
-    <div style={styles.points}>
+    <div style={styles.table}>
       <div style={styles.row}>
         {headers.map((header, index) => (
           <div key={index} style={styles.cell}>
