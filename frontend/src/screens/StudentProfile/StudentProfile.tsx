@@ -12,6 +12,7 @@ import { Points } from "../../utils";
 import { PointsForm } from "./PointsForm";
 import { StudentPoints } from "./StudentPoints";
 import { FormPoints } from "./types";
+import { StudentStatistics } from "./StudentStatistics";
 
 export const StudentProfile = () => {
   const student = getStudents()[0];
@@ -45,6 +46,7 @@ export const StudentProfile = () => {
     <div style={{ display: "flex", flexDirection: "row", gap: 20 }}>
       <StudentPoints pointsList={pointsList} />
       <PointsForm studentId={student.id} handleAdd={handleAdd} />
+      <StudentStatistics student={student} />
     </div>
   );
 };

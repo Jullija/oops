@@ -3,7 +3,7 @@ import { getStudents } from "../api";
 import { Student } from "../utils";
 
 type HallOfFameProps = {
-  studentId: string;
+  studentId?: string;
 };
 
 export const HallOfFame = ({ studentId = "6" }: HallOfFameProps) => {

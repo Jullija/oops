@@ -2,11 +2,11 @@ import { Level } from "../utils";
 
 export const getLevel = (level: number): Level | undefined => {
   return levels.find((l) => {
-    l.level === level;
+    return l.level === level;
   });
 };
 
-export const GetLevels = (): Level[] => {
+export const getLevels = (): Level[] => {
   return levels;
 };
 

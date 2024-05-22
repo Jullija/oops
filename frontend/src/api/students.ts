@@ -10,8 +10,8 @@ export const getStudent = (id: string): Student | undefined => {
 
 const students: Student[] = [
   { id: "1", name: "Anna Cichocka", level: 2, experience: 133 },
-  { id: "2", name: "Julia Smerdel", level: 4, experience: 270 },
-  { id: "3", name: "Krzysztof Wiśniewski", level: 2, experience: 100 },
+  { id: "2", name: "Julia Smerdel", level: 3, experience: 270 },
+  { id: "3", name: "Krzysztof Wiśniewski", level: 1, experience: 102 },
   { id: "4", name: "Anna Wójcik", level: 3, experience: 202 },
   { id: "5", name: "Maria Kowalczyk", level: 4, experience: 388 },
   { id: "6", name: "Magdalena Kamińska", level: 2, experience: 122 },
