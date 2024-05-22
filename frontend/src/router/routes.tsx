@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { StudentProfile, HallOfFame, Welcome } from "../screens";
+import { Profile, HallOfFame, Welcome } from "../screens";
 import { MockData, Root } from "../components";
 import { paths } from "./paths";
 
@@ -23,7 +23,7 @@ export const routes = createBrowserRouter([
       },
       {
         path: paths.StudentProfile,
-        element: <StudentProfile />,
+        element: <Profile />,
       },
       {
         path: paths.HallOfFame,

@@ -2,12 +2,14 @@ import {
   getCategories,
   getProviders,
   getSubcategoriesByCategory,
-} from "../../api";
+} from "../../../api";
 import { useFormik } from "formik";
-import { Subcategory } from "../../utils";
+import { Subcategory } from "../../../utils";
 import { ZodError, z } from "zod";
 import { useState } from "react";
 import { FormPoints } from "./types";
+
+// TODO move to provider or components
 
 type PointFormProps = {
   studentId: string;

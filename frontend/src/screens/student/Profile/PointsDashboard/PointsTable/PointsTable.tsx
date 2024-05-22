@@ -1,5 +1,5 @@
-import { Points } from "../../../../utils";
-import "./tableStyles.css";
+import { Points } from "../../../../../utils";
+import "./styles.css";
 
 type PointsTableProps = {
   pointsList: Points[];

@@ -7,14 +7,14 @@ import {
   getStudent,
   getStudents,
   getSubcategory,
-} from "../../api";
-import { Points } from "../../utils";
+} from "../../../api";
+import { Points } from "../../../utils";
 import { PointsForm } from "./PointsForm";
-import { StudentPoints } from "./StudentPoints";
+import { PointsDashboard } from "./PointsDashboard";
 import { FormPoints } from "./types";
-import { StudentStatistics } from "./StudentStatistics";
+import { LevelProgress } from "./LevelProgress";
 
-export const StudentProfile = () => {
+export const Profile = () => {
   const student = getStudents()[0];
   const [pointsList, setPointsList] = useState<Points[]>(
     GetPointsByStudent(student.id)
@@ -44,9 +44,9 @@ export const StudentProfile = () => {
 
   return (
     <div style={{ display: "flex", flexDirection: "row", gap: 20 }}>
-      <StudentPoints pointsList={pointsList} />
+      <PointsDashboard pointsList={pointsList} />
       <PointsForm studentId={student.id} handleAdd={handleAdd} />
-      <StudentStatistics student={student} />
+      <LevelProgress student={student} />
     </div>
   );
 };

@@ -1,13 +1,13 @@
-import { getLevel, getLevels } from "../../../api/levels";
-import { Student } from "../../../utils";
-import { PointsBar } from "./PointsBar";
+import { getLevel, getLevels } from "../../../../api/levels";
+import { Student } from "../../../../utils";
+import { ProgressBar } from "./ProgressBar";
 import "./styles.css";
 
-type StudentStatisticsProps = {
+type LevelProgressProps = {
   student: Student;
 };
 
-export const StudentStatistics = ({ student }: StudentStatisticsProps) => {
+export const LevelProgress = ({ student }: LevelProgressProps) => {
   const level = student.level;
   const maxLevel = getLevels().length;
   const lowerLevel = level === maxLevel ? level - 1 : level;
@@ -25,9 +25,9 @@ export const StudentStatistics = ({ student }: StudentStatisticsProps) => {
     <div className="statistics-container">
       <div className="student-avatar-placeholder" />
 
-      <PointsBar
-        experience={student.experience}
-        maxExperience={maxUpperLevelExperience}
+      <ProgressBar
+        value={student.experience}
+        maxValue={maxUpperLevelExperience}
       />
 
       <div className="next-prev-items-container">

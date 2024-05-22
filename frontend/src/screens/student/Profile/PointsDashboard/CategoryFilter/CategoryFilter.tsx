@@ -1,15 +1,15 @@
-import { getCategories } from "../../../../api";
-import { Category } from "../../../../utils";
+import { getCategories } from "../../../../../api";
+import { Category } from "../../../../../utils";
 
-type FilterMenuProps = {
+type CategoryFilterProps = {
   pickedCategoryIds: string[];
   onSelectChange: (pickedCategoryIds: string[]) => void;
 };
 
-export const FilterMenu = ({
+export const CategoryFilter = ({
   pickedCategoryIds,
   onSelectChange,
-}: FilterMenuProps) => {
+}: CategoryFilterProps) => {
   const categories = getCategories();
 
   const isSelected = (category: Category) => {

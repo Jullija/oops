@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { Points } from "../../../utils";
-import { FilterMenu } from "./FilterMenu";
+import { CategoryFilter } from "./CategoryFilter";
 import { PointsTable } from "./PointsTable";
+import { Points } from "../../../../utils";
 
-type StudentPointsProps = {
+type PointDashboardProps = {
   pointsList: Points[];
 };
 
-export const StudentPoints = ({ pointsList }: StudentPointsProps) => {
+export const PointsDashboard = ({ pointsList }: PointDashboardProps) => {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const onSelectChange = (updatedSelectedCategoryIds: string[]) => {
     setSelectedCategoryIds(updatedSelectedCategoryIds);
@@ -27,7 +27,7 @@ export const StudentPoints = ({ pointsList }: StudentPointsProps) => {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-      <FilterMenu
+      <CategoryFilter
         pickedCategoryIds={selectedCategoryIds}
         onSelectChange={onSelectChange}
       />
