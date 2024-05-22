@@ -15,15 +15,13 @@ const styles: Styles = {
     height: "240px",
     borderRadius: "50%",
   },
-  progressContainer: {
+  levelsContainer: {
     display: "flex",
     justifyContent: "space-between",
   },
-  levelContainer: {
+  levelAvatarsContainer: {
     display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: "12px",
+    justifyContent: "space-between",
   },
   // TODO avatar to single component
   smallAvatarPlaceholder: {
@@ -56,21 +54,19 @@ export const LevelProgress = ({ student }: LevelProgressProps) => {
     <div style={styles.container}>
       <div style={styles.bigAvatarPlaceholder} />
 
+      <div style={styles.levelsContainer}>
+        <div>{upperLevel} lvl</div>
+        <div>{lowerLevel} lvl</div>
+      </div>
+
       <ProgressBar
         value={student.experience}
         maxValue={maxUpperLevelExperience}
       />
 
-      <div style={styles.progressContainer}>
-        <div style={styles.levelContainer}>
-          <div style={styles.smallAvatarPlaceholder} />
-          <div>{lowerLevel} lvl</div>
-        </div>
-
-        <div style={styles.levelContainer}>
-          <div style={styles.smallAvatarPlaceholder} />
-          <div>{upperLevel} lvl</div>
-        </div>
+      <div style={styles.levelAvatarsContainer}>
+        <div style={styles.smallAvatarPlaceholder} />
+        <div style={styles.smallAvatarPlaceholder} />
       </div>
     </div>
   );

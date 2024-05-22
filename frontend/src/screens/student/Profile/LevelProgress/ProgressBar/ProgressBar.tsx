@@ -1,4 +1,3 @@
-import React from "react";
 import { Styles } from "../../../../../utils";
 
 const styles: Styles = {
@@ -6,8 +5,6 @@ const styles: Styles = {
     border: "1px solid black",
     flex: 1,
     height: "20px",
-    marginLeft: "12px",
-    marginRight: "12px",
     position: "relative",
   },
   barFill: {
