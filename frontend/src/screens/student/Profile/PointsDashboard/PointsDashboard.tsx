@@ -1,7 +1,15 @@
 import { useState } from "react";
+import { Points, Styles } from "../../../utils";
 import { CategoryFilter } from "./CategoryFilter";
 import { PointsTable } from "./PointsTable";
-import { Points } from "../../../../utils";
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+  },
+};
 
 type PointDashboardProps = {
   pointsList: Points[];
@@ -26,7 +34,7 @@ export const PointsDashboard = ({ pointsList }: PointDashboardProps) => {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+    <div style={styles.container}>
       <CategoryFilter
         pickedCategoryIds={selectedCategoryIds}
         onSelectChange={onSelectChange}

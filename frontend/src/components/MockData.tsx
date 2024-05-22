@@ -5,7 +5,24 @@ import {
   getStudents,
   getProviders,
 } from "../api";
-import { Category, Points, Subcategory, Student } from "../utils";
+import { Category, Points, Subcategory, Student, Styles } from "../utils";
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    border: "1px solid lightgrey",
+    padding: 12,
+    width: 200,
+    margin: 12,
+  },
+  card: {
+    display: "flex",
+    flexDirection: "row",
+    columnGap: 12,
+    alignItems: "center",
+  },
+};
 
 type categoryMockDataRequests = {
   name: string;
@@ -29,25 +46,9 @@ const categoryMockDataRequestsRequests: categoryMockDataRequests[] = [
 
 export const MockData = () => {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        border: "1px solid lightgrey",
-        padding: 12,
-        width: 200,
-      }}
-    >
+    <div style={styles.container}>
       {categoryMockDataRequestsRequests.map((item, index) => (
-        <div
-          key={index}
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            columnGap: 12,
-            alignItems: "center",
-          }}
-        >
+        <div key={index} style={styles.card}>
           <p>{item.name}</p>
           {item.requests.map((action, index) => (
             <button
