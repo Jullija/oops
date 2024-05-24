@@ -50,8 +50,8 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<com.netflix.graphql.dgs.codegen.gradle.GenerateJavaTask> {
 	schemaPaths = mutableListOf("${projectDir}/src/main/resources/schema")
-	packageName = "com.example.packagename"
-	generateClient = true
+	packageName = "main.kotlin.backend"
+	generateClient = false
 }
 
 tasks.withType<Test> {
