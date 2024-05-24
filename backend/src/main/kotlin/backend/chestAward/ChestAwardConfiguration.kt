@@ -9,34 +9,34 @@ import org.springframework.core.annotation.Order
 
 @Configuration
 class ChestAwardConfiguration {
-    @Bean
-    @Order(2)
-    fun chestAwardCommandLineRunner(chestAwardRepository: ChestAwardRepository, chestsRepository: ChestsRepository):CommandLineRunner{
-        return CommandLineRunner { args ->
-            if (chestAwardRepository.count() == 0L){
-                val chests = chestsRepository.findAll()
-                chests.forEach {chest ->
-                    val chestAwards = when (chest.type){
-                        "ZŁOTA" -> listOf(
-                            ChestAward(chestId = chest, name = "marchewka", bonus = 10),
-                            ChestAward(chestId = chest, name = "weterynarz", bonus = 20)
-                        )
-                        "SREBRNA" -> listOf(
-                            ChestAward(chestId = chest, name = "marchewka", bonus = 10),
-                            ChestAward(chestId = chest, name = "weterynarz", bonus = 20)
-                        )
-                        "BRĄZOWA" -> listOf(
-                            ChestAward(chestId = chest, name = "marchewka", bonus = 5),
-                        )
-                        else -> listOf(
-                            ChestAward(chestId = chest, name = "ups", bonus = 0)
-                        )
-
-                    }
-                    chestAwardRepository.saveAll(chestAwards)
-
-                }
-            }
-        }
-    }
+//    @Bean
+//    @Order(2)
+//    fun chestAwardCommandLineRunner(chestAwardRepository: ChestAwardRepository, chestsRepository: ChestsRepository):CommandLineRunner{
+//        return CommandLineRunner { args ->
+//            if (chestAwardRepository.count() == 0L){
+//                val chests = chestsRepository.findAll()
+//                chests.forEach {chest ->
+//                    val chestAwards = when (chest.type){
+//                        "ZŁOTA" -> listOf(
+//                            ChestAward(chestId = chest, name = "marchewka", bonus = 10),
+//                            ChestAward(chestId = chest, name = "weterynarz", bonus = 20)
+//                        )
+//                        "SREBRNA" -> listOf(
+//                            ChestAward(chestId = chest, name = "marchewka", bonus = 10),
+//                            ChestAward(chestId = chest, name = "weterynarz", bonus = 20)
+//                        )
+//                        "BRĄZOWA" -> listOf(
+//                            ChestAward(chestId = chest, name = "marchewka", bonus = 5),
+//                        )
+//                        else -> listOf(
+//                            ChestAward(chestId = chest, name = "ups", bonus = 0)
+//                        )
+//
+//                    }
+//                    chestAwardRepository.saveAll(chestAwards)
+//
+//                }
+//            }
+//        }
+//    }
 }
