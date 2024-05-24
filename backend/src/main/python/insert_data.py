@@ -40,8 +40,8 @@ def insert_data(data_count_multiplier=1):
     conn = create_connection()
     cursor = conn.cursor()
     fake = Faker()
-    Faker.seed(123)
-    random.seed(123)
+    Faker.seed(1234)
+    random.seed(1234)
 
     category_names = ["LABORATORIA", "KARTKÓWKI", "PROJEKT", "EVENT"]
     chest_count = 3
@@ -78,8 +78,8 @@ def insert_data(data_count_multiplier=1):
             groups.append(cursor.fetchone()[0])
 
     total_groups = sum(year_group_counts.values())
-    min_students_per_group = 12
-    max_students_per_group = 15
+    min_students_per_group = 14
+    max_students_per_group = 23
     students_in_group_count = [random.randint(min_students_per_group, max_students_per_group) for _ in
                                range(total_groups)]
     total_students = sum(students_in_group_count)
