@@ -1,0 +1,21 @@
+table:
+  name: points
+  schema: public
+object_relationships:
+  - name: subcategory
+    using:
+      foreign_key_constraint_on: subcategory_id
+  - name: user
+    using:
+      foreign_key_constraint_on: student_id
+  - name: userByTeacherId
+    using:
+      foreign_key_constraint_on: teacher_id
+array_relationships:
+  - name: bonuses
+    using:
+      foreign_key_constraint_on:
+        column: points_id
+        table:
+          name: bonuses
+          schema: public

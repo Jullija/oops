@@ -1,0 +1,43 @@
+
+type Mutation {
+    createBonus(
+        studentId: Int!
+        teacherId: Int!
+        howMany: Int!
+        subcategoryId: Int!
+        awardId: Int!): CreateBonusOutput
+}
+
+
+type CreateBonusOutput {
+    bonusId: Int
+    points: Points_kotlin!
+    award: ChestAward_kotlin!
+    subcategory: Subcategories_kotlin!
+}
+
+type User_kotlin {
+    nick: String!
+    role: String!
+    userId: Int!
+}
+
+type Points_kotlin {
+    pointsId: Int
+    userId: User_kotlin
+    fromWho: User_kotlin
+    howMany: Int
+    subcategory: Subcategories_kotlin
+}
+
+type ChestAward_kotlin {
+    awardId: Int
+    name: String
+    bonus: Int
+}
+
+type Subcategories_kotlin {
+    subcategoryId: Int
+    subcategoryName: String
+    categoryId: Int
+}

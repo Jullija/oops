@@ -1,0 +1,32 @@
+table:
+  name: users
+  schema: public
+array_relationships:
+  - name: chest_histories
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: chest_history
+          schema: public
+  - name: points
+    using:
+      foreign_key_constraint_on:
+        column: student_id
+        table:
+          name: points
+          schema: public
+  - name: pointsByTeacherId
+    using:
+      foreign_key_constraint_on:
+        column: teacher_id
+        table:
+          name: points
+          schema: public
+  - name: user_groups
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: user_groups
+          schema: public

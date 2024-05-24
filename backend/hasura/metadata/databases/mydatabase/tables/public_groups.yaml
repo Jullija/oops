@@ -1,0 +1,11 @@
+table:
+  name: groups
+  schema: public
+array_relationships:
+  - name: user_groups
+    using:
+      foreign_key_constraint_on:
+        column: group_id
+        table:
+          name: user_groups
+          schema: public

@@ -1,0 +1,18 @@
+table:
+  name: chests
+  schema: public
+array_relationships:
+  - name: chest_awards
+    using:
+      foreign_key_constraint_on:
+        column: chest_id
+        table:
+          name: chest_award
+          schema: public
+  - name: chest_histories
+    using:
+      foreign_key_constraint_on:
+        column: chest_id
+        table:
+          name: chest_history
+          schema: public

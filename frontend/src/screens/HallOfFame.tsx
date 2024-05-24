@@ -18,7 +18,6 @@ export const HallOfFame = ({ studentId = "6" }: HallOfFameProps) => {
 
   const students = getStudents();
   students.sort((a: Student, b: Student) => b.level - a.level);
-
   return (
     <>
       <button

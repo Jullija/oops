@@ -1,0 +1,13 @@
+table:
+  name: bonuses
+  schema: public
+object_relationships:
+  - name: chest_award
+    using:
+      foreign_key_constraint_on: award_id
+  - name: point
+    using:
+      foreign_key_constraint_on: points_id
+  - name: subcategory
+    using:
+      foreign_key_constraint_on: subcategory_id

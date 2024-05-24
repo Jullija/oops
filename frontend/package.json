@@ -6,17 +6,40 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "postinstall": "cd .. && husky install frontend/.husky",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "type-check": "tsc --pretty --noEmit",
+    "format": "prettier --write \"**/*.tsx\" \"**/*.ts\" \"**/*.graphql\"",
+    "format:graphql": "prettier --write \"**/*.graphql*\"",
+    "preview": "vite preview",
+    "codegen": "graphql-codegen && yarn format:graphql"
   },
   "dependencies": {
+    "@apollo/client": "^3.10.4",
     "formik": "^2.4.6",
+    "graphql": "^16.8.1",
+    "lint-staged": "^15.2.4",
+    "prettier": "^3.2.5",
+    "pretty-quick": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",
     "zod": "^3.23.8"
   },
+  "lint-staged": {
+    "!(*graphql.types).{ts,tsx}": [
+      "eslint --cache",
+      "pretty-quick --staged"
+    ]
+  },
   "devDependencies": {
+    "@graphql-codegen/add": "^5.0.2",
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/fragment-matcher": "^5.0.2",
+    "@graphql-codegen/near-operation-file-preset": "^3.0.0",
+    "@graphql-codegen/typescript": "^4.0.7",
+    "@graphql-codegen/typescript-operations": "^4.2.1",
+    "@graphql-codegen/typescript-react-apollo": "^4.3.0",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
@@ -25,6 +48,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
+    "husky": "8.0.1",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
   }
