@@ -4,11 +4,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Import
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 @SpringBootApplication(scanBasePackages = [
 	"backend.bonuses",
 	"backend.categories",
 	"backend.chestAward",
+	"backend.award",
 	"backend.chestHistory",
 	"backend.chests",
 	"backend.levels",
