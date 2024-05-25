@@ -1,0 +1,18 @@
+table:
+  name: award
+  schema: public
+array_relationships:
+  - name: bonuses
+    using:
+      foreign_key_constraint_on:
+        column: award_id
+        table:
+          name: bonuses
+          schema: public
+  - name: chest_awards
+    using:
+      foreign_key_constraint_on:
+        column: award_id
+        table:
+          name: chest_award
+          schema: public

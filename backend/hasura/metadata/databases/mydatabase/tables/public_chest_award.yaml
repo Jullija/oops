@@ -2,14 +2,9 @@ table:
   name: chest_award
   schema: public
 object_relationships:
+  - name: award
+    using:
+      foreign_key_constraint_on: award_id
   - name: chest
     using:
       foreign_key_constraint_on: chest_id
-array_relationships:
-  - name: bonuses
-    using:
-      foreign_key_constraint_on:
-        column: award_id
-        table:
-          name: bonuses
-          schema: public
