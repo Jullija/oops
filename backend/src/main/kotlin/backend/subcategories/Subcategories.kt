@@ -16,10 +16,15 @@ class Subcategories(
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
-    var category: Categories
+    var category: Categories,
+
+
+    @Column(name = "label", nullable = false, length = 256)
+    var label: String
 ) {
     constructor() : this(
         subcategoryName = "",
-        category = Categories()
+        category = Categories(),
+        label = ""
     )
 }

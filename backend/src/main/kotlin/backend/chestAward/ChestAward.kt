@@ -1,5 +1,6 @@
 package backend.chestAward
 
+import backend.award.Award
 import backend.chests.Chests
 import jakarta.persistence.*
 
@@ -8,8 +9,12 @@ import jakarta.persistence.*
 class ChestAward(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "award_id")
-    val awardId: Long = 0,
+    @Column(name = "chest_award_id")
+    val chestAwardId: Long = 0,
+
+    @ManyToOne
+    @JoinColumn(name = "award_id", referencedColumnName = "award_id")
+    var award: Award,
 
     @ManyToOne
     @JoinColumn(name = "chest_id", referencedColumnName = "chest_id")
@@ -19,11 +24,16 @@ class ChestAward(
     var name: String,
 
     @Column(name = "bonus", nullable = false)
-    var bonus: Long
+    var bonus: Long,
+
+    @Column(name = "label", nullable = false, length = 256)
+    var label: String,
 ) {
     constructor() : this(
+        award = Award(),
         chestId = Chests(),
         name = "",
-        bonus = 0
+        bonus = 0,
+        label = ""
     )
 }

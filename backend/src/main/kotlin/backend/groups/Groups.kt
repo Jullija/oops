@@ -21,7 +21,7 @@ class Groups(
     var label: String = "",
 
     @ManyToMany(mappedBy = "groups")
-    val users: Set<Users> = HashSet()
+    val users: Set<Users> = HashSet(),
 ) {
     constructor() : this(
         groupName = "",

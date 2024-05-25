@@ -11,9 +11,14 @@ class Chests(
     val chestId: Long = 0,
 
     @Column(name = "type", nullable = false)
-    var type: String
+    var type: String,
+
+
+    @Column(name = "label", nullable = false, length = 256)
+    var label: String
 ) {
     constructor() : this(
-        type = ""
+        type = "",
+        label = ""
     )
 }

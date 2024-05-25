@@ -60,7 +60,7 @@ CREATE TABLE user_groups (
                              CONSTRAINT fk_group FOREIGN KEY (group_id) REFERENCES groups(groups_id)
 );
 CREATE TABLE chest_award (
-                             award_id SERIAL PRIMARY KEY,
+                             chest_award_id SERIAL PRIMARY KEY,
                              chest_id INT NOT NULL,
                              name VARCHAR(255) NOT NULL,
                              bonus BIGINT NOT NULL,
@@ -70,10 +70,8 @@ CREATE TABLE chest_award (
 CREATE TABLE bonuses (
                          bonus_id SERIAL PRIMARY KEY,
                          points_id INT NOT NULL,
-                         award_id INT NOT NULL,
                          subcategory_id INT NOT NULL,
                          CONSTRAINT fk_points FOREIGN KEY (points_id) REFERENCES points(points_id),
-                         CONSTRAINT fk_award FOREIGN KEY (award_id) REFERENCES chest_award(award_id),
                          CONSTRAINT fk_subcategory FOREIGN KEY (subcategory_id) REFERENCES subcategories(subcategory_id)
 );
 

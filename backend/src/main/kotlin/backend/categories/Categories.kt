@@ -12,9 +12,13 @@ class Categories(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category_name", nullable = false)
-    var categoryName: CategoriesEnum
+    var categoryName: CategoriesEnum,
+
+    @Column(name = "label", nullable = false, length = 256)
+    var label: String
 ) {
     constructor() : this(
-        categoryName = CategoriesEnum.LABORATORIA
+        categoryName = CategoriesEnum.LABORATORIA,
+        label = ""
     )
 }

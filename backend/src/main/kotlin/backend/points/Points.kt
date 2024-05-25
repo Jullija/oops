@@ -2,6 +2,7 @@ package backend.points
 
 import backend.subcategories.Subcategories
 import backend.users.Users
+import backend.utils.TimestampModel
 import jakarta.persistence.*
 
 @Entity
@@ -25,13 +26,18 @@ class Points(
 
     @ManyToOne
     @JoinColumn(name = "subcategory_id", referencedColumnName = "subcategory_id")
-    var subcategory: Subcategories
-) {
+    var subcategory: Subcategories,
+
+
+    @Column(name = "label", nullable = false, length = 256)
+    var label: String
+) : TimestampModel(){
     constructor() : this(
         userId = Users(),
         fromWho = Users(),
         howMany = 0,
-        subcategory = Subcategories()
+        subcategory = Subcategories(),
+        label = ""
     )
 }
 
