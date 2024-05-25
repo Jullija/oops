@@ -19,20 +19,30 @@ class Levels(
     @Column(name = "maximum_points", nullable = false)
     var maximumPoints: Double,
 
+    @Column(name = "grade", nullable = false)
+    var grade: Double,
+
     @Column(name = "avatar", nullable = true)
-    var avatar: String = "" // image URL or path
+    var avatar: String = "", // image URL or path
+
+    @Column(name = "label", nullable = false, length = 256)
+    var label: String
 ) {
 
     protected constructor() : this(
         name = "",
         minimumPoints = 0.0,
-        maximumPoints = 0.0
+        maximumPoints = 0.0,
+        grade = 2.0,
+        label = ""
     )
 
-    constructor(name: String, minimumPoints: Double, maximumPoints: Double):this(
+    constructor(name: String, minimumPoints: Double, maximumPoints: Double, grade: Double):this(
         name = name,
         minimumPoints = minimumPoints,
         maximumPoints = maximumPoints,
-        avatar = ""
+        grade = grade,
+        avatar = "",
+        label = ""
     )
 }

@@ -1,3 +1,4 @@
+- "!include public_award.yaml"
 - "!include public_bonuses.yaml"
 - "!include public_categories.yaml"
 - "!include public_chest_award.yaml"

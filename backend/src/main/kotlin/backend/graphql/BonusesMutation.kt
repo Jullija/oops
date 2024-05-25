@@ -1,5 +1,6 @@
 package backend.graphql
 
+import backend.award.AwardRepository
 import backend.bonuses.Bonuses
 import backend.bonuses.BonusesRepository
 import backend.points.Points
@@ -7,6 +8,7 @@ import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
 import backend.chestAward.ChestAwardRepository
+import backend.chestHistory.ChestHistoryRepository
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -29,7 +31,11 @@ class BonusesMutation {
     lateinit var subcategoriesRepository: SubcategoriesRepository
 
     @Autowired
-    lateinit var chestAwardRepository: ChestAwardRepository
+    lateinit var awardRepository: AwardRepository
+
+    @Autowired
+    lateinit var chestHistoryRepository: ChestHistoryRepository
+
 
     @DgsMutation
     @Transactional
@@ -44,7 +50,10 @@ class BonusesMutation {
             .orElseThrow { IllegalArgumentException("Teacher not found") }
         val subcategory = subcategoriesRepository.findById(subcategoryId)
             .orElseThrow { IllegalArgumentException("Subcategory not found") }
-        val award = chestAwardRepository.findById(awardId)
+        val award = awardRepository.findById(awardId)
+            .orElseThrow { IllegalArgumentException("Award not found") }
+
+        val chestHistory = chestHistoryRepository.findById(awardId)
             .orElseThrow { IllegalArgumentException("Award not found") }
 
         // Create Points record
@@ -52,7 +61,8 @@ class BonusesMutation {
             userId = student,
             fromWho = teacher,
             howMany = howMany,
-            subcategory = subcategory
+            subcategory = subcategory,
+            label = ""
         )
         pointsRepository.save(points)
 
@@ -60,7 +70,9 @@ class BonusesMutation {
         val bonus = Bonuses(
             points = points,
             award = award,
-            subcategory = subcategory
+            subcategory = subcategory,
+            label ="",
+            chestHistoryId = chestHistory
         )
         return bonusesRepository.save(bonus)
     }

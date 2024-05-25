@@ -2,6 +2,13 @@ table:
   name: chest_history
   schema: public
 object_relationships:
+  - name: bonuse
+    using:
+      foreign_key_constraint_on:
+        column: chest_history_id
+        table:
+          name: bonuses
+          schema: public
   - name: chest
     using:
       foreign_key_constraint_on: chest_id

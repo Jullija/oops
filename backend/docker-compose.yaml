@@ -12,7 +12,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./initdb:/docker-entrypoint-initdb.d
-
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   hasura:
     image: hasura/graphql-engine:latest
@@ -20,7 +24,9 @@ services:
     ports:
       - "9191:8080" # Mapping custom external port 9191 to internal default Hasura port 8080
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    restart: always
     environment:
       HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:password@postgres:5432/mydatabase # Internal port 5432 remains the same
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
