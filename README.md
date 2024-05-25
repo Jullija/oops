@@ -6,7 +6,6 @@ Object Oriented Programming System
 This is a step-by-step guide on how to run Oops application locally.
 
 ### Reqirements
-We use hasura middleware 
 
 * [Docker desktop](https://www.docker.com/products/docker-desktop/)
 * [Intellij Idea with Java 17](https://www.jetbrains.com/idea/)
@@ -18,7 +17,9 @@ We use hasura middleware
 1. Clone this repository with ```git clone https://github.com/Jullija/oops.git```
 2. Cd into backend directory ```cd oops/backend```
 3. Run Docker desktop
-4. Run ```docker compose up -d```. Note: If you're on Windows/Linux you should remove ```platfor: linux/arm64/v8``` from ```docker-compose.yaml```
+4. Run ```docker compose up -d```.
+   
+   Note: If you're on Windows/Linux you should remove ```platfor: linux/arm64/v8``` from ```docker-compose.yaml```
 5. Open Intellij Idea in backend project folder
 6. Setup sdk to use Java 17. (On MacOs click ```cmd + ;```)
 7. Build a project with gradle, alternatively run ```./gradlew build``` (```./gradlew.bat build``` for Windows)
