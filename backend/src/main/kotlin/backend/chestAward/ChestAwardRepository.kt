@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ChestAwardRepository : JpaRepository<ChestAward, Long> {
 
-    fun findByNameAndChestId(name: String, chestId: Chests) : List<ChestAward>
 }

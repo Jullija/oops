@@ -20,20 +20,12 @@ class ChestAward(
     @JoinColumn(name = "chest_id", referencedColumnName = "chest_id")
     var chestId: Chests,
 
-    @Column(name = "name", nullable = false)
-    var name: String,
-
-    @Column(name = "bonus", nullable = false)
-    var bonus: Long,
-
     @Column(name = "label", nullable = false, length = 256)
     var label: String,
 ) {
     constructor() : this(
         award = Award(),
         chestId = Chests(),
-        name = "",
-        bonus = 0,
         label = ""
     )
 }
