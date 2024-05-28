@@ -13,7 +13,6 @@ class Chests(
     @Column(name = "type", nullable = false)
     var type: String,
 
-
     @Column(name = "label", nullable = false, length = 256)
     var label: String
 ) {

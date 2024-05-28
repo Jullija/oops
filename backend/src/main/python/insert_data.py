@@ -38,6 +38,7 @@ def truncate_and_restart_sequences():
     conn.close()
 
 
+
 def insert_data(data_count_multiplier=1):
     conn = create_connection()
     cursor = conn.cursor()
@@ -101,7 +102,15 @@ def insert_data(data_count_multiplier=1):
                                range(total_groups)]
     total_students = sum(students_in_group_count)
 
+    def generate_unique_index_number(existing_index_numbers):
+        while True:
+            index_number = fake.random_int(min=502000, max=504000)
+            if index_number not in existing_index_numbers:
+                return index_number
+
+
     # Insert data into users
+    existing_index_numbers = set()
     users = []
     roles = ['STUDENT'] * total_students + ['TEACHER'] * 7 + ['COORDINATOR']
     random.shuffle(roles)
@@ -109,7 +118,8 @@ def insert_data(data_count_multiplier=1):
         nick = fake.user_name()
         first_name = fake.first_name()
         second_name = fake.last_name()
-        index_number = fake.random_int(min=1000, max=9999)
+        index_number = generate_unique_index_number(existing_index_numbers)
+        existing_index_numbers.add(index_number)
         cursor.execute(
             "INSERT INTO users (nick, role, index_number, first_name, second_name, label) VALUES (%s, %s, %s, %s, %s, %s) RETURNING user_id",
             (nick, role, index_number, first_name, second_name, ""))
