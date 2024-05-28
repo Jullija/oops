@@ -45,11 +45,7 @@ def insert_data(data_count_multiplier=1):
     Faker.seed(1234)
     random.seed(1234)
 
-    category_names = ["LABORATORIA", "KARTKÓWKI", "PROJEKT", "EVENT"]
-    chest_count = 3
-    point_count = 200
-    bonus_count = 5
-    chest_history_count = 5
+    category_names = ["LABORATORY", "TEST", "PROJECT", "EVENT"]
 
     # Insert data into categories
     categories = {}
@@ -107,7 +103,7 @@ def insert_data(data_count_multiplier=1):
 
     # Insert data into users
     users = []
-    roles = ['student'] * total_students + ['teacher'] * 7 + ['COORDINATOR']
+    roles = ['STUDENT'] * total_students + ['TEACHER'] * 7 + ['COORDINATOR']
     random.shuffle(roles)
     for role in roles:
         nick = fake.user_name()
@@ -120,7 +116,7 @@ def insert_data(data_count_multiplier=1):
         users.append(cursor.fetchone()[0])
 
     # Assign students to groups
-    student_ids = [user_id for user_id, role in zip(users, roles) if role == 'student']
+    student_ids = [user_id for user_id, role in zip(users, roles) if role == 'STUDENT']
     random.shuffle(student_ids)
 
     student_index = 0
@@ -132,7 +128,7 @@ def insert_data(data_count_multiplier=1):
                 student_index += 1
 
     # Assign teachers and coordinators to groups randomly
-    teacher_ids = [user_id for user_id, role in zip(users, roles) if role == 'teacher']
+    teacher_ids = [user_id for user_id, role in zip(users, roles) if role == 'TEACHER']
     coordinator_id = [user_id for user_id, role in zip(users, roles) if role == 'COORDINATOR'][0]
 
     # Create a list of all teachers and the coordinator
@@ -167,9 +163,9 @@ def insert_data(data_count_multiplier=1):
 
     # Insert data into subcategories
     subcategories_data = {
-        "LABORATORIA": [f"lab_{i}" for i in range(1, 15)],
-        "KARTKÓWKI": [f"kart_{i}" for i in range(1, 15)],
-        "PROJEKT": [f"proj_{i}" for i in range(1, 4)],
+        "LABORATORY": [f"lab_{i}" for i in range(1, 15)],
+        "TEST": [f"kart_{i}" for i in range(1, 15)],
+        "PROJECT": [f"proj_{i}" for i in range(1, 4)],
         "EVENT": ["Gitowe Dziady", "Spooky Spring", "Constructor Christmas"]
     }
 
@@ -215,7 +211,7 @@ def insert_data(data_count_multiplier=1):
                 SELECT group_id
                 FROM user_groups
                 WHERE user_id = %s
-            ) AND u.role = 'student'
+            ) AND u.role = 'STUDENT'
             ORDER BY RANDOM()
             LIMIT 1
         """, (teacher_id,))
@@ -223,7 +219,7 @@ def insert_data(data_count_multiplier=1):
 
         # 1. Insert a record in the chest_history table to represent the student receiving a chest from the teacher.
         chest_id = random.choice(chest_ids)
-        subcategory_id = random.choice([s for s in subcategories if subcategory_to_category[s] in ["EVENT", "PROJEKT"]])
+        subcategory_id = random.choice([s for s in subcategories if subcategory_to_category[s] in ["EVENT", "PROJECT"]])
         cursor.execute(
             "INSERT INTO chest_history (user_id, chest_id, subcategory_id, label, created_at, updated_at) VALUES (%s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING chest_history_id",
             (student_id, chest_id, subcategory_id, "")
@@ -238,7 +234,7 @@ def insert_data(data_count_multiplier=1):
         # 3. Create an initial point record in the points table for the student by the teacher.
         initial_points = random.randint(10, 50)
         cursor.execute(
-            "INSERT INTO points (student_id, teacher_id, how_many, subcategory_id, label, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING points_id",
+            "INSERT INTO points (student_id, teacher_id, value, subcategory_id, label, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING points_id",
             (student_id, teacher_id, initial_points, subcategory_id, "")
         )
         points_id = cursor.fetchone()[0]
@@ -251,11 +247,11 @@ def insert_data(data_count_multiplier=1):
         bonus_id = cursor.fetchone()[0]
 
         # 5. Update the points in the points table based on the chosen award from the bonuses table.
-        cursor.execute("SELECT how_many FROM points WHERE points_id = %s", (points_id,))
+        cursor.execute("SELECT value FROM points WHERE points_id = %s", (points_id,))
         current_points = cursor.fetchone()[0]
         bonus_points = chosen_award_id * 10  # Each award gives points based on award_id * 10
         updated_points = current_points + bonus_points
-        cursor.execute("UPDATE points SET how_many = %s WHERE points_id = %s", (updated_points, points_id))
+        cursor.execute("UPDATE points SET value = %s WHERE points_id = %s", (updated_points, points_id))
 
         # Print user roles and award names
         cursor.execute("SELECT role FROM users WHERE user_id = %s", (teacher_id,))
@@ -276,19 +272,19 @@ def insert_data(data_count_multiplier=1):
                 SELECT group_id
                 FROM user_groups
                 WHERE user_id = %s
-            ) AND u.role = 'student'
+            ) AND u.role = 'STUDENT'
             ORDER BY RANDOM()
             LIMIT 1
         """, (teacher_id,))
         student_id = cursor.fetchone()[0]
 
-        # Choose a subcategory from LABORATORIA or KARTKÓWKI
-        subcategory_id = random.choice([s for s in subcategories if subcategory_to_category[s] in ["LABORATORIA", "KARTKÓWKI"]])
+        # Choose a subcategory from LABORATORY or TEST
+        subcategory_id = random.choice([s for s in subcategories if subcategory_to_category[s] in ["LABORATORY", "TEST"]])
 
         # Add points to the student for the chosen subcategory
         points = random.randint(5, 20)
         cursor.execute(
-            "INSERT INTO points (student_id, teacher_id, how_many, subcategory_id, label, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)",
+            "INSERT INTO points (student_id, teacher_id, value, subcategory_id, label, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)",
             (student_id, teacher_id, points, subcategory_id, "")
         )
 
@@ -300,7 +296,7 @@ def insert_data(data_count_multiplier=1):
             give_chest_and_apply_award(teacher_id)
             add_points_for_laboratory_or_test(teacher_id)
 
-    # Coordinator gives chests to random students
+    # coordinator gives chests to random students
     for _ in range(5):  # Adjust the number of times you want to model this process for the coordinator
         student_id = random.choice(student_ids)
         give_chest_and_apply_award(coordinator_id)

@@ -58,10 +58,10 @@ class BonusesMutation {
 
         // Create Points record
         val points = Points(
-            userId = student,
-            fromWho = teacher,
-            howMany = howMany,
-            subcategory = subcategory,
+            studentId = student,
+            teacherId = teacher,
+            value = howMany,
+            subcategoryId = subcategory,
             label = ""
         )
         pointsRepository.save(points)

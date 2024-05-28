@@ -18,7 +18,7 @@ class Categories(
     var label: String
 ) {
     constructor() : this(
-        categoryName = CategoriesEnum.LABORATORIA,
+        categoryName = CategoriesEnum.LABORATORY,
         label = ""
     )
 }
