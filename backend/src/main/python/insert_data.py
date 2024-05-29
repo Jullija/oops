@@ -77,19 +77,19 @@ def insert_data(data_count_multiplier=1):
 
     # Insert data into awards
     awards = [
-        ("Lekarstwo", "Restore", ""),
-        ("Weterynarz", "Restore", ""),
-        ("Marchewka laboratoryjna", "Multiplier", ""),
-        ("Marchewka projektowa", "Multiplier", ""),
-        ("Rabat na sianko", "Discount", ""),
-        ("LekarstwoV2", "Discount", ""),
-        ("WeterynarzV2", "Multiplier", "")
+        ("Lekarstwo", "Restore", 6, ""),
+        ("Weterynarz", "Restore", 2, ""),
+        ("Marchewka laboratoryjna", "Multiplier", 2, ""),
+        ("Marchewka projektowa", "Multiplier", 2, ""),
+        ("Rabat na sianko", "Discount", 2, ""),
+        ("LekarstwoV2", "Discount", 2, ""),
+        ("WeterynarzV2", "Multiplier", -1, "")
     ]
     award_ids = []
     award_name_map = {}
-    for name, award_type, label in awards:
-        cursor.execute("INSERT INTO award (award_name, award_type, label) VALUES (%s, %s, %s) RETURNING award_id",
-                       (name, award_type, ""))
+    for name, award_type, max_usages, label in awards:
+        cursor.execute("INSERT INTO award (award_name, award_type, max_usages, label) VALUES (%s, %s, %s, %s) RETURNING award_id",
+                       (name, award_type, max_usages, ""))
         award_id = cursor.fetchone()[0]
         award_ids.append(award_id)
         award_name_map[award_id] = name

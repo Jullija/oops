@@ -18,6 +18,9 @@ class Award (
         @Column(name="award_type", nullable = false)
         var awardType: AwardType,
 
+        @Column(name = "max_usages", nullable = false)
+        var maxUsages: Int,
+
         @OneToMany(mappedBy = "award", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
         val awardEditions: Set<AwardEdition> = HashSet(),
 
@@ -27,6 +30,7 @@ class Award (
         constructor() : this(
                 awardName = "",
                 awardType = AwardType.ADDITIVE,
+                maxUsages = 1,
                 awardEditions = HashSet(),
                 label = ""
         )
