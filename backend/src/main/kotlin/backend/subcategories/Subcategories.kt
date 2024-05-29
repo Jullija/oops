@@ -1,6 +1,7 @@
 package backend.subcategories
 
 import backend.categories.Categories
+import backend.edition.Edition
 import jakarta.persistence.*
 
 @Entity
@@ -18,6 +19,9 @@ class Subcategories(
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     var category: Categories,
 
+    @ManyToOne
+    @JoinColumn(name = "edition_id", referencedColumnName = "edition_id")
+    var edition: Edition,
 
     @Column(name = "label", nullable = false, length = 256)
     var label: String
@@ -25,6 +29,7 @@ class Subcategories(
     constructor() : this(
         subcategoryName = "",
         category = Categories(),
+        edition = Edition(),
         label = ""
     )
 }

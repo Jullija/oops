@@ -23,7 +23,7 @@ def truncate_and_restart_sequences():
     # Truncate tables
     tables = [
         "bonuses", "chest_history", "chest_award", "user_groups", "points",
-        "users", "subcategories", "levels", "groups", "chests", "categories", "award"
+        "users", "subcategories", "levels", "groups", "chests", "categories", "award", "edition", "award_edition"
     ]
 
     for table in tables:
@@ -36,7 +36,6 @@ def truncate_and_restart_sequences():
     conn.commit()
     cursor.close()
     conn.close()
-
 
 
 def insert_data(data_count_multiplier=1):
@@ -55,6 +54,14 @@ def insert_data(data_count_multiplier=1):
                        (category_name, ""))
         categories[category_name] = cursor.fetchone()[0]
 
+    # Insert data into editions
+    editions = {}
+    for year in range(2020, 2026):
+        name = f"Edition {year}"
+        cursor.execute("INSERT INTO edition (name, edition_year, label) VALUES (%s, %s, %s) RETURNING edition_id",
+                       (name, year, ""))
+        editions[year] = cursor.fetchone()[0]
+
     # Insert data into chests
     chests = [
         ("Gold Chest", "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/reward_gold.png"),
@@ -62,10 +69,11 @@ def insert_data(data_count_multiplier=1):
         ("Bronze Chest", "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/reward_bronze.png")
     ]
     chest_ids = []
-    for name, image_url in chests:
-        cursor.execute("INSERT INTO chests (type, label) VALUES (%s, %s) RETURNING chest_id",
-                       (name, ""))
-        chest_ids.append(cursor.fetchone()[0])
+    for year, edition_id in editions.items():
+        for name, image_url in chests:
+            cursor.execute("INSERT INTO chests (type, label, edition_id) VALUES (%s, %s, %s) RETURNING chest_id",
+                           (name, "", edition_id))
+            chest_ids.append(cursor.fetchone()[0])
 
     # Insert data into awards
     awards = [
@@ -73,7 +81,9 @@ def insert_data(data_count_multiplier=1):
         ("Weterynarz", "Restore", ""),
         ("Marchewka laboratoryjna", "Multiplier", ""),
         ("Marchewka projektowa", "Multiplier", ""),
-        ("Rabat na sianko", "Discount", "")
+        ("Rabat na sianko", "Discount", ""),
+        ("LekarstwoV2", "Discount", ""),
+        ("WeterynarzV2", "Multiplier", "")
     ]
     award_ids = []
     award_name_map = {}
@@ -84,15 +94,31 @@ def insert_data(data_count_multiplier=1):
         award_ids.append(award_id)
         award_name_map[award_id] = name
 
+    # Insert data into award_edition with specific editions for each award
+    award_editions = {
+        "Lekarstwo": [2020, 2021],
+        "Weterynarz": [2021, 2022],
+        "Marchewka laboratoryjna": [2020, 2021],
+        "Marchewka projektowa": [2021, 2023],
+        "Rabat na sianko": [2023, 2024],
+        "LekarstwoV2": [2022, 2023],
+        "WeterynarzV2": [2024, 2025]
+    }
+
+    for award_id, name in zip(award_ids, award_name_map.values()):
+        for year in award_editions[name]:
+            if year in editions:
+                cursor.execute("INSERT INTO award_edition (award_id, edition_id, label) VALUES (%s, %s, %s)",
+                               (award_id, editions[year], ""))
+
     # Insert data into groups
     groups = []
     year_group_counts = {year: random.randint(12, 15) for year in range(2020, 2026)}
     for year, count in year_group_counts.items():
         for i in range(1, count + 1):
             group_name = f"gr_{i}"
-            group_year = year
-            cursor.execute("INSERT INTO groups (group_name, group_year) VALUES (%s, %s) RETURNING groups_id",
-                           (group_name, group_year))
+            cursor.execute("INSERT INTO groups (group_name, edition_id, label) VALUES (%s, %s, %s) RETURNING groups_id",
+                           (group_name, editions[year], ""))
             groups.append(cursor.fetchone()[0])
 
     total_groups = sum(year_group_counts.values())
@@ -107,7 +133,6 @@ def insert_data(data_count_multiplier=1):
             index_number = fake.random_int(min=502000, max=504000)
             if index_number not in existing_index_numbers:
                 return index_number
-
 
     # Insert data into users
     existing_index_numbers = set()
@@ -168,8 +193,8 @@ def insert_data(data_count_multiplier=1):
 
     for name, min_points, max_points, avatar, grade, label in levels_data:
         cursor.execute(
-            "INSERT INTO levels (name, minimum_points, maximum_points, avatar, grade, label) VALUES (%s, %s, %s, %s, %s, %s) RETURNING level_id",
-            (name, min_points, max_points, avatar, grade, ""))
+            "INSERT INTO levels (name, minimum_points, maximum_points, avatar, grade, label, edition_id) VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING level_id",
+            (name, min_points, max_points, avatar, grade, "", random.choice(list(editions.values()))))
 
     # Insert data into subcategories
     subcategories_data = {
@@ -184,39 +209,34 @@ def insert_data(data_count_multiplier=1):
     for category_name, subcategory_names in subcategories_data.items():
         for subcategory_name in subcategory_names:
             cursor.execute(
-                "INSERT INTO subcategories (subcategory_name, category_id, label) VALUES (%s, %s, %s) RETURNING subcategory_id",
-                (subcategory_name, categories[category_name], ""))
+                "INSERT INTO subcategories (subcategory_name, category_id, label, edition_id) VALUES (%s, %s, %s, %s) RETURNING subcategory_id",
+                (subcategory_name, categories[category_name], "", random.choice(list(editions.values()))))
             subcategory_id = cursor.fetchone()[0]
             subcategories.append(subcategory_id)
             subcategory_to_category[subcategory_id] = category_name
 
     # Insert data into chest_award
-    chest_awards_content = [
-        (chest_ids[0], 1),
-        (chest_ids[1], 1),
-        (chest_ids[2], 1),
-        (chest_ids[0], 2),
-        (chest_ids[1], 2),
-        (chest_ids[2], 2),
-        (chest_ids[1], 3),
-        (chest_ids[0], 4),
-        (chest_ids[0], 5)
-    ]
-
     chest_awards = []
-    for chest_id, award_id in chest_awards_content:
-        cursor.execute(
-            "INSERT INTO chest_award (chest_id, award_id, label) VALUES (%s, %s, %s) RETURNING award_id",
-            (chest_id, award_id, ""))
-        chest_awards.append(cursor.fetchone()[0])
+    for chest_id in chest_ids:
+        cursor.execute("SELECT edition_id FROM chests WHERE chest_id = %s", (chest_id,))
+        chest_edition_id = cursor.fetchone()[0]
+        cursor.execute("SELECT award_id FROM award_edition WHERE edition_id = %s", (chest_edition_id,))
+        valid_awards = cursor.fetchall()
+        for award in valid_awards:
+            award_id = award[0]
+            cursor.execute(
+                "INSERT INTO chest_award (chest_id, award_id, label) VALUES (%s, %s, %s) RETURNING award_id",
+                (chest_id, award_id, ""))
+            chest_awards.append(cursor.fetchone()[0])
 
     # Function to model giving a chest to a student, choosing an award, and applying the bonus
     def give_chest_and_apply_award(teacher_id):
         # Choose a random student from the teacher's group
         cursor.execute("""
-            SELECT u.user_id
+            SELECT u.user_id, g.edition_id
             FROM users u
             JOIN user_groups ug ON u.user_id = ug.user_id
+            JOIN groups g ON ug.group_id = g.groups_id
             WHERE ug.group_id IN (
                 SELECT group_id
                 FROM user_groups
@@ -225,10 +245,24 @@ def insert_data(data_count_multiplier=1):
             ORDER BY RANDOM()
             LIMIT 1
         """, (teacher_id,))
-        student_id = cursor.fetchone()[0]
+        student_record = cursor.fetchone()
+        student_id = student_record[0]
+        edition_id = student_record[1]
+
+        # Check that both the teacher and student are in the same edition
+        cursor.execute("""
+            SELECT 1
+            FROM user_groups ug
+            JOIN groups g ON ug.group_id = g.groups_id
+            WHERE ug.user_id = %s AND g.edition_id = %s
+        """, (teacher_id, edition_id))
+        if cursor.fetchone() is None:
+            print(f"Teacher {teacher_id} is not in the same edition as student {student_id}")
+            return
 
         # 1. Insert a record in the chest_history table to represent the student receiving a chest from the teacher.
-        chest_id = random.choice(chest_ids)
+        cursor.execute("SELECT chest_id FROM chests WHERE edition_id = %s ORDER BY RANDOM() LIMIT 1", (edition_id,))
+        chest_id = cursor.fetchone()[0]
         subcategory_id = random.choice([s for s in subcategories if subcategory_to_category[s] in ["EVENT", "PROJECT"]])
         cursor.execute(
             "INSERT INTO chest_history (user_id, chest_id, subcategory_id, label, created_at, updated_at) VALUES (%s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING chest_history_id",
@@ -242,7 +276,7 @@ def insert_data(data_count_multiplier=1):
         chosen_award_id = random.choice(available_awards)[0]
 
         # 3. Create an initial point record in the points table for the student by the teacher.
-        initial_points = random.randint(10, 50)
+        initial_points = 0
         cursor.execute(
             "INSERT INTO points (student_id, teacher_id, value, subcategory_id, label, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING points_id",
             (student_id, teacher_id, initial_points, subcategory_id, "")
@@ -269,7 +303,8 @@ def insert_data(data_count_multiplier=1):
         cursor.execute("SELECT role FROM users WHERE user_id = %s", (student_id,))
         student_role = cursor.fetchone()[0]
 
-        print(f"Teacher {teacher_id} ({teacher_role}) gave a chest to student {student_id} ({student_role}). Student chose award {chosen_award_id} ({award_name_map[chosen_award_id]}) and received {bonus_points} bonus points.")
+        print(
+            f"Teacher {teacher_id} ({teacher_role}) gave a chest to student {student_id} ({student_role}). Student chose award {chosen_award_id} ({award_name_map[chosen_award_id]}) and received {bonus_points} bonus points.")
 
     # New function for adding points for laboratory or test
     def add_points_for_laboratory_or_test(teacher_id):
@@ -306,7 +341,7 @@ def insert_data(data_count_multiplier=1):
             give_chest_and_apply_award(teacher_id)
             add_points_for_laboratory_or_test(teacher_id)
 
-    # coordinator gives chests to random students
+    # Coordinator gives chests to random students
     for _ in range(5):  # Adjust the number of times you want to model this process for the coordinator
         student_id = random.choice(student_ids)
         give_chest_and_apply_award(coordinator_id)

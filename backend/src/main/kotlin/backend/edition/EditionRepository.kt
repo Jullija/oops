@@ -1,9 +1,8 @@
-package backend.groups
+package backend.edition
 
-import backend.edition.Edition
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface GroupsRepository : JpaRepository<Groups, Long> {
+interface EditionRepository : JpaRepository<Edition, Long> {
 }

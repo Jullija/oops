@@ -1,5 +1,6 @@
 package backend.levels
 
+import backend.edition.Edition
 import jakarta.persistence.*
 
 @Entity
@@ -26,23 +27,28 @@ class Levels(
     var avatar: String = "", // image URL or path
 
     @Column(name = "label", nullable = false, length = 256)
-    var label: String
-) {
+    var label: String,
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "edition_id", nullable = false)
+    var edition: Edition
+) {
     protected constructor() : this(
         name = "",
         minimumPoints = 0.0,
         maximumPoints = 0.0,
         grade = 2.0,
-        label = ""
+        label = "",
+        edition = Edition()
     )
 
-    constructor(name: String, minimumPoints: Double, maximumPoints: Double, grade: Double):this(
+    constructor(name: String, minimumPoints: Double, maximumPoints: Double, grade: Double) : this(
         name = name,
         minimumPoints = minimumPoints,
         maximumPoints = maximumPoints,
         grade = grade,
         avatar = "",
-        label = ""
+        label = "",
+        edition = Edition()
     )
 }
