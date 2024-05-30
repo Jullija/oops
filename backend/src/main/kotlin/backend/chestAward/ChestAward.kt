@@ -18,14 +18,14 @@ class ChestAward(
 
     @ManyToOne
     @JoinColumn(name = "chest_id", referencedColumnName = "chest_id")
-    var chestId: Chests,
+    var chest: Chests,
 
     @Column(name = "label", nullable = false, length = 256)
     var label: String,
 ) {
     constructor() : this(
         award = Award(),
-        chestId = Chests(),
+        chest = Chests(),
         label = ""
     )
 }

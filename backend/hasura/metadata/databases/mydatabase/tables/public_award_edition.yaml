@@ -1,7 +1,10 @@
 table:
-  name: levels
+  name: award_edition
   schema: public
 object_relationships:
+  - name: award
+    using:
+      foreign_key_constraint_on: award_id
   - name: edition
     using:
       foreign_key_constraint_on: edition_id

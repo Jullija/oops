@@ -1,5 +1,6 @@
 package backend.chests
 
+import backend.edition.Edition
 import jakarta.persistence.*
 
 @Entity
@@ -11,14 +12,18 @@ class Chests(
     val chestId: Long = 0,
 
     @Column(name = "type", nullable = false)
-    var type: String,
-
+    var chestType: String,
 
     @Column(name = "label", nullable = false, length = 256)
-    var label: String
+    var label: String,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "edition_id", nullable = false)
+    var edition: Edition
 ) {
     constructor() : this(
-        type = "",
-        label = ""
+        chestType = "",
+        label = "",
+        edition = Edition()
     )
 }

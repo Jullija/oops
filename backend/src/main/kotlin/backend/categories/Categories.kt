@@ -10,15 +10,14 @@ class Categories(
     @Column(name = "category_id")
     val categoryId: Long = 0,
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "category_name", nullable = false)
-    var categoryName: CategoriesEnum,
+    @Column(name = "category_name", nullable = false, length = 256)
+    var categoryName: String,
 
     @Column(name = "label", nullable = false, length = 256)
     var label: String
 ) {
     constructor() : this(
-        categoryName = CategoriesEnum.LABORATORIA,
+        categoryName = "LABORATORY",
         label = ""
     )
 }

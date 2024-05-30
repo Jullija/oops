@@ -2,6 +2,13 @@ table:
   name: award
   schema: public
 array_relationships:
+  - name: award_editions
+    using:
+      foreign_key_constraint_on:
+        column: award_id
+        table:
+          name: award_edition
+          schema: public
   - name: bonuses
     using:
       foreign_key_constraint_on:

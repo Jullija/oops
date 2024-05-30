@@ -4,14 +4,14 @@ import backend.groups.Groups
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = [UniqueConstraint(columnNames = ["index_number"])])
 class Users(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     val userId: Long = 0,
 
-    @Column(name = "index_number", nullable = false)
+    @Column(name = "index_number", nullable = false, unique = true)
     var indexNumber: Int,
 
     @Column(name = "nick", nullable = false)
@@ -37,7 +37,6 @@ class Users(
 
     @Column(name = "label", nullable = false, length = 256)
     var label: String
-
 
 ) {
     constructor() : this(

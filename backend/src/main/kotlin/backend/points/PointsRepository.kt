@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface PointsRepository : JpaRepository<Points, Long> {
-    fun findByUserIdAndFromWhoAndSubcategory(userId: Users, fromWho: Users, subcategory: Subcategories) : List<Points>
+    fun findByStudentAndTeacherAndSubcategory(studentId: Users, teacherId: Users, subcategoryId: Subcategories) : List<Points>
 }
