@@ -1,6 +1,10 @@
 table:
   name: chests
   schema: public
+object_relationships:
+  - name: edition
+    using:
+      foreign_key_constraint_on: edition_id
 array_relationships:
   - name: chest_awards
     using:

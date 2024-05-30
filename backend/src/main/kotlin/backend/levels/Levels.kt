@@ -12,7 +12,7 @@ class Levels(
     val levelId: Long = 0,
 
     @Column(name = "name", nullable = false)
-    var name: String,
+    var levelName: String,
 
     @Column(name = "minimum_points", nullable = false)
     var minimumPoints: Double,
@@ -34,7 +34,7 @@ class Levels(
     var edition: Edition
 ) {
     protected constructor() : this(
-        name = "",
+        levelName = "",
         minimumPoints = 0.0,
         maximumPoints = 0.0,
         grade = 2.0,
@@ -43,7 +43,7 @@ class Levels(
     )
 
     constructor(name: String, minimumPoints: Double, maximumPoints: Double, grade: Double) : this(
-        name = name,
+        levelName = name,
         minimumPoints = minimumPoints,
         maximumPoints = maximumPoints,
         grade = grade,

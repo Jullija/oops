@@ -15,36 +15,36 @@ class Points(
 
     @ManyToOne
     @JoinColumn(name = "student_id", referencedColumnName = "user_id")
-    var studentId: Users,
+    var student: Users,
 
     @ManyToOne
     @JoinColumn(name = "teacher_id", referencedColumnName = "user_id")
-    var teacherId: Users,
+    var teacher: Users,
 
     @Column(name = "value", nullable = false)
     var value: Long,
 
     @ManyToOne
     @JoinColumn(name = "subcategory_id", referencedColumnName = "subcategory_id")
-    var subcategoryId: Subcategories,
+    var subcategory: Subcategories,
 
 
     @Column(name = "label", nullable = false, length = 256)
     var label: String
 ) : TimestampModel(){
     constructor() : this(
-        studentId = Users(),
-        teacherId = Users(),
+        student = Users(),
+        teacher = Users(),
         value = 0,
-        subcategoryId = Subcategories(),
+        subcategory = Subcategories(),
         label = ""
     )
 }
 
 
 data class PointsInput(
-    val studentId: Long,
-    val teacherId: Long,
+    val student: Long,
+    val teacher: Long,
     val value: Long,
-    val subcategoryId: Long
+    val subcategory: Long
 )

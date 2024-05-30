@@ -11,7 +11,7 @@ class Edition(
     val editionId: Long = 0,
 
     @Column(name = "name", nullable = false, length = 256)
-    var name: String,
+    var editionName: String,
 
     @Column(name = "edition_year", nullable = false)
     var editionYear: Int,
@@ -20,7 +20,7 @@ class Edition(
     var label: String
 ) {
     constructor() : this(
-        name = "",
+        editionName = "",
         editionYear = 0,
         label = ""
     )

@@ -31,7 +31,7 @@ class Bonuses(
 
     @OneToOne
     @JoinColumn(name = "chest_history_id", referencedColumnName = "chest_history_id")
-    var chestHistoryId: ChestHistory,
+    var chestHistory: ChestHistory,
 
     @Column(name = "label", nullable = false, length = 256)
     var label: String,
@@ -41,7 +41,7 @@ class Bonuses(
         points = Points(),
         award = Award(),
         subcategory = Subcategories(),
-        chestHistoryId = ChestHistory(),
+        chestHistory = ChestHistory(),
         label = ""
     )
 }

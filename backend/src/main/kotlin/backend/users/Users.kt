@@ -4,7 +4,7 @@ import backend.groups.Groups
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = [UniqueConstraint(columnNames = ["index_number"])])
 class Users(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,6 @@ class Users(
 
     @Column(name = "label", nullable = false, length = 256)
     var label: String
-
 
 ) {
     constructor() : this(

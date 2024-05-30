@@ -12,7 +12,7 @@ class Chests(
     val chestId: Long = 0,
 
     @Column(name = "type", nullable = false)
-    var type: String,
+    var chestType: String,
 
     @Column(name = "label", nullable = false, length = 256)
     var label: String,
@@ -22,7 +22,7 @@ class Chests(
     var edition: Edition
 ) {
     constructor() : this(
-        type = "",
+        chestType = "",
         label = "",
         edition = Edition()
     )
