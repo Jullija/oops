@@ -19,6 +19,11 @@ class ChestHistory(
     var user: Users,
 
     @ManyToOne
+    @JoinColumn(name = "teacher_id", referencedColumnName = "user_id")
+    var teacher: Users,
+
+
+    @ManyToOne
     @JoinColumn(name = "chest_id", referencedColumnName = "chest_id")
     var chest: Chests,
 
@@ -32,6 +37,7 @@ class ChestHistory(
 ): TimestampModel() {
     constructor() : this(
         user = Users(),
+        teacher = Users(),
         chest = Chests(),
         subcategory = Subcategories(),
         label = ""
