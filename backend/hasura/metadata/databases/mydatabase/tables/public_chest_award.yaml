@@ -8,3 +8,19 @@ object_relationships:
   - name: chest
     using:
       foreign_key_constraint_on: chest_id
+select_permissions:
+  - role: student
+    permission:
+      columns:
+        - award_id
+        - chest_award_id
+        - chest_id
+        - label
+      filter:
+        chest:
+          edition:
+            groups:
+              user_groups:
+                user_id:
+                  _eq: X-Hasura-User-Id
+    comment: ""

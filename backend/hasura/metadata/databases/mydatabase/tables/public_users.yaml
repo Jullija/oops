@@ -30,3 +30,23 @@ array_relationships:
         table:
           name: user_groups
           schema: public
+select_permissions:
+  - role: student
+    permission:
+      columns:
+        - first_name
+        - index_number
+        - label
+        - nick
+        - role
+        - second_name
+        - user_id
+      filter:
+        user_groups:
+          group:
+            edition:
+              groups:
+                user_groups:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+    comment: ""

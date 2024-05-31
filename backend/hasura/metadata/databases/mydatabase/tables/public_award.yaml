@@ -23,3 +23,37 @@ array_relationships:
         table:
           name: chest_award
           schema: public
+select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - award_id
+        - award_name
+        - award_type
+        - label
+        - max_usages
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: student
+    permission:
+      columns:
+        - award_id
+        - award_name
+        - award_type
+        - label
+        - max_usages
+      filter:
+        award_editions:
+          edition:
+            groups:
+              user_groups:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      allow_aggregations: true
+    comment: ""
+  - role: teacher
+    permission:
+      columns: []
+      filter: {}
+    comment: ""

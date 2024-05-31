@@ -9,3 +9,12 @@ array_relationships:
         table:
           name: subcategories
           schema: public
+select_permissions:
+  - role: student
+    permission:
+      columns:
+        - category_id
+        - category_name
+        - label
+      filter: {}
+    comment: ""

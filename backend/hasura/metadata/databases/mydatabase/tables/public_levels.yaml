@@ -5,3 +5,22 @@ object_relationships:
   - name: edition
     using:
       foreign_key_constraint_on: edition_id
+select_permissions:
+  - role: student
+    permission:
+      columns:
+        - avatar
+        - edition_id
+        - grade
+        - label
+        - level_id
+        - maximum_points
+        - minimum_points
+        - name
+      filter:
+        edition:
+          groups:
+            user_groups:
+              user_id:
+                _eq: X-Hasura-User-Id
+    comment: ""
