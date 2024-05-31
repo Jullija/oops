@@ -180,21 +180,46 @@ def insert_data(data_count_multiplier=1):
             teacher_to_student_map[assigned_teacher] = []
         teacher_to_student_map[assigned_teacher].append(group_id)
 
-    # Insert data into levels
-    levels_data = [
-        ("Jajo", 0, 25, "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear1.png", 2.0, ""),
-        ("Pisklak", 25, 50, "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear2.png", 2.0, ""),
-        ("Podlot", 50, 60, "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear3.png", 3.0, ""),
-        ("Żółtodziób", 60, 70, "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear4.png", 3.5, ""),
-        ("Nieopierzony odkrywca", 70, 80, "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear5.png", 4.0, ""),
-        ("Samodzielny Zwierzak", 80, 90, "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear6.png", 4.5, ""),
-        ("Majestatyczna Bestia", 90, 100, "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear7.png", 5.0, "")
-    ]
+    def generate_levels():
+        levels = []
+        for edition_id in editions.values():
+            for i in range(1, 8):
+                name = f"Level {i}"
+                min_points = 0 if i == 1 else levels[-1][2] + 1
+                max_points = min_points + random.randint(10, 20)
+                avatar = f"https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/level_{i}.png"
+                grade = random.uniform(2.0, 5.0)
+                levels.append((name, min_points, max_points, avatar, grade, edition_id))
+        return levels
 
-    for name, min_points, max_points, avatar, grade, label in levels_data:
-        cursor.execute(
-            "INSERT INTO levels (name, minimum_points, maximum_points, avatar, grade, label, edition_id) VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING level_id",
-            (name, min_points, max_points, avatar, grade, "", random.choice(list(editions.values()))))
+    def generate_levels():
+        levels = [0]
+        for i in range(1, 8):
+            if i < 3:
+                levels.append(levels[-1] + random.randint(40, 60))
+            else:
+                levels.append(levels[-1] + random.randint(10, 20))
+        for i in range(0, 8):
+            levels[i] = int(levels[i] / max(levels) * 100)
+        return levels
+    random_levels = [[0, 25, 50, 60, 70, 80, 90, 100]] + [generate_levels() for _ in range(len(editions.values())-1)]
+    # Insert data into levels
+    for i, edition_id in enumerate(editions.values()):
+        levels_values = random_levels[i]
+        levels_data = [
+            ("Jajo", levels_values[0], levels_values[1], "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear1.png", 2.0, ""),
+            ("Pisklak", levels_values[1], levels_values[2], "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear2.png", 2.0, ""),
+            ("Podlot", levels_values[2], levels_values[3], "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear3.png", 3.0, ""),
+            ("Żółtodziób", levels_values[3], levels_values[4], "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear4.png", 3.5, ""),
+            ("Nieopierzony odkrywca", levels_values[4], levels_values[5], "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear5.png", 4.0, ""),
+            ("Samodzielny Zwierzak", levels_values[5], levels_values[6], "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear6.png", 4.5, ""),
+            ("Majestatyczna Bestia", levels_values[6], levels_values[7], "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear7.png", 5.0, "")
+        ]
+
+        for name, min_points, max_points, avatar, grade, label in levels_data:
+            cursor.execute(
+                "INSERT INTO levels (name, minimum_points, maximum_points, avatar, grade, label, edition_id) VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING level_id",
+                (name, min_points, max_points, avatar, grade, "", random.choice(list(editions.values()))))
 
     # Insert data into subcategories
     subcategories_data = {
@@ -265,8 +290,8 @@ def insert_data(data_count_multiplier=1):
         chest_id = cursor.fetchone()[0]
         subcategory_id = random.choice([s for s in subcategories if subcategory_to_category[s] in ["EVENT", "PROJECT"]])
         cursor.execute(
-            "INSERT INTO chest_history (user_id, chest_id, subcategory_id, label, created_at, updated_at) VALUES (%s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING chest_history_id",
-            (student_id, chest_id, subcategory_id, "")
+            "INSERT INTO chest_history (user_id, chest_id, subcategory_id, label, created_at, updated_at, teacher_id) VALUES (%s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, %s) RETURNING chest_history_id",
+            (student_id, chest_id, subcategory_id, "", teacher_id)
         )
         chest_history_id = cursor.fetchone()[0]
 
