@@ -219,7 +219,7 @@ def insert_data(data_count_multiplier=1):
         for name, min_points, max_points, avatar, grade, label in levels_data:
             cursor.execute(
                 "INSERT INTO levels (name, minimum_points, maximum_points, avatar, grade, label, edition_id) VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING level_id",
-                (name, min_points, max_points, avatar, grade, "", random.choice(list(editions.values()))))
+                (name, min_points, max_points, avatar, grade, "", edition_id))
 
     # Insert data into subcategories
     subcategories_data = {
