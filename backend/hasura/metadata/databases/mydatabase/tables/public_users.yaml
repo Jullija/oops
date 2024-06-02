@@ -99,6 +99,13 @@ select_permissions:
                   user_id:
                     _eq: X-Hasura-User-Id
     comment: ""
+  - role: unauthenticated_user
+    permission:
+      columns:
+        - nick
+        - role
+      filter: {}
+    comment: ""
 update_permissions:
   - role: coordinator
     permission:
