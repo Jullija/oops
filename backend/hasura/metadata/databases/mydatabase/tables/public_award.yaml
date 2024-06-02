@@ -28,9 +28,7 @@ insert_permissions:
     permission:
       check: {}
       set:
-        award_type: Restore
         label: '""'
-        max_usages: "-1"
       columns:
         - award_name
         - award_type
@@ -93,4 +91,15 @@ update_permissions:
         - max_usages
       filter: {}
       check: {}
+      set:
+        label: '""'
+    comment: ""
+delete_permissions:
+  - role: coordinator
+    permission:
+      filter:
+        _not:
+          bonuses:
+            bonus_id:
+              _is_null: false
     comment: ""

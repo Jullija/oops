@@ -8,7 +8,28 @@ object_relationships:
   - name: chest
     using:
       foreign_key_constraint_on: chest_id
+insert_permissions:
+  - role: coordinator
+    permission:
+      check: {}
+      set:
+        label: '""'
+      columns:
+        - chest_award_id
+        - chest_id
+        - label
+    comment: ""
 select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - award_id
+        - chest_award_id
+        - chest_id
+        - label
+      filter: {}
+      allow_aggregations: true
+    comment: ""
   - role: student
     permission:
       columns:
@@ -38,4 +59,14 @@ select_permissions:
               user_groups:
                 user_id:
                   _eq: X-Hasura-User-Id
+    comment: ""
+update_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - label
+      filter: {}
+      check: {}
+      set:
+        label: '""'
     comment: ""

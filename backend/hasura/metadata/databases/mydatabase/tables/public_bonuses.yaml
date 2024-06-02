@@ -15,6 +15,20 @@ object_relationships:
     using:
       foreign_key_constraint_on: subcategory_id
 select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - award_id
+        - bonus_id
+        - chest_history_id
+        - points_id
+        - subcategory_id
+        - label
+        - created_at
+        - updated_at
+      filter: {}
+      allow_aggregations: true
+    comment: ""
   - role: student
     permission:
       columns:
@@ -46,4 +60,16 @@ select_permissions:
         chest_history:
           teacher_id:
             _eq: X-Hasura-User-Id
+    comment: ""
+update_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - award_id
+        - label
+        - subcategory_id
+      filter: {}
+      check: {}
+      set:
+        label: '""'
     comment: ""
