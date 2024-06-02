@@ -9,3 +9,60 @@ array_relationships:
         table:
           name: subcategories
           schema: public
+insert_permissions:
+  - role: coordinator
+    permission:
+      check: {}
+      set:
+        label: '""'
+      columns:
+        - category_name
+        - label
+    comment: ""
+select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - category_id
+        - category_name
+        - label
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: student
+    permission:
+      columns:
+        - category_id
+        - category_name
+        - label
+      filter: {}
+    comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - category_id
+        - category_name
+        - label
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - category_name
+        - label
+      filter: {}
+      check: {}
+      set:
+        label: '""'
+    comment: ""
+delete_permissions:
+  - role: coordinator
+    permission:
+      filter:
+        _not:
+          subcategories:
+            edition:
+              edition_id:
+                _is_null: false
+    comment: ""

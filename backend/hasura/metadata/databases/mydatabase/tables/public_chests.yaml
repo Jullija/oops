@@ -20,3 +20,73 @@ array_relationships:
         table:
           name: chest_history
           schema: public
+insert_permissions:
+  - role: coordinator
+    permission:
+      check: {}
+      set:
+        label: '""'
+      columns:
+        - edition_id
+        - label
+        - type
+    comment: ""
+select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - chest_id
+        - edition_id
+        - label
+        - type
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: student
+    permission:
+      columns:
+        - chest_id
+        - edition_id
+        - label
+        - type
+      filter:
+        edition:
+          groups:
+            user_groups:
+              user_id:
+                _eq: X-Hasura-User-Id
+    comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - chest_id
+        - edition_id
+        - label
+        - type
+      filter:
+        edition:
+          groups:
+            user_groups:
+              user_id:
+                _eq: X-Hasura-User-Id
+    comment: ""
+update_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - label
+        - type
+      filter: {}
+      check: {}
+      set:
+        label: '""'
+    comment: ""
+delete_permissions:
+  - role: coordinator
+    permission:
+      filter:
+        _not:
+          chest_histories:
+            chest_history_id:
+              _is_null: false
+    comment: ""

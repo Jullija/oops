@@ -23,3 +23,83 @@ array_relationships:
         table:
           name: chest_award
           schema: public
+insert_permissions:
+  - role: coordinator
+    permission:
+      check: {}
+      set:
+        label: '""'
+      columns:
+        - award_name
+        - award_type
+        - label
+        - max_usages
+    comment: ""
+select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - award_id
+        - award_name
+        - award_type
+        - label
+        - max_usages
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: student
+    permission:
+      columns:
+        - award_id
+        - award_name
+        - award_type
+        - label
+        - max_usages
+      filter:
+        award_editions:
+          edition:
+            groups:
+              user_groups:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      allow_aggregations: true
+    comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - award_id
+        - award_name
+        - award_type
+        - label
+        - max_usages
+      filter:
+        award_editions:
+          edition:
+            groups:
+              user_groups:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      allow_aggregations: true
+    comment: ""
+update_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - award_name
+        - award_type
+        - label
+        - max_usages
+      filter: {}
+      check: {}
+      set:
+        label: '""'
+    comment: ""
+delete_permissions:
+  - role: coordinator
+    permission:
+      filter:
+        _not:
+          bonuses:
+            bonus_id:
+              _is_null: false
+    comment: ""

@@ -2,7 +2,7 @@ table:
   name: chest_history
   schema: public
 object_relationships:
-  - name: bonuse
+  - name: bonus
     using:
       foreign_key_constraint_on:
         column: chest_history_id
@@ -18,3 +18,87 @@ object_relationships:
   - name: user
     using:
       foreign_key_constraint_on: user_id
+  - name: userByTeacherId
+    using:
+      foreign_key_constraint_on: teacher_id
+insert_permissions:
+  - role: coordinator
+    permission:
+      check: {}
+      set:
+        label: '""'
+      columns:
+        - chest_id
+        - label
+        - subcategory_id
+        - teacher_id
+        - user_id
+    comment: ""
+select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - chest_history_id
+        - chest_id
+        - subcategory_id
+        - teacher_id
+        - user_id
+        - label
+        - created_at
+        - updated_at
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: student
+    permission:
+      columns:
+        - chest_history_id
+        - chest_id
+        - created_at
+        - label
+        - subcategory_id
+        - teacher_id
+        - updated_at
+        - user_id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+    comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - chest_history_id
+        - chest_id
+        - created_at
+        - label
+        - subcategory_id
+        - teacher_id
+        - updated_at
+        - user_id
+      filter:
+        teacher_id:
+          _eq: X-Hasura-User-Id
+    comment: ""
+update_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - chest_id
+        - label
+        - subcategory_id
+        - teacher_id
+        - user_id
+      filter: {}
+      check: {}
+      set:
+        label: '""'
+    comment: ""
+delete_permissions:
+  - role: coordinator
+    permission:
+      filter:
+        _not:
+          bonus:
+            bonus_id:
+              _is_null: false
+    comment: ""

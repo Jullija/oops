@@ -19,3 +19,86 @@ array_relationships:
         table:
           name: bonuses
           schema: public
+insert_permissions:
+  - role: coordinator
+    permission:
+      check: {}
+      set:
+        label: '""'
+      columns:
+        - label
+        - student_id
+        - subcategory_id
+        - teacher_id
+        - value
+    comment: ""
+select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - points_id
+        - student_id
+        - subcategory_id
+        - teacher_id
+        - value
+        - label
+        - created_at
+        - updated_at
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: student
+    permission:
+      columns:
+        - created_at
+        - label
+        - points_id
+        - student_id
+        - subcategory_id
+        - teacher_id
+        - updated_at
+        - value
+      filter:
+        user:
+          user_id:
+            _eq: X-Hasura-User-Id
+      allow_aggregations: true
+    comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - created_at
+        - label
+        - points_id
+        - student_id
+        - subcategory_id
+        - teacher_id
+        - updated_at
+        - value
+      filter:
+        _or:
+          - teacher_id:
+              _eq: X-Hasura-User-Id
+          - user:
+              user_groups:
+                group:
+                  edition:
+                    groups:
+                      user_groups:
+                        user_id:
+                          _eq: X-Hasura-User-Id
+    comment: ""
+update_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - label
+        - student_id
+        - subcategory_id
+        - teacher_id
+        - value
+      filter: {}
+      check: {}
+      set:
+        label: '""'
+    comment: ""

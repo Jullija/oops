@@ -2,6 +2,13 @@ table:
   name: users
   schema: public
 array_relationships:
+  - name: chestHistoriesByTeacherId
+    using:
+      foreign_key_constraint_on:
+        column: teacher_id
+        table:
+          name: chest_history
+          schema: public
   - name: chest_histories
     using:
       foreign_key_constraint_on:
@@ -30,3 +37,110 @@ array_relationships:
         table:
           name: user_groups
           schema: public
+insert_permissions:
+  - role: coordinator
+    permission:
+      check: {}
+      set:
+        label: '""'
+      columns:
+        - first_name
+        - index_number
+        - label
+        - nick
+        - role
+        - second_name
+    comment: ""
+select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - user_id
+        - first_name
+        - label
+        - nick
+        - role
+        - second_name
+        - index_number
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: student
+    permission:
+      columns:
+        - nick
+        - role
+        - user_id
+      filter:
+        user_groups:
+          group:
+            edition:
+              groups:
+                user_groups:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+    comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - first_name
+        - index_number
+        - label
+        - nick
+        - role
+        - second_name
+        - user_id
+      filter:
+        user_groups:
+          group:
+            edition:
+              groups:
+                user_groups:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+    comment: ""
+  - role: unauthenticated_user
+    permission:
+      columns:
+        - nick
+        - role
+        - user_id
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - first_name
+        - index_number
+        - label
+        - nick
+        - role
+        - second_name
+      filter: {}
+      check: {}
+      set:
+        label: '""'
+    comment: ""
+delete_permissions:
+  - role: coordinator
+    permission:
+      filter:
+        _not:
+          _or:
+            - chest_histories:
+                chest_history_id:
+                  _is_null: false
+            - chestHistoriesByTeacherId:
+                chest_history_id:
+                  _is_null: false
+            - points:
+                points_id:
+                  _is_null: false
+            - pointsByTeacherId:
+                points_id:
+                  _is_null: false
+            - user_groups:
+                user_id:
+                  _is_null: false
+    comment: ""
