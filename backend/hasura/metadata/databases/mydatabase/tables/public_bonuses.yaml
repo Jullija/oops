@@ -31,3 +31,19 @@ select_permissions:
           user_id:
             _eq: X-Hasura-User-Id
     comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - award_id
+        - bonus_id
+        - chest_history_id
+        - created_at
+        - label
+        - points_id
+        - subcategory_id
+        - updated_at
+      filter:
+        chest_history:
+          teacher_id:
+            _eq: X-Hasura-User-Id
+    comment: ""

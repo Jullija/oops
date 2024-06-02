@@ -18,3 +18,11 @@ select_permissions:
         - label
       filter: {}
     comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - category_id
+        - category_name
+        - label
+      filter: {}
+    comment: ""

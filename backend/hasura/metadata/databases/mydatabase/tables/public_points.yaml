@@ -34,4 +34,28 @@ select_permissions:
         user:
           user_id:
             _eq: X-Hasura-User-Id
+      allow_aggregations: true
+    comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - created_at
+        - label
+        - points_id
+        - student_id
+        - subcategory_id
+        - teacher_id
+        - updated_at
+      filter:
+        _or:
+          - teacher_id:
+              _eq: X-Hasura-User-Id
+          - user:
+              user_groups:
+                group:
+                  edition:
+                    groups:
+                      user_groups:
+                        user_id:
+                          _eq: X-Hasura-User-Id
     comment: ""

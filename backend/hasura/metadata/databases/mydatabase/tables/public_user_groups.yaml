@@ -22,3 +22,16 @@ select_permissions:
                 user_id:
                   _eq: X-Hasura-User-Id
     comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - group_id
+        - user_id
+      filter:
+        group:
+          edition:
+            groups:
+              user_groups:
+                user_id:
+                  _eq: X-Hasura-User-Id
+    comment: ""

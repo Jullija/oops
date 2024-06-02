@@ -24,3 +24,18 @@ select_permissions:
                 user_id:
                   _eq: X-Hasura-User-Id
     comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - award_id
+        - chest_award_id
+        - chest_id
+        - label
+      filter:
+        chest:
+          edition:
+            groups:
+              user_groups:
+                user_id:
+                  _eq: X-Hasura-User-Id
+    comment: ""
