@@ -104,6 +104,7 @@ select_permissions:
       columns:
         - nick
         - role
+        - user_id
       filter: {}
     comment: ""
 update_permissions:

@@ -57,6 +57,7 @@ select_permissions:
         - subcategory_id
         - teacher_id
         - updated_at
+        - value
       filter:
         user:
           user_id:
@@ -73,6 +74,7 @@ select_permissions:
         - subcategory_id
         - teacher_id
         - updated_at
+        - value
       filter:
         _or:
           - teacher_id:

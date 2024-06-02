@@ -57,6 +57,7 @@ select_permissions:
         - created_at
         - label
         - subcategory_id
+        - teacher_id
         - updated_at
         - user_id
       filter:
@@ -71,6 +72,7 @@ select_permissions:
         - created_at
         - label
         - subcategory_id
+        - teacher_id
         - updated_at
         - user_id
       filter:
