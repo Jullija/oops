@@ -1,0 +1,44 @@
+table:
+  name: hall_of_fame
+  schema: public
+select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - edition_id
+        - user_id
+        - nick
+        - sum_of_points
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: student
+    permission:
+      columns:
+        - edition_id
+        - user_id
+        - nick
+        - sum_of_points
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - edition_id
+        - user_id
+        - nick
+        - sum_of_points
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: unauthenticated_user
+    permission:
+      columns:
+        - edition_id
+        - user_id
+        - nick
+        - sum_of_points
+      filter: {}
+      allow_aggregations: true
+    comment: ""
