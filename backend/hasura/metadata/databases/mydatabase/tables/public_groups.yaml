@@ -6,7 +6,7 @@ object_relationships:
     using:
       foreign_key_constraint_on: edition_id
 array_relationships:
-  - name: user_groups
+  - name: userGroups
     using:
       foreign_key_constraint_on:
         column: group_id
@@ -45,7 +45,7 @@ select_permissions:
       filter:
         edition:
           groups:
-            user_groups:
+            userGroups:
               user_id:
                 _eq: X-Hasura-User-Id
     comment: ""
@@ -59,7 +59,7 @@ select_permissions:
       filter:
         edition:
           groups:
-            user_groups:
+            userGroups:
               user_id:
                 _eq: X-Hasura-User-Id
     comment: ""
@@ -79,7 +79,7 @@ delete_permissions:
     permission:
       filter:
         _not:
-          user_groups:
+          userGroups:
             group_id:
               _is_null: false
     comment: ""

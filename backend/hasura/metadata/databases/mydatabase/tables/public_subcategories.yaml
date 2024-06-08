@@ -9,7 +9,7 @@ object_relationships:
     using:
       foreign_key_constraint_on: edition_id
 array_relationships:
-  - name: chest_histories
+  - name: chestHistories
     using:
       foreign_key_constraint_on:
         column: subcategory_id
@@ -58,7 +58,7 @@ select_permissions:
       filter:
         edition:
           groups:
-            user_groups:
+            userGroups:
               user_id:
                 _eq: X-Hasura-User-Id
     comment: ""
@@ -73,7 +73,7 @@ select_permissions:
       filter:
         edition:
           groups:
-            user_groups:
+            userGroups:
               user_id:
                 _eq: X-Hasura-User-Id
     comment: ""

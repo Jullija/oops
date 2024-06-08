@@ -6,7 +6,7 @@ object_relationships:
     using:
       foreign_key_constraint_on: category_id
 array_relationships:
-  - name: award_editions
+  - name: awardEditions
     using:
       foreign_key_constraint_on:
         column: award_id
@@ -20,7 +20,7 @@ array_relationships:
         table:
           name: bonuses
           schema: public
-  - name: chest_awards
+  - name: chestAwards
     using:
       foreign_key_constraint_on:
         column: award_id
@@ -66,10 +66,10 @@ select_permissions:
         - label
         - max_usages
       filter:
-        award_editions:
+        awardEditions:
           edition:
             groups:
-              user_groups:
+              userGroups:
                 user_id:
                   _eq: X-Hasura-User-Id
       allow_aggregations: true
@@ -85,10 +85,10 @@ select_permissions:
         - label
         - max_usages
       filter:
-        award_editions:
+        awardEditions:
           edition:
             groups:
-              user_groups:
+              userGroups:
                 user_id:
                   _eq: X-Hasura-User-Id
       allow_aggregations: true

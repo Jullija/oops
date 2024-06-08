@@ -5,7 +5,7 @@ object_relationships:
   - name: award
     using:
       foreign_key_constraint_on: award_id
-  - name: chest_history
+  - name: chestHistory
     using:
       foreign_key_constraint_on: chest_history_id
   - name: point
@@ -36,7 +36,7 @@ select_permissions:
         - points_id
         - updated_at
       filter:
-        chest_history:
+        chestHistory:
           user_id:
             _eq: X-Hasura-User-Id
     comment: ""
@@ -51,7 +51,7 @@ select_permissions:
         - points_id
         - updated_at
       filter:
-        chest_history:
+        chestHistory:
           teacher_id:
             _eq: X-Hasura-User-Id
     comment: ""

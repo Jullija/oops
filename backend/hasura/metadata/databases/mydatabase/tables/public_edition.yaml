@@ -2,7 +2,7 @@ table:
   name: edition
   schema: public
 array_relationships:
-  - name: award_editions
+  - name: awardEditions
     using:
       foreign_key_constraint_on:
         column: edition_id
@@ -68,7 +68,7 @@ select_permissions:
         - name
       filter:
         groups:
-          user_groups:
+          userGroups:
             user_id:
               _eq: X-Hasura-User-Id
     comment: ""
@@ -81,7 +81,7 @@ select_permissions:
         - name
       filter:
         groups:
-          user_groups:
+          userGroups:
             user_id:
               _eq: X-Hasura-User-Id
     comment: ""
