@@ -4,36 +4,36 @@ type Mutation {
     createPoints(studentId: Int!,
         teacherId: Int!,
         value: Int!,
-        subcategoryId: Int!): Points
+        subcategoryId: Int!): PointsType
 }
 
 type createBonusPayload {
-    bonus: Bonus
-    points: Points
+    bonus: BonusType
+    points: PointsType
 }
 
-type Bonus {
+type BonusType {
     bonusId: Int!
-    points: Points!
-    award: Award!
-    chestHistory: ChestHistory!
+    points: PointsType!
+    award: AwardType!
+    chestHistory: ChestHistoryType!
     label: String!
     createdAt: String!
     updatedAt: String!
 }
 
-type Points {
+type PointsType {
     pointsId: Int!
-    student: Users!
-    teacher: Users!
+    student: UsersType!
+    teacher: UsersType!
     value: Int!
-    subcategory: Subcategories!
+    subcategory: SubcategoriesType!
     label: String!
     createdAt: String!
     updatedAt: String!
 }
 
-type Award {
+type AwardType {
     awardId: Int!
     awardName: String!
     awardType: AwardType!
@@ -41,63 +41,63 @@ type Award {
     label: String!
 }
 
-type Subcategories {
+type SubcategoriesType {
     subcategoryId: Int!
     subcategoryName: String!
     maxPoints: Int!
-    category: Categories!
-    edition: Edition!
+    category: CategoriesType!
+    edition: EditionType!
     label: String!
 }
 
-type ChestHistory {
+type ChestHistoryType {
     chestHistoryId: Int!
-    user: Users!
-    teacher: Users!
-    chest: Chest!
-    subcategory: Subcategories!
+    user: UsersType!
+    teacher: UsersType!
+    chest: ChestType!
+    subcategory: SubcategoriesType!
     label: String!
     createdAt: String!
     updatedAt: String!
 }
 
-type Chest {
+type ChestType {
     chestId: Int!
     chestType: String!
     label: String!
-    edition: Edition!
+    edition: EditionType!
 }
 
-type Categories {
+type CategoriesType {
     categoryId: Int!
     categoryName: String!
     label: String!
 }
 
-type Edition {
+type EditionType {
     editionId: Int!
     editionName: String!
     editionYear: Int!
     label: String!
 }
 
-type Users {
+type UsersType {
     userId: Int!
     indexNumber: Int!
     nick: String!
     firstName: String!
     secondName: String!
-    role: UsersRoles!
+    role: UsersRolesType!
     label: String!
 }
 
-enum UsersRoles {
+enum UsersRolesType {
     student
     teacher
     coordinator
 }
 
-enum AwardType {
+enum AwardTypeType {
     ADDITIVE_NEXT
     ADDITIVE_PREV
     ADDITIVE

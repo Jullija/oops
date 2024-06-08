@@ -223,19 +223,19 @@ def insert_data(data_count_multiplier=1):
 
     # Insert data into subcategories
     subcategories_data = {
-        "LABORATORY": [f"lab_{i}" for i in range(1, 15)],
-        "TEST": [f"kart_{i}" for i in range(1, 15)],
-        "PROJECT": [f"proj_{i}" for i in range(1, 4)],
-        "EVENT": ["Gitowe Dziady", "Spooky Spring", "Constructor Christmas"]
+        "LABORATORY": [(f"lab_{i}", 10) for i in range(1, 15)],
+        "TEST": [(f"kart_{i}", 5) for i in range(1, 15)],
+        "PROJECT": [(f"proj_{i}", 50) for i in range(1, 4)],
+        "EVENT": [("Gitowe Dziady", 10), ("Spooky Spring", 20), ("Constructor Christmas", 100)]
     }
     for edition_id in editions.values():
         subcategories = []
         subcategory_to_category = {}
-        for category_name, subcategory_names in subcategories_data.items():
-            for subcategory_name in subcategory_names:
+        for category_name, subcategory_names_and_max_points in subcategories_data.items():
+            for subcategory_name, max_points in subcategory_names_and_max_points:
                 cursor.execute(
-                    "INSERT INTO subcategories (subcategory_name, category_id, label, edition_id) VALUES (%s, %s, %s, %s) RETURNING subcategory_id",
-                    (subcategory_name, categories[category_name], "", edition_id))
+                    "INSERT INTO subcategories (subcategory_name, category_id, label, edition_id, max_points) VALUES (%s, %s, %s, %s, %s) RETURNING subcategory_id",
+                    (subcategory_name, categories[category_name], "", edition_id, max_points))
                 subcategory_id = cursor.fetchone()[0]
                 subcategories.append(subcategory_id)
                 subcategory_to_category[subcategory_id] = category_name
