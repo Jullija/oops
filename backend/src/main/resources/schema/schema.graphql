@@ -1,6 +1,10 @@
 type Mutation {
     createBonus(chestHistoryId: Int!,
         awardId: Int!): createBonusPayload
+    createPoints(studentId: Int!,
+        teacherId: Int!,
+        value: Int!,
+        subcategoryId: Int!): Points
 }
 
 type createBonusPayload {

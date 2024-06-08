@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository
 interface PointsRepository : JpaRepository<Points, Long> {
     fun findByStudentAndTeacherAndSubcategory(studentId: Users, teacherId: Users, subcategoryId: Subcategories) : List<Points>
     fun findAllByStudentAndSubcategory_Edition(student: Users, edition: Edition): List<Points>
+    fun findAllByStudent(student: Users): List<Points>
 }
