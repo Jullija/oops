@@ -15,6 +15,9 @@ class Subcategories(
     @Column(name = "subcategory_name", nullable = false)
     var subcategoryName: String,
 
+    @Column(name = "max_points", nullable = false)
+    var maxPoints: Int = 0,
+
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     var category: Categories,
@@ -28,6 +31,7 @@ class Subcategories(
 ) {
     constructor() : this(
         subcategoryName = "",
+        maxPoints = 0,
         category = Categories(),
         edition = Edition(),
         label = ""

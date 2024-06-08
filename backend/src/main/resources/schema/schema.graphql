@@ -44,6 +44,7 @@ type Award {
 type Subcategories {
     subcategoryId: Int!
     subcategoryName: String!
+    maxPoints: Int!
     category: Categories!
     edition: Edition!
     label: String!

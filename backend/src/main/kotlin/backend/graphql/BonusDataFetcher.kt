@@ -22,6 +22,7 @@ import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import kotlin.math.min
 import kotlin.jvm.optionals.toSet
 
 
@@ -216,25 +217,14 @@ class BonusDataFetcher {
 
     private fun updateAdditivePrevPoints(chestHistory: ChestHistory, award: Award, edition: Edition): Points {
         val pointsInAwardCategory = getPointsInAwardCategory(chestHistory, edition, award)
-            .filter { point -> bonusRepository.findByPoints(point).isEmpty() } // exclude points connected to bonuses
 
         val lastPoints = pointsInAwardCategory.maxByOrNull { it.subcategory.subcategoryId }
 
         return if (lastPoints != null) {
-            lastPoints.value += award.awardValue.toLong()
+            lastPoints.value = min((lastPoints.value + award.awardValue).toLong(), lastPoints.subcategory.maxPoints.toLong())
             pointsRepository.save(lastPoints)
         } else {
-            // No points found, create a new entry with the first subcategory of the given category in the given edition
-            val firstSubcategory = subcategoriesRepository.findFirstByCategoryAndEditionOrderBySubcategoryIdAsc(chestHistory.subcategory.category, edition)
-                .orElseThrow { IllegalArgumentException("No subcategory found in the specified category and edition.") }
-
-            Points(
-                student = chestHistory.user,
-                teacher = chestHistory.teacher,
-                value = award.awardValue.toLong(),
-                subcategory = firstSubcategory,
-                label = ""
-            ).also { pointsRepository.save(it) }
+            throw IllegalArgumentException("No previous points found in the specified category.")
         }
     }
     private fun createMultiplicativePoints(chestHistory: ChestHistory, award: Award, edition: Edition): Points {
@@ -252,9 +242,9 @@ class BonusDataFetcher {
     }
 
     private fun getPointsInAwardCategory(chestHistory: ChestHistory, edition: Edition, award: Award): List<Points> {
-        val allPointsInEdition = pointsRepository.findAllByStudentAndSubcategory_Edition(chestHistory.user, edition)
+        val allStudentPointsInEdition = pointsRepository.findAllByStudentAndSubcategory_Edition(chestHistory.user, edition)
 
-        return allPointsInEdition.filter {
+        return allStudentPointsInEdition.filter {
             it.subcategory.category == award.category &&
                     it.subcategory.edition == edition
         }.filter { point ->
@@ -267,7 +257,7 @@ class BonusDataFetcher {
             points = savedPoints,
             award = award,
             chestHistory = chestHistory,
-            label = "Generated Bonus"
+            label = ""
         )
     }
 }
