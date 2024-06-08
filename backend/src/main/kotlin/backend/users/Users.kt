@@ -44,7 +44,7 @@ class Users(
         nick = "",
         firstName = "",
         secondName = "",
-        role = UsersRoles.STUDENT,
+        role = UsersRoles.student,
         groups = HashSet(),
         label = ""
     )

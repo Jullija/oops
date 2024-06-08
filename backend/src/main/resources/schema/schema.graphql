@@ -92,9 +92,9 @@ type Users {
 }
 
 enum UsersRoles {
-    STUDENT
-    TEACHER
-    ADMIN
+    student
+    teacher
+    coordinator
 }
 
 enum AwardType {
