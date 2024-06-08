@@ -137,7 +137,7 @@ def insert_data(data_count_multiplier=1):
     # Insert data into users
     existing_index_numbers = set()
     users = []
-    roles = ['STUDENT'] * total_students + ['TEACHER'] * 7 + ['COORDINATOR']
+    roles = ['student'] * total_students + ['teacher'] * 7 + ['coordinator']
     random.shuffle(roles)
     for role in roles:
         nick = fake.user_name()
@@ -151,7 +151,7 @@ def insert_data(data_count_multiplier=1):
         users.append(cursor.fetchone()[0])
 
     # Assign students to groups
-    student_ids = [user_id for user_id, role in zip(users, roles) if role == 'STUDENT']
+    student_ids = [user_id for user_id, role in zip(users, roles) if role == 'student']
     random.shuffle(student_ids)
 
     student_index = 0
@@ -163,8 +163,8 @@ def insert_data(data_count_multiplier=1):
                 student_index += 1
 
     # Assign teachers and coordinators to groups randomly
-    teacher_ids = [user_id for user_id, role in zip(users, roles) if role == 'TEACHER']
-    coordinator_id = [user_id for user_id, role in zip(users, roles) if role == 'COORDINATOR'][0]
+    teacher_ids = [user_id for user_id, role in zip(users, roles) if role == 'teacher']
+    coordinator_id = [user_id for user_id, role in zip(users, roles) if role == 'coordinator'][0]
 
     # Create a list of all teachers and the coordinator
     teachers_and_coordinator = teacher_ids + [coordinator_id]
@@ -266,7 +266,7 @@ def insert_data(data_count_multiplier=1):
                 SELECT group_id
                 FROM user_groups
                 WHERE user_id = %s
-            ) AND u.role = 'STUDENT'
+            ) AND u.role = 'student'
             ORDER BY RANDOM()
             LIMIT 1
         """, (teacher_id,))
@@ -342,7 +342,7 @@ def insert_data(data_count_multiplier=1):
                 SELECT group_id
                 FROM user_groups
                 WHERE user_id = %s
-            ) AND u.role = 'STUDENT'
+            ) AND u.role = 'student'
             ORDER BY RANDOM()
             LIMIT 1
         """, (teacher_id,))
