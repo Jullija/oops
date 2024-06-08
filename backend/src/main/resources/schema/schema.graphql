@@ -1,43 +1,100 @@
-
 type Mutation {
-    createBonus(
-        studentId: Int!
-        teacherId: Int!
-        howMany: Int!
-        subcategoryId: Int!
-        awardId: Int!): CreateBonusOutput
+    createBonus(chestHistoryId: Int!,
+        awardId: Int!): createBonusPayload
 }
 
-
-type CreateBonusOutput {
-    bonusId: Int
-    points: Points_kotlin!
-    award: ChestAward_kotlin!
-    subcategory: Subcategories_kotlin!
+type createBonusPayload {
+    bonus: Bonus
+    points: Points
 }
 
-type User_kotlin {
-    nick: String!
-    role: String!
+type Bonus {
+    bonusId: Int!
+    points: Points!
+    award: Award!
+    chestHistory: ChestHistory!
+    label: String!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type Points {
+    pointsId: Int!
+    student: Users!
+    teacher: Users!
+    value: Int!
+    subcategory: Subcategories!
+    label: String!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type Award {
+    awardId: Int!
+    awardName: String!
+    awardType: AwardType!
+    maxUsages: Int!
+    label: String!
+}
+
+type Subcategories {
+    subcategoryId: Int!
+    subcategoryName: String!
+    category: Categories!
+    edition: Edition!
+    label: String!
+}
+
+type ChestHistory {
+    chestHistoryId: Int!
+    user: Users!
+    teacher: Users!
+    chest: Chest!
+    subcategory: Subcategories!
+    label: String!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type Chest {
+    chestId: Int!
+    chestType: String!
+    label: String!
+    edition: Edition!
+}
+
+type Categories {
+    categoryId: Int!
+    categoryName: String!
+    label: String!
+}
+
+type Edition {
+    editionId: Int!
+    editionName: String!
+    editionYear: Int!
+    label: String!
+}
+
+type Users {
     userId: Int!
+    indexNumber: Int!
+    nick: String!
+    firstName: String!
+    secondName: String!
+    role: UsersRoles!
+    label: String!
 }
 
-type Points_kotlin {
-    pointsId: Int
-    userId: User_kotlin
-    fromWho: User_kotlin
-    howMany: Int
-    subcategory: Subcategories_kotlin
+enum UsersRoles {
+    STUDENT
+    TEACHER
+    ADMIN
 }
 
-type ChestAward_kotlin {
-    awardId: Int
-    name: String
-    bonus: Int
-}
-
-type Subcategories_kotlin {
-    subcategoryId: Int
-    subcategoryName: String
-    categoryId: Int
+enum AwardType {
+    ADDITIVE_NEXT
+    ADDITIVE_PREV
+    ADDITIVE
+    MULTIPLICATIVE
 }

@@ -11,9 +11,6 @@ object_relationships:
   - name: point
     using:
       foreign_key_constraint_on: points_id
-  - name: subcategory
-    using:
-      foreign_key_constraint_on: subcategory_id
 select_permissions:
   - role: coordinator
     permission:
@@ -22,7 +19,6 @@ select_permissions:
         - bonus_id
         - chest_history_id
         - points_id
-        - subcategory_id
         - label
         - created_at
         - updated_at
@@ -38,7 +34,6 @@ select_permissions:
         - created_at
         - label
         - points_id
-        - subcategory_id
         - updated_at
       filter:
         chest_history:
@@ -54,7 +49,6 @@ select_permissions:
         - created_at
         - label
         - points_id
-        - subcategory_id
         - updated_at
       filter:
         chest_history:
@@ -67,7 +61,6 @@ update_permissions:
       columns:
         - award_id
         - label
-        - subcategory_id
       filter: {}
       check: {}
       set:

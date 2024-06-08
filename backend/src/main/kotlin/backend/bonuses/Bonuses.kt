@@ -25,9 +25,6 @@ class Bonuses(
     @JoinColumn(name = "award_id", referencedColumnName = "award_id")
     var award: Award,
 
-    @ManyToOne
-    @JoinColumn(name = "subcategory_id", referencedColumnName = "subcategory_id")
-    var subcategory: Subcategories,
 
     @OneToOne
     @JoinColumn(name = "chest_history_id", referencedColumnName = "chest_history_id")
@@ -40,7 +37,6 @@ class Bonuses(
     constructor() : this(
         points = Points(),
         award = Award(),
-        subcategory = Subcategories(),
         chestHistory = ChestHistory(),
         label = ""
     )

@@ -77,19 +77,19 @@ def insert_data(data_count_multiplier=1):
 
     # Insert data into awards
     awards = [
-        ("Lekarstwo", "Restore", 6, ""),
-        ("Weterynarz", "Restore", 2, ""),
-        ("Marchewka laboratoryjna", "Multiplier", 2, ""),
-        ("Marchewka projektowa", "Multiplier", 2, ""),
-        ("Rabat na sianko", "Discount", 2, ""),
-        ("LekarstwoV2", "Discount", 2, ""),
-        ("WeterynarzV2", "Multiplier", -1, "")
+        ("Lekarstwo", "ADDITIVE_NEXT", 10, 1, 6, ""),
+        ("Weterynarz", "ADDITIVE_PREV", 20, 2, 2, ""),
+        ("Marchewka laboratoryjna", "MULTIPLICATIVE", 0.3, 1, 2, ""),
+        ("Marchewka projektowa", "MULTIPLICATIVE", 0.6, 3, 2, ""),
+        ("Rabat na sianko", "ADDITIVE", 12, 1, 2, ""),
+        ("LekarstwoV2", "ADDITIVE_NEXT", 14, 1, 2, ""),
+        ("WeterynarzV2", "ADDITIVE_PREV", 16, 2, -1, "")
     ]
     award_ids = []
     award_name_map = {}
-    for name, award_type, max_usages, label in awards:
-        cursor.execute("INSERT INTO award (award_name, award_type, max_usages, label) VALUES (%s, %s, %s, %s) RETURNING award_id",
-                       (name, award_type, max_usages, ""))
+    for name, award_type, award_value, category_id, max_usages, label in awards:
+        cursor.execute("INSERT INTO award (award_name, award_type, award_value, category_id, max_usages, label) VALUES (%s, %s, %s, %s, %s, %s) RETURNING award_id",
+                       (name, award_type, award_value, category_id, max_usages, ""))
         award_id = cursor.fetchone()[0]
         award_ids.append(award_id)
         award_name_map[award_id] = name
@@ -228,17 +228,17 @@ def insert_data(data_count_multiplier=1):
         "PROJECT": [f"proj_{i}" for i in range(1, 4)],
         "EVENT": ["Gitowe Dziady", "Spooky Spring", "Constructor Christmas"]
     }
-
-    subcategories = []
-    subcategory_to_category = {}
-    for category_name, subcategory_names in subcategories_data.items():
-        for subcategory_name in subcategory_names:
-            cursor.execute(
-                "INSERT INTO subcategories (subcategory_name, category_id, label, edition_id) VALUES (%s, %s, %s, %s) RETURNING subcategory_id",
-                (subcategory_name, categories[category_name], "", random.choice(list(editions.values()))))
-            subcategory_id = cursor.fetchone()[0]
-            subcategories.append(subcategory_id)
-            subcategory_to_category[subcategory_id] = category_name
+    for edition_id in editions.values():
+        subcategories = []
+        subcategory_to_category = {}
+        for category_name, subcategory_names in subcategories_data.items():
+            for subcategory_name in subcategory_names:
+                cursor.execute(
+                    "INSERT INTO subcategories (subcategory_name, category_id, label, edition_id) VALUES (%s, %s, %s, %s) RETURNING subcategory_id",
+                    (subcategory_name, categories[category_name], "", edition_id))
+                subcategory_id = cursor.fetchone()[0]
+                subcategories.append(subcategory_id)
+                subcategory_to_category[subcategory_id] = category_name
 
     # Insert data into chest_award
     chest_awards = []
@@ -310,8 +310,8 @@ def insert_data(data_count_multiplier=1):
 
         # 4. Insert a record in the bonuses table for the chosen award.
         cursor.execute(
-            "INSERT INTO bonuses (points_id, award_id, subcategory_id, created_at, updated_at, label, chest_history_id) VALUES (%s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, %s, %s) RETURNING bonus_id",
-            (points_id, chosen_award_id, subcategory_id, "", chest_history_id)
+            "INSERT INTO bonuses (points_id, award_id, created_at, updated_at, label, chest_history_id) VALUES (%s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, %s, %s) RETURNING bonus_id",
+            (points_id, chosen_award_id, "", chest_history_id)
         )
         bonus_id = cursor.fetchone()[0]
 
