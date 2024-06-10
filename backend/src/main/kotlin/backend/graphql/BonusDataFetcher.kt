@@ -13,7 +13,6 @@ import backend.chestHistory.ChestHistory
 import backend.edition.Edition
 import backend.groups.GroupsRepository
 import backend.subcategories.SubcategoriesRepository
-import backend.users.Users
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -104,15 +103,6 @@ class BonusDataFetcher {
 
     private fun getAwardEditions(award: Award): Set<Edition> {
         return awardEditionRepository.findByAward(award).map { it.edition }.toSet()
-    }
-
-    private fun checkMaxUsages(user: Users, award: Award) {
-        if (award.maxUsages != -1) {
-            val bonusCount = bonusRepository.countByAwardAndPoints_Student(award, user)
-            if (bonusCount >= award.maxUsages) {
-                throw IllegalArgumentException("Cannot apply more than ${award.maxUsages} bonuses for this award.")
-            }
-        }
     }
 
     private fun createAdditivePoints(chestHistory: ChestHistory, award: Award): Points {
