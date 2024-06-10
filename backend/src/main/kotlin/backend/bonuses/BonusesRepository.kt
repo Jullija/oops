@@ -1,6 +1,7 @@
 package backend.bonuses
 
 import backend.award.Award
+import backend.award.AwardType
 import backend.bonuses.Bonuses
 import backend.chestHistory.ChestHistory
 import backend.points.Points
@@ -13,5 +14,8 @@ interface BonusesRepository : JpaRepository<Bonuses, Long> {
     fun findByChestHistory(chestHistory: ChestHistory): List<Bonuses>
     fun findByPoints(points: Points): List<Bonuses>
     fun countByAwardAndPoints_Student(award: Award, student: Users): Long
+
+    fun findByAward_AwardTypeAndPoints_Student(awardType: AwardType, student: Users): List<Bonuses>
+
 
 }

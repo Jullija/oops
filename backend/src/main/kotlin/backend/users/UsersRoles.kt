@@ -1,7 +1,13 @@
 package backend.users
 
+import java.util.*
+
 enum class UsersRoles {
-    student,
-    teacher,
-    coordinator
+    STUDENT,
+    TEACHER,
+    COORDINATOR;
+
+    override fun toString(): String {
+        return name.lowercase(Locale.getDefault())
+    }
 }

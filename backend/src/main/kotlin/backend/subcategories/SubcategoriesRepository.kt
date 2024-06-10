@@ -12,8 +12,8 @@ import java.util.*
 @Repository
 interface SubcategoriesRepository : JpaRepository<Subcategories, Long> {
     fun findBySubcategoryNameAndCategory(subcategoryName:String, category: Categories) : List<Subcategories>
-    fun findFirstByCategoryAndSubcategoryIdGreaterThanOrderBySubcategoryIdAsc(category: Categories, subcategoryId: Long): Optional<Subcategories>
-    fun findFirstByCategoryOrderBySubcategoryIdAsc(category: Categories): Optional<Subcategories>
-    fun findFirstByCategoryAndEditionOrderBySubcategoryIdAsc(category: Categories, edition: Edition): Optional<Subcategories>
+    fun findFirstByCategoryAndOrdinalNumberGreaterThanOrderByOrdinalNumberAsc(category: Categories, ordinalNumber: Int): Optional<Subcategories>
+    fun findFirstByCategoryOrderByOrdinalNumberAsc(category: Categories): Optional<Subcategories>
+    fun findFirstByCategoryAndEditionOrderByOrdinalNumberAsc(category: Categories, edition: Edition): Optional<Subcategories>
 
 }

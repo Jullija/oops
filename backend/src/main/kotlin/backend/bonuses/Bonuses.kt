@@ -1,11 +1,9 @@
 package backend.bonuses
 
 import backend.award.Award
-import backend.chestAward.ChestAward
 import backend.chestHistory.ChestHistory
 import backend.points.Points
-import backend.points.PointsInput
-import backend.subcategories.Subcategories
+import backend.points.PointsRepository
 import backend.utils.TimestampModel
 import jakarta.persistence.*
 
@@ -40,4 +38,15 @@ class Bonuses(
         chestHistory = ChestHistory(),
         label = ""
     )
+
+    fun updateMultiplicativePoints(bonusRepository: BonusesRepository, pointsRepository: PointsRepository) {
+        val pointsInAwardCategory = points.student.getPointsByEditionAndCategory(points.subcategory.edition,
+            award.category, pointsRepository).filter{
+                point -> bonusRepository.findByPoints(point).isEmpty()
+        }
+        val totalPointsValue = pointsInAwardCategory.sumOf { it.value }
+        points.value = (totalPointsValue * award.awardValue).toLong()
+        pointsRepository.save(points)
+    }
+
 }

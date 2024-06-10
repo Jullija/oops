@@ -1,13 +1,14 @@
 type Mutation {
-    createBonus(chestHistoryId: Int!,
-        awardId: Int!): createBonusPayload
-    createPoints(studentId: Int!,
+    addBonusMutation(chestHistoryId: Int!,
+        awardId: Int!): AddBonusReturnType
+
+    addPointsMutation (studentId: Int!,
         teacherId: Int!,
         value: Int!,
         subcategoryId: Int!): PointsType
 }
 
-type createBonusPayload {
+type AddBonusReturnType {
     bonus: BonusType
     points: PointsType
 }
@@ -36,7 +37,7 @@ type PointsType {
 type AwardType {
     awardId: Int!
     awardName: String!
-    awardType: AwardType!
+    awardType: AwardTypeType!
     maxUsages: Int!
     label: String!
 }
@@ -45,6 +46,7 @@ type SubcategoriesType {
     subcategoryId: Int!
     subcategoryName: String!
     maxPoints: Int!
+    ordinalNumber: Int!
     category: CategoriesType!
     edition: EditionType!
     label: String!
@@ -92,9 +94,9 @@ type UsersType {
 }
 
 enum UsersRolesType {
-    student
-    teacher
-    coordinator
+    STUDENT
+    TEACHER
+    COORDINATOR
 }
 
 enum AwardTypeType {

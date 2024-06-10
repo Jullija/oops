@@ -1,6 +1,5 @@
 package backend.graphql
 
-
 import backend.award.Award
 import backend.points.Points
 import backend.points.PointsRepository
@@ -12,20 +11,15 @@ import backend.bonuses.Bonuses
 import backend.bonuses.BonusesRepository
 import backend.chestHistory.ChestHistory
 import backend.edition.Edition
-import backend.edition.EditionRepository
 import backend.groups.GroupsRepository
-import backend.subcategories.Subcategories
 import backend.subcategories.SubcategoriesRepository
 import backend.users.Users
-import backend.users.UsersRepository
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
+import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import kotlin.math.min
-import kotlin.jvm.optionals.toSet
-
-
 
 @DgsComponent
 class BonusDataFetcher {
@@ -51,18 +45,23 @@ class BonusDataFetcher {
     @Autowired
     lateinit var subcategoriesRepository: SubcategoriesRepository
 
-    @Autowired
-    lateinit var usersRepository: UsersRepository
-
     @DgsMutation
     @Transactional
-    fun createBonus(chestHistoryId: Long, awardId: Long): createBonusPayload {
-        val chestHistory = getChestHistory(chestHistoryId)
-        checkExistingBonus(chestHistory)
-        val award = getAward(awardId)
+    fun addBonusMutation(@InputArgument chestHistoryId: Long, @InputArgument awardId: Long): AddBonusReturnType {
+        val chestHistory = chestHistoryRepository.findById(chestHistoryId)
+            .orElseThrow { IllegalArgumentException("Invalid chest history ID") }
 
-        checkMaxUsages(chestHistory.user, award)
 
+        if (chestHistory.hasExistingBonus(bonusRepository)) {
+            throw IllegalArgumentException("Bonus already exists for the given chest history.")
+        }
+
+        val award = awardRepository.findById(awardId)
+            .orElseThrow { IllegalArgumentException("Invalid award ID") }
+
+        if (chestHistory.user.getAwardUsageCount(award, bonusRepository) >= award.maxUsages) {
+            throw IllegalArgumentException("Cannot apply more than ${award.maxUsages} bonuses for this award.")
+        }
 
         val userEditions = getUserEditions(chestHistory.user.userId)
         val awardEditions = getAwardEditions(award)
@@ -87,75 +86,15 @@ class BonusDataFetcher {
         }
 
         val savedPoints = pointsRepository.save(points)
-        val bonus = createBonusEntry(savedPoints, award, chestHistory)
-        val savedBonus = bonusRepository.save(bonus)
-
-        return createBonusPayload(savedBonus, savedPoints)
-    }
-
-    @DgsMutation
-    @Transactional
-    fun createPoints(studentId: Long, teacherId: Long, value: Long, subcategoryId: Long): Points {
-        val student = getUsers(studentId)
-        val teacher = getUsers(teacherId)
-        val subcategory = getSubcategory(subcategoryId)
-
-        val points = Points(
-            student = student,
-            teacher = teacher,
-            value = value,
-            subcategory = subcategory,
+        val bonus = Bonuses(
+            points = savedPoints,
+            award = award,
+            chestHistory = chestHistory,
             label = ""
         )
+        val savedBonus = bonusRepository.save(bonus)
 
-        val savedPoints = pointsRepository.save(points)
-
-        // Check all points the user has that are connected to some award
-        val userPoints = pointsRepository.findAllByStudent(student)
-
-        userPoints.forEach { point ->
-            val bonuses = bonusRepository.findByPoints(point)
-            bonuses.forEach { bonus ->
-                val award = bonus.award
-                if (award.awardType == AwardType.MULTIPLICATIVE) {
-                    // Recompute the value and update points entry
-                    val pointsInCategory = userPoints.filter { it.subcategory.category == award.category && bonusRepository.findByPoints(it).isEmpty() }
-                    val totalPointsValue = pointsInCategory.sumOf { it.value }
-                    point.value = (totalPointsValue * award.awardValue).toLong()
-                    pointsRepository.save(point)
-                } else {
-                    // Future logic can be added here
-                }
-            }
-        }
-
-        return savedPoints
-    }
-
-    private fun getUsers(userId: Long): Users {
-        return usersRepository.findById(userId)
-            .orElseThrow { IllegalArgumentException("Invalid user ID") }
-    }
-    private fun getSubcategory(subcategoryId: Long): Subcategories {
-        return subcategoriesRepository.findById(subcategoryId)
-            .orElseThrow { IllegalArgumentException("Invalid subcategory ID") }
-    }
-
-    private fun getChestHistory(chestHistoryId: Long): ChestHistory {
-        return chestHistoryRepository.findById(chestHistoryId)
-            .orElseThrow { IllegalArgumentException("Invalid chest history ID") }
-    }
-
-    private fun checkExistingBonus(chestHistory: ChestHistory) {
-        val existingBonuses = bonusRepository.findByChestHistory(chestHistory)
-        if (existingBonuses.isNotEmpty()) {
-            throw IllegalArgumentException("Bonus already exists for the given chest history.")
-        }
-    }
-
-    private fun getAward(awardId: Long): Award {
-        return awardRepository.findById(awardId)
-            .orElseThrow { IllegalArgumentException("Invalid award ID") }
+        return AddBonusReturnType(savedBonus, savedPoints)
     }
 
     private fun getUserEditions(userId: Long): Set<Edition> {
@@ -186,23 +125,26 @@ class BonusDataFetcher {
             teacher = chestHistory.teacher,
             value = award.awardValue.toLong(),
             subcategory = chestHistory.subcategory,
-            label = ""
+            label = "Points awarded for ${award.awardName}"
         )
     }
 
     private fun createAdditiveNextPoints(chestHistory: ChestHistory, award: Award, edition: Edition): Points {
-        val pointsInAwardCategory = getPointsInAwardCategory(chestHistory, edition, award)
+        val pointsInAwardCategory = chestHistory.user.getPointsByEditionAndCategory(edition,
+            award.category, pointsRepository).filter{
+                point -> bonusRepository.findByPoints(point).isEmpty()  // discard points connected to bonuses
+            }
 
-        val lastSubcategory = pointsInAwardCategory.maxByOrNull { it.subcategory.subcategoryId }?.subcategory
+        val lastSubcategory = pointsInAwardCategory.maxByOrNull { it.subcategory.ordinalNumber }?.subcategory
         val nextSubcategory = if (lastSubcategory != null) {
-            subcategoriesRepository.findFirstByCategoryAndSubcategoryIdGreaterThanOrderBySubcategoryIdAsc(
-                lastSubcategory.category, lastSubcategory.subcategoryId
+            subcategoriesRepository.findFirstByCategoryAndOrdinalNumberGreaterThanOrderByOrdinalNumberAsc(
+                lastSubcategory.category, lastSubcategory.ordinalNumber
             ).orElseGet {
-                subcategoriesRepository.findFirstByCategoryOrderBySubcategoryIdAsc(lastSubcategory.category)
+                subcategoriesRepository.findFirstByCategoryOrderByOrdinalNumberAsc(lastSubcategory.category)
                     .orElseThrow { IllegalArgumentException("No subcategory found in the specified category.") }
             }
         } else {
-            subcategoriesRepository.findFirstByCategoryOrderBySubcategoryIdAsc(chestHistory.subcategory.category)
+            subcategoriesRepository.findFirstByCategoryOrderByOrdinalNumberAsc(chestHistory.subcategory.category)
                 .orElseThrow { IllegalArgumentException("No subcategory found in the specified category.") }
         }
 
@@ -211,14 +153,16 @@ class BonusDataFetcher {
             teacher = chestHistory.teacher,
             value = award.awardValue.toLong(),
             subcategory = nextSubcategory,
-            label = ""
+            label = "Points awarded for ${award.awardName}"
         )
     }
 
     private fun updateAdditivePrevPoints(chestHistory: ChestHistory, award: Award, edition: Edition): Points {
-        val pointsInAwardCategory = getPointsInAwardCategory(chestHistory, edition, award)
-
-        val lastPoints = pointsInAwardCategory.maxByOrNull { it.subcategory.subcategoryId }
+        val pointsInAwardCategory = chestHistory.user.getPointsByEditionAndCategory(edition,
+            award.category, pointsRepository).filter{
+                point -> bonusRepository.findByPoints(point).isEmpty()  // discard points connected to bonuses
+        }
+        val lastPoints = pointsInAwardCategory.maxByOrNull { it.subcategory.ordinalNumber }
 
         return if (lastPoints != null) {
             lastPoints.value = min((lastPoints.value + award.awardValue).toLong(), lastPoints.subcategory.maxPoints.toLong())
@@ -227,9 +171,12 @@ class BonusDataFetcher {
             throw IllegalArgumentException("No previous points found in the specified category.")
         }
     }
-    private fun createMultiplicativePoints(chestHistory: ChestHistory, award: Award, edition: Edition): Points {
-        val pointsInAwardCategory = getPointsInAwardCategory(chestHistory, edition, award)
 
+    private fun createMultiplicativePoints(chestHistory: ChestHistory, award: Award, edition: Edition): Points {
+        val pointsInAwardCategory = chestHistory.user.getPointsByEditionAndCategory(edition,
+            award.category, pointsRepository).filter{
+                point -> bonusRepository.findByPoints(point).isEmpty()  // discard points connected to bonuses
+        }
         val totalPointsValue = pointsInAwardCategory.sumOf { it.value }
 
         return Points(
@@ -237,31 +184,12 @@ class BonusDataFetcher {
             teacher = chestHistory.teacher,
             value = (totalPointsValue * award.awardValue).toLong(),
             subcategory = chestHistory.subcategory,
-            label = ""
-        )
-    }
-
-    private fun getPointsInAwardCategory(chestHistory: ChestHistory, edition: Edition, award: Award): List<Points> {
-        val allStudentPointsInEdition = pointsRepository.findAllByStudentAndSubcategory_Edition(chestHistory.user, edition)
-
-        return allStudentPointsInEdition.filter {
-            it.subcategory.category == award.category &&
-                    it.subcategory.edition == edition
-        }.filter { point ->
-            bonusRepository.findByPoints(point).isEmpty() // discard points connected to bonuses
-        }
-    }
-
-    private fun createBonusEntry(savedPoints: Points, award: Award, chestHistory: ChestHistory): Bonuses {
-        return Bonuses(
-            points = savedPoints,
-            award = award,
-            chestHistory = chestHistory,
-            label = ""
+            label = "Points awarded for ${award.awardName}"
         )
     }
 }
-data class createBonusPayload(
+
+data class AddBonusReturnType(
     val bonus: Bonuses,
     val points: Points
 )

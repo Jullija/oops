@@ -2,7 +2,6 @@ package backend.award
 
 import backend.awardEdition.AwardEdition
 import backend.categories.Categories
-import backend.subcategories.Subcategories
 import jakarta.persistence.*
 
 @Entity

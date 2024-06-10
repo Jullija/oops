@@ -77,13 +77,13 @@ def insert_data(data_count_multiplier=1):
 
     # Insert data into awards
     awards = [
-        ("Lekarstwo", "ADDITIVE_NEXT", 10, 1, 6, ""),
-        ("Weterynarz", "ADDITIVE_PREV", 20, 2, 2, ""),
-        ("Marchewka laboratoryjna", "MULTIPLICATIVE", 0.3, 1, 2, ""),
-        ("Marchewka projektowa", "MULTIPLICATIVE", 0.6, 3, 2, ""),
-        ("Rabat na sianko", "ADDITIVE", 12, 1, 2, ""),
-        ("LekarstwoV2", "ADDITIVE_NEXT", 14, 1, 2, ""),
-        ("WeterynarzV2", "ADDITIVE_PREV", 16, 2, -1, "")
+        ("Lekarstwo", "additive_next", 10, 1, 6, ""),
+        ("Weterynarz", "additive_prev", 20, 2, 2, ""),
+        ("Marchewka laboratoryjna", "multiplicative", 0.3, 1, 2, ""),
+        ("Marchewka projektowa", "multiplicative", 0.6, 3, 2, ""),
+        ("Rabat na sianko", "additive", 12, 1, 2, ""),
+        ("LekarstwoV2", "additive_next", 14, 1, 2, ""),
+        ("WeterynarzV2", "additive_prev", 16, 2, -1, "")
     ]
     award_ids = []
     award_name_map = {}
@@ -232,13 +232,15 @@ def insert_data(data_count_multiplier=1):
         subcategories = []
         subcategory_to_category = {}
         for category_name, subcategory_names_and_max_points in subcategories_data.items():
+            ordinal_number = 0
             for subcategory_name, max_points in subcategory_names_and_max_points:
                 cursor.execute(
-                    "INSERT INTO subcategories (subcategory_name, category_id, label, edition_id, max_points) VALUES (%s, %s, %s, %s, %s) RETURNING subcategory_id",
-                    (subcategory_name, categories[category_name], "", edition_id, max_points))
+                    "INSERT INTO subcategories (subcategory_name, category_id, label, edition_id, max_points, ordinal_number) VALUES (%s, %s, %s, %s, %s, %s) RETURNING subcategory_id",
+                    (subcategory_name, categories[category_name], "", edition_id, max_points, ordinal_number))
                 subcategory_id = cursor.fetchone()[0]
                 subcategories.append(subcategory_id)
                 subcategory_to_category[subcategory_id] = category_name
+                ordinal_number += 1
 
     # Insert data into chest_award
     chest_awards = []
