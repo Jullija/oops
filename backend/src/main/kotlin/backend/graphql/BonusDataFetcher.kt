@@ -138,6 +138,10 @@ class BonusDataFetcher {
                 .orElseThrow { IllegalArgumentException("No subcategory found in the specified category.") }
         }
 
+        if (chestHistory.user.getPointsBySubcategory(nextSubcategory.subcategoryId, pointsRepository).isNotEmpty()) {
+            throw IllegalArgumentException("User already has points in the next subcategory.")
+        }
+
         return Points(
             student = chestHistory.user,
             teacher = chestHistory.teacher,
@@ -156,6 +160,7 @@ class BonusDataFetcher {
 
         return if (lastPoints != null) {
             lastPoints.value = min((lastPoints.value + award.awardValue).toLong(), lastPoints.subcategory.maxPoints.toLong())
+            lastPoints.label = "Points awarded for ${award.awardName}"
             pointsRepository.save(lastPoints)
         } else {
             throw IllegalArgumentException("No previous points found in the specified category.")

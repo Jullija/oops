@@ -8,6 +8,7 @@ import backend.subcategories.SubcategoriesRepository
 import backend.users.Users
 import backend.users.UsersRepository
 import backend.award.AwardType
+import backend.users.UsersRoles
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -33,9 +34,37 @@ class PointsDataFetcher {
     @Transactional
     fun addPointsMutation(@InputArgument studentId: Long, @InputArgument teacherId: Long, value: Long,
                           @InputArgument subcategoryId: Long): Points {
-        val student = getUsers(studentId)
-        val teacher = getUsers(teacherId)
-        val subcategory = getSubcategory(subcategoryId)
+        val student = usersRepository.findByUserId(studentId)
+            .orElseThrow { IllegalArgumentException("Invalid user ID") }
+
+        val teacher = usersRepository.findByUserId(teacherId)
+            .orElseThrow { IllegalArgumentException("Invalid user ID") }
+
+        val subcategory = subcategoriesRepository.findById(subcategoryId)
+            .orElseThrow { IllegalArgumentException("Invalid subcategory ID") }
+
+        if (teacher.role != UsersRoles.TEACHER && teacher.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("Points can be added only by teacher or coordinator")
+        }
+        if (student.role != UsersRoles.STUDENT) {
+            throw IllegalArgumentException("Points can be added only to student")
+        }
+        val studentEditions = student.groups.map { group -> group.edition }
+        if (!studentEditions.contains(subcategory.edition)) {
+            throw IllegalArgumentException("Student is not participating in this edition")
+        }
+        val teacherEditions = teacher.groups.map { group -> group.edition }
+        if (!teacherEditions.contains(subcategory.edition)) {
+            throw IllegalArgumentException("Teacher is not participating in this edition")
+        }
+        if (value < 0) {
+            throw IllegalArgumentException("Value cannot be negative")
+        }
+        val studentPoints = student.getPointsBySubcategory(subcategoryId, pointsRepository)
+        val studentPointsSum = studentPoints.sumOf { it.value }
+        if (studentPointsSum + value > subcategory.maxPoints) {
+            throw IllegalArgumentException("Student cannot have more than ${subcategory.maxPoints} points in this subcategory")
+        }
 
         val points = Points(
             student = student,
@@ -56,15 +85,5 @@ class PointsDataFetcher {
         }
 
         return savedPoints
-    }
-
-    private fun getUsers(userId: Long): Users {
-        return usersRepository.findById(userId)
-            .orElseThrow { IllegalArgumentException("Invalid user ID") }
-    }
-
-    private fun getSubcategory(subcategoryId: Long): Subcategories {
-        return subcategoriesRepository.findById(subcategoryId)
-            .orElseThrow { IllegalArgumentException("Invalid subcategory ID") }
     }
 }

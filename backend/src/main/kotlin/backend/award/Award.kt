@@ -15,8 +15,8 @@ class Award (
         @Column(name = "award_name", nullable = false)
         var awardName: String,
 
-        @Enumerated(EnumType.STRING)
         @Column(name="award_type", nullable = false)
+        @Convert(converter = AwardTypeConverter::class)
         var awardType: AwardType,
 
         @Column(name="award_value", nullable = false)
