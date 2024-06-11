@@ -80,11 +80,11 @@ select_permissions:
           - teacher_id:
               _eq: X-Hasura-User-Id
           - user:
-              user_groups:
+              userGroups:
                 group:
                   edition:
                     groups:
-                      user_groups:
+                      userGroups:
                         user_id:
                           _eq: X-Hasura-User-Id
     comment: ""

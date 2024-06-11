@@ -1,5 +1,6 @@
 package backend.chestHistory
 
+import backend.bonuses.BonusesRepository
 import backend.chests.Chests
 import backend.subcategories.Subcategories
 import backend.users.Users
@@ -42,4 +43,12 @@ class ChestHistory(
         subcategory = Subcategories(),
         label = ""
     )
+
+    fun hasExistingBonus(bonusRepository: BonusesRepository): Boolean {
+        val existingBonuses = bonusRepository.findByChestHistory(this)
+        if (existingBonuses.isNotEmpty()) {
+            return true
+        }
+        return false
+    }
 }

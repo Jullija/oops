@@ -1,6 +1,7 @@
 package backend.award
 
 import backend.awardEdition.AwardEdition
+import backend.categories.Categories
 import jakarta.persistence.*
 
 @Entity
@@ -14,9 +15,16 @@ class Award (
         @Column(name = "award_name", nullable = false)
         var awardName: String,
 
-        @Enumerated(EnumType.STRING)
         @Column(name="award_type", nullable = false)
+        @Convert(converter = AwardTypeConverter::class)
         var awardType: AwardType,
+
+        @Column(name="award_value", nullable = false)
+        var awardValue: Float,
+
+        @ManyToOne
+        @JoinColumn(name = "category_id", referencedColumnName = "category_id")
+        var category: Categories,
 
         @Column(name = "max_usages", nullable = false)
         var maxUsages: Int,
@@ -30,6 +38,8 @@ class Award (
         constructor() : this(
                 awardName = "",
                 awardType = AwardType.ADDITIVE,
+                awardValue = 1.0f,
+                category = Categories(),
                 maxUsages = 1,
                 awardEditions = HashSet(),
                 label = ""

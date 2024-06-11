@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository
 interface GroupsRepository : JpaRepository<Groups, Long> {
     fun findByGroupNameAndEdition(groupName: String, edition: Edition): Groups
     fun findByEdition(edition: Edition): List<Groups>
+    fun findByUsers_UserId(userId: Long): List<Groups>
+
 }

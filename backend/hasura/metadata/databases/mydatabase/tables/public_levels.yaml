@@ -49,7 +49,7 @@ select_permissions:
       filter:
         edition:
           groups:
-            user_groups:
+            userGroups:
               user_id:
                 _eq: X-Hasura-User-Id
     comment: ""
@@ -67,7 +67,7 @@ select_permissions:
       filter:
         edition:
           groups:
-            user_groups:
+            userGroups:
               user_id:
                 _eq: X-Hasura-User-Id
     comment: ""

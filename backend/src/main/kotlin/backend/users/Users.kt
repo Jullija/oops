@@ -1,7 +1,16 @@
 package backend.users
 
+import UsersRolesConverter
+import backend.award.Award
+import backend.bonuses.BonusesRepository
+import backend.categories.Categories
+import backend.edition.Edition
 import backend.groups.Groups
+import backend.points.Points
+import backend.points.PointsRepository
 import jakarta.persistence.*
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 
 @Entity
 @Table(name = "users", uniqueConstraints = [UniqueConstraint(columnNames = ["index_number"])])
@@ -24,7 +33,7 @@ class Users(
     var secondName: String,
 
     @Column(name = "role", nullable = false)
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = UsersRolesConverter::class)
     var role: UsersRoles,
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -48,4 +57,23 @@ class Users(
         groups = HashSet(),
         label = ""
     )
+    fun getAwardUsageCount(award: Award, bonusRepository: BonusesRepository): Long {
+        return bonusRepository.countByAwardAndPoints_Student(award, this)
+    }
+
+    fun getPointsByEditionAndCategory(
+        edition: Edition,
+        category: Categories,
+        pointsRepository: PointsRepository,
+    ): List<Points> {
+        val allStudentPointsInEdition = pointsRepository.findAllByStudentAndSubcategory_Edition(this, edition)
+
+        return allStudentPointsInEdition.filter {
+            it.subcategory.category == category && it.subcategory.edition == edition
+        }
+    }
+
+    fun getPointsBySubcategory(subcategoryId: Long, pointsRepository: PointsRepository): List<Points> {
+        return pointsRepository.findAllByStudentAndSubcategory_SubcategoryId(this, subcategoryId)
+    }
 }

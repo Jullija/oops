@@ -1,43 +1,107 @@
-
 type Mutation {
-    createBonus(
-        studentId: Int!
-        teacherId: Int!
-        howMany: Int!
-        subcategoryId: Int!
-        awardId: Int!): CreateBonusOutput
+    addBonusMutation(chestHistoryId: Int!,
+        awardId: Int!): AddBonusReturnType
+
+    addPointsMutation (studentId: Int!,
+        teacherId: Int!,
+        value: Int!,
+        subcategoryId: Int!): PointsType
 }
 
-
-type CreateBonusOutput {
-    bonusId: Int
-    points: Points_kotlin!
-    award: ChestAward_kotlin!
-    subcategory: Subcategories_kotlin!
+type AddBonusReturnType {
+    bonus: BonusType
+    points: PointsType
 }
 
-type User_kotlin {
-    nick: String!
-    role: String!
+type BonusType {
+    bonusId: Int!
+    points: PointsType!
+    award: AwardType!
+    chestHistory: ChestHistoryType!
+    label: String!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type PointsType {
+    pointsId: Int!
+    student: UsersType!
+    teacher: UsersType!
+    value: Int!
+    subcategory: SubcategoriesType!
+    label: String!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type AwardType {
+    awardId: Int!
+    awardName: String!
+    awardType: AwardTypeType!
+    maxUsages: Int!
+    label: String!
+}
+
+type SubcategoriesType {
+    subcategoryId: Int!
+    subcategoryName: String!
+    maxPoints: Int!
+    ordinalNumber: Int!
+    category: CategoriesType!
+    edition: EditionType!
+    label: String!
+}
+
+type ChestHistoryType {
+    chestHistoryId: Int!
+    user: UsersType!
+    teacher: UsersType!
+    chest: ChestType!
+    subcategory: SubcategoriesType!
+    label: String!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type ChestType {
+    chestId: Int!
+    chestType: String!
+    label: String!
+    edition: EditionType!
+}
+
+type CategoriesType {
+    categoryId: Int!
+    categoryName: String!
+    label: String!
+}
+
+type EditionType {
+    editionId: Int!
+    editionName: String!
+    editionYear: Int!
+    label: String!
+}
+
+type UsersType {
     userId: Int!
+    indexNumber: Int!
+    nick: String!
+    firstName: String!
+    secondName: String!
+    role: UsersRolesType!
+    label: String!
 }
 
-type Points_kotlin {
-    pointsId: Int
-    userId: User_kotlin
-    fromWho: User_kotlin
-    howMany: Int
-    subcategory: Subcategories_kotlin
+enum UsersRolesType {
+    STUDENT
+    TEACHER
+    COORDINATOR
 }
 
-type ChestAward_kotlin {
-    awardId: Int
-    name: String
-    bonus: Int
-}
-
-type Subcategories_kotlin {
-    subcategoryId: Int
-    subcategoryName: String
-    categoryId: Int
+enum AwardTypeType {
+    ADDITIVE_NEXT
+    ADDITIVE_PREV
+    ADDITIVE
+    MULTIPLICATIVE
 }

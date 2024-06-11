@@ -9,14 +9,7 @@ object_relationships:
     using:
       foreign_key_constraint_on: edition_id
 array_relationships:
-  - name: bonuses
-    using:
-      foreign_key_constraint_on:
-        column: subcategory_id
-        table:
-          name: bonuses
-          schema: public
-  - name: chest_histories
+  - name: chestHistories
     using:
       foreign_key_constraint_on:
         column: subcategory_id
@@ -40,6 +33,8 @@ insert_permissions:
         - category_id
         - edition_id
         - label
+        - max_points
+        - ordinal_number
         - subcategory_name
     comment: ""
 select_permissions:
@@ -48,8 +43,10 @@ select_permissions:
       columns:
         - category_id
         - edition_id
-        - subcategory_id
         - label
+        - max_points
+        - ordinal_number
+        - subcategory_id
         - subcategory_name
       filter: {}
       allow_aggregations: true
@@ -60,12 +57,14 @@ select_permissions:
         - category_id
         - edition_id
         - label
+        - max_points
+        - ordinal_number
         - subcategory_id
         - subcategory_name
       filter:
         edition:
           groups:
-            user_groups:
+            userGroups:
               user_id:
                 _eq: X-Hasura-User-Id
     comment: ""
@@ -75,12 +74,14 @@ select_permissions:
         - category_id
         - edition_id
         - label
+        - max_points
+        - ordinal_number
         - subcategory_id
         - subcategory_name
       filter:
         edition:
           groups:
-            user_groups:
+            userGroups:
               user_id:
                 _eq: X-Hasura-User-Id
     comment: ""
@@ -90,6 +91,8 @@ update_permissions:
       columns:
         - category_id
         - label
+        - max_points
+        - ordinal_number
         - subcategory_name
       filter: {}
       check: {}

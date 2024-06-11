@@ -2,17 +2,17 @@ table:
   name: users
   schema: public
 array_relationships:
+  - name: chestHistories
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: chest_history
+          schema: public
   - name: chestHistoriesByTeacherId
     using:
       foreign_key_constraint_on:
         column: teacher_id
-        table:
-          name: chest_history
-          schema: public
-  - name: chest_histories
-    using:
-      foreign_key_constraint_on:
-        column: user_id
         table:
           name: chest_history
           schema: public
@@ -30,7 +30,7 @@ array_relationships:
         table:
           name: points
           schema: public
-  - name: user_groups
+  - name: userGroups
     using:
       foreign_key_constraint_on:
         column: user_id
@@ -89,11 +89,11 @@ select_permissions:
         - second_name
         - user_id
       filter:
-        user_groups:
+        userGroups:
           group:
             edition:
               groups:
-                user_groups:
+                userGroups:
                   user_id:
                     _eq: X-Hasura-User-Id
     comment: ""
@@ -126,7 +126,7 @@ delete_permissions:
       filter:
         _not:
           _or:
-            - chest_histories:
+            - chestHistories:
                 chest_history_id:
                   _is_null: false
             - chestHistoriesByTeacherId:
@@ -138,7 +138,7 @@ delete_permissions:
             - pointsByTeacherId:
                 points_id:
                   _is_null: false
-            - user_groups:
+            - userGroups:
                 user_id:
                   _is_null: false
     comment: ""

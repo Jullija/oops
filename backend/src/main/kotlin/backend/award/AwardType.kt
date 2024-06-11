@@ -2,5 +2,7 @@ package backend.award
 
 enum class AwardType {
     MULTIPLICATIVE,
-    ADDITIVE
+    ADDITIVE_NEXT,
+    ADDITIVE_PREV,
+    ADDITIVE;
 }
