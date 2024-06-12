@@ -41,13 +41,13 @@ insert_permissions:
           - chest:
               edition:
                 groups:
-                  user_groups:
+                  userGroups:
                     user_id:
                       _eq: X-Hasura-User-Id
           - user:
-              user_groups:
+              userGroups:
                 group:
-                  user_groups:
+                  userGroups:
                     user_id:
                       _eq: X-Hasura-User-Id
           - userByTeacherId:
@@ -56,7 +56,7 @@ insert_permissions:
           - subcategory:
               edition:
                 groups:
-                  user_groups:
+                  userGroups:
                     user_id:
                       _eq: X-Hasura-User-Id
       set:
@@ -139,13 +139,13 @@ update_permissions:
           - chest:
               edition:
                 groups:
-                  user_groups:
+                  userGroups:
                     user_id:
                       _eq: X-Hasura-User-Id
           - user:
-              user_groups:
+              userGroups:
                 group:
-                  user_groups:
+                  userGroups:
                     user_id:
                       _eq: X-Hasura-User-Id
           - userByTeacherId:
@@ -154,7 +154,7 @@ update_permissions:
           - subcategory:
               edition:
                 groups:
-                  user_groups:
+                  userGroups:
                     user_id:
                       _eq: X-Hasura-User-Id
       check:
@@ -162,13 +162,13 @@ update_permissions:
           - chest:
               edition:
                 groups:
-                  user_groups:
+                  userGroups:
                     user_id:
                       _eq: X-Hasura-User-Id
           - user:
-              user_groups:
+              userGroups:
                 group:
-                  user_groups:
+                  userGroups:
                     user_id:
                       _eq: X-Hasura-User-Id
           - userByTeacherId:
@@ -177,7 +177,7 @@ update_permissions:
           - subcategory:
               edition:
                 groups:
-                  user_groups:
+                  userGroups:
                     user_id:
                       _eq: X-Hasura-User-Id
       set:
