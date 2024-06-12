@@ -1,6 +1,7 @@
 package backend.chests
 
 import backend.edition.Edition
+import backend.files.FileEntity
 import jakarta.persistence.*
 
 @Entity
@@ -19,7 +20,11 @@ class Chests(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "edition_id", nullable = false)
-    var edition: Edition
+    var edition: Edition,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_file_id")
+    var imageFile: FileEntity? = null,
 ) {
     constructor() : this(
         chestType = "",

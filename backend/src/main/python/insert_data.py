@@ -1,6 +1,7 @@
 import psycopg2
 from faker import Faker
 import random
+import os
 
 
 def create_connection():
@@ -23,7 +24,8 @@ def truncate_and_restart_sequences():
     # Truncate tables
     tables = [
         "bonuses", "chest_history", "chest_award", "user_groups", "points",
-        "users", "subcategories", "levels", "groups", "chests", "categories", "award", "edition", "award_edition"
+        "users", "subcategories", "levels", "groups", "chests", "categories",
+        "award", "edition", "award_edition", "files"
     ]
 
     for table in tables:
@@ -44,6 +46,14 @@ def insert_data(data_count_multiplier=1):
     fake = Faker()
     Faker.seed(1234)
     random.seed(1234)
+
+    owlbear_filenames = ["owlbear1.png", "owlbear2.png", "owlbear3.png", "owlbear4.png",
+                         "owlbear5.png", "owlbear6.png", "owlbear7.png"]
+
+    for filename in owlbear_filenames:
+        avatar_path = os.path.abspath(f"../../../resources/files/{filename}")
+        cursor.execute("INSERT INTO files (path_to_file, file_name, file_type) VALUES (%s, %s, %s)",
+                       (avatar_path, filename, "image/png"))
 
     category_names = ["LABORATORY", "TEST", "PROJECT", "EVENT"]
 
@@ -181,18 +191,6 @@ def insert_data(data_count_multiplier=1):
         teacher_to_student_map[assigned_teacher].append(group_id)
 
     def generate_levels():
-        levels = []
-        for edition_id in editions.values():
-            for i in range(1, 8):
-                name = f"Level {i}"
-                min_points = 0 if i == 1 else levels[-1][2] + 1
-                max_points = min_points + random.randint(10, 20)
-                avatar = f"https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/level_{i}.png"
-                grade = random.uniform(2.0, 5.0)
-                levels.append((name, min_points, max_points, avatar, grade, edition_id))
-        return levels
-
-    def generate_levels():
         levels = [0]
         for i in range(1, 8):
             if i < 3:
@@ -207,19 +205,19 @@ def insert_data(data_count_multiplier=1):
     for i, edition_id in enumerate(editions.values()):
         levels_values = random_levels[i]
         levels_data = [
-            ("Jajo", levels_values[0], levels_values[1], "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear1.png", 2.0, ""),
-            ("Pisklak", levels_values[1], levels_values[2], "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear2.png", 2.0, ""),
-            ("Podlot", levels_values[2], levels_values[3], "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear3.png", 3.0, ""),
-            ("Żółtodziób", levels_values[3], levels_values[4], "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear4.png", 3.5, ""),
-            ("Nieopierzony odkrywca", levels_values[4], levels_values[5], "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear5.png", 4.0, ""),
-            ("Samodzielny Zwierzak", levels_values[5], levels_values[6], "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear6.png", 4.5, ""),
-            ("Majestatyczna Bestia", levels_values[6], levels_values[7], "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear7.png", 5.0, "")
+            ("Jajo", levels_values[0], levels_values[1], 1, 2.0, ""),
+            ("Pisklak", levels_values[1], levels_values[2], 2, 2.0, ""),
+            ("Podlot", levels_values[2], levels_values[3], 3, 3.0, ""),
+            ("Żółtodziób", levels_values[3], levels_values[4], 4, 3.5, ""),
+            ("Nieopierzony odkrywca", levels_values[4], levels_values[5], 5, 4.0, ""),
+            ("Samodzielny Zwierzak", levels_values[5], levels_values[6], 6, 4.5, ""),
+            ("Majestatyczna Bestia", levels_values[6], levels_values[7], 7, 5.0, "")
         ]
 
-        for name, min_points, max_points, avatar, grade, label in levels_data:
+        for name, min_points, max_points, image_file_id, grade, label in levels_data:
             cursor.execute(
-                "INSERT INTO levels (name, minimum_points, maximum_points, avatar, grade, label, edition_id) VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING level_id",
-                (name, min_points, max_points, avatar, grade, "", edition_id))
+                "INSERT INTO levels (name, minimum_points, maximum_points, image_file_id, grade, label, edition_id) VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING level_id",
+                (name, min_points, max_points, image_file_id, grade, "", edition_id))
 
     # Insert data into subcategories
     subcategories_data = {

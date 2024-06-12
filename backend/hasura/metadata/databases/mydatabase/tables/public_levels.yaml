@@ -12,10 +12,11 @@ insert_permissions:
       set:
         label: '""'
       columns:
-        - avatar
         - edition_id
         - grade
+        - image_file_id
         - label
+        - level_id
         - maximum_points
         - minimum_points
         - name
@@ -26,7 +27,7 @@ select_permissions:
       columns:
         - edition_id
         - level_id
-        - avatar
+        - image_file_id
         - label
         - name
         - grade
@@ -38,7 +39,7 @@ select_permissions:
   - role: student
     permission:
       columns:
-        - avatar
+        - image_file_id
         - edition_id
         - grade
         - label
@@ -56,7 +57,7 @@ select_permissions:
   - role: teacher
     permission:
       columns:
-        - avatar
+        - image_file_id
         - edition_id
         - grade
         - label
@@ -75,7 +76,7 @@ update_permissions:
   - role: coordinator
     permission:
       columns:
-        - avatar
+        - image_file_id
         - grade
         - label
         - maximum_points
