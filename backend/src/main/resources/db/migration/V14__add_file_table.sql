@@ -2,7 +2,8 @@ CREATE TABLE files (
                        file_id SERIAL PRIMARY KEY,
                        path_to_file VARCHAR(1024) NOT NULL,
                        file_name VARCHAR(255) NOT NULL,
-                       file_type VARCHAR(50) NOT NULL
+                       file_type VARCHAR(50) NOT NULL,
+                       label VARCHAR(256) NOT NULL
 );
 
 ALTER TABLE levels

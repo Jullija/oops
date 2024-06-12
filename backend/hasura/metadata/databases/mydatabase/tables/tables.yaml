@@ -6,6 +6,7 @@
 - "!include public_chest_history.yaml"
 - "!include public_chests.yaml"
 - "!include public_edition.yaml"
+- "!include public_files.yaml"
 - "!include public_flyway_schema_history.yaml"
 - "!include public_groups.yaml"
 - "!include public_hall_of_fame.yaml"

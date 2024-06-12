@@ -52,8 +52,8 @@ def insert_data(data_count_multiplier=1):
 
     for filename in owlbear_filenames:
         avatar_path = os.path.abspath(f"../../../resources/files/{filename}")
-        cursor.execute("INSERT INTO files (path_to_file, file_name, file_type) VALUES (%s, %s, %s)",
-                       (avatar_path, filename, "image/png"))
+        cursor.execute("INSERT INTO files (path_to_file, file_name, file_type, label) VALUES (%s, %s, %s, %s)",
+                       (avatar_path, filename, "image/png", ""))
 
     category_names = ["LABORATORY", "TEST", "PROJECT", "EVENT"]
 

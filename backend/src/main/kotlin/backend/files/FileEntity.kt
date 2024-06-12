@@ -15,11 +15,15 @@ data class FileEntity(
     val fileName: String,
 
     @Column(name = "file_type", nullable = false)
-    val fileType: String
+    val fileType: String,
+
+    @Column(name = "label", nullable = false, length = 256)
+    var label: String = "",
 ) {
     constructor() : this(
         pathToFile = "",
         fileName = "",
-        fileType = ""
+        fileType = "",
+        label = ""
     )
 }
