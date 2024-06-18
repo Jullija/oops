@@ -1,0 +1,72 @@
+table:
+  name: chest_award
+  schema: public
+object_relationships:
+  - name: award
+    using:
+      foreign_key_constraint_on: award_id
+  - name: chest
+    using:
+      foreign_key_constraint_on: chest_id
+insert_permissions:
+  - role: coordinator
+    permission:
+      check: {}
+      set:
+        label: '""'
+      columns:
+        - chest_award_id
+        - chest_id
+        - label
+    comment: ""
+select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - award_id
+        - chest_award_id
+        - chest_id
+        - label
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: student
+    permission:
+      columns:
+        - award_id
+        - chest_award_id
+        - chest_id
+        - label
+      filter:
+        chest:
+          edition:
+            groups:
+              userGroups:
+                user_id:
+                  _eq: X-Hasura-User-Id
+    comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - award_id
+        - chest_award_id
+        - chest_id
+        - label
+      filter:
+        chest:
+          edition:
+            groups:
+              userGroups:
+                user_id:
+                  _eq: X-Hasura-User-Id
+    comment: ""
+update_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - label
+      filter: {}
+      check: {}
+      set:
+        label: '""'
+    comment: ""

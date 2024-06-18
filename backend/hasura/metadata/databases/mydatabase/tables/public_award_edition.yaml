@@ -1,0 +1,80 @@
+table:
+  name: award_edition
+  schema: public
+object_relationships:
+  - name: award
+    using:
+      foreign_key_constraint_on: award_id
+  - name: edition
+    using:
+      foreign_key_constraint_on: edition_id
+insert_permissions:
+  - role: coordinator
+    permission:
+      check: {}
+      set:
+        label: '""'
+      columns:
+        - award_id
+        - edition_id
+        - label
+    comment: ""
+select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - award_edition_id
+        - award_id
+        - edition_id
+        - label
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: student
+    permission:
+      columns:
+        - award_edition_id
+        - award_id
+        - edition_id
+        - label
+      filter:
+        edition:
+          groups:
+            userGroups:
+              user_id:
+                _eq: X-Hasura-User-Id
+    comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - award_edition_id
+        - award_id
+        - edition_id
+        - label
+      filter:
+        edition:
+          groups:
+            userGroups:
+              user_id:
+                _eq: X-Hasura-User-Id
+    comment: ""
+update_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - label
+      filter: {}
+      check: {}
+      set:
+        label: '""'
+    comment: ""
+delete_permissions:
+  - role: coordinator
+    permission:
+      filter:
+        _not:
+          award:
+            bonuses:
+              bonus_id:
+                _is_null: false
+    comment: ""

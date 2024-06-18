@@ -1,0 +1,9 @@
+2024-05-20 23:17:50.135706+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "GROUPS" not found (this database is empty); SQL statement:
+select count(*) from groups g1_0 [42104-224]
+2024-05-20 23:18:27.944239+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CATEGORIES" not found (this database is empty); SQL statement:
+select count(*) from categories c1_0 [42104-224]
+2024-05-20 23:21:44.899568+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CHESTS" not found (this database is empty); SQL statement:
+select count(*) from chests c1_0 [42104-224]

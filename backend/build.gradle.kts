@@ -5,6 +5,8 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.4"
 	kotlin("jvm") version "1.9.23"
 	kotlin("plugin.spring") version "1.9.23"
+	id("com.netflix.dgs.codegen") version "6.2.1"
+
 }
 
 group = "oops"
@@ -18,14 +20,25 @@ repositories {
 	mavenCentral()
 }
 
+dependencyManagement {
+	imports {
+		mavenBom("com.netflix.graphql.dgs:graphql-dgs-platform-dependencies:8.7.1")
+	}
+}
+
+
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.flywaydb:flyway-core")
+	implementation("org.postgresql:postgresql")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	runtimeOnly("com.h2database:h2")
-	runtimeOnly("org.postgresql:postgresql")
+	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	implementation("org.hibernate.orm:hibernate-core")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	implementation("com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter")
+
 }
 
 tasks.withType<KotlinCompile> {
@@ -35,6 +48,13 @@ tasks.withType<KotlinCompile> {
 	}
 }
 
+tasks.withType<com.netflix.graphql.dgs.codegen.gradle.GenerateJavaTask> {
+	schemaPaths = mutableListOf("${projectDir}/src/main/resources/schema")
+	packageName = "main.kotlin.backend"
+	generateClient = false
+}
+
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+

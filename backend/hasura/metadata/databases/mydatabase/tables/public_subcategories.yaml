@@ -1,0 +1,110 @@
+table:
+  name: subcategories
+  schema: public
+object_relationships:
+  - name: category
+    using:
+      foreign_key_constraint_on: category_id
+  - name: edition
+    using:
+      foreign_key_constraint_on: edition_id
+array_relationships:
+  - name: chestHistories
+    using:
+      foreign_key_constraint_on:
+        column: subcategory_id
+        table:
+          name: chest_history
+          schema: public
+  - name: points
+    using:
+      foreign_key_constraint_on:
+        column: subcategory_id
+        table:
+          name: points
+          schema: public
+insert_permissions:
+  - role: coordinator
+    permission:
+      check: {}
+      set:
+        label: '""'
+      columns:
+        - category_id
+        - edition_id
+        - label
+        - max_points
+        - ordinal_number
+        - subcategory_name
+    comment: ""
+select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - category_id
+        - edition_id
+        - label
+        - max_points
+        - ordinal_number
+        - subcategory_id
+        - subcategory_name
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: student
+    permission:
+      columns:
+        - category_id
+        - edition_id
+        - label
+        - max_points
+        - ordinal_number
+        - subcategory_id
+        - subcategory_name
+      filter:
+        edition:
+          groups:
+            userGroups:
+              user_id:
+                _eq: X-Hasura-User-Id
+    comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - category_id
+        - edition_id
+        - label
+        - max_points
+        - ordinal_number
+        - subcategory_id
+        - subcategory_name
+      filter:
+        edition:
+          groups:
+            userGroups:
+              user_id:
+                _eq: X-Hasura-User-Id
+    comment: ""
+update_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - category_id
+        - label
+        - max_points
+        - ordinal_number
+        - subcategory_name
+      filter: {}
+      check: {}
+      set:
+        label: '""'
+    comment: ""
+delete_permissions:
+  - role: coordinator
+    permission:
+      filter:
+        _not:
+          points:
+            points_id:
+              _is_null: false
+    comment: ""

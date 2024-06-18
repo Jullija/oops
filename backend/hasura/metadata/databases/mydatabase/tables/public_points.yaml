@@ -1,0 +1,104 @@
+table:
+  name: points
+  schema: public
+object_relationships:
+  - name: subcategory
+    using:
+      foreign_key_constraint_on: subcategory_id
+  - name: user
+    using:
+      foreign_key_constraint_on: student_id
+  - name: userByTeacherId
+    using:
+      foreign_key_constraint_on: teacher_id
+array_relationships:
+  - name: bonuses
+    using:
+      foreign_key_constraint_on:
+        column: points_id
+        table:
+          name: bonuses
+          schema: public
+insert_permissions:
+  - role: coordinator
+    permission:
+      check: {}
+      set:
+        label: '""'
+      columns:
+        - label
+        - student_id
+        - subcategory_id
+        - teacher_id
+        - value
+    comment: ""
+select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - points_id
+        - student_id
+        - subcategory_id
+        - teacher_id
+        - value
+        - label
+        - created_at
+        - updated_at
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: student
+    permission:
+      columns:
+        - created_at
+        - label
+        - points_id
+        - student_id
+        - subcategory_id
+        - teacher_id
+        - updated_at
+        - value
+      filter:
+        user:
+          user_id:
+            _eq: X-Hasura-User-Id
+      allow_aggregations: true
+    comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - created_at
+        - label
+        - points_id
+        - student_id
+        - subcategory_id
+        - teacher_id
+        - updated_at
+        - value
+      filter:
+        _or:
+          - teacher_id:
+              _eq: X-Hasura-User-Id
+          - user:
+              userGroups:
+                group:
+                  edition:
+                    groups:
+                      userGroups:
+                        user_id:
+                          _eq: X-Hasura-User-Id
+    comment: ""
+update_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - label
+        - student_id
+        - subcategory_id
+        - teacher_id
+        - value
+      filter: {}
+      check: {}
+      set:
+        label: '""'
+    comment: ""

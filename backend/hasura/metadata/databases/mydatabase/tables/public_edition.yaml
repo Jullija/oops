@@ -1,0 +1,108 @@
+table:
+  name: edition
+  schema: public
+array_relationships:
+  - name: awardEditions
+    using:
+      foreign_key_constraint_on:
+        column: edition_id
+        table:
+          name: award_edition
+          schema: public
+  - name: chests
+    using:
+      foreign_key_constraint_on:
+        column: edition_id
+        table:
+          name: chests
+          schema: public
+  - name: groups
+    using:
+      foreign_key_constraint_on:
+        column: edition_id
+        table:
+          name: groups
+          schema: public
+  - name: levels
+    using:
+      foreign_key_constraint_on:
+        column: edition_id
+        table:
+          name: levels
+          schema: public
+  - name: subcategories
+    using:
+      foreign_key_constraint_on:
+        column: edition_id
+        table:
+          name: subcategories
+          schema: public
+insert_permissions:
+  - role: coordinator
+    permission:
+      check: {}
+      set:
+        label: '""'
+      columns:
+        - edition_year
+        - label
+        - name
+    comment: ""
+select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - edition_id
+        - label
+        - name
+        - edition_year
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: student
+    permission:
+      columns:
+        - edition_id
+        - edition_year
+        - label
+        - name
+      filter:
+        groups:
+          userGroups:
+            user_id:
+              _eq: X-Hasura-User-Id
+    comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - edition_id
+        - edition_year
+        - label
+        - name
+      filter:
+        groups:
+          userGroups:
+            user_id:
+              _eq: X-Hasura-User-Id
+    comment: ""
+update_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - edition_year
+        - label
+        - name
+      filter: {}
+      check: {}
+      set:
+        label: '""'
+    comment: ""
+delete_permissions:
+  - role: coordinator
+    permission:
+      filter:
+        _not:
+          groups:
+            groups_id:
+              _is_null: false
+    comment: ""
