@@ -1,50 +1,36 @@
-import { useState } from "react";
-import {
-  GetPointsByStudent,
-  getCategory,
-  getPoints,
-  getProvider,
-  getStudent,
-  getStudents,
-  getSubcategory,
-} from "../../api";
-import { Points } from "../../utils";
-import { PointsForm } from "./PointsForm";
-import { StudentPoints } from "./StudentPoints";
-import { FormPoints } from "./types";
+import React, { useEffect } from "react";
+import { useUserPointsQuery } from "../../graphql/userPoints.graphql.types";
+import { useUser } from "../../contexts/userContext";
+import { UserCard } from "../../components/userProfile/userCard";
+import { PointsTable } from "../../components/userProfile/pointsTable";
 
-export const StudentProfile = () => {
-  const student = getStudents()[0];
-  const [pointsList, setPointsList] = useState<Points[]>(
-    GetPointsByStudent(student.id)
-  );
-  const handleAdd = (formPoints: FormPoints) => {
-    const subcategory = getSubcategory(formPoints.subcategoryId);
-    const category = getCategory(
-      subcategory !== undefined ? subcategory.categoryId : "-1"
-    );
-    const student = getStudent(formPoints.studentId);
-    const provider = getProvider(formPoints.providerId);
+export function StudentProfile() {
+  const { user, edition } = useUser();
+  const editionId = edition ? edition.editionId : "0";
+  const { data, loading, error, refetch } = useUserPointsQuery({
+    skip: !edition,
+    variables: { id: user.userId, editionId },
+  });
 
-    if (subcategory && category && student && provider) {
-      const points: Points = {
-        id: getPoints().length.toString(),
-        category: category,
-        subcategory: subcategory,
-        student: student,
-        provider: provider,
-        number: formPoints.number,
-      };
-      setPointsList([...pointsList, points]);
-    } else {
-      alert("something went wrong");
+  useEffect(() => {
+    if (edition) {
+      refetch({ id: user.userId, editionId: edition.editionId });
     }
-  };
+  }, [edition, refetch, user.userId]);
+
+  if (!edition) {
+    return <p>Please select an edition.</p>;
+  }
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  const points = data?.usersByPk?.points ?? [];
 
   return (
     <div style={{ display: "flex", flexDirection: "row", gap: 20 }}>
-      <StudentPoints pointsList={pointsList} />
-      <PointsForm studentId={student.id} handleAdd={handleAdd} />
+      {data?.usersByPk && <UserCard user={data.usersByPk} />}
+      <PointsTable points={points} />
     </div>
   );
-};
+}

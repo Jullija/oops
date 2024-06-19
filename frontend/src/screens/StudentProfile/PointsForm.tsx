@@ -30,7 +30,6 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
   const categories = getCategories();
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const providers = getProviders();
-
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const categoryId = e.target.value;
     const categorySubcategories = getSubcategoriesByCategory(categoryId);

@@ -4,7 +4,6 @@ export const paths = {
   MockData: "/mock-data",
   StudentProfile: "/student-profile",
   HallOfFame: "/hall-of-fame",
-  GraphqlDemo: "/graphql-demo",
 };
 
 type NavigationItem = {
@@ -28,9 +27,5 @@ export const navigationItems: NavigationItem[] = [
   {
     title: "hall-of-fame",
     path: paths.HallOfFame,
-  },
-  {
-    title: "graphql-demo",
-    path: paths.GraphqlDemo,
   },
 ];
