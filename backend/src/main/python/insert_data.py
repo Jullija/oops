@@ -98,8 +98,9 @@ def insert_data(data_count_multiplier=1):
     award_ids = []
     award_name_map = {}
     for name, award_type, award_value, category_id, max_usages, label in awards:
-        cursor.execute("INSERT INTO award (award_name, award_type, award_value, category_id, max_usages, label) VALUES (%s, %s, %s, %s, %s, %s) RETURNING award_id",
-                       (name, award_type, award_value, category_id, max_usages, ""))
+        cursor.execute(
+            "INSERT INTO award (award_name, award_type, award_value, category_id, max_usages, label) VALUES (%s, %s, %s, %s, %s, %s) RETURNING award_id",
+            (name, award_type, award_value, category_id, max_usages, ""))
         award_id = cursor.fetchone()[0]
         award_ids.append(award_id)
         award_name_map[award_id] = name
@@ -200,25 +201,25 @@ def insert_data(data_count_multiplier=1):
         for i in range(0, 8):
             levels[i] = int(levels[i] / max(levels) * 100)
         return levels
-    random_levels = [[0, 25, 50, 60, 70, 80, 90, 100]] + [generate_levels() for _ in range(len(editions.values())-1)]
+
+    random_levels = [[0, 25, 50, 60, 70, 80, 90, 100]] + [generate_levels() for _ in range(len(editions.values()) - 1)]
     # Insert data into levels
     for i, edition_id in enumerate(editions.values()):
         levels_values = random_levels[i]
         levels_data = [
-            ("Jajo", levels_values[0], levels_values[1], 1, 2.0, ""),
-            ("Pisklak", levels_values[1], levels_values[2], 2, 2.0, ""),
-            ("Podlot", levels_values[2], levels_values[3], 3, 3.0, ""),
-            ("Żółtodziób", levels_values[3], levels_values[4], 4, 3.5, ""),
-            ("Nieopierzony odkrywca", levels_values[4], levels_values[5], 5, 4.0, ""),
-            ("Samodzielny Zwierzak", levels_values[5], levels_values[6], 6, 4.5, ""),
-            ("Majestatyczna Bestia", levels_values[6], levels_values[7], 7, 5.0, "")
+            ("Jajo", levels_values[0], levels_values[1], 1, 2.0, "", False),
+            ("Pisklak", levels_values[1], levels_values[2], 2, 2.0, "", False),
+            ("Podlot", levels_values[2], levels_values[3], 3, 3.0, "", False),
+            ("Żółtodziób", levels_values[3], levels_values[4], 4, 3.5, "", False),
+            ("Nieopierzony odkrywca", levels_values[4], levels_values[5], 5, 4.0, "", False),
+            ("Samodzielny Zwierzak", levels_values[5], levels_values[6], 6, 4.5, "", False),
+            ("Majestatyczna Bestia", levels_values[6], levels_values[7], 7, 5.0, "", True)
         ]
 
-        for name, min_points, max_points, image_file_id, grade, label in levels_data:
+        for name, min_points, max_points, image_file_id, grade, label, highest in levels_data:
             cursor.execute(
-                "INSERT INTO levels (name, minimum_points, maximum_points, image_file_id, grade, label, edition_id) VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING level_id",
-                (name, min_points, max_points, image_file_id, grade, "", edition_id))
-
+                "INSERT INTO levels (name, minimum_points, maximum_points, image_file_id, grade, label, edition_id, highest) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING level_id",
+                (name, min_points, max_points, image_file_id, grade, "", edition_id, highest))
     # Insert data into subcategories
     subcategories_data = {
         "LABORATORY": [(f"lab_{i}", 10) for i in range(1, 15)],
@@ -226,9 +227,10 @@ def insert_data(data_count_multiplier=1):
         "PROJECT": [(f"proj_{i}", 50) for i in range(1, 4)],
         "EVENT": [("Gitowe Dziady", 10), ("Spooky Spring", 20), ("Constructor Christmas", 100)]
     }
+    subcategory_to_category = {}
+    subcategories = []
+
     for edition_id in editions.values():
-        subcategories = []
-        subcategory_to_category = {}
         for category_name, subcategory_names_and_max_points in subcategories_data.items():
             ordinal_number = 0
             for subcategory_name, max_points in subcategory_names_and_max_points:
@@ -267,10 +269,9 @@ def insert_data(data_count_multiplier=1):
                 FROM user_groups
                 WHERE user_id = %s
             ) AND u.role = 'student'
-            ORDER BY RANDOM()
-            LIMIT 1
         """, (teacher_id,))
-        student_record = cursor.fetchone()
+        student_record = cursor.fetchall()
+        student_record = random.choice(student_record)
         student_id = student_record[0]
         edition_id = student_record[1]
 
@@ -286,9 +287,13 @@ def insert_data(data_count_multiplier=1):
             return
 
         # 1. Insert a record in the chest_history table to represent the student receiving a chest from the teacher.
-        cursor.execute("SELECT chest_id FROM chests WHERE edition_id = %s ORDER BY RANDOM() LIMIT 1", (edition_id,))
-        chest_id = cursor.fetchone()[0]
-        subcategory_id = random.choice([s for s in subcategories if subcategory_to_category[s] in ["EVENT", "PROJECT"]])
+        cursor.execute("SELECT chest_id FROM chests WHERE edition_id = %s", (edition_id,))
+        chest_id = cursor.fetchall()
+        chest_id = random.choice(chest_id)[0]
+        subcategory_id = random.choice([s for s in subcategories if
+                                        subcategory_to_category[s] in ["EVENT", "PROJECT"] and not cursor.execute(
+                                            "SELECT 1 FROM subcategories WHERE subcategory_id = %s AND edition_id = %s",
+                                            (s, edition_id)) and cursor.fetchone() is not None])
         cursor.execute(
             "INSERT INTO chest_history (user_id, chest_id, subcategory_id, label, created_at, updated_at, teacher_id) VALUES (%s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, %s) RETURNING chest_history_id",
             (student_id, chest_id, subcategory_id, "", teacher_id)
@@ -335,21 +340,33 @@ def insert_data(data_count_multiplier=1):
     def add_points_for_laboratory_or_test(teacher_id):
         # Choose a random student from the teacher's group
         cursor.execute("""
-            SELECT u.user_id
+            SELECT u.user_id, g.edition_id
             FROM users u
             JOIN user_groups ug ON u.user_id = ug.user_id
+            JOIN groups g ON ug.group_id = g.groups_id
             WHERE ug.group_id IN (
                 SELECT group_id
                 FROM user_groups
                 WHERE user_id = %s
             ) AND u.role = 'student'
-            ORDER BY RANDOM()
-            LIMIT 1
         """, (teacher_id,))
-        student_id = cursor.fetchone()[0]
+        student_record = cursor.fetchall()
+        student_record = random.choice(student_record)
+        student_id = student_record[0]
+        edition_id = student_record[1]
 
-        # Choose a subcategory from LABORATORY or TEST
-        subcategory_id = random.choice([s for s in subcategories if subcategory_to_category[s] in ["LABORATORY", "TEST"]])
+        # Choose a subcategory from LABORATORY or TEST within the student's edition
+        cursor.execute("""
+            SELECT subcategory_id
+            FROM subcategories
+            WHERE category_id IN (
+                SELECT category_id
+                FROM categories
+                WHERE category_name IN ('LABORATORY', 'TEST')
+            ) AND edition_id = %s
+        """, (edition_id,))
+        subcategory_id = cursor.fetchall()
+        subcategory_id = random.choice(subcategory_id)[0]
 
         # Add points to the student for the chosen subcategory
         points = random.randint(5, 20)
@@ -358,18 +375,19 @@ def insert_data(data_count_multiplier=1):
             (student_id, teacher_id, points, subcategory_id, "")
         )
 
-        print(f"Teacher {teacher_id} added {points} points to student {student_id} for {subcategory_to_category[subcategory_id]}.")
+        print(
+            f"Teacher {teacher_id} added {points} points to student {student_id} for {subcategory_to_category[subcategory_id]} in edition {edition_id}.")
 
     # Example of modeling the chest-giving process
     for teacher_id in teacher_ids:
-        for _ in range(5):  # Adjust the number of times you want to model this process per teacher
+        for _ in range(500):  # Adjust the number of times you want to model this process per teacher
             give_chest_and_apply_award(teacher_id)
             add_points_for_laboratory_or_test(teacher_id)
 
     # Coordinator gives chests to random students
-    for _ in range(5):  # Adjust the number of times you want to model this process for the coordinator
-        student_id = random.choice(student_ids)
+    for _ in range(500):  # Adjust the number of times you want to model this process for the coordinator
         give_chest_and_apply_award(coordinator_id)
+        add_points_for_laboratory_or_test(coordinator_id)
 
     conn.commit()
     cursor.close()
