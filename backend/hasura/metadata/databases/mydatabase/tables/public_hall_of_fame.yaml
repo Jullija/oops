@@ -5,7 +5,7 @@ select_permissions:
   - role: coordinator
     permission:
       columns:
-        - avatar
+        - image_file_id
         - edition_id
         - level_id
         - level_name
@@ -18,7 +18,7 @@ select_permissions:
   - role: student
     permission:
       columns:
-        - avatar
+        - image_file_id
         - edition_id
         - level_id
         - level_name
@@ -31,7 +31,7 @@ select_permissions:
   - role: teacher
     permission:
       columns:
-        - avatar
+        - image_file_id
         - edition_id
         - level_id
         - level_name
@@ -44,7 +44,7 @@ select_permissions:
   - role: unauthenticated_user
     permission:
       columns:
-        - avatar
+        - image_file_id
         - edition_id
         - level_id
         - level_name

@@ -33,4 +33,16 @@ class FileUploadController(
 
         return ResponseEntity(fileContent, headers, HttpStatus.OK)
     }
+
+    @DeleteMapping("/{fileId}")
+    fun deleteFile(@PathVariable fileId: Long): ResponseEntity<Void> {
+        fileRetrievalService.deleteFile(fileId)
+        return ResponseEntity(HttpStatus.NO_CONTENT)
+    }
+
+    @PutMapping("/{fileId}")
+    fun updateFile(@PathVariable fileId: Long, @RequestParam("file") newFile: MultipartFile): ResponseEntity<FileEntity> {
+        val updatedFileEntity = fileRetrievalService.updateFile(fileId, newFile)
+        return ResponseEntity(updatedFileEntity, HttpStatus.OK)
+    }
 }
