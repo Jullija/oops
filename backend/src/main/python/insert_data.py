@@ -210,25 +210,25 @@ def insert_data(data_count_multiplier=1):
         levels_values = random_levels[i]
         levels_data = [
             ("Jajo", levels_values[0], levels_values[1],
-             "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear1.png", 2.0, ""),
+             "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear1.png", 2.0, "", False),
             ("Pisklak", levels_values[1], levels_values[2],
-             "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear2.png", 2.0, ""),
+             "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear2.png", 2.0, "", False),
             ("Podlot", levels_values[2], levels_values[3],
-             "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear3.png", 3.0, ""),
+             "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear3.png", 3.0, "", False),
             ("Żółtodziób", levels_values[3], levels_values[4],
-             "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear4.png", 3.5, ""),
+             "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear4.png", 3.5, "", False),
             ("Nieopierzony odkrywca", levels_values[4], levels_values[5],
-             "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear5.png", 4.0, ""),
+             "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear5.png", 4.0, "", False),
             ("Samodzielny Zwierzak", levels_values[5], levels_values[6],
-             "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear6.png", 4.5, ""),
-            ("Majestatyczna Bestia", levels_values[6], levels_values[7],
-             "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear7.png", 5.0, "")
+             "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear6.png", 4.5, "", False),
+            ("Majestatyczna Bestia", levels_values[6], None,
+             "https://raw.githubusercontent.com/Soamid/obiektowe-lab/master/img/owlbear7.png", 5.0, "", True)
         ]
 
-        for name, min_points, max_points, avatar, grade, label in levels_data:
+        for name, min_points, max_points, avatar, grade, label, highest in levels_data:
             cursor.execute(
-                "INSERT INTO levels (name, minimum_points, maximum_points, avatar, grade, label, edition_id) VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING level_id",
-                (name, min_points, max_points, avatar, grade, "", edition_id))
+                "INSERT INTO levels (name, minimum_points, maximum_points, avatar, grade, label, edition_id, highest) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING level_id",
+                (name, min_points, max_points, avatar, grade, "", edition_id, highest))
 
     # Insert data into subcategories
     subcategories_data = {
@@ -390,12 +390,12 @@ def insert_data(data_count_multiplier=1):
 
     # Example of modeling the chest-giving process
     for teacher_id in teacher_ids:
-        for _ in range(50):  # Adjust the number of times you want to model this process per teacher
+        for _ in range(500):  # Adjust the number of times you want to model this process per teacher
             give_chest_and_apply_award(teacher_id)
             add_points_for_laboratory_or_test(teacher_id)
 
     # Coordinator gives chests to random students
-    for _ in range(50):  # Adjust the number of times you want to model this process for the coordinator
+    for _ in range(500):  # Adjust the number of times you want to model this process for the coordinator
         give_chest_and_apply_award(coordinator_id)
         add_points_for_laboratory_or_test(coordinator_id)
 
