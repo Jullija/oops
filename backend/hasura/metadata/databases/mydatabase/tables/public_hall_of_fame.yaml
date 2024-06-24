@@ -5,40 +5,52 @@ select_permissions:
   - role: coordinator
     permission:
       columns:
+        - avatar
         - edition_id
-        - user_id
+        - level_id
+        - level_name
         - nick
         - sum_of_points
+        - user_id
       filter: {}
       allow_aggregations: true
     comment: ""
   - role: student
     permission:
       columns:
+        - avatar
         - edition_id
-        - user_id
+        - level_id
+        - level_name
         - nick
         - sum_of_points
+        - user_id
       filter: {}
       allow_aggregations: true
     comment: ""
   - role: teacher
     permission:
       columns:
+        - avatar
         - edition_id
-        - user_id
+        - level_id
+        - level_name
         - nick
         - sum_of_points
+        - user_id
       filter: {}
       allow_aggregations: true
     comment: ""
   - role: unauthenticated_user
     permission:
       columns:
+        - avatar
         - edition_id
-        - user_id
+        - level_id
+        - level_name
         - nick
         - sum_of_points
+        - user_id
       filter: {}
       allow_aggregations: true
     comment: ""
