@@ -1,6 +1,7 @@
 package backend.levels
 
 import backend.edition.Edition
+import backend.files.FileEntity
 import jakarta.persistence.*
 
 @Entity
@@ -23,8 +24,9 @@ class Levels(
     @Column(name = "grade", nullable = false)
     var grade: Double,
 
-    @Column(name = "avatar", nullable = true)
-    var avatar: String = "", // image URL or path
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_file_id")
+    var imageFile: FileEntity? = null,
 
     @Column(name = "label", nullable = false, length = 256)
     var label: String,
@@ -47,7 +49,7 @@ class Levels(
         minimumPoints = minimumPoints,
         maximumPoints = maximumPoints,
         grade = grade,
-        avatar = "",
+        imageFile = null,
         label = "",
         edition = Edition()
     )
