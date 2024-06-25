@@ -4,7 +4,6 @@ const basePaths = {
   MockData: "/mock-data",
   StudentProfile: "/student-profile",
   HallOfFame: "/hall-of-fame",
-  GraphqlDemo: "/graphql-demo",
   GroupsList: "/groups-list",
   Group: "/group",
 };
@@ -41,10 +40,6 @@ export const navigationItems: NavigationItem[] = [
   {
     title: "hall-of-fame",
     path: pathsWithParameters.HallOfFame,
-  },
-  {
-    title: "graphql-demo",
-    path: pathsWithParameters.GraphqlDemo,
   },
   {
     title: "groups-list",

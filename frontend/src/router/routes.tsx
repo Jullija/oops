@@ -3,7 +3,6 @@ import {
   StudentProfile,
   HallOfFame,
   Welcome,
-  GroupAndBonusComponent,
   GroupsList,
   Group,
 } from "../screens";
@@ -35,10 +34,6 @@ export const routes = createBrowserRouter([
       {
         path: pathsWithParameters.HallOfFame,
         element: <HallOfFame studentId={"6"} />,
-      },
-      {
-        path: pathsWithParameters.GraphqlDemo,
-        element: <GroupAndBonusComponent />,
       },
       {
         path: pathsWithParameters.GroupsList,
