@@ -1,0 +1,8 @@
+query getGroups($editionId: bigint!) {
+  groups(where: { editionId: { _eq: $editionId } }) {
+    editionId
+    groupName
+    groupsId
+    label
+  }
+}
