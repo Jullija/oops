@@ -1,8 +1,18 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useUserPointsQuery } from "../../graphql/userPoints.graphql.types";
 import { useUser } from "../../contexts/userContext";
 import { UserCard } from "../../components/userProfile/userCard";
 import { PointsTable } from "../../components/userProfile/pointsTable";
+import { Styles } from "../../utils";
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 20,
+    margin: 12,
+  },
+};
 
 export function StudentProfile() {
   const { user, edition } = useUser();
@@ -28,7 +38,7 @@ export function StudentProfile() {
   const points = data?.usersByPk?.points ?? [];
 
   return (
-    <div style={{ display: "flex", flexDirection: "row", gap: 20 }}>
+    <div style={styles.container}>
       {data?.usersByPk && <UserCard user={data.usersByPk} />}
       <PointsTable points={points} />
     </div>

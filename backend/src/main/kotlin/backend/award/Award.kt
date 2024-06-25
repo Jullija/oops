@@ -2,6 +2,7 @@ package backend.award
 
 import backend.awardEdition.AwardEdition
 import backend.categories.Categories
+import backend.files.FileEntity
 import jakarta.persistence.*
 
 @Entity
@@ -33,7 +34,11 @@ class Award (
         val awardEditions: Set<AwardEdition> = HashSet(),
 
         @Column(name = "label", nullable = false, length = 256)
-        var label: String
+        var label: String,
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "image_file_id")
+        var imageFile: FileEntity? = null,
 ) {
         constructor() : this(
                 awardName = "",

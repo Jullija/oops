@@ -1,7 +1,15 @@
 import { useState } from "react";
-import { Points } from "../../../utils";
+import { Points, Styles } from "../../../utils";
 import { FilterMenu } from "./FilterMenu";
 import { PointsTable } from "./PointsTable";
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+  },
+};
 
 type StudentPointsProps = {
   pointsList: Points[];
@@ -15,7 +23,7 @@ export const StudentPoints = ({ pointsList }: StudentPointsProps) => {
 
   const isInSelectedCategoryIds = (points: Points) => {
     return selectedCategoryIds.some(
-      (selectedId) => selectedId === points.category.id
+      (selectedId) => selectedId === points.category.id,
     );
   };
 
@@ -26,7 +34,7 @@ export const StudentPoints = ({ pointsList }: StudentPointsProps) => {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+    <div style={styles.container}>
       <FilterMenu
         pickedCategoryIds={selectedCategoryIds}
         onSelectChange={onSelectChange}

@@ -1,5 +1,17 @@
 import { getCategories } from "../../../../api";
-import { Category } from "../../../../utils";
+import { Category, Styles } from "../../../../utils";
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+  },
+  item: {
+    border: "1px solid black",
+    textAlign: "center",
+    padding: 12,
+    cursor: "pointer",
+  },
+};
 
 type FilterMenuProps = {
   pickedCategoryIds: string[];
@@ -19,7 +31,7 @@ export const FilterMenu = ({
   const handleCategoryClick = (category: Category) => {
     if (isSelected(category)) {
       const updatedSelectedCategories = pickedCategoryIds.filter(
-        (selectedId) => selectedId !== category.id
+        (selectedId) => selectedId !== category.id,
       );
       onSelectChange(updatedSelectedCategories);
     } else {
@@ -27,14 +39,11 @@ export const FilterMenu = ({
     }
   };
   return (
-    <div style={{ display: "flex" }}>
+    <div style={styles.container}>
       {categories.map((category, index) => (
         <div
           style={{
-            border: "1px solid black",
-            textAlign: "center",
-            padding: 12,
-            cursor: "pointer",
+            ...styles.item,
             backgroundColor: isSelected(category) ? "green" : undefined,
           }}
           key={index}
