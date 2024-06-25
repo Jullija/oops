@@ -4,8 +4,8 @@ type SelectInputProps = {
   handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   handleBlur: (e: React.FocusEvent<HTMLSelectElement>) => void;
   value: string;
-  error: string | undefined;
-  touched: boolean | undefined;
+  error?: string;
+  touched?: boolean;
   name: string;
   label?: string;
   optionItems: SelectOptionItem[];

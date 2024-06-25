@@ -4,8 +4,8 @@ type NumberInputProps = {
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   value: number;
-  error: string | undefined;
-  touched: boolean | undefined;
+  error?: string;
+  touched?: boolean;
   name: string;
   label?: string;
 };
