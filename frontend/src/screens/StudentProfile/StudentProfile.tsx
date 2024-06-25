@@ -8,10 +8,19 @@ import {
   getStudents,
   getSubcategory,
 } from "../../api";
-import { Points } from "../../utils";
+import { Points, Styles } from "../../utils";
 import { PointsForm } from "./PointsForm";
 import { StudentPoints } from "./StudentPoints";
 import { FormPoints } from "./types";
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 20,
+    margin: 12,
+  },
+};
 
 export const StudentProfile = () => {
   const student = getStudents()[0];
@@ -42,7 +51,7 @@ export const StudentProfile = () => {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "row", gap: 20 }}>
+    <div style={styles.container}>
       <StudentPoints pointsList={pointsList} />
       <PointsForm studentId={student.id} handleAdd={handleAdd} />
     </div>
