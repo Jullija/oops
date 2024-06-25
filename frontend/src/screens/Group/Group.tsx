@@ -26,15 +26,15 @@ const styles: Styles = {
 export const Group = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const id = params.id;
+  const id = params.id ?? "-1";
 
   const { data: groupData } = useGetGroupQuery({
-    variables: { editionId: "1", groupId: id ?? "1" },
+    // TODO editionId should be changed
+    variables: { editionId: "1", groupId: id },
   });
 
   const users = groupData?.groups[0].userGroups.map((item) => item.user);
-
-  console.log(users);
+  const groupName = groupData?.groups[0].groupName;
 
   return (
     <div style={styles.screenContainer}>
@@ -42,7 +42,7 @@ export const Group = () => {
         <button onClick={() => navigate(pathsGenerator.GroupsList)}>
           go back to groups list
         </button>
-        <div>{groupData?.groups[0].groupName}</div>
+        <div>{groupName}</div>
       </div>
       <div style={styles.studentsContainer}>
         {users?.map((user, index) => {
