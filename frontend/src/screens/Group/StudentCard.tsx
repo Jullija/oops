@@ -15,7 +15,7 @@ const styles: Styles = {
 export const StudentCard = ({ firstName, secondName }: StudentCardProps) => {
   return (
     <div style={styles.container}>
-      {firstName} {secondName}
+      {secondName} {firstName}
     </div>
   );
 };

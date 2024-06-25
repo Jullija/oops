@@ -26,7 +26,7 @@ export const GetGroupDocument = gql`
     groups(
       where: { editionId: { _eq: $editionId }, groupsId: { _eq: $groupId } }
     ) {
-      userGroups {
+      userGroups(orderBy: { user: { secondName: ASC } }) {
         userId
         user {
           firstName
