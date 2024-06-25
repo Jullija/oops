@@ -1,10 +1,23 @@
-export const paths = {
+const basePaths = {
   Default: "/",
   Welcome: "/welcome",
   MockData: "/mock-data",
   StudentProfile: "/student-profile",
   HallOfFame: "/hall-of-fame",
   GraphqlDemo: "/graphql-demo",
+  GroupsList: "/groups-list",
+  Group: "/group",
+};
+
+// do not use outside ./router
+export const pathsWithParameters = {
+  ...basePaths,
+  Group: `${basePaths.Group}/:id`,
+};
+
+export const pathsGenerator = {
+  ...basePaths,
+  Group: (id: string) => `${basePaths.Group}/${id}`,
 };
 
 type NavigationItem = {
@@ -15,22 +28,26 @@ type NavigationItem = {
 export const navigationItems: NavigationItem[] = [
   {
     title: "welcome",
-    path: paths.Welcome,
+    path: pathsWithParameters.Welcome,
   },
   {
     title: "mock-data",
-    path: paths.MockData,
+    path: pathsWithParameters.MockData,
   },
   {
     title: "student-profile",
-    path: paths.StudentProfile,
+    path: pathsWithParameters.StudentProfile,
   },
   {
     title: "hall-of-fame",
-    path: paths.HallOfFame,
+    path: pathsWithParameters.HallOfFame,
   },
   {
     title: "graphql-demo",
-    path: paths.GraphqlDemo,
+    path: pathsWithParameters.GraphqlDemo,
+  },
+  {
+    title: "groups-list",
+    path: pathsWithParameters.GroupsList,
   },
 ];

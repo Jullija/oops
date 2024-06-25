@@ -4,37 +4,50 @@ import {
   HallOfFame,
   Welcome,
   GroupAndBonusComponent,
+  GroupsList,
+  Group,
 } from "../screens";
 import { MockData, Root } from "../components";
-import { paths } from "./paths";
+import { pathsWithParameters } from "./paths";
 
 export const routes = createBrowserRouter([
   {
-    path: paths.Default,
+    path: pathsWithParameters.Default,
     element: <Root />,
     children: [
       {
-        path: paths.Default,
+        path: pathsWithParameters.Default,
         element: <Welcome />,
         index: true,
       },
       {
-        path: paths.Welcome,
+        path: pathsWithParameters.Welcome,
         element: <Welcome />,
       },
       {
-        path: paths.MockData,
+        path: pathsWithParameters.MockData,
         element: <MockData />,
       },
       {
-        path: paths.StudentProfile,
+        path: pathsWithParameters.StudentProfile,
         element: <StudentProfile />,
       },
       {
-        path: paths.HallOfFame,
+        path: pathsWithParameters.HallOfFame,
         element: <HallOfFame studentId={"6"} />,
       },
-      { path: paths.GraphqlDemo, element: <GroupAndBonusComponent /> },
+      {
+        path: pathsWithParameters.GraphqlDemo,
+        element: <GroupAndBonusComponent />,
+      },
+      {
+        path: pathsWithParameters.GroupsList,
+        element: <GroupsList />,
+      },
+      {
+        path: pathsWithParameters.Group,
+        element: <Group />,
+      },
     ],
   },
 ]);
