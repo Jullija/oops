@@ -1,6 +1,8 @@
+import { useNavigate } from "react-router-dom";
 import { useGetGroupsQuery } from "../../graphql/getGroups.graphql.types";
 import { Styles } from "../../utils";
 import { GroupsListItem } from "./GroupsListItem";
+import { pathsGenerator } from "../../router";
 
 const styles: Styles = {
   groupsContainer: {
@@ -13,12 +15,12 @@ const styles: Styles = {
 };
 
 export const GroupsList = () => {
-  // TODO change to current editionId
-  const editionId = "1";
+  const navigate = useNavigate();
 
   const { data: groupsData } = useGetGroupsQuery({
     variables: {
-      editionId: editionId,
+      // TODO editionId should be changed
+      editionId: "1",
     },
   });
 
@@ -26,9 +28,9 @@ export const GroupsList = () => {
     <div style={styles.groupsContainer}>
       {groupsData?.groups.map((group, index) => (
         <GroupsListItem
-          id={group.groupsId}
-          name={group.groupName}
+          groupName={group.groupName}
           key={index}
+          onClick={() => navigate(pathsGenerator.Group(group.groupsId))}
         />
       ))}
     </div>

@@ -26,14 +26,14 @@ const styles: Styles = {
 export const Group = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const id = params.id ?? "-1";
+  const id = params.id;
 
   const { data: groupData } = useGetGroupQuery({
     // TODO editionId should be changed
-    variables: { editionId: "1", groupId: id },
+    variables: { editionId: "1", groupId: id ?? "-1" },
   });
 
-  const users = groupData?.groups[0].userGroups.map((item) => item.user);
+  const students = groupData?.groups[0].userGroups.map((item) => item.user);
   const groupName = groupData?.groups[0].groupName;
 
   return (
@@ -45,7 +45,7 @@ export const Group = () => {
         <div>{groupName}</div>
       </div>
       <div style={styles.studentsContainer}>
-        {users?.map((user, index) => {
+        {students?.map((user, index) => {
           return (
             <StudentCard
               key={index}

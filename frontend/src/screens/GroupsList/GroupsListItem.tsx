@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router-dom";
-import { pathsGenerator } from "../../router";
 import { Styles } from "../../utils";
 
 const styles: Styles = {
@@ -15,18 +13,14 @@ const styles: Styles = {
 };
 
 type GroupsListItem = {
-  id: string;
-  name: string;
+  groupName: string;
+  onClick: () => void;
 };
 
-export const GroupsListItem = ({ id, name }: GroupsListItem) => {
-  const navigate = useNavigate();
+export const GroupsListItem = ({ groupName, onClick }: GroupsListItem) => {
   return (
-    <div
-      style={styles.container}
-      onClick={() => navigate(pathsGenerator.Group(id))}
-    >
-      {name}
+    <div style={styles.container} onClick={onClick}>
+      {groupName}
     </div>
   );
 };
