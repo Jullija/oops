@@ -37,6 +37,7 @@ type PointsType {
 type AwardType {
     awardId: Int!
     awardName: String!
+    image_file_id: Int
     awardType: AwardTypeType!
     maxUsages: Int!
     label: String!
@@ -66,6 +67,7 @@ type ChestHistoryType {
 type ChestType {
     chestId: Int!
     chestType: String!
+    image_file_id: Int
     label: String!
     edition: EditionType!
 }
@@ -83,6 +85,13 @@ type EditionType {
     label: String!
 }
 
+type GroupType {
+    groups_id: ID!
+    group_name: String!
+    label: String
+    users: [UsersType!]!
+}
+
 type UsersType {
     userId: Int!
     indexNumber: Int!
@@ -91,7 +100,14 @@ type UsersType {
     secondName: String!
     role: UsersRolesType!
     label: String!
+    groups: [GroupType!]!
 }
+
+type UserGroupType {
+    user_id: ID!
+    group_id: ID!
+}
+
 
 enum UsersRolesType {
     STUDENT

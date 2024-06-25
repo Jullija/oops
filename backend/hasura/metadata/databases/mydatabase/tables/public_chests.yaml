@@ -5,6 +5,9 @@ object_relationships:
   - name: edition
     using:
       foreign_key_constraint_on: edition_id
+  - name: file
+    using:
+      foreign_key_constraint_on: image_file_id
 array_relationships:
   - name: chestAwards
     using:
@@ -28,6 +31,7 @@ insert_permissions:
         label: '""'
       columns:
         - edition_id
+        - image_file_id
         - label
         - type
     comment: ""
@@ -37,6 +41,7 @@ select_permissions:
       columns:
         - chest_id
         - edition_id
+        - image_file_id
         - label
         - type
       filter: {}
@@ -47,6 +52,7 @@ select_permissions:
       columns:
         - chest_id
         - edition_id
+        - image_file_id
         - label
         - type
       filter:
@@ -61,6 +67,7 @@ select_permissions:
       columns:
         - chest_id
         - edition_id
+        - image_file_id
         - label
         - type
       filter:
@@ -74,6 +81,7 @@ update_permissions:
   - role: coordinator
     permission:
       columns:
+        - image_file_id
         - label
         - type
       filter: {}

@@ -5,6 +5,9 @@ object_relationships:
   - name: category
     using:
       foreign_key_constraint_on: category_id
+  - name: file
+    using:
+      foreign_key_constraint_on: image_file_id
 array_relationships:
   - name: awardEditions
     using:
@@ -38,6 +41,7 @@ insert_permissions:
         - award_type
         - award_value
         - category_id
+        - image_file_id
         - label
         - max_usages
     comment: ""
@@ -50,6 +54,7 @@ select_permissions:
         - award_type
         - award_value
         - category_id
+        - image_file_id
         - label
         - max_usages
       filter: {}
@@ -63,6 +68,7 @@ select_permissions:
         - award_type
         - award_value
         - category_id
+        - image_file_id
         - label
         - max_usages
       filter:
@@ -82,6 +88,7 @@ select_permissions:
         - award_type
         - award_value
         - category_id
+        - image_file_id
         - label
         - max_usages
       filter:
@@ -101,6 +108,7 @@ update_permissions:
         - award_type
         - award_value
         - category_id
+        - image_file_id
         - label
         - max_usages
       filter: {}
