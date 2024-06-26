@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useUserPointsQuery } from "../../graphql/userPoints.graphql.types";
 import { UserCard } from "../../components/userProfile/userCard";
-import { PointsTable } from "../../components/userProfile/pointsTable";
 import { Styles } from "../../utils";
 import { useUser } from "../../hooks/useUser";
 import { useUserEditions } from "../../hooks/useUserEditions";
+import PointsTable from "../../components/userProfile/pointsTable";
 
 const styles: Styles = {
   container: {

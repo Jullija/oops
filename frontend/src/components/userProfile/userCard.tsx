@@ -5,6 +5,8 @@ type UserCardProps = {
 };
 
 export function UserCard({ user }: UserCardProps) {
+  // this card will also contain photo with current lvl and points (probably)
+
   return (
     <div className="user-card">
       <h2>

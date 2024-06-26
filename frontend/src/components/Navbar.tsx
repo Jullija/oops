@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { navigationItems } from "../router";
 import { Styles } from "../utils";
@@ -22,11 +22,21 @@ const styles: Styles = {
     padding: 12,
     border: "1px solid black",
   },
+  editionName: {
+    marginLeft: "auto",
+    padding: 12,
+  },
 };
 
 export const Navbar = () => {
   const navigate = useNavigate();
   const { editions, selectedEdition, setSelectedEdition } = useUserEditions();
+
+  useEffect(() => {
+    if (editions.length === 1) {
+      setSelectedEdition(editions[0]);
+    }
+  }, [editions, setSelectedEdition]);
 
   const handleEditionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = event.target.value;
@@ -49,17 +59,21 @@ export const Navbar = () => {
           {item.title}
         </div>
       ))}
-      <select
-        style={styles.select}
-        onChange={handleEditionChange}
-        value={selectedEdition?.editionId || ""}
-      >
-        {editions.map((edition) => (
-          <option key={edition.editionId} value={edition.editionId}>
-            {edition.name}
-          </option>
-        ))}
-      </select>
+      {editions.length === 1 ? (
+        <div style={styles.editionName}>{editions[0].name}</div>
+      ) : editions.length > 1 ? (
+        <select
+          style={styles.select}
+          onChange={handleEditionChange}
+          value={selectedEdition?.editionId || ""}
+        >
+          {editions.map((edition) => (
+            <option key={edition.editionId} value={edition.editionId}>
+              {edition.name}
+            </option>
+          ))}
+        </select>
+      ) : null}
     </div>
   );
 };
