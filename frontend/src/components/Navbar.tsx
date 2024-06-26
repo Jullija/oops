@@ -1,14 +1,14 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Roles } from "../utils";
-import { useUser } from "../contexts/userContext";
-import { useUserEditionsQuery } from "../graphql/userEditions.graphql.types";
 import { navigationItems } from "../router";
 import { Styles } from "../utils";
+import { useUserEditions } from "../hooks/useUserEditions";
 
 const styles: Styles = {
   container: {
     width: "100%",
     display: "flex",
+    alignItems: "center",
     marginBottom: 12,
     borderBottom: "1px solid black",
   },
@@ -17,16 +17,26 @@ const styles: Styles = {
     padding: 12,
     cursor: "pointer",
   },
+  select: {
+    marginLeft: "auto",
+    padding: 12,
+    border: "1px solid black",
+  },
 };
 
 export const Navbar = () => {
   const navigate = useNavigate();
-  const { user } = useUser();
-  const { loading } = useUserEditionsQuery({
-    skip: user.role === Roles.UNAUTHENTICATED_USER,
-  });
+  const { editions, selectedEdition, setSelectedEdition } = useUserEditions();
 
-  if (loading) return <div>Loading...</div>;
+  const handleEditionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedId = event.target.value;
+    const selectedEdition = editions.find(
+      (edition) => edition.editionId === selectedId,
+    );
+    if (selectedEdition) {
+      setSelectedEdition(selectedEdition);
+    }
+  };
 
   return (
     <div style={styles.container}>
@@ -39,6 +49,17 @@ export const Navbar = () => {
           {item.title}
         </div>
       ))}
+      <select
+        style={styles.select}
+        onChange={handleEditionChange}
+        value={selectedEdition?.editionId || ""}
+      >
+        {editions.map((edition) => (
+          <option key={edition.editionId} value={edition.editionId}>
+            {edition.name}
+          </option>
+        ))}
+      </select>
     </div>
   );
 };

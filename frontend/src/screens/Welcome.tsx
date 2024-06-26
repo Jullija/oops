@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useAllUsersQuery } from "../graphql/allUsers.graphql.types";
 import { paths } from "../router/paths";
 import { Roles } from "../utils";
-import { User, useUser } from "../contexts/userContext";
+import { User } from "../contexts/userContext";
+import { useUser } from "../hooks/useUser";
 
 export const Welcome = () => {
   const { user: selectedUser, setUser } = useUser();

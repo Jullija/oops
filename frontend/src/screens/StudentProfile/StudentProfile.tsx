@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { useUserPointsQuery } from "../../graphql/userPoints.graphql.types";
-import { useUser } from "../../contexts/userContext";
 import { UserCard } from "../../components/userProfile/userCard";
 import { PointsTable } from "../../components/userProfile/pointsTable";
 import { Styles } from "../../utils";
+import { useUser } from "../../hooks/useUser";
+import { useUserEditions } from "../../hooks/useUserEditions";
 
 const styles: Styles = {
   container: {
@@ -15,7 +16,8 @@ const styles: Styles = {
 };
 
 export function StudentProfile() {
-  const { user, edition } = useUser();
+  const { user } = useUser();
+  const { selectedEdition: edition } = useUserEditions();
   const editionId = edition ? edition.editionId : "0";
   const { data, loading, error, refetch } = useUserPointsQuery({
     skip: !edition,

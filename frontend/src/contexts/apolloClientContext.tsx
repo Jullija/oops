@@ -1,5 +1,4 @@
-// ApolloClientSetup.tsx
-import { ReactNode } from "react";
+import { ReactNode, useContext } from "react";
 import {
   ApolloClient,
   InMemoryCache,
@@ -7,41 +6,41 @@ import {
   createHttpLink,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import { User, UserContext } from "../contexts/userContext";
 import { Roles } from "../utils";
-import { useUser } from "./userContext";
 
 const httpLink = createHttpLink({
   uri: "http://127.0.0.1:9191/v1/graphql",
 });
 
-const AuthLink = () => {
-  const { user } = useUser();
-
-  const authLink = setContext((_, { headers }) => {
+const createAuthLink = (user?: User) =>
+  setContext((_, { headers }) => {
     return {
       headers: {
         ...headers,
         "x-hasura-admin-secret": "admin_secret",
-        ...(user.userId !== "unauthenticated"
+        ...(user?.userId !== "unauthenticated" && user
           ? {
-              "x-hasura-user-id": user.userId,
-              "x-hasura-role": user.role.toLowerCase(),
+              "x-hasura-user-id": user?.userId,
+              "x-hasura-role": user?.role.toLowerCase(),
             }
           : { "x-hasura-role": Roles.UNAUTHENTICATED_USER }),
       },
     };
   });
 
-  return authLink.concat(httpLink);
+const initializeApolloClient = (user?: User) => {
+  const authLink = createAuthLink(user);
+  return new ApolloClient({
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache(),
+  });
 };
 
 export const ApolloClientProvider = ({ children }: { children: ReactNode }) => {
-  const authLink = AuthLink();
+  const userContext = useContext(UserContext);
 
-  const client = new ApolloClient({
-    link: authLink,
-    cache: new InMemoryCache(),
-  });
+  const client = initializeApolloClient(userContext?.user);
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };
