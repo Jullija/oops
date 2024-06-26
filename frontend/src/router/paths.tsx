@@ -1,7 +1,6 @@
 export const paths = {
   Default: "/",
   Welcome: "/welcome",
-  MockData: "/mock-data",
   StudentProfile: "/student-profile",
   HallOfFame: "/hall-of-fame",
 };
@@ -15,10 +14,6 @@ export const navigationItems: NavigationItem[] = [
   {
     title: "welcome",
     path: paths.Welcome,
-  },
-  {
-    title: "mock-data",
-    path: paths.MockData,
   },
   {
     title: "student-profile",
