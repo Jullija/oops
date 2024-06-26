@@ -217,6 +217,12 @@ type Award {
     """
     where: ChestAwardBoolExp
   ): ChestAwardAggregate!
+
+  """
+  An object relationship
+  """
+  file: Files
+  imageFileId: bigint
   label: String!
   maxUsages: Int!
 }
@@ -294,6 +300,7 @@ type AwardAvgFields {
   awardId: Float
   awardValue: Float
   categoryId: Float
+  imageFileId: Float
   maxUsages: Float
 }
 
@@ -304,6 +311,7 @@ input AwardAvgOrderBy {
   awardId: OrderBy
   awardValue: OrderBy
   categoryId: OrderBy
+  imageFileId: OrderBy
   maxUsages: OrderBy
 }
 
@@ -326,6 +334,8 @@ input AwardBoolExp {
   categoryId: BigintComparisonExp
   chestAwards: ChestAwardBoolExp
   chestAwardsAggregate: ChestAwardAggregateBoolExp
+  file: FilesBoolExp
+  imageFileId: BigintComparisonExp
   label: StringComparisonExp
   maxUsages: IntComparisonExp
 }
@@ -800,6 +810,7 @@ input AwardIncInput {
   awardId: bigint
   awardValue: float8
   categoryId: bigint
+  imageFileId: bigint
   maxUsages: Int
 }
 
@@ -816,6 +827,8 @@ input AwardInsertInput {
   category: CategoriesObjRelInsertInput
   categoryId: bigint
   chestAwards: ChestAwardArrRelInsertInput
+  file: FilesObjRelInsertInput
+  imageFileId: bigint
   label: String
   maxUsages: Int
 }
@@ -829,6 +842,7 @@ type AwardMaxFields {
   awardType: String
   awardValue: float8
   categoryId: bigint
+  imageFileId: bigint
   label: String
   maxUsages: Int
 }
@@ -842,6 +856,7 @@ input AwardMaxOrderBy {
   awardType: OrderBy
   awardValue: OrderBy
   categoryId: OrderBy
+  imageFileId: OrderBy
   label: OrderBy
   maxUsages: OrderBy
 }
@@ -855,6 +870,7 @@ type AwardMinFields {
   awardType: String
   awardValue: float8
   categoryId: bigint
+  imageFileId: bigint
   label: String
   maxUsages: Int
 }
@@ -868,6 +884,7 @@ input AwardMinOrderBy {
   awardType: OrderBy
   awardValue: OrderBy
   categoryId: OrderBy
+  imageFileId: OrderBy
   label: OrderBy
   maxUsages: OrderBy
 }
@@ -921,6 +938,8 @@ input AwardOrderBy {
   category: CategoriesOrderBy
   categoryId: OrderBy
   chestAwardsAggregate: ChestAwardAggregateOrderBy
+  file: FilesOrderBy
+  imageFileId: OrderBy
   label: OrderBy
   maxUsages: OrderBy
 }
@@ -960,6 +979,11 @@ enum AwardSelectColumn {
   column name
   """
   categoryId
+
+  """
+  column name
+  """
+  imageFileId
 
   """
   column name
@@ -1061,6 +1085,7 @@ input AwardSetInput {
   awardType: String
   awardValue: float8
   categoryId: bigint
+  imageFileId: bigint
   label: String
   maxUsages: Int
 }
@@ -1072,6 +1097,7 @@ type AwardStddevFields {
   awardId: Float
   awardValue: Float
   categoryId: Float
+  imageFileId: Float
   maxUsages: Float
 }
 
@@ -1082,6 +1108,7 @@ input AwardStddevOrderBy {
   awardId: OrderBy
   awardValue: OrderBy
   categoryId: OrderBy
+  imageFileId: OrderBy
   maxUsages: OrderBy
 }
 
@@ -1092,6 +1119,7 @@ type AwardStddevPopFields {
   awardId: Float
   awardValue: Float
   categoryId: Float
+  imageFileId: Float
   maxUsages: Float
 }
 
@@ -1102,6 +1130,7 @@ input AwardStddevPopOrderBy {
   awardId: OrderBy
   awardValue: OrderBy
   categoryId: OrderBy
+  imageFileId: OrderBy
   maxUsages: OrderBy
 }
 
@@ -1112,6 +1141,7 @@ type AwardStddevSampFields {
   awardId: Float
   awardValue: Float
   categoryId: Float
+  imageFileId: Float
   maxUsages: Float
 }
 
@@ -1122,6 +1152,7 @@ input AwardStddevSampOrderBy {
   awardId: OrderBy
   awardValue: OrderBy
   categoryId: OrderBy
+  imageFileId: OrderBy
   maxUsages: OrderBy
 }
 
@@ -1149,6 +1180,7 @@ input AwardStreamCursorValueInput {
   awardType: String
   awardValue: float8
   categoryId: bigint
+  imageFileId: bigint
   label: String
   maxUsages: Int
 }
@@ -1160,6 +1192,7 @@ type AwardSumFields {
   awardId: bigint
   awardValue: float8
   categoryId: bigint
+  imageFileId: bigint
   maxUsages: Int
 }
 
@@ -1170,6 +1203,7 @@ input AwardSumOrderBy {
   awardId: OrderBy
   awardValue: OrderBy
   categoryId: OrderBy
+  imageFileId: OrderBy
   maxUsages: OrderBy
 }
 
@@ -1177,6 +1211,7 @@ type AwardType {
   awardId: Int!
   awardName: String!
   awardType: AwardTypeType!
+  image_file_id: Int
   label: String!
   maxUsages: Int!
 }
@@ -1220,6 +1255,11 @@ enum AwardUpdateColumn {
   """
   column name
   """
+  imageFileId
+
+  """
+  column name
+  """
   label
 
   """
@@ -1252,6 +1292,7 @@ type AwardVarPopFields {
   awardId: Float
   awardValue: Float
   categoryId: Float
+  imageFileId: Float
   maxUsages: Float
 }
 
@@ -1262,6 +1303,7 @@ input AwardVarPopOrderBy {
   awardId: OrderBy
   awardValue: OrderBy
   categoryId: OrderBy
+  imageFileId: OrderBy
   maxUsages: OrderBy
 }
 
@@ -1272,6 +1314,7 @@ type AwardVarSampFields {
   awardId: Float
   awardValue: Float
   categoryId: Float
+  imageFileId: Float
   maxUsages: Float
 }
 
@@ -1282,6 +1325,7 @@ input AwardVarSampOrderBy {
   awardId: OrderBy
   awardValue: OrderBy
   categoryId: OrderBy
+  imageFileId: OrderBy
   maxUsages: OrderBy
 }
 
@@ -1292,6 +1336,7 @@ type AwardVarianceFields {
   awardId: Float
   awardValue: Float
   categoryId: Float
+  imageFileId: Float
   maxUsages: Float
 }
 
@@ -1302,6 +1347,7 @@ input AwardVarianceOrderBy {
   awardId: OrderBy
   awardValue: OrderBy
   categoryId: OrderBy
+  imageFileId: OrderBy
   maxUsages: OrderBy
 }
 
@@ -3389,6 +3435,7 @@ type ChestType {
   chestId: Int!
   chestType: String!
   edition: EditionType!
+  image_file_id: Int
   label: String!
 }
 
@@ -3522,6 +3569,12 @@ type Chests {
   """
   edition: Edition!
   editionId: bigint!
+
+  """
+  An object relationship
+  """
+  file: Files
+  imageFileId: bigint
   label: String!
   type: String!
 }
@@ -3590,6 +3643,7 @@ aggregate avg on columns
 type ChestsAvgFields {
   chestId: Float
   editionId: Float
+  imageFileId: Float
 }
 
 """
@@ -3598,6 +3652,7 @@ order by avg() on columns of table "chests"
 input ChestsAvgOrderBy {
   chestId: OrderBy
   editionId: OrderBy
+  imageFileId: OrderBy
 }
 
 """
@@ -3614,6 +3669,8 @@ input ChestsBoolExp {
   chestId: BigintComparisonExp
   edition: EditionBoolExp
   editionId: BigintComparisonExp
+  file: FilesBoolExp
+  imageFileId: BigintComparisonExp
   label: StringComparisonExp
   type: StringComparisonExp
 }
@@ -3634,6 +3691,7 @@ input type for incrementing numeric columns in table "chests"
 input ChestsIncInput {
   chestId: bigint
   editionId: bigint
+  imageFileId: bigint
 }
 
 """
@@ -3645,6 +3703,8 @@ input ChestsInsertInput {
   chestId: bigint
   edition: EditionObjRelInsertInput
   editionId: bigint
+  file: FilesObjRelInsertInput
+  imageFileId: bigint
   label: String
   type: String
 }
@@ -3655,6 +3715,7 @@ aggregate max on columns
 type ChestsMaxFields {
   chestId: bigint
   editionId: bigint
+  imageFileId: bigint
   label: String
   type: String
 }
@@ -3665,6 +3726,7 @@ order by max() on columns of table "chests"
 input ChestsMaxOrderBy {
   chestId: OrderBy
   editionId: OrderBy
+  imageFileId: OrderBy
   label: OrderBy
   type: OrderBy
 }
@@ -3675,6 +3737,7 @@ aggregate min on columns
 type ChestsMinFields {
   chestId: bigint
   editionId: bigint
+  imageFileId: bigint
   label: String
   type: String
 }
@@ -3685,6 +3748,7 @@ order by min() on columns of table "chests"
 input ChestsMinOrderBy {
   chestId: OrderBy
   editionId: OrderBy
+  imageFileId: OrderBy
   label: OrderBy
   type: OrderBy
 }
@@ -3734,6 +3798,8 @@ input ChestsOrderBy {
   chestId: OrderBy
   edition: EditionOrderBy
   editionId: OrderBy
+  file: FilesOrderBy
+  imageFileId: OrderBy
   label: OrderBy
   type: OrderBy
 }
@@ -3762,6 +3828,11 @@ enum ChestsSelectColumn {
   """
   column name
   """
+  imageFileId
+
+  """
+  column name
+  """
   label
 
   """
@@ -3776,6 +3847,7 @@ input type for updating data in table "chests"
 input ChestsSetInput {
   chestId: bigint
   editionId: bigint
+  imageFileId: bigint
   label: String
   type: String
 }
@@ -3786,6 +3858,7 @@ aggregate stddev on columns
 type ChestsStddevFields {
   chestId: Float
   editionId: Float
+  imageFileId: Float
 }
 
 """
@@ -3794,6 +3867,7 @@ order by stddev() on columns of table "chests"
 input ChestsStddevOrderBy {
   chestId: OrderBy
   editionId: OrderBy
+  imageFileId: OrderBy
 }
 
 """
@@ -3802,6 +3876,7 @@ aggregate stddevPop on columns
 type ChestsStddevPopFields {
   chestId: Float
   editionId: Float
+  imageFileId: Float
 }
 
 """
@@ -3810,6 +3885,7 @@ order by stddevPop() on columns of table "chests"
 input ChestsStddevPopOrderBy {
   chestId: OrderBy
   editionId: OrderBy
+  imageFileId: OrderBy
 }
 
 """
@@ -3818,6 +3894,7 @@ aggregate stddevSamp on columns
 type ChestsStddevSampFields {
   chestId: Float
   editionId: Float
+  imageFileId: Float
 }
 
 """
@@ -3826,6 +3903,7 @@ order by stddevSamp() on columns of table "chests"
 input ChestsStddevSampOrderBy {
   chestId: OrderBy
   editionId: OrderBy
+  imageFileId: OrderBy
 }
 
 """
@@ -3849,6 +3927,7 @@ Initial value of the column from where the streaming should start
 input ChestsStreamCursorValueInput {
   chestId: bigint
   editionId: bigint
+  imageFileId: bigint
   label: String
   type: String
 }
@@ -3859,6 +3938,7 @@ aggregate sum on columns
 type ChestsSumFields {
   chestId: bigint
   editionId: bigint
+  imageFileId: bigint
 }
 
 """
@@ -3867,6 +3947,7 @@ order by sum() on columns of table "chests"
 input ChestsSumOrderBy {
   chestId: OrderBy
   editionId: OrderBy
+  imageFileId: OrderBy
 }
 
 """
@@ -3882,6 +3963,11 @@ enum ChestsUpdateColumn {
   column name
   """
   editionId
+
+  """
+  column name
+  """
+  imageFileId
 
   """
   column name
@@ -3917,6 +4003,7 @@ aggregate varPop on columns
 type ChestsVarPopFields {
   chestId: Float
   editionId: Float
+  imageFileId: Float
 }
 
 """
@@ -3925,6 +4012,7 @@ order by varPop() on columns of table "chests"
 input ChestsVarPopOrderBy {
   chestId: OrderBy
   editionId: OrderBy
+  imageFileId: OrderBy
 }
 
 """
@@ -3933,6 +4021,7 @@ aggregate varSamp on columns
 type ChestsVarSampFields {
   chestId: Float
   editionId: Float
+  imageFileId: Float
 }
 
 """
@@ -3941,6 +4030,7 @@ order by varSamp() on columns of table "chests"
 input ChestsVarSampOrderBy {
   chestId: OrderBy
   editionId: OrderBy
+  imageFileId: OrderBy
 }
 
 """
@@ -3949,6 +4039,7 @@ aggregate variance on columns
 type ChestsVarianceFields {
   chestId: Float
   editionId: Float
+  imageFileId: Float
 }
 
 """
@@ -3957,6 +4048,7 @@ order by variance() on columns of table "chests"
 input ChestsVarianceOrderBy {
   chestId: OrderBy
   editionId: OrderBy
+  imageFileId: OrderBy
 }
 
 """
@@ -4616,6 +4708,521 @@ type EditionVarianceFields {
 }
 
 """
+columns and relationships of "files"
+"""
+type Files {
+  """
+  An array relationship
+  """
+  awards(
+    """
+    distinct select on columns
+    """
+    distinctOn: [AwardSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [AwardOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: AwardBoolExp
+  ): [Award!]!
+
+  """
+  An aggregate relationship
+  """
+  awardsAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [AwardSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [AwardOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: AwardBoolExp
+  ): AwardAggregate!
+
+  """
+  An array relationship
+  """
+  chests(
+    """
+    distinct select on columns
+    """
+    distinctOn: [ChestsSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [ChestsOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: ChestsBoolExp
+  ): [Chests!]!
+
+  """
+  An aggregate relationship
+  """
+  chestsAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [ChestsSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [ChestsOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: ChestsBoolExp
+  ): ChestsAggregate!
+  fileId: bigint!
+  fileName: String!
+  fileType: String!
+  label: String!
+
+  """
+  An array relationship
+  """
+  levels(
+    """
+    distinct select on columns
+    """
+    distinctOn: [LevelsSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [LevelsOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: LevelsBoolExp
+  ): [Levels!]!
+
+  """
+  An aggregate relationship
+  """
+  levelsAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [LevelsSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [LevelsOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: LevelsBoolExp
+  ): LevelsAggregate!
+  pathToFile: String!
+}
+
+"""
+aggregated selection of "files"
+"""
+type FilesAggregate {
+  aggregate: FilesAggregateFields
+  nodes: [Files!]!
+}
+
+"""
+aggregate fields of "files"
+"""
+type FilesAggregateFields {
+  avg: FilesAvgFields
+  count(columns: [FilesSelectColumn!], distinct: Boolean): Int!
+  max: FilesMaxFields
+  min: FilesMinFields
+  stddev: FilesStddevFields
+  stddevPop: FilesStddevPopFields
+  stddevSamp: FilesStddevSampFields
+  sum: FilesSumFields
+  varPop: FilesVarPopFields
+  varSamp: FilesVarSampFields
+  variance: FilesVarianceFields
+}
+
+"""
+aggregate avg on columns
+"""
+type FilesAvgFields {
+  fileId: Float
+}
+
+"""
+Boolean expression to filter rows from the table "files". All fields are combined with a logical 'AND'.
+"""
+input FilesBoolExp {
+  _and: [FilesBoolExp!]
+  _not: FilesBoolExp
+  _or: [FilesBoolExp!]
+  awards: AwardBoolExp
+  awardsAggregate: AwardAggregateBoolExp
+  chests: ChestsBoolExp
+  chestsAggregate: ChestsAggregateBoolExp
+  fileId: BigintComparisonExp
+  fileName: StringComparisonExp
+  fileType: StringComparisonExp
+  label: StringComparisonExp
+  levels: LevelsBoolExp
+  levelsAggregate: LevelsAggregateBoolExp
+  pathToFile: StringComparisonExp
+}
+
+"""
+unique or primary key constraints on table "files"
+"""
+enum FilesConstraint {
+  """
+  unique or primary key constraint on columns "file_id"
+  """
+  files_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "files"
+"""
+input FilesIncInput {
+  fileId: bigint
+}
+
+"""
+input type for inserting data into table "files"
+"""
+input FilesInsertInput {
+  awards: AwardArrRelInsertInput
+  chests: ChestsArrRelInsertInput
+  fileId: bigint
+  fileName: String
+  fileType: String
+  label: String
+  levels: LevelsArrRelInsertInput
+  pathToFile: String
+}
+
+"""
+aggregate max on columns
+"""
+type FilesMaxFields {
+  fileId: bigint
+  fileName: String
+  fileType: String
+  label: String
+  pathToFile: String
+}
+
+"""
+aggregate min on columns
+"""
+type FilesMinFields {
+  fileId: bigint
+  fileName: String
+  fileType: String
+  label: String
+  pathToFile: String
+}
+
+"""
+response of any mutation on the table "files"
+"""
+type FilesMutationResponse {
+  """
+  number of rows affected by the mutation
+  """
+  affectedRows: Int!
+
+  """
+  data from the rows affected by the mutation
+  """
+  returning: [Files!]!
+}
+
+"""
+input type for inserting object relation for remote table "files"
+"""
+input FilesObjRelInsertInput {
+  data: FilesInsertInput!
+
+  """
+  upsert condition
+  """
+  onConflict: FilesOnConflict
+}
+
+"""
+on_conflict condition type for table "files"
+"""
+input FilesOnConflict {
+  constraint: FilesConstraint!
+  updateColumns: [FilesUpdateColumn!]! = []
+  where: FilesBoolExp
+}
+
+"""
+Ordering options when selecting data from "files".
+"""
+input FilesOrderBy {
+  awardsAggregate: AwardAggregateOrderBy
+  chestsAggregate: ChestsAggregateOrderBy
+  fileId: OrderBy
+  fileName: OrderBy
+  fileType: OrderBy
+  label: OrderBy
+  levelsAggregate: LevelsAggregateOrderBy
+  pathToFile: OrderBy
+}
+
+"""
+primary key columns input for table: files
+"""
+input FilesPkColumnsInput {
+  fileId: bigint!
+}
+
+"""
+select columns of table "files"
+"""
+enum FilesSelectColumn {
+  """
+  column name
+  """
+  fileId
+
+  """
+  column name
+  """
+  fileName
+
+  """
+  column name
+  """
+  fileType
+
+  """
+  column name
+  """
+  label
+
+  """
+  column name
+  """
+  pathToFile
+}
+
+"""
+input type for updating data in table "files"
+"""
+input FilesSetInput {
+  fileId: bigint
+  fileName: String
+  fileType: String
+  label: String
+  pathToFile: String
+}
+
+"""
+aggregate stddev on columns
+"""
+type FilesStddevFields {
+  fileId: Float
+}
+
+"""
+aggregate stddevPop on columns
+"""
+type FilesStddevPopFields {
+  fileId: Float
+}
+
+"""
+aggregate stddevSamp on columns
+"""
+type FilesStddevSampFields {
+  fileId: Float
+}
+
+"""
+Streaming cursor of the table "files"
+"""
+input FilesStreamCursorInput {
+  """
+  Stream column input with initial value
+  """
+  initialValue: FilesStreamCursorValueInput!
+
+  """
+  cursor ordering
+  """
+  ordering: CursorOrdering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input FilesStreamCursorValueInput {
+  fileId: bigint
+  fileName: String
+  fileType: String
+  label: String
+  pathToFile: String
+}
+
+"""
+aggregate sum on columns
+"""
+type FilesSumFields {
+  fileId: bigint
+}
+
+"""
+update columns of table "files"
+"""
+enum FilesUpdateColumn {
+  """
+  column name
+  """
+  fileId
+
+  """
+  column name
+  """
+  fileName
+
+  """
+  column name
+  """
+  fileType
+
+  """
+  column name
+  """
+  label
+
+  """
+  column name
+  """
+  pathToFile
+}
+
+input FilesUpdates {
+  """
+  increments the numeric columns with given value of the filtered values
+  """
+  _inc: FilesIncInput
+
+  """
+  sets the columns of the filtered rows to the given values
+  """
+  _set: FilesSetInput
+
+  """
+  filter the rows which have to be updated
+  """
+  where: FilesBoolExp!
+}
+
+"""
+aggregate varPop on columns
+"""
+type FilesVarPopFields {
+  fileId: Float
+}
+
+"""
+aggregate varSamp on columns
+"""
+type FilesVarSampFields {
+  fileId: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type FilesVarianceFields {
+  fileId: Float
+}
+
+"""
 Boolean expression to compare columns of type "float8". All fields are combined with logical 'AND'.
 """
 input Float8ComparisonExp {
@@ -5046,6 +5653,13 @@ type FlywaySchemaHistoryVarianceFields {
   checksum: Float
   executionTime: Float
   installedRank: Float
+}
+
+type GroupType {
+  group_name: String!
+  groups_id: ID!
+  label: String
+  users: [UsersType!]!
 }
 
 """
@@ -5556,6 +6170,9 @@ columns and relationships of "hall_of_fame"
 """
 type HallOfFame {
   editionId: bigint
+  imageFileId: bigint
+  levelId: bigint
+  levelName: String
   nick: String
   sumOfPoints: numeric
   userId: bigint
@@ -5591,6 +6208,8 @@ aggregate avg on columns
 """
 type HallOfFameAvgFields {
   editionId: Float
+  imageFileId: Float
+  levelId: Float
   sumOfPoints: Float
   userId: Float
 }
@@ -5603,6 +6222,9 @@ input HallOfFameBoolExp {
   _not: HallOfFameBoolExp
   _or: [HallOfFameBoolExp!]
   editionId: BigintComparisonExp
+  imageFileId: BigintComparisonExp
+  levelId: BigintComparisonExp
+  levelName: StringComparisonExp
   nick: StringComparisonExp
   sumOfPoints: NumericComparisonExp
   userId: BigintComparisonExp
@@ -5613,6 +6235,9 @@ aggregate max on columns
 """
 type HallOfFameMaxFields {
   editionId: bigint
+  imageFileId: bigint
+  levelId: bigint
+  levelName: String
   nick: String
   sumOfPoints: numeric
   userId: bigint
@@ -5623,6 +6248,9 @@ aggregate min on columns
 """
 type HallOfFameMinFields {
   editionId: bigint
+  imageFileId: bigint
+  levelId: bigint
+  levelName: String
   nick: String
   sumOfPoints: numeric
   userId: bigint
@@ -5633,6 +6261,9 @@ Ordering options when selecting data from "hall_of_fame".
 """
 input HallOfFameOrderBy {
   editionId: OrderBy
+  imageFileId: OrderBy
+  levelId: OrderBy
+  levelName: OrderBy
   nick: OrderBy
   sumOfPoints: OrderBy
   userId: OrderBy
@@ -5646,6 +6277,21 @@ enum HallOfFameSelectColumn {
   column name
   """
   editionId
+
+  """
+  column name
+  """
+  imageFileId
+
+  """
+  column name
+  """
+  levelId
+
+  """
+  column name
+  """
+  levelName
 
   """
   column name
@@ -5668,6 +6314,8 @@ aggregate stddev on columns
 """
 type HallOfFameStddevFields {
   editionId: Float
+  imageFileId: Float
+  levelId: Float
   sumOfPoints: Float
   userId: Float
 }
@@ -5677,6 +6325,8 @@ aggregate stddevPop on columns
 """
 type HallOfFameStddevPopFields {
   editionId: Float
+  imageFileId: Float
+  levelId: Float
   sumOfPoints: Float
   userId: Float
 }
@@ -5686,6 +6336,8 @@ aggregate stddevSamp on columns
 """
 type HallOfFameStddevSampFields {
   editionId: Float
+  imageFileId: Float
+  levelId: Float
   sumOfPoints: Float
   userId: Float
 }
@@ -5710,6 +6362,9 @@ Initial value of the column from where the streaming should start
 """
 input HallOfFameStreamCursorValueInput {
   editionId: bigint
+  imageFileId: bigint
+  levelId: bigint
+  levelName: String
   nick: String
   sumOfPoints: numeric
   userId: bigint
@@ -5720,6 +6375,8 @@ aggregate sum on columns
 """
 type HallOfFameSumFields {
   editionId: bigint
+  imageFileId: bigint
+  levelId: bigint
   sumOfPoints: numeric
   userId: bigint
 }
@@ -5729,6 +6386,8 @@ aggregate varPop on columns
 """
 type HallOfFameVarPopFields {
   editionId: Float
+  imageFileId: Float
+  levelId: Float
   sumOfPoints: Float
   userId: Float
 }
@@ -5738,6 +6397,8 @@ aggregate varSamp on columns
 """
 type HallOfFameVarSampFields {
   editionId: Float
+  imageFileId: Float
+  levelId: Float
   sumOfPoints: Float
   userId: Float
 }
@@ -5747,6 +6408,8 @@ aggregate variance on columns
 """
 type HallOfFameVarianceFields {
   editionId: Float
+  imageFileId: Float
+  levelId: Float
   sumOfPoints: Float
   userId: Float
 }
@@ -5770,17 +6433,22 @@ input IntComparisonExp {
 columns and relationships of "levels"
 """
 type Levels {
-  avatar: String
-
   """
   An object relationship
   """
   edition: Edition!
   editionId: bigint!
+
+  """
+  An object relationship
+  """
+  file: Files
   grade: float8!
+  highest: Boolean!
+  imageFileId: bigint
   label: String!
   levelId: bigint!
-  maximumPoints: float8!
+  maximumPoints: float8
   minimumPoints: float8!
   name: String!
 }
@@ -5795,6 +6463,8 @@ type LevelsAggregate {
 
 input LevelsAggregateBoolExp {
   avg: levelsAggregateBoolExpAvg
+  bool_and: levelsAggregateBoolExpBool_and
+  bool_or: levelsAggregateBoolExpBool_or
   corr: levelsAggregateBoolExpCorr
   count: levelsAggregateBoolExpCount
   covar_samp: levelsAggregateBoolExpCovar_samp
@@ -5857,6 +6527,7 @@ aggregate avg on columns
 type LevelsAvgFields {
   editionId: Float
   grade: Float
+  imageFileId: Float
   levelId: Float
   maximumPoints: Float
   minimumPoints: Float
@@ -5868,6 +6539,7 @@ order by avg() on columns of table "levels"
 input LevelsAvgOrderBy {
   editionId: OrderBy
   grade: OrderBy
+  imageFileId: OrderBy
   levelId: OrderBy
   maximumPoints: OrderBy
   minimumPoints: OrderBy
@@ -5880,10 +6552,12 @@ input LevelsBoolExp {
   _and: [LevelsBoolExp!]
   _not: LevelsBoolExp
   _or: [LevelsBoolExp!]
-  avatar: StringComparisonExp
   edition: EditionBoolExp
   editionId: BigintComparisonExp
+  file: FilesBoolExp
   grade: Float8ComparisonExp
+  highest: BooleanComparisonExp
+  imageFileId: BigintComparisonExp
   label: StringComparisonExp
   levelId: BigintComparisonExp
   maximumPoints: Float8ComparisonExp
@@ -5907,6 +6581,7 @@ input type for incrementing numeric columns in table "levels"
 input LevelsIncInput {
   editionId: bigint
   grade: float8
+  imageFileId: bigint
   levelId: bigint
   maximumPoints: float8
   minimumPoints: float8
@@ -5916,10 +6591,12 @@ input LevelsIncInput {
 input type for inserting data into table "levels"
 """
 input LevelsInsertInput {
-  avatar: String
   edition: EditionObjRelInsertInput
   editionId: bigint
+  file: FilesObjRelInsertInput
   grade: float8
+  highest: Boolean
+  imageFileId: bigint
   label: String
   levelId: bigint
   maximumPoints: float8
@@ -5931,9 +6608,9 @@ input LevelsInsertInput {
 aggregate max on columns
 """
 type LevelsMaxFields {
-  avatar: String
   editionId: bigint
   grade: float8
+  imageFileId: bigint
   label: String
   levelId: bigint
   maximumPoints: float8
@@ -5945,9 +6622,9 @@ type LevelsMaxFields {
 order by max() on columns of table "levels"
 """
 input LevelsMaxOrderBy {
-  avatar: OrderBy
   editionId: OrderBy
   grade: OrderBy
+  imageFileId: OrderBy
   label: OrderBy
   levelId: OrderBy
   maximumPoints: OrderBy
@@ -5959,9 +6636,9 @@ input LevelsMaxOrderBy {
 aggregate min on columns
 """
 type LevelsMinFields {
-  avatar: String
   editionId: bigint
   grade: float8
+  imageFileId: bigint
   label: String
   levelId: bigint
   maximumPoints: float8
@@ -5973,9 +6650,9 @@ type LevelsMinFields {
 order by min() on columns of table "levels"
 """
 input LevelsMinOrderBy {
-  avatar: OrderBy
   editionId: OrderBy
   grade: OrderBy
+  imageFileId: OrderBy
   label: OrderBy
   levelId: OrderBy
   maximumPoints: OrderBy
@@ -6011,10 +6688,12 @@ input LevelsOnConflict {
 Ordering options when selecting data from "levels".
 """
 input LevelsOrderBy {
-  avatar: OrderBy
   edition: EditionOrderBy
   editionId: OrderBy
+  file: FilesOrderBy
   grade: OrderBy
+  highest: OrderBy
+  imageFileId: OrderBy
   label: OrderBy
   levelId: OrderBy
   maximumPoints: OrderBy
@@ -6036,17 +6715,22 @@ enum LevelsSelectColumn {
   """
   column name
   """
-  avatar
-
-  """
-  column name
-  """
   editionId
 
   """
   column name
   """
   grade
+
+  """
+  column name
+  """
+  highest
+
+  """
+  column name
+  """
+  imageFileId
 
   """
   column name
@@ -6092,6 +6776,26 @@ enum LevelsSelectColumnLevelsAggregateBoolExpAvgArgumentsColumns {
   column name
   """
   minimumPoints
+}
+
+"""
+select "levelsAggregateBoolExpBool_andArgumentsColumns" columns of table "levels"
+"""
+enum LevelsSelectColumnLevelsAggregateBoolExpBool_andArgumentsColumns {
+  """
+  column name
+  """
+  highest
+}
+
+"""
+select "levelsAggregateBoolExpBool_orArgumentsColumns" columns of table "levels"
+"""
+enum LevelsSelectColumnLevelsAggregateBoolExpBool_orArgumentsColumns {
+  """
+  column name
+  """
+  highest
 }
 
 """
@@ -6238,9 +6942,10 @@ enum LevelsSelectColumnLevelsAggregateBoolExpVar_sampArgumentsColumns {
 input type for updating data in table "levels"
 """
 input LevelsSetInput {
-  avatar: String
   editionId: bigint
   grade: float8
+  highest: Boolean
+  imageFileId: bigint
   label: String
   levelId: bigint
   maximumPoints: float8
@@ -6254,6 +6959,7 @@ aggregate stddev on columns
 type LevelsStddevFields {
   editionId: Float
   grade: Float
+  imageFileId: Float
   levelId: Float
   maximumPoints: Float
   minimumPoints: Float
@@ -6265,6 +6971,7 @@ order by stddev() on columns of table "levels"
 input LevelsStddevOrderBy {
   editionId: OrderBy
   grade: OrderBy
+  imageFileId: OrderBy
   levelId: OrderBy
   maximumPoints: OrderBy
   minimumPoints: OrderBy
@@ -6276,6 +6983,7 @@ aggregate stddevPop on columns
 type LevelsStddevPopFields {
   editionId: Float
   grade: Float
+  imageFileId: Float
   levelId: Float
   maximumPoints: Float
   minimumPoints: Float
@@ -6287,6 +6995,7 @@ order by stddevPop() on columns of table "levels"
 input LevelsStddevPopOrderBy {
   editionId: OrderBy
   grade: OrderBy
+  imageFileId: OrderBy
   levelId: OrderBy
   maximumPoints: OrderBy
   minimumPoints: OrderBy
@@ -6298,6 +7007,7 @@ aggregate stddevSamp on columns
 type LevelsStddevSampFields {
   editionId: Float
   grade: Float
+  imageFileId: Float
   levelId: Float
   maximumPoints: Float
   minimumPoints: Float
@@ -6309,6 +7019,7 @@ order by stddevSamp() on columns of table "levels"
 input LevelsStddevSampOrderBy {
   editionId: OrderBy
   grade: OrderBy
+  imageFileId: OrderBy
   levelId: OrderBy
   maximumPoints: OrderBy
   minimumPoints: OrderBy
@@ -6333,9 +7044,10 @@ input LevelsStreamCursorInput {
 Initial value of the column from where the streaming should start
 """
 input LevelsStreamCursorValueInput {
-  avatar: String
   editionId: bigint
   grade: float8
+  highest: Boolean
+  imageFileId: bigint
   label: String
   levelId: bigint
   maximumPoints: float8
@@ -6349,6 +7061,7 @@ aggregate sum on columns
 type LevelsSumFields {
   editionId: bigint
   grade: float8
+  imageFileId: bigint
   levelId: bigint
   maximumPoints: float8
   minimumPoints: float8
@@ -6360,6 +7073,7 @@ order by sum() on columns of table "levels"
 input LevelsSumOrderBy {
   editionId: OrderBy
   grade: OrderBy
+  imageFileId: OrderBy
   levelId: OrderBy
   maximumPoints: OrderBy
   minimumPoints: OrderBy
@@ -6372,17 +7086,22 @@ enum LevelsUpdateColumn {
   """
   column name
   """
-  avatar
-
-  """
-  column name
-  """
   editionId
 
   """
   column name
   """
   grade
+
+  """
+  column name
+  """
+  highest
+
+  """
+  column name
+  """
+  imageFileId
 
   """
   column name
@@ -6433,6 +7152,7 @@ aggregate varPop on columns
 type LevelsVarPopFields {
   editionId: Float
   grade: Float
+  imageFileId: Float
   levelId: Float
   maximumPoints: Float
   minimumPoints: Float
@@ -6444,6 +7164,7 @@ order by varPop() on columns of table "levels"
 input LevelsVarPopOrderBy {
   editionId: OrderBy
   grade: OrderBy
+  imageFileId: OrderBy
   levelId: OrderBy
   maximumPoints: OrderBy
   minimumPoints: OrderBy
@@ -6455,6 +7176,7 @@ aggregate varSamp on columns
 type LevelsVarSampFields {
   editionId: Float
   grade: Float
+  imageFileId: Float
   levelId: Float
   maximumPoints: Float
   minimumPoints: Float
@@ -6466,6 +7188,7 @@ order by varSamp() on columns of table "levels"
 input LevelsVarSampOrderBy {
   editionId: OrderBy
   grade: OrderBy
+  imageFileId: OrderBy
   levelId: OrderBy
   maximumPoints: OrderBy
   minimumPoints: OrderBy
@@ -6477,6 +7200,7 @@ aggregate variance on columns
 type LevelsVarianceFields {
   editionId: Float
   grade: Float
+  imageFileId: Float
   levelId: Float
   maximumPoints: Float
   minimumPoints: Float
@@ -6488,6 +7212,7 @@ order by variance() on columns of table "levels"
 input LevelsVarianceOrderBy {
   editionId: OrderBy
   grade: OrderBy
+  imageFileId: OrderBy
   levelId: OrderBy
   maximumPoints: OrderBy
   minimumPoints: OrderBy
@@ -9001,6 +9726,7 @@ type UsersSumFields {
 
 type UsersType {
   firstName: String!
+  groups: [GroupType!]!
   indexNumber: Int!
   label: String!
   nick: String!
@@ -9220,6 +9946,20 @@ input levelsAggregateBoolExpAvg {
   predicate: Float8ComparisonExp!
 }
 
+input levelsAggregateBoolExpBool_and {
+  arguments: LevelsSelectColumnLevelsAggregateBoolExpBool_andArgumentsColumns!
+  distinct: Boolean
+  filter: LevelsBoolExp
+  predicate: BooleanComparisonExp!
+}
+
+input levelsAggregateBoolExpBool_or {
+  arguments: LevelsSelectColumnLevelsAggregateBoolExpBool_orArgumentsColumns!
+  distinct: Boolean
+  filter: LevelsBoolExp
+  predicate: BooleanComparisonExp!
+}
+
 input levelsAggregateBoolExpCorr {
   arguments: levelsAggregateBoolExpCorrArguments!
   distinct: Boolean
@@ -9417,6 +10157,21 @@ type mutation_root {
   delete single row from the table: "edition"
   """
   deleteEditionByPk(editionId: bigint!): Edition
+
+  """
+  delete data from the table: "files"
+  """
+  deleteFiles(
+    """
+    filter the rows which have to be deleted
+    """
+    where: FilesBoolExp!
+  ): FilesMutationResponse
+
+  """
+  delete single row from the table: "files"
+  """
+  deleteFilesByPk(fileId: bigint!): Files
 
   """
   delete data from the table: "flyway_schema_history"
@@ -9762,6 +10517,36 @@ type mutation_root {
     """
     onConflict: EditionOnConflict
   ): Edition
+
+  """
+  insert data into the table: "files"
+  """
+  insertFiles(
+    """
+    the rows to be inserted
+    """
+    objects: [FilesInsertInput!]!
+
+    """
+    upsert condition
+    """
+    onConflict: FilesOnConflict
+  ): FilesMutationResponse
+
+  """
+  insert a single row into the table: "files"
+  """
+  insertFilesOne(
+    """
+    the row to be inserted
+    """
+    object: FilesInsertInput!
+
+    """
+    upsert condition
+    """
+    onConflict: FilesOnConflict
+  ): Files
 
   """
   insert data into the table: "flyway_schema_history"
@@ -10340,6 +11125,52 @@ type mutation_root {
     """
     updates: [EditionUpdates!]!
   ): [EditionMutationResponse]
+
+  """
+  update data of the table: "files"
+  """
+  updateFiles(
+    """
+    increments the numeric columns with given value of the filtered values
+    """
+    _inc: FilesIncInput
+
+    """
+    sets the columns of the filtered rows to the given values
+    """
+    _set: FilesSetInput
+
+    """
+    filter the rows which have to be updated
+    """
+    where: FilesBoolExp!
+  ): FilesMutationResponse
+
+  """
+  update single row of the table: "files"
+  """
+  updateFilesByPk(
+    """
+    increments the numeric columns with given value of the filtered values
+    """
+    _inc: FilesIncInput
+
+    """
+    sets the columns of the filtered rows to the given values
+    """
+    _set: FilesSetInput
+    pkColumns: FilesPkColumnsInput!
+  ): Files
+
+  """
+  update multiples rows of table: "files"
+  """
+  updateFilesMany(
+    """
+    updates to execute, in order
+    """
+    updates: [FilesUpdates!]!
+  ): [FilesMutationResponse]
 
   """
   update data of the table: "flyway_schema_history"
@@ -11195,6 +12026,71 @@ type query_root {
   fetch data from the table: "edition" using primary key columns
   """
   editionByPk(editionId: bigint!): Edition
+
+  """
+  fetch data from the table: "files"
+  """
+  files(
+    """
+    distinct select on columns
+    """
+    distinctOn: [FilesSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [FilesOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: FilesBoolExp
+  ): [Files!]!
+
+  """
+  fetch aggregated fields from the table: "files"
+  """
+  filesAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [FilesSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [FilesOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: FilesBoolExp
+  ): FilesAggregate!
+
+  """
+  fetch data from the table: "files" using primary key columns
+  """
+  filesByPk(fileId: bigint!): Files
 
   """
   fetch data from the table: "flyway_schema_history"
@@ -12399,6 +13295,91 @@ type subscription_root {
     """
     where: EditionBoolExp
   ): [Edition!]!
+
+  """
+  fetch data from the table: "files"
+  """
+  files(
+    """
+    distinct select on columns
+    """
+    distinctOn: [FilesSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [FilesOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: FilesBoolExp
+  ): [Files!]!
+
+  """
+  fetch aggregated fields from the table: "files"
+  """
+  filesAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [FilesSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [FilesOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: FilesBoolExp
+  ): FilesAggregate!
+
+  """
+  fetch data from the table: "files" using primary key columns
+  """
+  filesByPk(fileId: bigint!): Files
+
+  """
+  fetch data from the table in a streaming manner: "files"
+  """
+  filesStream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batchSize: Int!
+
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [FilesStreamCursorInput]!
+
+    """
+    filter the rows returned
+    """
+    where: FilesBoolExp
+  ): [Files!]!
 
   """
   fetch data from the table: "flyway_schema_history"

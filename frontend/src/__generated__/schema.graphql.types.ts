@@ -59,6 +59,9 @@ export type Award = {
   chestAwards: Array<ChestAward>;
   /** An aggregate relationship */
   chestAwardsAggregate: ChestAwardAggregate;
+  /** An object relationship */
+  file?: Maybe<Files>;
+  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label: Scalars["String"]["output"];
   maxUsages: Scalars["Int"]["output"];
 };
@@ -186,6 +189,7 @@ export type AwardAvgFields = {
   awardId?: Maybe<Scalars["Float"]["output"]>;
   awardValue?: Maybe<Scalars["Float"]["output"]>;
   categoryId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   maxUsages?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -194,6 +198,7 @@ export type AwardAvgOrderBy = {
   awardId?: InputMaybe<OrderBy>;
   awardValue?: InputMaybe<OrderBy>;
   categoryId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   maxUsages?: InputMaybe<OrderBy>;
 };
 
@@ -214,6 +219,8 @@ export type AwardBoolExp = {
   categoryId?: InputMaybe<BigintComparisonExp>;
   chestAwards?: InputMaybe<ChestAwardBoolExp>;
   chestAwardsAggregate?: InputMaybe<ChestAwardAggregateBoolExp>;
+  file?: InputMaybe<FilesBoolExp>;
+  imageFileId?: InputMaybe<BigintComparisonExp>;
   label?: InputMaybe<StringComparisonExp>;
   maxUsages?: InputMaybe<IntComparisonExp>;
 };
@@ -576,6 +583,7 @@ export type AwardIncInput = {
   awardId?: InputMaybe<Scalars["bigint"]["input"]>;
   awardValue?: InputMaybe<Scalars["float8"]["input"]>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
+  imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   maxUsages?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -590,6 +598,8 @@ export type AwardInsertInput = {
   category?: InputMaybe<CategoriesObjRelInsertInput>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   chestAwards?: InputMaybe<ChestAwardArrRelInsertInput>;
+  file?: InputMaybe<FilesObjRelInsertInput>;
+  imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   maxUsages?: InputMaybe<Scalars["Int"]["input"]>;
 };
@@ -602,6 +612,7 @@ export type AwardMaxFields = {
   awardType?: Maybe<Scalars["String"]["output"]>;
   awardValue?: Maybe<Scalars["float8"]["output"]>;
   categoryId?: Maybe<Scalars["bigint"]["output"]>;
+  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   maxUsages?: Maybe<Scalars["Int"]["output"]>;
 };
@@ -613,6 +624,7 @@ export type AwardMaxOrderBy = {
   awardType?: InputMaybe<OrderBy>;
   awardValue?: InputMaybe<OrderBy>;
   categoryId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   maxUsages?: InputMaybe<OrderBy>;
 };
@@ -625,6 +637,7 @@ export type AwardMinFields = {
   awardType?: Maybe<Scalars["String"]["output"]>;
   awardValue?: Maybe<Scalars["float8"]["output"]>;
   categoryId?: Maybe<Scalars["bigint"]["output"]>;
+  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   maxUsages?: Maybe<Scalars["Int"]["output"]>;
 };
@@ -636,6 +649,7 @@ export type AwardMinOrderBy = {
   awardType?: InputMaybe<OrderBy>;
   awardValue?: InputMaybe<OrderBy>;
   categoryId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   maxUsages?: InputMaybe<OrderBy>;
 };
@@ -674,6 +688,8 @@ export type AwardOrderBy = {
   category?: InputMaybe<CategoriesOrderBy>;
   categoryId?: InputMaybe<OrderBy>;
   chestAwardsAggregate?: InputMaybe<ChestAwardAggregateOrderBy>;
+  file?: InputMaybe<FilesOrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   maxUsages?: InputMaybe<OrderBy>;
 };
@@ -695,6 +711,8 @@ export enum AwardSelectColumn {
   AwardValue = "awardValue",
   /** column name */
   CategoryId = "categoryId",
+  /** column name */
+  ImageFileId = "imageFileId",
   /** column name */
   Label = "label",
   /** column name */
@@ -756,6 +774,7 @@ export type AwardSetInput = {
   awardType?: InputMaybe<Scalars["String"]["input"]>;
   awardValue?: InputMaybe<Scalars["float8"]["input"]>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
+  imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   maxUsages?: InputMaybe<Scalars["Int"]["input"]>;
 };
@@ -766,6 +785,7 @@ export type AwardStddevFields = {
   awardId?: Maybe<Scalars["Float"]["output"]>;
   awardValue?: Maybe<Scalars["Float"]["output"]>;
   categoryId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   maxUsages?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -774,6 +794,7 @@ export type AwardStddevOrderBy = {
   awardId?: InputMaybe<OrderBy>;
   awardValue?: InputMaybe<OrderBy>;
   categoryId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   maxUsages?: InputMaybe<OrderBy>;
 };
 
@@ -783,6 +804,7 @@ export type AwardStddevPopFields = {
   awardId?: Maybe<Scalars["Float"]["output"]>;
   awardValue?: Maybe<Scalars["Float"]["output"]>;
   categoryId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   maxUsages?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -791,6 +813,7 @@ export type AwardStddevPopOrderBy = {
   awardId?: InputMaybe<OrderBy>;
   awardValue?: InputMaybe<OrderBy>;
   categoryId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   maxUsages?: InputMaybe<OrderBy>;
 };
 
@@ -800,6 +823,7 @@ export type AwardStddevSampFields = {
   awardId?: Maybe<Scalars["Float"]["output"]>;
   awardValue?: Maybe<Scalars["Float"]["output"]>;
   categoryId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   maxUsages?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -808,6 +832,7 @@ export type AwardStddevSampOrderBy = {
   awardId?: InputMaybe<OrderBy>;
   awardValue?: InputMaybe<OrderBy>;
   categoryId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   maxUsages?: InputMaybe<OrderBy>;
 };
 
@@ -826,6 +851,7 @@ export type AwardStreamCursorValueInput = {
   awardType?: InputMaybe<Scalars["String"]["input"]>;
   awardValue?: InputMaybe<Scalars["float8"]["input"]>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
+  imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   maxUsages?: InputMaybe<Scalars["Int"]["input"]>;
 };
@@ -836,6 +862,7 @@ export type AwardSumFields = {
   awardId?: Maybe<Scalars["bigint"]["output"]>;
   awardValue?: Maybe<Scalars["float8"]["output"]>;
   categoryId?: Maybe<Scalars["bigint"]["output"]>;
+  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   maxUsages?: Maybe<Scalars["Int"]["output"]>;
 };
 
@@ -844,6 +871,7 @@ export type AwardSumOrderBy = {
   awardId?: InputMaybe<OrderBy>;
   awardValue?: InputMaybe<OrderBy>;
   categoryId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   maxUsages?: InputMaybe<OrderBy>;
 };
 
@@ -852,6 +880,7 @@ export type AwardType = {
   awardId: Scalars["Int"]["output"];
   awardName: Scalars["String"]["output"];
   awardType: AwardTypeType;
+  image_file_id?: Maybe<Scalars["Int"]["output"]>;
   label: Scalars["String"]["output"];
   maxUsages: Scalars["Int"]["output"];
 };
@@ -876,6 +905,8 @@ export enum AwardUpdateColumn {
   /** column name */
   CategoryId = "categoryId",
   /** column name */
+  ImageFileId = "imageFileId",
+  /** column name */
   Label = "label",
   /** column name */
   MaxUsages = "maxUsages",
@@ -896,6 +927,7 @@ export type AwardVarPopFields = {
   awardId?: Maybe<Scalars["Float"]["output"]>;
   awardValue?: Maybe<Scalars["Float"]["output"]>;
   categoryId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   maxUsages?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -904,6 +936,7 @@ export type AwardVarPopOrderBy = {
   awardId?: InputMaybe<OrderBy>;
   awardValue?: InputMaybe<OrderBy>;
   categoryId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   maxUsages?: InputMaybe<OrderBy>;
 };
 
@@ -913,6 +946,7 @@ export type AwardVarSampFields = {
   awardId?: Maybe<Scalars["Float"]["output"]>;
   awardValue?: Maybe<Scalars["Float"]["output"]>;
   categoryId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   maxUsages?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -921,6 +955,7 @@ export type AwardVarSampOrderBy = {
   awardId?: InputMaybe<OrderBy>;
   awardValue?: InputMaybe<OrderBy>;
   categoryId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   maxUsages?: InputMaybe<OrderBy>;
 };
 
@@ -930,6 +965,7 @@ export type AwardVarianceFields = {
   awardId?: Maybe<Scalars["Float"]["output"]>;
   awardValue?: Maybe<Scalars["Float"]["output"]>;
   categoryId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   maxUsages?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -938,6 +974,7 @@ export type AwardVarianceOrderBy = {
   awardId?: InputMaybe<OrderBy>;
   awardValue?: InputMaybe<OrderBy>;
   categoryId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   maxUsages?: InputMaybe<OrderBy>;
 };
 
@@ -2492,6 +2529,7 @@ export type ChestType = {
   chestId: Scalars["Int"]["output"];
   chestType: Scalars["String"]["output"];
   edition: EditionType;
+  image_file_id?: Maybe<Scalars["Int"]["output"]>;
   label: Scalars["String"]["output"];
 };
 
@@ -2510,6 +2548,9 @@ export type Chests = {
   /** An object relationship */
   edition: Edition;
   editionId: Scalars["bigint"]["output"];
+  /** An object relationship */
+  file?: Maybe<Files>;
+  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label: Scalars["String"]["output"];
   type: Scalars["String"]["output"];
 };
@@ -2610,12 +2651,14 @@ export type ChestsAvgFields = {
   __typename?: "ChestsAvgFields";
   chestId?: Maybe<Scalars["Float"]["output"]>;
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by avg() on columns of table "chests" */
 export type ChestsAvgOrderBy = {
   chestId?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
 };
 
 /** Boolean expression to filter rows from the table "chests". All fields are combined with a logical 'AND'. */
@@ -2630,6 +2673,8 @@ export type ChestsBoolExp = {
   chestId?: InputMaybe<BigintComparisonExp>;
   edition?: InputMaybe<EditionBoolExp>;
   editionId?: InputMaybe<BigintComparisonExp>;
+  file?: InputMaybe<FilesBoolExp>;
+  imageFileId?: InputMaybe<BigintComparisonExp>;
   label?: InputMaybe<StringComparisonExp>;
   type?: InputMaybe<StringComparisonExp>;
 };
@@ -2644,6 +2689,7 @@ export enum ChestsConstraint {
 export type ChestsIncInput = {
   chestId?: InputMaybe<Scalars["bigint"]["input"]>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
+  imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
 
 /** input type for inserting data into table "chests" */
@@ -2653,6 +2699,8 @@ export type ChestsInsertInput = {
   chestId?: InputMaybe<Scalars["bigint"]["input"]>;
   edition?: InputMaybe<EditionObjRelInsertInput>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
+  file?: InputMaybe<FilesObjRelInsertInput>;
+  imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<Scalars["String"]["input"]>;
 };
@@ -2662,6 +2710,7 @@ export type ChestsMaxFields = {
   __typename?: "ChestsMaxFields";
   chestId?: Maybe<Scalars["bigint"]["output"]>;
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   type?: Maybe<Scalars["String"]["output"]>;
 };
@@ -2670,6 +2719,7 @@ export type ChestsMaxFields = {
 export type ChestsMaxOrderBy = {
   chestId?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   type?: InputMaybe<OrderBy>;
 };
@@ -2679,6 +2729,7 @@ export type ChestsMinFields = {
   __typename?: "ChestsMinFields";
   chestId?: Maybe<Scalars["bigint"]["output"]>;
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   type?: Maybe<Scalars["String"]["output"]>;
 };
@@ -2687,6 +2738,7 @@ export type ChestsMinFields = {
 export type ChestsMinOrderBy = {
   chestId?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   type?: InputMaybe<OrderBy>;
 };
@@ -2721,6 +2773,8 @@ export type ChestsOrderBy = {
   chestId?: InputMaybe<OrderBy>;
   edition?: InputMaybe<EditionOrderBy>;
   editionId?: InputMaybe<OrderBy>;
+  file?: InputMaybe<FilesOrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   type?: InputMaybe<OrderBy>;
 };
@@ -2737,6 +2791,8 @@ export enum ChestsSelectColumn {
   /** column name */
   EditionId = "editionId",
   /** column name */
+  ImageFileId = "imageFileId",
+  /** column name */
   Label = "label",
   /** column name */
   Type = "type",
@@ -2746,6 +2802,7 @@ export enum ChestsSelectColumn {
 export type ChestsSetInput = {
   chestId?: InputMaybe<Scalars["bigint"]["input"]>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
+  imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<Scalars["String"]["input"]>;
 };
@@ -2755,12 +2812,14 @@ export type ChestsStddevFields = {
   __typename?: "ChestsStddevFields";
   chestId?: Maybe<Scalars["Float"]["output"]>;
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by stddev() on columns of table "chests" */
 export type ChestsStddevOrderBy = {
   chestId?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
 };
 
 /** aggregate stddevPop on columns */
@@ -2768,12 +2827,14 @@ export type ChestsStddevPopFields = {
   __typename?: "ChestsStddevPopFields";
   chestId?: Maybe<Scalars["Float"]["output"]>;
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by stddevPop() on columns of table "chests" */
 export type ChestsStddevPopOrderBy = {
   chestId?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
 };
 
 /** aggregate stddevSamp on columns */
@@ -2781,12 +2842,14 @@ export type ChestsStddevSampFields = {
   __typename?: "ChestsStddevSampFields";
   chestId?: Maybe<Scalars["Float"]["output"]>;
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by stddevSamp() on columns of table "chests" */
 export type ChestsStddevSampOrderBy = {
   chestId?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
 };
 
 /** Streaming cursor of the table "chests" */
@@ -2801,6 +2864,7 @@ export type ChestsStreamCursorInput = {
 export type ChestsStreamCursorValueInput = {
   chestId?: InputMaybe<Scalars["bigint"]["input"]>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
+  imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<Scalars["String"]["input"]>;
 };
@@ -2810,12 +2874,14 @@ export type ChestsSumFields = {
   __typename?: "ChestsSumFields";
   chestId?: Maybe<Scalars["bigint"]["output"]>;
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
 };
 
 /** order by sum() on columns of table "chests" */
 export type ChestsSumOrderBy = {
   chestId?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
 };
 
 /** update columns of table "chests" */
@@ -2824,6 +2890,8 @@ export enum ChestsUpdateColumn {
   ChestId = "chestId",
   /** column name */
   EditionId = "editionId",
+  /** column name */
+  ImageFileId = "imageFileId",
   /** column name */
   Label = "label",
   /** column name */
@@ -2844,12 +2912,14 @@ export type ChestsVarPopFields = {
   __typename?: "ChestsVarPopFields";
   chestId?: Maybe<Scalars["Float"]["output"]>;
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by varPop() on columns of table "chests" */
 export type ChestsVarPopOrderBy = {
   chestId?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
 };
 
 /** aggregate varSamp on columns */
@@ -2857,12 +2927,14 @@ export type ChestsVarSampFields = {
   __typename?: "ChestsVarSampFields";
   chestId?: Maybe<Scalars["Float"]["output"]>;
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by varSamp() on columns of table "chests" */
 export type ChestsVarSampOrderBy = {
   chestId?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
 };
 
 /** aggregate variance on columns */
@@ -2870,12 +2942,14 @@ export type ChestsVarianceFields = {
   __typename?: "ChestsVarianceFields";
   chestId?: Maybe<Scalars["Float"]["output"]>;
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by variance() on columns of table "chests" */
 export type ChestsVarianceOrderBy = {
   chestId?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
 };
 
 /** ordering argument of a cursor */
@@ -3260,6 +3334,323 @@ export type EditionVarianceFields = {
   editionYear?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** columns and relationships of "files" */
+export type Files = {
+  __typename?: "Files";
+  /** An array relationship */
+  awards: Array<Award>;
+  /** An aggregate relationship */
+  awardsAggregate: AwardAggregate;
+  /** An array relationship */
+  chests: Array<Chests>;
+  /** An aggregate relationship */
+  chestsAggregate: ChestsAggregate;
+  fileId: Scalars["bigint"]["output"];
+  fileName: Scalars["String"]["output"];
+  fileType: Scalars["String"]["output"];
+  label: Scalars["String"]["output"];
+  /** An array relationship */
+  levels: Array<Levels>;
+  /** An aggregate relationship */
+  levelsAggregate: LevelsAggregate;
+  pathToFile: Scalars["String"]["output"];
+};
+
+/** columns and relationships of "files" */
+export type FilesAwardsArgs = {
+  distinctOn?: InputMaybe<Array<AwardSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<AwardOrderBy>>;
+  where?: InputMaybe<AwardBoolExp>;
+};
+
+/** columns and relationships of "files" */
+export type FilesAwardsAggregateArgs = {
+  distinctOn?: InputMaybe<Array<AwardSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<AwardOrderBy>>;
+  where?: InputMaybe<AwardBoolExp>;
+};
+
+/** columns and relationships of "files" */
+export type FilesChestsArgs = {
+  distinctOn?: InputMaybe<Array<ChestsSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<ChestsOrderBy>>;
+  where?: InputMaybe<ChestsBoolExp>;
+};
+
+/** columns and relationships of "files" */
+export type FilesChestsAggregateArgs = {
+  distinctOn?: InputMaybe<Array<ChestsSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<ChestsOrderBy>>;
+  where?: InputMaybe<ChestsBoolExp>;
+};
+
+/** columns and relationships of "files" */
+export type FilesLevelsArgs = {
+  distinctOn?: InputMaybe<Array<LevelsSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<LevelsOrderBy>>;
+  where?: InputMaybe<LevelsBoolExp>;
+};
+
+/** columns and relationships of "files" */
+export type FilesLevelsAggregateArgs = {
+  distinctOn?: InputMaybe<Array<LevelsSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<LevelsOrderBy>>;
+  where?: InputMaybe<LevelsBoolExp>;
+};
+
+/** aggregated selection of "files" */
+export type FilesAggregate = {
+  __typename?: "FilesAggregate";
+  aggregate?: Maybe<FilesAggregateFields>;
+  nodes: Array<Files>;
+};
+
+/** aggregate fields of "files" */
+export type FilesAggregateFields = {
+  __typename?: "FilesAggregateFields";
+  avg?: Maybe<FilesAvgFields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<FilesMaxFields>;
+  min?: Maybe<FilesMinFields>;
+  stddev?: Maybe<FilesStddevFields>;
+  stddevPop?: Maybe<FilesStddevPopFields>;
+  stddevSamp?: Maybe<FilesStddevSampFields>;
+  sum?: Maybe<FilesSumFields>;
+  varPop?: Maybe<FilesVarPopFields>;
+  varSamp?: Maybe<FilesVarSampFields>;
+  variance?: Maybe<FilesVarianceFields>;
+};
+
+/** aggregate fields of "files" */
+export type FilesAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<FilesSelectColumn>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** aggregate avg on columns */
+export type FilesAvgFields = {
+  __typename?: "FilesAvgFields";
+  fileId?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** Boolean expression to filter rows from the table "files". All fields are combined with a logical 'AND'. */
+export type FilesBoolExp = {
+  _and?: InputMaybe<Array<FilesBoolExp>>;
+  _not?: InputMaybe<FilesBoolExp>;
+  _or?: InputMaybe<Array<FilesBoolExp>>;
+  awards?: InputMaybe<AwardBoolExp>;
+  awardsAggregate?: InputMaybe<AwardAggregateBoolExp>;
+  chests?: InputMaybe<ChestsBoolExp>;
+  chestsAggregate?: InputMaybe<ChestsAggregateBoolExp>;
+  fileId?: InputMaybe<BigintComparisonExp>;
+  fileName?: InputMaybe<StringComparisonExp>;
+  fileType?: InputMaybe<StringComparisonExp>;
+  label?: InputMaybe<StringComparisonExp>;
+  levels?: InputMaybe<LevelsBoolExp>;
+  levelsAggregate?: InputMaybe<LevelsAggregateBoolExp>;
+  pathToFile?: InputMaybe<StringComparisonExp>;
+};
+
+/** unique or primary key constraints on table "files" */
+export enum FilesConstraint {
+  /** unique or primary key constraint on columns "file_id" */
+  FilesPkey = "files_pkey",
+}
+
+/** input type for incrementing numeric columns in table "files" */
+export type FilesIncInput = {
+  fileId?: InputMaybe<Scalars["bigint"]["input"]>;
+};
+
+/** input type for inserting data into table "files" */
+export type FilesInsertInput = {
+  awards?: InputMaybe<AwardArrRelInsertInput>;
+  chests?: InputMaybe<ChestsArrRelInsertInput>;
+  fileId?: InputMaybe<Scalars["bigint"]["input"]>;
+  fileName?: InputMaybe<Scalars["String"]["input"]>;
+  fileType?: InputMaybe<Scalars["String"]["input"]>;
+  label?: InputMaybe<Scalars["String"]["input"]>;
+  levels?: InputMaybe<LevelsArrRelInsertInput>;
+  pathToFile?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type FilesMaxFields = {
+  __typename?: "FilesMaxFields";
+  fileId?: Maybe<Scalars["bigint"]["output"]>;
+  fileName?: Maybe<Scalars["String"]["output"]>;
+  fileType?: Maybe<Scalars["String"]["output"]>;
+  label?: Maybe<Scalars["String"]["output"]>;
+  pathToFile?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** aggregate min on columns */
+export type FilesMinFields = {
+  __typename?: "FilesMinFields";
+  fileId?: Maybe<Scalars["bigint"]["output"]>;
+  fileName?: Maybe<Scalars["String"]["output"]>;
+  fileType?: Maybe<Scalars["String"]["output"]>;
+  label?: Maybe<Scalars["String"]["output"]>;
+  pathToFile?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** response of any mutation on the table "files" */
+export type FilesMutationResponse = {
+  __typename?: "FilesMutationResponse";
+  /** number of rows affected by the mutation */
+  affectedRows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Files>;
+};
+
+/** input type for inserting object relation for remote table "files" */
+export type FilesObjRelInsertInput = {
+  data: FilesInsertInput;
+  /** upsert condition */
+  onConflict?: InputMaybe<FilesOnConflict>;
+};
+
+/** on_conflict condition type for table "files" */
+export type FilesOnConflict = {
+  constraint: FilesConstraint;
+  updateColumns?: Array<FilesUpdateColumn>;
+  where?: InputMaybe<FilesBoolExp>;
+};
+
+/** Ordering options when selecting data from "files". */
+export type FilesOrderBy = {
+  awardsAggregate?: InputMaybe<AwardAggregateOrderBy>;
+  chestsAggregate?: InputMaybe<ChestsAggregateOrderBy>;
+  fileId?: InputMaybe<OrderBy>;
+  fileName?: InputMaybe<OrderBy>;
+  fileType?: InputMaybe<OrderBy>;
+  label?: InputMaybe<OrderBy>;
+  levelsAggregate?: InputMaybe<LevelsAggregateOrderBy>;
+  pathToFile?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: files */
+export type FilesPkColumnsInput = {
+  fileId: Scalars["bigint"]["input"];
+};
+
+/** select columns of table "files" */
+export enum FilesSelectColumn {
+  /** column name */
+  FileId = "fileId",
+  /** column name */
+  FileName = "fileName",
+  /** column name */
+  FileType = "fileType",
+  /** column name */
+  Label = "label",
+  /** column name */
+  PathToFile = "pathToFile",
+}
+
+/** input type for updating data in table "files" */
+export type FilesSetInput = {
+  fileId?: InputMaybe<Scalars["bigint"]["input"]>;
+  fileName?: InputMaybe<Scalars["String"]["input"]>;
+  fileType?: InputMaybe<Scalars["String"]["input"]>;
+  label?: InputMaybe<Scalars["String"]["input"]>;
+  pathToFile?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type FilesStddevFields = {
+  __typename?: "FilesStddevFields";
+  fileId?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** aggregate stddevPop on columns */
+export type FilesStddevPopFields = {
+  __typename?: "FilesStddevPopFields";
+  fileId?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** aggregate stddevSamp on columns */
+export type FilesStddevSampFields = {
+  __typename?: "FilesStddevSampFields";
+  fileId?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** Streaming cursor of the table "files" */
+export type FilesStreamCursorInput = {
+  /** Stream column input with initial value */
+  initialValue: FilesStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type FilesStreamCursorValueInput = {
+  fileId?: InputMaybe<Scalars["bigint"]["input"]>;
+  fileName?: InputMaybe<Scalars["String"]["input"]>;
+  fileType?: InputMaybe<Scalars["String"]["input"]>;
+  label?: InputMaybe<Scalars["String"]["input"]>;
+  pathToFile?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type FilesSumFields = {
+  __typename?: "FilesSumFields";
+  fileId?: Maybe<Scalars["bigint"]["output"]>;
+};
+
+/** update columns of table "files" */
+export enum FilesUpdateColumn {
+  /** column name */
+  FileId = "fileId",
+  /** column name */
+  FileName = "fileName",
+  /** column name */
+  FileType = "fileType",
+  /** column name */
+  Label = "label",
+  /** column name */
+  PathToFile = "pathToFile",
+}
+
+export type FilesUpdates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<FilesIncInput>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<FilesSetInput>;
+  /** filter the rows which have to be updated */
+  where: FilesBoolExp;
+};
+
+/** aggregate varPop on columns */
+export type FilesVarPopFields = {
+  __typename?: "FilesVarPopFields";
+  fileId?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** aggregate varSamp on columns */
+export type FilesVarSampFields = {
+  __typename?: "FilesVarSampFields";
+  fileId?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** aggregate variance on columns */
+export type FilesVarianceFields = {
+  __typename?: "FilesVarianceFields";
+  fileId?: Maybe<Scalars["Float"]["output"]>;
+};
+
 /** Boolean expression to compare columns of type "float8". All fields are combined with logical 'AND'. */
 export type Float8ComparisonExp = {
   _eq?: InputMaybe<Scalars["float8"]["input"]>;
@@ -3579,6 +3970,14 @@ export type FlywaySchemaHistoryVarianceFields = {
   checksum?: Maybe<Scalars["Float"]["output"]>;
   executionTime?: Maybe<Scalars["Float"]["output"]>;
   installedRank?: Maybe<Scalars["Float"]["output"]>;
+};
+
+export type GroupType = {
+  __typename?: "GroupType";
+  group_name: Scalars["String"]["output"];
+  groups_id: Scalars["ID"]["output"];
+  label?: Maybe<Scalars["String"]["output"]>;
+  users: Array<UsersType>;
 };
 
 /** columns and relationships of "groups" */
@@ -3942,6 +4341,9 @@ export type GroupsVarianceOrderBy = {
 export type HallOfFame = {
   __typename?: "HallOfFame";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
+  levelId?: Maybe<Scalars["bigint"]["output"]>;
+  levelName?: Maybe<Scalars["String"]["output"]>;
   nick?: Maybe<Scalars["String"]["output"]>;
   sumOfPoints?: Maybe<Scalars["numeric"]["output"]>;
   userId?: Maybe<Scalars["bigint"]["output"]>;
@@ -3980,6 +4382,8 @@ export type HallOfFameAggregateFieldsCountArgs = {
 export type HallOfFameAvgFields = {
   __typename?: "HallOfFameAvgFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
+  levelId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
 };
@@ -3990,6 +4394,9 @@ export type HallOfFameBoolExp = {
   _not?: InputMaybe<HallOfFameBoolExp>;
   _or?: InputMaybe<Array<HallOfFameBoolExp>>;
   editionId?: InputMaybe<BigintComparisonExp>;
+  imageFileId?: InputMaybe<BigintComparisonExp>;
+  levelId?: InputMaybe<BigintComparisonExp>;
+  levelName?: InputMaybe<StringComparisonExp>;
   nick?: InputMaybe<StringComparisonExp>;
   sumOfPoints?: InputMaybe<NumericComparisonExp>;
   userId?: InputMaybe<BigintComparisonExp>;
@@ -3999,6 +4406,9 @@ export type HallOfFameBoolExp = {
 export type HallOfFameMaxFields = {
   __typename?: "HallOfFameMaxFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
+  levelId?: Maybe<Scalars["bigint"]["output"]>;
+  levelName?: Maybe<Scalars["String"]["output"]>;
   nick?: Maybe<Scalars["String"]["output"]>;
   sumOfPoints?: Maybe<Scalars["numeric"]["output"]>;
   userId?: Maybe<Scalars["bigint"]["output"]>;
@@ -4008,6 +4418,9 @@ export type HallOfFameMaxFields = {
 export type HallOfFameMinFields = {
   __typename?: "HallOfFameMinFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
+  levelId?: Maybe<Scalars["bigint"]["output"]>;
+  levelName?: Maybe<Scalars["String"]["output"]>;
   nick?: Maybe<Scalars["String"]["output"]>;
   sumOfPoints?: Maybe<Scalars["numeric"]["output"]>;
   userId?: Maybe<Scalars["bigint"]["output"]>;
@@ -4016,6 +4429,9 @@ export type HallOfFameMinFields = {
 /** Ordering options when selecting data from "hall_of_fame". */
 export type HallOfFameOrderBy = {
   editionId?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
+  levelId?: InputMaybe<OrderBy>;
+  levelName?: InputMaybe<OrderBy>;
   nick?: InputMaybe<OrderBy>;
   sumOfPoints?: InputMaybe<OrderBy>;
   userId?: InputMaybe<OrderBy>;
@@ -4025,6 +4441,12 @@ export type HallOfFameOrderBy = {
 export enum HallOfFameSelectColumn {
   /** column name */
   EditionId = "editionId",
+  /** column name */
+  ImageFileId = "imageFileId",
+  /** column name */
+  LevelId = "levelId",
+  /** column name */
+  LevelName = "levelName",
   /** column name */
   Nick = "nick",
   /** column name */
@@ -4037,6 +4459,8 @@ export enum HallOfFameSelectColumn {
 export type HallOfFameStddevFields = {
   __typename?: "HallOfFameStddevFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
+  levelId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
 };
@@ -4045,6 +4469,8 @@ export type HallOfFameStddevFields = {
 export type HallOfFameStddevPopFields = {
   __typename?: "HallOfFameStddevPopFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
+  levelId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
 };
@@ -4053,6 +4479,8 @@ export type HallOfFameStddevPopFields = {
 export type HallOfFameStddevSampFields = {
   __typename?: "HallOfFameStddevSampFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
+  levelId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
 };
@@ -4068,6 +4496,9 @@ export type HallOfFameStreamCursorInput = {
 /** Initial value of the column from where the streaming should start */
 export type HallOfFameStreamCursorValueInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
+  imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
+  levelId?: InputMaybe<Scalars["bigint"]["input"]>;
+  levelName?: InputMaybe<Scalars["String"]["input"]>;
   nick?: InputMaybe<Scalars["String"]["input"]>;
   sumOfPoints?: InputMaybe<Scalars["numeric"]["input"]>;
   userId?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -4077,6 +4508,8 @@ export type HallOfFameStreamCursorValueInput = {
 export type HallOfFameSumFields = {
   __typename?: "HallOfFameSumFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
+  levelId?: Maybe<Scalars["bigint"]["output"]>;
   sumOfPoints?: Maybe<Scalars["numeric"]["output"]>;
   userId?: Maybe<Scalars["bigint"]["output"]>;
 };
@@ -4085,6 +4518,8 @@ export type HallOfFameSumFields = {
 export type HallOfFameVarPopFields = {
   __typename?: "HallOfFameVarPopFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
+  levelId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
 };
@@ -4093,6 +4528,8 @@ export type HallOfFameVarPopFields = {
 export type HallOfFameVarSampFields = {
   __typename?: "HallOfFameVarSampFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
+  levelId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
 };
@@ -4101,6 +4538,8 @@ export type HallOfFameVarSampFields = {
 export type HallOfFameVarianceFields = {
   __typename?: "HallOfFameVarianceFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
+  levelId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
 };
@@ -4121,14 +4560,17 @@ export type IntComparisonExp = {
 /** columns and relationships of "levels" */
 export type Levels = {
   __typename?: "Levels";
-  avatar?: Maybe<Scalars["String"]["output"]>;
   /** An object relationship */
   edition: Edition;
   editionId: Scalars["bigint"]["output"];
+  /** An object relationship */
+  file?: Maybe<Files>;
   grade: Scalars["float8"]["output"];
+  highest: Scalars["Boolean"]["output"];
+  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label: Scalars["String"]["output"];
   levelId: Scalars["bigint"]["output"];
-  maximumPoints: Scalars["float8"]["output"];
+  maximumPoints?: Maybe<Scalars["float8"]["output"]>;
   minimumPoints: Scalars["float8"]["output"];
   name: Scalars["String"]["output"];
 };
@@ -4142,6 +4584,8 @@ export type LevelsAggregate = {
 
 export type LevelsAggregateBoolExp = {
   avg?: InputMaybe<LevelsAggregateBoolExpAvg>;
+  bool_and?: InputMaybe<LevelsAggregateBoolExpBool_And>;
+  bool_or?: InputMaybe<LevelsAggregateBoolExpBool_Or>;
   corr?: InputMaybe<LevelsAggregateBoolExpCorr>;
   count?: InputMaybe<LevelsAggregateBoolExpCount>;
   covar_samp?: InputMaybe<LevelsAggregateBoolExpCovar_Samp>;
@@ -4201,6 +4645,7 @@ export type LevelsAvgFields = {
   __typename?: "LevelsAvgFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
   grade?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   maximumPoints?: Maybe<Scalars["Float"]["output"]>;
   minimumPoints?: Maybe<Scalars["Float"]["output"]>;
@@ -4210,6 +4655,7 @@ export type LevelsAvgFields = {
 export type LevelsAvgOrderBy = {
   editionId?: InputMaybe<OrderBy>;
   grade?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   maximumPoints?: InputMaybe<OrderBy>;
   minimumPoints?: InputMaybe<OrderBy>;
@@ -4220,10 +4666,12 @@ export type LevelsBoolExp = {
   _and?: InputMaybe<Array<LevelsBoolExp>>;
   _not?: InputMaybe<LevelsBoolExp>;
   _or?: InputMaybe<Array<LevelsBoolExp>>;
-  avatar?: InputMaybe<StringComparisonExp>;
   edition?: InputMaybe<EditionBoolExp>;
   editionId?: InputMaybe<BigintComparisonExp>;
+  file?: InputMaybe<FilesBoolExp>;
   grade?: InputMaybe<Float8ComparisonExp>;
+  highest?: InputMaybe<BooleanComparisonExp>;
+  imageFileId?: InputMaybe<BigintComparisonExp>;
   label?: InputMaybe<StringComparisonExp>;
   levelId?: InputMaybe<BigintComparisonExp>;
   maximumPoints?: InputMaybe<Float8ComparisonExp>;
@@ -4241,6 +4689,7 @@ export enum LevelsConstraint {
 export type LevelsIncInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   grade?: InputMaybe<Scalars["float8"]["input"]>;
+  imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   levelId?: InputMaybe<Scalars["bigint"]["input"]>;
   maximumPoints?: InputMaybe<Scalars["float8"]["input"]>;
   minimumPoints?: InputMaybe<Scalars["float8"]["input"]>;
@@ -4248,10 +4697,12 @@ export type LevelsIncInput = {
 
 /** input type for inserting data into table "levels" */
 export type LevelsInsertInput = {
-  avatar?: InputMaybe<Scalars["String"]["input"]>;
   edition?: InputMaybe<EditionObjRelInsertInput>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
+  file?: InputMaybe<FilesObjRelInsertInput>;
   grade?: InputMaybe<Scalars["float8"]["input"]>;
+  highest?: InputMaybe<Scalars["Boolean"]["input"]>;
+  imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   levelId?: InputMaybe<Scalars["bigint"]["input"]>;
   maximumPoints?: InputMaybe<Scalars["float8"]["input"]>;
@@ -4262,9 +4713,9 @@ export type LevelsInsertInput = {
 /** aggregate max on columns */
 export type LevelsMaxFields = {
   __typename?: "LevelsMaxFields";
-  avatar?: Maybe<Scalars["String"]["output"]>;
   editionId?: Maybe<Scalars["bigint"]["output"]>;
   grade?: Maybe<Scalars["float8"]["output"]>;
+  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
   maximumPoints?: Maybe<Scalars["float8"]["output"]>;
@@ -4274,9 +4725,9 @@ export type LevelsMaxFields = {
 
 /** order by max() on columns of table "levels" */
 export type LevelsMaxOrderBy = {
-  avatar?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
   grade?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   maximumPoints?: InputMaybe<OrderBy>;
@@ -4287,9 +4738,9 @@ export type LevelsMaxOrderBy = {
 /** aggregate min on columns */
 export type LevelsMinFields = {
   __typename?: "LevelsMinFields";
-  avatar?: Maybe<Scalars["String"]["output"]>;
   editionId?: Maybe<Scalars["bigint"]["output"]>;
   grade?: Maybe<Scalars["float8"]["output"]>;
+  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
   maximumPoints?: Maybe<Scalars["float8"]["output"]>;
@@ -4299,9 +4750,9 @@ export type LevelsMinFields = {
 
 /** order by min() on columns of table "levels" */
 export type LevelsMinOrderBy = {
-  avatar?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
   grade?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   maximumPoints?: InputMaybe<OrderBy>;
@@ -4327,10 +4778,12 @@ export type LevelsOnConflict = {
 
 /** Ordering options when selecting data from "levels". */
 export type LevelsOrderBy = {
-  avatar?: InputMaybe<OrderBy>;
   edition?: InputMaybe<EditionOrderBy>;
   editionId?: InputMaybe<OrderBy>;
+  file?: InputMaybe<FilesOrderBy>;
   grade?: InputMaybe<OrderBy>;
+  highest?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   maximumPoints?: InputMaybe<OrderBy>;
@@ -4346,11 +4799,13 @@ export type LevelsPkColumnsInput = {
 /** select columns of table "levels" */
 export enum LevelsSelectColumn {
   /** column name */
-  Avatar = "avatar",
-  /** column name */
   EditionId = "editionId",
   /** column name */
   Grade = "grade",
+  /** column name */
+  Highest = "highest",
+  /** column name */
+  ImageFileId = "imageFileId",
   /** column name */
   Label = "label",
   /** column name */
@@ -4371,6 +4826,18 @@ export enum LevelsSelectColumnLevelsAggregateBoolExpAvgArgumentsColumns {
   MaximumPoints = "maximumPoints",
   /** column name */
   MinimumPoints = "minimumPoints",
+}
+
+/** select "levelsAggregateBoolExpBool_andArgumentsColumns" columns of table "levels" */
+export enum LevelsSelectColumnLevelsAggregateBoolExpBool_AndArgumentsColumns {
+  /** column name */
+  Highest = "highest",
+}
+
+/** select "levelsAggregateBoolExpBool_orArgumentsColumns" columns of table "levels" */
+export enum LevelsSelectColumnLevelsAggregateBoolExpBool_OrArgumentsColumns {
+  /** column name */
+  Highest = "highest",
 }
 
 /** select "levelsAggregateBoolExpCorrArgumentsColumns" columns of table "levels" */
@@ -4445,9 +4912,10 @@ export enum LevelsSelectColumnLevelsAggregateBoolExpVar_SampArgumentsColumns {
 
 /** input type for updating data in table "levels" */
 export type LevelsSetInput = {
-  avatar?: InputMaybe<Scalars["String"]["input"]>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   grade?: InputMaybe<Scalars["float8"]["input"]>;
+  highest?: InputMaybe<Scalars["Boolean"]["input"]>;
+  imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   levelId?: InputMaybe<Scalars["bigint"]["input"]>;
   maximumPoints?: InputMaybe<Scalars["float8"]["input"]>;
@@ -4460,6 +4928,7 @@ export type LevelsStddevFields = {
   __typename?: "LevelsStddevFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
   grade?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   maximumPoints?: Maybe<Scalars["Float"]["output"]>;
   minimumPoints?: Maybe<Scalars["Float"]["output"]>;
@@ -4469,6 +4938,7 @@ export type LevelsStddevFields = {
 export type LevelsStddevOrderBy = {
   editionId?: InputMaybe<OrderBy>;
   grade?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   maximumPoints?: InputMaybe<OrderBy>;
   minimumPoints?: InputMaybe<OrderBy>;
@@ -4479,6 +4949,7 @@ export type LevelsStddevPopFields = {
   __typename?: "LevelsStddevPopFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
   grade?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   maximumPoints?: Maybe<Scalars["Float"]["output"]>;
   minimumPoints?: Maybe<Scalars["Float"]["output"]>;
@@ -4488,6 +4959,7 @@ export type LevelsStddevPopFields = {
 export type LevelsStddevPopOrderBy = {
   editionId?: InputMaybe<OrderBy>;
   grade?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   maximumPoints?: InputMaybe<OrderBy>;
   minimumPoints?: InputMaybe<OrderBy>;
@@ -4498,6 +4970,7 @@ export type LevelsStddevSampFields = {
   __typename?: "LevelsStddevSampFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
   grade?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   maximumPoints?: Maybe<Scalars["Float"]["output"]>;
   minimumPoints?: Maybe<Scalars["Float"]["output"]>;
@@ -4507,6 +4980,7 @@ export type LevelsStddevSampFields = {
 export type LevelsStddevSampOrderBy = {
   editionId?: InputMaybe<OrderBy>;
   grade?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   maximumPoints?: InputMaybe<OrderBy>;
   minimumPoints?: InputMaybe<OrderBy>;
@@ -4522,9 +4996,10 @@ export type LevelsStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type LevelsStreamCursorValueInput = {
-  avatar?: InputMaybe<Scalars["String"]["input"]>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   grade?: InputMaybe<Scalars["float8"]["input"]>;
+  highest?: InputMaybe<Scalars["Boolean"]["input"]>;
+  imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   levelId?: InputMaybe<Scalars["bigint"]["input"]>;
   maximumPoints?: InputMaybe<Scalars["float8"]["input"]>;
@@ -4537,6 +5012,7 @@ export type LevelsSumFields = {
   __typename?: "LevelsSumFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
   grade?: Maybe<Scalars["float8"]["output"]>;
+  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
   maximumPoints?: Maybe<Scalars["float8"]["output"]>;
   minimumPoints?: Maybe<Scalars["float8"]["output"]>;
@@ -4546,6 +5022,7 @@ export type LevelsSumFields = {
 export type LevelsSumOrderBy = {
   editionId?: InputMaybe<OrderBy>;
   grade?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   maximumPoints?: InputMaybe<OrderBy>;
   minimumPoints?: InputMaybe<OrderBy>;
@@ -4554,11 +5031,13 @@ export type LevelsSumOrderBy = {
 /** update columns of table "levels" */
 export enum LevelsUpdateColumn {
   /** column name */
-  Avatar = "avatar",
-  /** column name */
   EditionId = "editionId",
   /** column name */
   Grade = "grade",
+  /** column name */
+  Highest = "highest",
+  /** column name */
+  ImageFileId = "imageFileId",
   /** column name */
   Label = "label",
   /** column name */
@@ -4585,6 +5064,7 @@ export type LevelsVarPopFields = {
   __typename?: "LevelsVarPopFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
   grade?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   maximumPoints?: Maybe<Scalars["Float"]["output"]>;
   minimumPoints?: Maybe<Scalars["Float"]["output"]>;
@@ -4594,6 +5074,7 @@ export type LevelsVarPopFields = {
 export type LevelsVarPopOrderBy = {
   editionId?: InputMaybe<OrderBy>;
   grade?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   maximumPoints?: InputMaybe<OrderBy>;
   minimumPoints?: InputMaybe<OrderBy>;
@@ -4604,6 +5085,7 @@ export type LevelsVarSampFields = {
   __typename?: "LevelsVarSampFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
   grade?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   maximumPoints?: Maybe<Scalars["Float"]["output"]>;
   minimumPoints?: Maybe<Scalars["Float"]["output"]>;
@@ -4613,6 +5095,7 @@ export type LevelsVarSampFields = {
 export type LevelsVarSampOrderBy = {
   editionId?: InputMaybe<OrderBy>;
   grade?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   maximumPoints?: InputMaybe<OrderBy>;
   minimumPoints?: InputMaybe<OrderBy>;
@@ -4623,6 +5106,7 @@ export type LevelsVarianceFields = {
   __typename?: "LevelsVarianceFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
   grade?: Maybe<Scalars["Float"]["output"]>;
+  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   maximumPoints?: Maybe<Scalars["Float"]["output"]>;
   minimumPoints?: Maybe<Scalars["Float"]["output"]>;
@@ -4632,6 +5116,7 @@ export type LevelsVarianceFields = {
 export type LevelsVarianceOrderBy = {
   editionId?: InputMaybe<OrderBy>;
   grade?: InputMaybe<OrderBy>;
+  imageFileId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   maximumPoints?: InputMaybe<OrderBy>;
   minimumPoints?: InputMaybe<OrderBy>;
@@ -6359,6 +6844,7 @@ export type UsersSumFields = {
 export type UsersType = {
   __typename?: "UsersType";
   firstName: Scalars["String"]["output"];
+  groups: Array<GroupType>;
   indexNumber: Scalars["Int"]["output"];
   label: Scalars["String"]["output"];
   nick: Scalars["String"]["output"];
@@ -6542,6 +7028,20 @@ export type LevelsAggregateBoolExpAvg = {
   predicate: Float8ComparisonExp;
 };
 
+export type LevelsAggregateBoolExpBool_And = {
+  arguments: LevelsSelectColumnLevelsAggregateBoolExpBool_AndArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<LevelsBoolExp>;
+  predicate: BooleanComparisonExp;
+};
+
+export type LevelsAggregateBoolExpBool_Or = {
+  arguments: LevelsSelectColumnLevelsAggregateBoolExpBool_OrArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<LevelsBoolExp>;
+  predicate: BooleanComparisonExp;
+};
+
 export type LevelsAggregateBoolExpCorr = {
   arguments: LevelsAggregateBoolExpCorrArguments;
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -6645,6 +7145,10 @@ export type Mutation_Root = {
   deleteEdition?: Maybe<EditionMutationResponse>;
   /** delete single row from the table: "edition" */
   deleteEditionByPk?: Maybe<Edition>;
+  /** delete data from the table: "files" */
+  deleteFiles?: Maybe<FilesMutationResponse>;
+  /** delete single row from the table: "files" */
+  deleteFilesByPk?: Maybe<Files>;
   /** delete data from the table: "flyway_schema_history" */
   deleteFlywaySchemaHistory?: Maybe<FlywaySchemaHistoryMutationResponse>;
   /** delete single row from the table: "flyway_schema_history" */
@@ -6705,6 +7209,10 @@ export type Mutation_Root = {
   insertEdition?: Maybe<EditionMutationResponse>;
   /** insert a single row into the table: "edition" */
   insertEditionOne?: Maybe<Edition>;
+  /** insert data into the table: "files" */
+  insertFiles?: Maybe<FilesMutationResponse>;
+  /** insert a single row into the table: "files" */
+  insertFilesOne?: Maybe<Files>;
   /** insert data into the table: "flyway_schema_history" */
   insertFlywaySchemaHistory?: Maybe<FlywaySchemaHistoryMutationResponse>;
   /** insert a single row into the table: "flyway_schema_history" */
@@ -6781,6 +7289,12 @@ export type Mutation_Root = {
   updateEditionByPk?: Maybe<Edition>;
   /** update multiples rows of table: "edition" */
   updateEditionMany?: Maybe<Array<Maybe<EditionMutationResponse>>>;
+  /** update data of the table: "files" */
+  updateFiles?: Maybe<FilesMutationResponse>;
+  /** update single row of the table: "files" */
+  updateFilesByPk?: Maybe<Files>;
+  /** update multiples rows of table: "files" */
+  updateFilesMany?: Maybe<Array<Maybe<FilesMutationResponse>>>;
   /** update data of the table: "flyway_schema_history" */
   updateFlywaySchemaHistory?: Maybe<FlywaySchemaHistoryMutationResponse>;
   /** update single row of the table: "flyway_schema_history" */
@@ -6920,6 +7434,16 @@ export type Mutation_RootDeleteEditionArgs = {
 /** mutation root */
 export type Mutation_RootDeleteEditionByPkArgs = {
   editionId: Scalars["bigint"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootDeleteFilesArgs = {
+  where: FilesBoolExp;
+};
+
+/** mutation root */
+export type Mutation_RootDeleteFilesByPkArgs = {
+  fileId: Scalars["bigint"]["input"];
 };
 
 /** mutation root */
@@ -7087,6 +7611,18 @@ export type Mutation_RootInsertEditionArgs = {
 export type Mutation_RootInsertEditionOneArgs = {
   object: EditionInsertInput;
   onConflict?: InputMaybe<EditionOnConflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsertFilesArgs = {
+  objects: Array<FilesInsertInput>;
+  onConflict?: InputMaybe<FilesOnConflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsertFilesOneArgs = {
+  object: FilesInsertInput;
+  onConflict?: InputMaybe<FilesOnConflict>;
 };
 
 /** mutation root */
@@ -7326,6 +7862,25 @@ export type Mutation_RootUpdateEditionManyArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootUpdateFilesArgs = {
+  _inc?: InputMaybe<FilesIncInput>;
+  _set?: InputMaybe<FilesSetInput>;
+  where: FilesBoolExp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdateFilesByPkArgs = {
+  _inc?: InputMaybe<FilesIncInput>;
+  _set?: InputMaybe<FilesSetInput>;
+  pkColumns: FilesPkColumnsInput;
+};
+
+/** mutation root */
+export type Mutation_RootUpdateFilesManyArgs = {
+  updates: Array<FilesUpdates>;
+};
+
+/** mutation root */
 export type Mutation_RootUpdateFlywaySchemaHistoryArgs = {
   _inc?: InputMaybe<FlywaySchemaHistoryIncInput>;
   _set?: InputMaybe<FlywaySchemaHistorySetInput>;
@@ -7516,6 +8071,12 @@ export type Query_Root = {
   editionAggregate: EditionAggregate;
   /** fetch data from the table: "edition" using primary key columns */
   editionByPk?: Maybe<Edition>;
+  /** fetch data from the table: "files" */
+  files: Array<Files>;
+  /** fetch aggregated fields from the table: "files" */
+  filesAggregate: FilesAggregate;
+  /** fetch data from the table: "files" using primary key columns */
+  filesByPk?: Maybe<Files>;
   /** fetch data from the table: "flyway_schema_history" */
   flywaySchemaHistory: Array<FlywaySchemaHistory>;
   /** fetch aggregated fields from the table: "flyway_schema_history" */
@@ -7723,6 +8284,26 @@ export type Query_RootEditionAggregateArgs = {
 
 export type Query_RootEditionByPkArgs = {
   editionId: Scalars["bigint"]["input"];
+};
+
+export type Query_RootFilesArgs = {
+  distinctOn?: InputMaybe<Array<FilesSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<FilesOrderBy>>;
+  where?: InputMaybe<FilesBoolExp>;
+};
+
+export type Query_RootFilesAggregateArgs = {
+  distinctOn?: InputMaybe<Array<FilesSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<FilesOrderBy>>;
+  where?: InputMaybe<FilesBoolExp>;
+};
+
+export type Query_RootFilesByPkArgs = {
+  fileId: Scalars["bigint"]["input"];
 };
 
 export type Query_RootFlywaySchemaHistoryArgs = {
@@ -7955,6 +8536,14 @@ export type Subscription_Root = {
   editionByPk?: Maybe<Edition>;
   /** fetch data from the table in a streaming manner: "edition" */
   editionStream: Array<Edition>;
+  /** fetch data from the table: "files" */
+  files: Array<Files>;
+  /** fetch aggregated fields from the table: "files" */
+  filesAggregate: FilesAggregate;
+  /** fetch data from the table: "files" using primary key columns */
+  filesByPk?: Maybe<Files>;
+  /** fetch data from the table in a streaming manner: "files" */
+  filesStream: Array<Files>;
   /** fetch data from the table: "flyway_schema_history" */
   flywaySchemaHistory: Array<FlywaySchemaHistory>;
   /** fetch aggregated fields from the table: "flyway_schema_history" */
@@ -8226,6 +8815,32 @@ export type Subscription_RootEditionStreamArgs = {
   batchSize: Scalars["Int"]["input"];
   cursor: Array<InputMaybe<EditionStreamCursorInput>>;
   where?: InputMaybe<EditionBoolExp>;
+};
+
+export type Subscription_RootFilesArgs = {
+  distinctOn?: InputMaybe<Array<FilesSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<FilesOrderBy>>;
+  where?: InputMaybe<FilesBoolExp>;
+};
+
+export type Subscription_RootFilesAggregateArgs = {
+  distinctOn?: InputMaybe<Array<FilesSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<FilesOrderBy>>;
+  where?: InputMaybe<FilesBoolExp>;
+};
+
+export type Subscription_RootFilesByPkArgs = {
+  fileId: Scalars["bigint"]["input"];
+};
+
+export type Subscription_RootFilesStreamArgs = {
+  batchSize: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<FilesStreamCursorInput>>;
+  where?: InputMaybe<FilesBoolExp>;
 };
 
 export type Subscription_RootFlywaySchemaHistoryArgs = {
