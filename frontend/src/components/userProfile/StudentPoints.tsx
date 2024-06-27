@@ -43,6 +43,7 @@ export default function StudentPoints({
       <FilterMenu
         pickedCategoryIds={selectedCategoryIds}
         onSelectChange={onSelectChange}
+        points={pointsList}
       />
       <PointsTable pointsList={getFilteredItems()} />
     </div>

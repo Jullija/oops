@@ -1,9 +1,11 @@
-import { getCategories } from "../../api";
-import { Styles, Category } from "../../utils";
+import { Styles } from "../../utils";
+import { UserPointsQuery } from "../../graphql/userPoints.graphql.types";
 
 const styles: Styles = {
   container: {
     display: "flex",
+    flexWrap: "wrap", // Added to wrap items if they overflow
+    gap: "10px", // Added gap between items
   },
   item: {
     border: "1px solid black",
@@ -13,42 +15,62 @@ const styles: Styles = {
   },
 };
 
+type Category = NonNullable<
+  UserPointsQuery["usersByPk"]
+>["points"][number]["subcategory"]["category"];
+
+type FilterMenuProps = {
+  pickedCategoryIds: string[];
+  onSelectChange: (pickedCategoryIds: string[]) => void;
+  points: NonNullable<UserPointsQuery["usersByPk"]>["points"];
+};
+
 export default function FilterMenu({
   pickedCategoryIds,
   onSelectChange,
-}: {
-  pickedCategoryIds: string[];
-  onSelectChange: (pickedCategoryIds: string[]) => void;
-}) {
-  const categories = getCategories();
+  points,
+}: FilterMenuProps) {
+  const categoryMap = new Map<string, Category>();
+  points.forEach((point) => {
+    categoryMap.set(
+      point.subcategory.category.categoryId,
+      point.subcategory.category,
+    );
+  });
+
+  const categories = Array.from(categoryMap.values()).sort((a, b) =>
+    a.categoryName.localeCompare(b.categoryName),
+  );
 
   const isSelected = (category: Category) => {
-    return pickedCategoryIds.some((selectedId) => selectedId === category.id);
+    return pickedCategoryIds.some(
+      (selectedId) => selectedId === category.categoryId,
+    );
   };
 
   const handleCategoryClick = (category: Category) => {
     if (isSelected(category)) {
       const updatedSelectedCategories = pickedCategoryIds.filter(
-        (selectedId) => selectedId !== category.id,
+        (selectedId) => selectedId !== category.categoryId,
       );
       onSelectChange(updatedSelectedCategories);
     } else {
-      onSelectChange([...pickedCategoryIds, category.id]);
+      onSelectChange([...pickedCategoryIds, category.categoryId]);
     }
   };
 
   return (
     <div style={styles.container}>
-      {categories.map((category, index) => (
+      {categories.map((category) => (
         <div
           style={{
             ...styles.item,
             backgroundColor: isSelected(category) ? "green" : undefined,
           }}
-          key={index}
+          key={category.categoryId}
           onClick={() => handleCategoryClick(category)}
         >
-          {category.name}
+          {category.categoryName}
         </div>
       ))}
     </div>
