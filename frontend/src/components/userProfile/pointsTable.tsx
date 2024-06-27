@@ -1,66 +1,48 @@
-import React, { useState } from "react";
-import { UserPointsQuery } from "../../graphql/userPoints.graphql.types";
-import { Styles } from "../../utils";
-import PointsTableHeader from "./pointsTableHeader";
-import PointsTableRow from "./pointsTableRow";
+import { Points, Styles } from "../../../../utils";
 
 const styles: Styles = {
   table: {
-    width: "100%",
-    borderCollapse: "collapse",
+    width: 600,
+    border: "1px solid blue",
+  },
+  row: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  cell: {
+    border: "1px solid blue",
+    padding: 12,
+    display: "flex",
+    justifyContent: "center",
+    width: "30%",
   },
 };
 
-function PointsTable({
-  points,
-}: {
-  points: NonNullable<UserPointsQuery["usersByPk"]>["points"];
-}) {
-  const [filters, setFilters] = useState({
-    date: "",
-    label: "",
-    teacher: "",
-    subcategory: "",
-    category: "",
-  });
+type PointsTableProps = {
+  pointsList: Points[];
+};
 
-  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setFilters({
-      ...filters,
-      [name]: value,
-    });
-  };
-
-  const filteredPoints = points.filter((point) => {
-    return (
-      point.createdAt.includes(filters.date) &&
-      point.label.toLowerCase().includes(filters.label.toLowerCase()) &&
-      `${point.userByTeacherId?.firstName} ${point.userByTeacherId?.secondName}`
-        .toLowerCase()
-        .includes(filters.teacher.toLowerCase()) &&
-      point.subcategory.subcategoryName
-        .toLowerCase()
-        .includes(filters.subcategory.toLowerCase()) &&
-      point.subcategory.category.categoryName
-        .toLowerCase()
-        .includes(filters.category.toLowerCase())
-    );
-  });
+export const PointsTable = ({ pointsList }: PointsTableProps) => {
+  const headers = ["category", "subcategory", "points", "provider"];
 
   return (
-    <table style={styles.table}>
-      <PointsTableHeader
-        filters={filters}
-        handleFilterChange={handleFilterChange}
-      />
-      <tbody>
-        {filteredPoints.map((point) => (
-          <PointsTableRow key={point.pointsId} point={point} />
+    <div style={styles.table}>
+      <div style={styles.row}>
+        {headers.map((header, index) => (
+          <div key={index} style={styles.cell}>
+            {header}
+          </div>
         ))}
-      </tbody>
-    </table>
-  );
-}
+      </div>
 
-export default PointsTable;
+      {pointsList.map((points, index) => (
+        <div key={index} style={styles.row}>
+          <div style={styles.cell}>{points.category.name}</div>
+          <div style={styles.cell}>{points.subcategory.name}</div>
+          <div style={styles.cell}>{points.number}</div>
+          <div style={styles.cell}>{points.provider.name}</div>
+        </div>
+      ))}
+    </div>
+  );
+};

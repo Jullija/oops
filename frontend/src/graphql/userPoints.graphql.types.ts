@@ -23,6 +23,7 @@ export type UserPointsQuery = {
       createdAt: string;
       label: string;
       pointsId: string;
+      value: string;
       userByTeacherId: {
         __typename?: "Users";
         userId: string;
@@ -80,6 +81,7 @@ export const UserPointsDocument = gql`
         createdAt
         label
         pointsId
+        value
         userByTeacherId {
           userId
           secondName

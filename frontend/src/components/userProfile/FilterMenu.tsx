@@ -1,5 +1,5 @@
-import { getCategories } from "../../../../api";
-import { Category, Styles } from "../../../../utils";
+import { getCategories } from "../../api";
+import { Styles, Category } from "../../utils";
 
 const styles: Styles = {
   container: {
@@ -13,15 +13,13 @@ const styles: Styles = {
   },
 };
 
-type FilterMenuProps = {
-  pickedCategoryIds: string[];
-  onSelectChange: (pickedCategoryIds: string[]) => void;
-};
-
-export const FilterMenu = ({
+export default function FilterMenu({
   pickedCategoryIds,
   onSelectChange,
-}: FilterMenuProps) => {
+}: {
+  pickedCategoryIds: string[];
+  onSelectChange: (pickedCategoryIds: string[]) => void;
+}) {
   const categories = getCategories();
 
   const isSelected = (category: Category) => {
@@ -38,6 +36,7 @@ export const FilterMenu = ({
       onSelectChange([...pickedCategoryIds, category.id]);
     }
   };
+
   return (
     <div style={styles.container}>
       {categories.map((category, index) => (
@@ -47,13 +46,11 @@ export const FilterMenu = ({
             backgroundColor: isSelected(category) ? "green" : undefined,
           }}
           key={index}
-          onClick={() => {
-            handleCategoryClick(category);
-          }}
+          onClick={() => handleCategoryClick(category)}
         >
           {category.name}
         </div>
       ))}
     </div>
   );
-};
+}

@@ -1,18 +1,21 @@
 import { UserPointsQuery } from "../../graphql/userPoints.graphql.types";
 
 type UserCardProps = {
-  user: NonNullable<UserPointsQuery["usersByPk"]>;
+  fullName: string;
+  index: number;
+  points: NonNullable<UserPointsQuery["usersByPk"]>["points"];
 };
 
-export function UserCard({ user }: UserCardProps) {
-  // this card will also contain photo with current lvl and points (probably)
+export function UserCard({ fullName, index, points }: UserCardProps) {
+  // this card will also contain a photo with the current level and points (probably)
 
   return (
     <div className="user-card">
-      <h2>
-        {user.firstName} {user.secondName} ({user.nick})
-      </h2>
-      <p>Index Number: {user.indexNumber}</p>
+      <h2>{fullName}</h2>
+      <p>Index Number: {index}</p>
+      <p>
+        Total Points: {points.reduce((acc, point) => acc + +point.value, 0)}
+      </p>
     </div>
   );
 }

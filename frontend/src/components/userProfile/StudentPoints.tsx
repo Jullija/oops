@@ -1,7 +1,9 @@
+import { Styles } from "../../utils";
+import FilterMenu from "./FilterMenu";
+
+import { UserPointsQuery } from "../../graphql/userPoints.graphql.types";
 import { useState } from "react";
-import { Points, Styles } from "../../../utils";
-import { FilterMenu } from "./FilterMenu";
-import { PointsTable } from "./PointsTable";
+import PointsTable from "./PointsTable";
 
 const styles: Styles = {
   container: {
@@ -11,19 +13,22 @@ const styles: Styles = {
   },
 };
 
-type StudentPointsProps = {
-  pointsList: Points[];
-};
-
-export const StudentPoints = ({ pointsList }: StudentPointsProps) => {
+export default function StudentPoints({
+  pointsList,
+}: {
+  pointsList: NonNullable<UserPointsQuery["usersByPk"]>["points"];
+}) {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
+
   const onSelectChange = (updatedSelectedCategoryIds: string[]) => {
     setSelectedCategoryIds(updatedSelectedCategoryIds);
   };
 
-  const isInSelectedCategoryIds = (points: Points) => {
+  const isInSelectedCategoryIds = (
+    points: NonNullable<UserPointsQuery["usersByPk"]>["points"][number],
+  ) => {
     return selectedCategoryIds.some(
-      (selectedId) => selectedId === points.category.id,
+      (selectedId) => selectedId === points.subcategory.category.categoryId,
     );
   };
 
@@ -42,4 +47,4 @@ export const StudentPoints = ({ pointsList }: StudentPointsProps) => {
       <PointsTable pointsList={getFilteredItems()} />
     </div>
   );
-};
+}

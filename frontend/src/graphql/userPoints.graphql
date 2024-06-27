@@ -10,6 +10,7 @@ query UserPoints($id: bigint!, $editionId: bigint!) {
       createdAt
       label
       pointsId
+      value
       userByTeacherId {
         userId
         secondName
