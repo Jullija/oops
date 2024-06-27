@@ -24,7 +24,7 @@ export default function PointsTable({
 }: {
   pointsList: NonNullable<UserPointsQuery["usersByPk"]>["points"];
 }) {
-  const headers = ["category", "subcategory", "points", "provider"];
+  const headers = ["Kategoria", "Podkategoria", "Punkty", "Prowadzący"];
 
   return (
     <div style={styles.table}>
