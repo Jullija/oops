@@ -1,0 +1,54 @@
+import { Styles } from "../../utils";
+import { UserPointsQuery } from "../../graphql/userPoints.graphql.types";
+
+const styles: Styles = {
+  table: {
+    width: 600,
+    border: "1px solid blue",
+  },
+  row: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  cell: {
+    border: "1px solid blue",
+    padding: 12,
+    display: "flex",
+    justifyContent: "center",
+    width: "30%",
+  },
+};
+
+export default function PointsTable({
+  pointsList,
+}: {
+  pointsList: NonNullable<UserPointsQuery["usersByPk"]>["points"];
+}) {
+  const headers = ["category", "subcategory", "points", "provider"];
+
+  return (
+    <div style={styles.table}>
+      <div style={styles.row}>
+        {headers.map((header, index) => (
+          <div key={index} style={styles.cell}>
+            {header}
+          </div>
+        ))}
+      </div>
+
+      {pointsList.map((points, index) => (
+        <div key={index} style={styles.row}>
+          <div style={styles.cell}>
+            {points.subcategory.category.categoryName}
+          </div>
+          <div style={styles.cell}>{points.subcategory.subcategoryName}</div>
+          <div style={styles.cell}>{points.value}</div>
+          <div style={styles.cell}>
+            {points.userByTeacherId?.firstName}{" "}
+            {points.userByTeacherId?.secondName}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
