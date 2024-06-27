@@ -1,8 +1,9 @@
-import { Styles } from "../../utils";
+import { Styles } from "../../../utils";
 
 type StudentCardProps = {
   firstName: string;
   secondName: string;
+  onClick: () => void;
 };
 
 const styles: Styles = {
@@ -12,9 +13,13 @@ const styles: Styles = {
   },
 };
 
-export const StudentCard = ({ firstName, secondName }: StudentCardProps) => {
+export const StudentCard = ({
+  firstName,
+  secondName,
+  onClick,
+}: StudentCardProps) => {
   return (
-    <div style={styles.container}>
+    <div style={styles.container} onClick={onClick}>
       {secondName} {firstName}
     </div>
   );

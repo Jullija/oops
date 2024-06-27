@@ -1,11 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import {
-  StudentProfile,
-  HallOfFame,
-  Welcome,
-  GroupsList,
-  Group,
-} from "../screens";
+import { StudentProfile, HallOfFame, Welcome, Groups, Group } from "../screens";
 import { MockData, Root } from "../components";
 import { pathsWithParameters } from "./paths";
 
@@ -36,8 +30,8 @@ export const routes = createBrowserRouter([
         element: <HallOfFame studentId={"6"} />,
       },
       {
-        path: pathsWithParameters.GroupsList,
-        element: <GroupsList />,
+        path: pathsWithParameters.Groups,
+        element: <Groups />,
       },
       {
         path: pathsWithParameters.Group,

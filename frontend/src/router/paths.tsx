@@ -4,7 +4,7 @@ const basePaths = {
   MockData: "/mock-data",
   StudentProfile: "/student-profile",
   HallOfFame: "/hall-of-fame",
-  GroupsList: "/groups-list",
+  Groups: "/groups",
   Group: "/group",
 };
 
@@ -42,7 +42,11 @@ export const navigationItems: NavigationItem[] = [
     path: pathsWithParameters.HallOfFame,
   },
   {
-    title: "groups-list",
-    path: pathsWithParameters.GroupsList,
+    title: "groups",
+    path: pathsWithParameters.Groups,
+  },
+  {
+    title: "group",
+    path: pathsWithParameters.Group,
   },
 ];

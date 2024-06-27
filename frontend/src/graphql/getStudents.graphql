@@ -1,0 +1,7 @@
+# TODO add editionId
+query getStudents {
+  users(where: { role: { _eq: "student" } }) {
+    firstName
+    secondName
+  }
+}

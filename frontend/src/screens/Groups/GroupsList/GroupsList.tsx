@@ -1,8 +1,10 @@
-import { useNavigate } from "react-router-dom";
-import { useGetGroupsQuery } from "../../graphql/getGroups.graphql.types";
-import { Styles } from "../../utils";
+// import { useNavigate } from "react-router-dom";
 import { GroupsListItem } from "./GroupsListItem";
-import { pathsGenerator } from "../../router";
+// import { pathsGenerator } from "../../../router";
+import { useGetGroupsQuery } from "../../../graphql/getGroups.graphql.types";
+import { Styles } from "../../../utils";
+import { pathsGenerator } from "../../../router";
+import { useNavigate } from "react-router-dom";
 
 const styles: Styles = {
   groupsContainer: {
