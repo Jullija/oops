@@ -2,6 +2,7 @@ query UserPoints($id: bigint!, $editionId: bigint!) {
   usersByPk(userId: $id) {
     userId
     firstName
+    fullName
     indexNumber
     nick
     role
@@ -13,9 +14,8 @@ query UserPoints($id: bigint!, $editionId: bigint!) {
       value
       userByTeacherId {
         userId
-        secondName
+        fullName
         role
-        firstName
         nick
       }
       subcategory {

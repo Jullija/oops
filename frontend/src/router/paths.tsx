@@ -12,15 +12,15 @@ type NavigationItem = {
 
 export const navigationItems: NavigationItem[] = [
   {
-    title: "welcome",
+    title: "Witaj",
     path: paths.Welcome,
   },
   {
-    title: "student-profile",
+    title: "Profil studenta",
     path: paths.StudentProfile,
   },
   {
-    title: "hall-of-fame",
+    title: "Hala Chwały",
     path: paths.HallOfFame,
   },
 ];

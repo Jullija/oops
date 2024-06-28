@@ -1,5 +1,4 @@
-import { Styles } from "../../utils";
-import { UserPointsQuery } from "../../graphql/userPoints.graphql.types";
+import { Styles, UserPoints } from "../../utils";
 
 const styles: Styles = {
   table: {
@@ -22,7 +21,7 @@ const styles: Styles = {
 export default function PointsTable({
   pointsList,
 }: {
-  pointsList: NonNullable<UserPointsQuery["usersByPk"]>["points"];
+  pointsList: UserPoints;
 }) {
   const headers = ["Kategoria", "Podkategoria", "Punkty", "Prowadzący"];
 
@@ -43,10 +42,7 @@ export default function PointsTable({
           </div>
           <div style={styles.cell}>{points.subcategory.subcategoryName}</div>
           <div style={styles.cell}>{points.value}</div>
-          <div style={styles.cell}>
-            {points.userByTeacherId?.firstName}{" "}
-            {points.userByTeacherId?.secondName}
-          </div>
+          <div style={styles.cell}>{points.userByTeacherId?.fullName}</div>
         </div>
       ))}
     </div>

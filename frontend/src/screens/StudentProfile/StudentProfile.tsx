@@ -15,6 +15,7 @@ const styles: Styles = {
 export function StudentProfile() {
   const { userData, loading, error } = useStudentData();
 
+  // TODO: add components for loading state and error message
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
   if (!userData) return <p>Please select an edition.</p>;
@@ -24,7 +25,7 @@ export function StudentProfile() {
       {!loading && (
         <>
           <UserCard
-            fullName={userData.fullName}
+            fullName={userData?.fullName}
             index={userData.index}
             points={userData.points}
           />

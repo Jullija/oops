@@ -14,6 +14,7 @@ export type UserPointsQuery = {
     __typename?: "Users";
     userId: string;
     firstName: string;
+    fullName?: string | null;
     indexNumber: number;
     nick: string;
     role: string;
@@ -27,9 +28,8 @@ export type UserPointsQuery = {
       userByTeacherId: {
         __typename?: "Users";
         userId: string;
-        secondName: string;
+        fullName?: string | null;
         role: string;
-        firstName: string;
         nick: string;
       };
       subcategory: {
@@ -73,6 +73,7 @@ export const UserPointsDocument = gql`
     usersByPk(userId: $id) {
       userId
       firstName
+      fullName
       indexNumber
       nick
       role
@@ -84,9 +85,8 @@ export const UserPointsDocument = gql`
         value
         userByTeacherId {
           userId
-          secondName
+          fullName
           role
-          firstName
           nick
         }
         subcategory {

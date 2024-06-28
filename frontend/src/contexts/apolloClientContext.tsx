@@ -9,8 +9,10 @@ import { setContext } from "@apollo/client/link/context";
 import { User, UserContext } from "../contexts/userContext";
 import { Roles } from "../utils";
 
+export const GRAPHQL_URI = "http://127.0.0.1:9191/v1/graphql";
+
 const httpLink = createHttpLink({
-  uri: "http://127.0.0.1:9191/v1/graphql",
+  uri: GRAPHQL_URI,
 });
 
 const createAuthLink = (user?: User) =>

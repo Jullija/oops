@@ -6489,6 +6489,8 @@ export type Users = {
   /** An aggregate relationship */
   chestHistoriesByTeacherIdAggregate: ChestHistoryAggregate;
   firstName: Scalars["String"]["output"];
+  /** A computed field, executes function "users_fullname" */
+  fullName?: Maybe<Scalars["String"]["output"]>;
   indexNumber: Scalars["Int"]["output"];
   label: Scalars["String"]["output"];
   nick: Scalars["String"]["output"];
@@ -6645,6 +6647,7 @@ export type UsersBoolExp = {
   chestHistoriesByTeacherId?: InputMaybe<ChestHistoryBoolExp>;
   chestHistoriesByTeacherIdAggregate?: InputMaybe<ChestHistoryAggregateBoolExp>;
   firstName?: InputMaybe<StringComparisonExp>;
+  fullName?: InputMaybe<StringComparisonExp>;
   indexNumber?: InputMaybe<IntComparisonExp>;
   label?: InputMaybe<StringComparisonExp>;
   nick?: InputMaybe<StringComparisonExp>;
@@ -6695,6 +6698,8 @@ export type UsersInsertInput = {
 export type UsersMaxFields = {
   __typename?: "UsersMaxFields";
   firstName?: Maybe<Scalars["String"]["output"]>;
+  /** A computed field, executes function "users_fullname" */
+  fullName?: Maybe<Scalars["String"]["output"]>;
   indexNumber?: Maybe<Scalars["Int"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   nick?: Maybe<Scalars["String"]["output"]>;
@@ -6707,6 +6712,8 @@ export type UsersMaxFields = {
 export type UsersMinFields = {
   __typename?: "UsersMinFields";
   firstName?: Maybe<Scalars["String"]["output"]>;
+  /** A computed field, executes function "users_fullname" */
+  fullName?: Maybe<Scalars["String"]["output"]>;
   indexNumber?: Maybe<Scalars["Int"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   nick?: Maybe<Scalars["String"]["output"]>;
@@ -6743,6 +6750,7 @@ export type UsersOrderBy = {
   chestHistoriesAggregate?: InputMaybe<ChestHistoryAggregateOrderBy>;
   chestHistoriesByTeacherIdAggregate?: InputMaybe<ChestHistoryAggregateOrderBy>;
   firstName?: InputMaybe<OrderBy>;
+  fullName?: InputMaybe<OrderBy>;
   indexNumber?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   nick?: InputMaybe<OrderBy>;

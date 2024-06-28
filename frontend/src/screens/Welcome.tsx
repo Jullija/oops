@@ -1,11 +1,38 @@
-// Welcome.tsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAllUsersQuery } from "../graphql/allUsers.graphql.types";
 import { paths } from "../router/paths";
-import { Roles } from "../utils";
+import { Roles, Styles } from "../utils";
 import { User } from "../contexts/userContext";
 import { useUser } from "../hooks/useUser";
+
+// again - chat gptd styles, also do not bother about this component, it is temporary till login isn't implemented
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  userList: {
+    flex: 1,
+  },
+  searchInput: {
+    marginBottom: "10px",
+    padding: "8px",
+    width: "100%",
+    boxSizing: "border-box",
+  },
+  table: {
+    width: "100%",
+    borderCollapse: "collapse",
+  },
+  tableRow: {
+    cursor: "pointer",
+  },
+  selectedUser: {
+    flex: 1,
+    marginLeft: "20px",
+  },
+};
 
 export const Welcome = () => {
   const { user: selectedUser, setUser } = useUser();
@@ -18,12 +45,6 @@ export const Welcome = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (data) {
-      setFilteredUsers(data.users);
-    }
-  }, [data]);
 
   useEffect(() => {
     if (data) {
@@ -40,20 +61,21 @@ export const Welcome = () => {
     navigate(paths.StudentProfile);
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error loading users.</div>;
+  if (loading) return <div>Ładowanie...</div>;
+  if (error) return <div>Błąd podczas ładowania uzytkowników.</div>;
 
   return (
-    <div style={{ display: "flex", flexDirection: "row" }}>
-      <div style={{ flex: 1 }}>
-        <h1>Welcome</h1>
+    <div style={styles.container}>
+      <div style={styles.userList}>
+        <h1>Witaj!</h1>
         <input
           type="text"
           placeholder="Search Users"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          style={styles.searchInput}
         />
-        <table>
+        <table style={styles.table}>
           <thead>
             <tr>
               <th>Nick</th>
@@ -66,7 +88,7 @@ export const Welcome = () => {
               <tr
                 key={user.userId}
                 onClick={() => handleUserSelect(user)}
-                style={{ cursor: "pointer" }}
+                style={styles.tableRow}
               >
                 <td>{user.nick}</td>
                 <td>{user.role}</td>
@@ -76,13 +98,13 @@ export const Welcome = () => {
           </tbody>
         </table>
       </div>
-      <div style={{ flex: 1, marginLeft: "20px" }}>
+      <div style={styles.selectedUser}>
         {selectedUser && (
           <div>
-            <h2>Selected User:</h2>
+            <h2>Wybrany uzytkownik:</h2>
             <p>Nick: {selectedUser.nick}</p>
-            <p>Role: {selectedUser.role}</p>
-            <p>User ID: {selectedUser.userId}</p>
+            <p>Rola: {selectedUser.role}</p>
+            <p>ID: {selectedUser.userId}</p>
           </div>
         )}
       </div>

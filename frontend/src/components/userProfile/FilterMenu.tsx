@@ -1,4 +1,4 @@
-import { Styles } from "../../utils";
+import { Styles, UserPoints } from "../../utils";
 import { UserPointsQuery } from "../../graphql/userPoints.graphql.types";
 
 const styles: Styles = {
@@ -22,7 +22,7 @@ type Category = NonNullable<
 type FilterMenuProps = {
   pickedCategoryIds: string[];
   onSelectChange: (pickedCategoryIds: string[]) => void;
-  points: NonNullable<UserPointsQuery["usersByPk"]>["points"];
+  points: UserPoints;
 };
 
 export default function FilterMenu({

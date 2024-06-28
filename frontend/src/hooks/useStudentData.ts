@@ -1,22 +1,19 @@
-import {
-  UserPointsQuery,
-  useUserPointsQuery,
-} from "../graphql/userPoints.graphql.types";
+import { useUserPointsQuery } from "../graphql/userPoints.graphql.types";
+import { UserPoints } from "../utils";
 import { useUser } from "./useUser";
 import { useUserEditions } from "./useUserEditions";
 
 type UserData = {
   fullName: string;
   index: number;
-  points: NonNullable<UserPointsQuery["usersByPk"]>["points"];
+  points: UserPoints;
 };
 
 type UseUserDataResult = {
-  userData: UserData | null;
+  userData?: UserData;
   loading: boolean;
-  error: Error | null;
+  error?: Error;
 };
-
 export function useStudentData(): UseUserDataResult {
   const { user } = useUser();
   const { selectedEdition: edition } = useUserEditions();
@@ -29,16 +26,15 @@ export function useStudentData(): UseUserDataResult {
 
   if (loading || error || !data?.usersByPk) {
     return {
-      userData: null,
       loading,
-      error: error || null,
+      error: error,
     };
   }
 
-  const { firstName, secondName, indexNumber, points } = data.usersByPk;
-  console.log(data.usersByPk);
+  const { fullName, indexNumber, points } = data.usersByPk;
+
   const userData = {
-    fullName: `${firstName} ${secondName}`,
+    fullName: fullName || "",
     index: indexNumber,
     points: points,
   };
@@ -46,6 +42,6 @@ export function useStudentData(): UseUserDataResult {
   return {
     userData,
     loading,
-    error: null,
+    error,
   };
 }

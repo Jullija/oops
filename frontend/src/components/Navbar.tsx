@@ -32,6 +32,8 @@ export const Navbar = () => {
   const { editions, selectedEdition, handleEditionChange } =
     useEditionSelection();
 
+  const showEditionSelection = editions.length > 1;
+
   return (
     <div style={styles.container}>
       {navigationItems.map((item, index) => (
@@ -43,9 +45,10 @@ export const Navbar = () => {
           {item.title}
         </div>
       ))}
-      {editions.length === 1 ? (
-        <div style={styles.editionName}>{editions[0].name}</div>
-      ) : editions.length > 1 ? (
+      {!showEditionSelection && (
+        <div style={styles.editionName}>{editions[0]?.name}</div>
+      )}
+      {showEditionSelection && (
         <select
           style={styles.select}
           onChange={handleEditionChange}
@@ -57,7 +60,7 @@ export const Navbar = () => {
             </option>
           ))}
         </select>
-      ) : null}
+      )}
     </div>
   );
 };
