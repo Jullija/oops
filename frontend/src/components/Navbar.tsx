@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { navigationItems } from "../router";
 import { Styles } from "../utils";
-import { useUserEditions } from "../hooks/useUserEditions";
+import { useEditionSelection } from "../hooks/useEditionSelection";
 
 const styles: Styles = {
   container: {
@@ -30,23 +29,8 @@ const styles: Styles = {
 
 export const Navbar = () => {
   const navigate = useNavigate();
-  const { editions, selectedEdition, setSelectedEdition } = useUserEditions();
-
-  useEffect(() => {
-    if (editions.length === 1) {
-      setSelectedEdition(editions[0]);
-    }
-  }, [editions, setSelectedEdition]);
-
-  const handleEditionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedId = event.target.value;
-    const selectedEdition = editions.find(
-      (edition) => edition.editionId === selectedId,
-    );
-    if (selectedEdition) {
-      setSelectedEdition(selectedEdition);
-    }
-  };
+  const { editions, selectedEdition, handleEditionChange } =
+    useEditionSelection();
 
   return (
     <div style={styles.container}>
