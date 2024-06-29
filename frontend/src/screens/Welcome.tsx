@@ -6,7 +6,7 @@ import { Roles, Styles } from "../utils";
 import { User } from "../contexts/userContext";
 import { useUser } from "../hooks/useUser";
 
-// again - chat gptd styles, also do not bother about this component, it is temporary till login isn't implemented
+// TODO: again - chat gptd styles, also do not bother about this component, it is temporary till login isn't implemented
 const styles: Styles = {
   container: {
     display: "flex",

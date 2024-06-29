@@ -6,7 +6,7 @@ type UserCardProps = {
   points: UserPoints;
 };
 
-// those styles will be changed, i've just chat-gptd them
+// TODO: those styles will be changed, i've just chat-gptd them
 const styles: Styles = {
   userCard: {
     display: "flex",
