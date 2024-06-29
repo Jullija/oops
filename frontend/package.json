@@ -12,7 +12,7 @@
     "format": "prettier --write \"**/*.tsx\" \"**/*.ts\" \"**/*.graphql\"",
     "format:graphql": "prettier --write \"**/*.graphql*\"",
     "preview": "vite preview",
-    "codegen": "graphql-codegen && yarn format:graphql"
+    "codegen": "graphql-codegen --config codegen.yml && yarn format:graphql"
   },
   "dependencies": {
     "@apollo/client": "^3.10.4",

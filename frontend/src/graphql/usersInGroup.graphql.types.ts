@@ -10,33 +10,27 @@ export type UsersInGroupQueryVariables = Types.Exact<{
 export type UsersInGroupQuery = {
   __typename?: "query_root";
   users: Array<{
-    __typename?: "users";
+    __typename?: "Users";
     nick: string;
     role: string;
-    user_id: string;
-    user_groups: Array<{
-      __typename?: "user_groups";
-      group: {
-        __typename?: "groups";
-        groups_id: string;
-        group_name: string;
-        group_year: number;
-      };
+    userId: string;
+    userGroups: Array<{
+      __typename?: "UserGroups";
+      group: { __typename?: "Groups"; groupsId: string; groupName: string };
     }>;
   }>;
 };
 
 export const UsersInGroupDocument = gql`
   query UsersInGroup($groupId: bigint!) {
-    users(where: { user_groups: { group_id: { _eq: $groupId } } }) {
+    users(where: { userGroups: { groupId: { _eq: $groupId } } }) {
       nick
       role
-      user_id
-      user_groups {
+      userId
+      userGroups {
         group {
-          groups_id
-          group_name
-          group_year
+          groupsId
+          groupName
         }
       }
     }

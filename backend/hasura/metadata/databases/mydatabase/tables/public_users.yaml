@@ -85,8 +85,11 @@ select_permissions:
       computed_fields:
         - fullName
       filter:
-        user_id:
-          _eq: X-Hasura-User-Id
+        _or:
+          - user_id:
+              _eq: X-Hasura-User-Id
+          - role:
+              _neq: student
     comment: ""
   - role: teacher
     permission:

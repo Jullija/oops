@@ -34,6 +34,7 @@ services:
       HASURA_GRAPHQL_ADMIN_SECRET: admin_secret
       HASURA_GRAPHQL_EXPERIMENTAL_FEATURES: "naming_convention"
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: "unauthenticated_user"
+      HASURA_GRAPHQL_STRINGIFY_NUMERIC_TYPES: true  # this one is needed so ids are sent as a strings to FE
 
 volumes:
   postgres_data:
