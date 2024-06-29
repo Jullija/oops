@@ -1,3 +1,5 @@
+import { UserPointsQuery } from "../graphql/userPoints.graphql.types";
+
 export type Student = {
   id: string;
   name: string;
@@ -28,3 +30,13 @@ export type Points = {
   provider: Provider;
   number: number;
 };
+
+export enum Roles {
+  ADMIN = "admin",
+  COORDINATOR = "coordinator",
+  STUDENT = "student",
+  TEACHER = "teacher",
+  UNAUTHENTICATED_USER = "unauthenticated_user",
+}
+
+export type UserPoints = NonNullable<UserPointsQuery["usersByPk"]>["points"];

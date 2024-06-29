@@ -1211,6 +1211,7 @@ type AwardType {
   awardId: Int!
   awardName: String!
   awardType: AwardTypeType!
+  image_file_id: Int
   label: String!
   maxUsages: Int!
 }
@@ -3434,6 +3435,7 @@ type ChestType {
   chestId: Int!
   chestType: String!
   edition: EditionType!
+  image_file_id: Int
   label: String!
 }
 
@@ -5651,6 +5653,13 @@ type FlywaySchemaHistoryVarianceFields {
   checksum: Float
   executionTime: Float
   installedRank: Float
+}
+
+type GroupType {
+  group_name: String!
+  groups_id: ID!
+  label: String
+  users: [UsersType!]!
 }
 
 """
@@ -9216,6 +9225,11 @@ type Users {
     where: ChestHistoryBoolExp
   ): ChestHistoryAggregate!
   firstName: String!
+
+  """
+  A computed field, executes function "users_fullname"
+  """
+  fullName: String
   indexNumber: Int!
   label: String!
   nick: String!
@@ -9449,6 +9463,7 @@ input UsersBoolExp {
   chestHistoriesByTeacherId: ChestHistoryBoolExp
   chestHistoriesByTeacherIdAggregate: ChestHistoryAggregateBoolExp
   firstName: StringComparisonExp
+  fullName: StringComparisonExp
   indexNumber: IntComparisonExp
   label: StringComparisonExp
   nick: StringComparisonExp
@@ -9514,6 +9529,11 @@ aggregate max on columns
 """
 type UsersMaxFields {
   firstName: String
+
+  """
+  A computed field, executes function "users_fullname"
+  """
+  fullName: String
   indexNumber: Int
   label: String
   nick: String
@@ -9527,6 +9547,11 @@ aggregate min on columns
 """
 type UsersMinFields {
   firstName: String
+
+  """
+  A computed field, executes function "users_fullname"
+  """
+  fullName: String
   indexNumber: Int
   label: String
   nick: String
@@ -9578,6 +9603,7 @@ input UsersOrderBy {
   chestHistoriesAggregate: ChestHistoryAggregateOrderBy
   chestHistoriesByTeacherIdAggregate: ChestHistoryAggregateOrderBy
   firstName: OrderBy
+  fullName: OrderBy
   indexNumber: OrderBy
   label: OrderBy
   nick: OrderBy
@@ -9717,6 +9743,7 @@ type UsersSumFields {
 
 type UsersType {
   firstName: String!
+  groups: [GroupType!]!
   indexNumber: Int!
   label: String!
   nick: String!

@@ -37,6 +37,12 @@ array_relationships:
         table:
           name: user_groups
           schema: public
+computed_fields:
+  - name: fullName
+    definition:
+      function:
+        name: users_fullname
+        schema: public
 insert_permissions:
   - role: coordinator
     permission:
@@ -62,6 +68,8 @@ select_permissions:
         - role
         - second_name
         - index_number
+      computed_fields:
+        - fullName
       filter: {}
       allow_aggregations: true
     comment: ""
@@ -74,9 +82,14 @@ select_permissions:
         - role
         - second_name
         - user_id
+      computed_fields:
+        - fullName
       filter:
-        user_id:
-          _eq: X-Hasura-User-Id
+        _or:
+          - user_id:
+              _eq: X-Hasura-User-Id
+          - role:
+              _neq: student
     comment: ""
   - role: teacher
     permission:
@@ -88,6 +101,8 @@ select_permissions:
         - role
         - second_name
         - user_id
+      computed_fields:
+        - fullName
       filter:
         userGroups:
           group:

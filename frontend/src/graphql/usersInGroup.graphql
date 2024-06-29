@@ -1,0 +1,13 @@
+query UsersInGroup($groupId: bigint!) {
+  users(where: { userGroups: { groupId: { _eq: $groupId } } }) {
+    nick
+    role
+    userId
+    userGroups {
+      group {
+        groupsId
+        groupName
+      }
+    }
+  }
+}

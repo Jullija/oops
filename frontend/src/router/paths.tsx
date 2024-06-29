@@ -1,7 +1,6 @@
 const basePaths = {
   Default: "/",
   Welcome: "/welcome",
-  MockData: "/mock-data",
   StudentProfile: "/student-profile",
   HallOfFame: "/hall-of-fame",
   Groups: "/groups",
@@ -26,27 +25,23 @@ type NavigationItem = {
 
 export const navigationItems: NavigationItem[] = [
   {
-    title: "welcome",
+    title: "Witaj",
     path: pathsWithParameters.Welcome,
   },
   {
-    title: "mock-data",
-    path: pathsWithParameters.MockData,
-  },
-  {
-    title: "student-profile",
+    title: "Profil studenta",
     path: pathsWithParameters.StudentProfile,
   },
   {
-    title: "hall-of-fame",
+    title: "Hala Chwały",
     path: pathsWithParameters.HallOfFame,
   },
   {
-    title: "groups",
+    title: "Grupy",
     path: pathsWithParameters.Groups,
   },
   {
-    title: "group",
+    title: "Grupa",
     path: pathsWithParameters.Group,
   },
 ];

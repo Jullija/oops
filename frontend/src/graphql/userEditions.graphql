@@ -1,0 +1,8 @@
+query userEditions {
+  edition(orderBy: { editionYear: DESC }) {
+    editionId
+    editionYear
+    label
+    name
+  }
+}

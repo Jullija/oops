@@ -880,6 +880,7 @@ export type AwardType = {
   awardId: Scalars["Int"]["output"];
   awardName: Scalars["String"]["output"];
   awardType: AwardTypeType;
+  image_file_id?: Maybe<Scalars["Int"]["output"]>;
   label: Scalars["String"]["output"];
   maxUsages: Scalars["Int"]["output"];
 };
@@ -2528,6 +2529,7 @@ export type ChestType = {
   chestId: Scalars["Int"]["output"];
   chestType: Scalars["String"]["output"];
   edition: EditionType;
+  image_file_id?: Maybe<Scalars["Int"]["output"]>;
   label: Scalars["String"]["output"];
 };
 
@@ -3968,6 +3970,14 @@ export type FlywaySchemaHistoryVarianceFields = {
   checksum?: Maybe<Scalars["Float"]["output"]>;
   executionTime?: Maybe<Scalars["Float"]["output"]>;
   installedRank?: Maybe<Scalars["Float"]["output"]>;
+};
+
+export type GroupType = {
+  __typename?: "GroupType";
+  group_name: Scalars["String"]["output"];
+  groups_id: Scalars["ID"]["output"];
+  label?: Maybe<Scalars["String"]["output"]>;
+  users: Array<UsersType>;
 };
 
 /** columns and relationships of "groups" */
@@ -6479,6 +6489,8 @@ export type Users = {
   /** An aggregate relationship */
   chestHistoriesByTeacherIdAggregate: ChestHistoryAggregate;
   firstName: Scalars["String"]["output"];
+  /** A computed field, executes function "users_fullname" */
+  fullName?: Maybe<Scalars["String"]["output"]>;
   indexNumber: Scalars["Int"]["output"];
   label: Scalars["String"]["output"];
   nick: Scalars["String"]["output"];
@@ -6635,6 +6647,7 @@ export type UsersBoolExp = {
   chestHistoriesByTeacherId?: InputMaybe<ChestHistoryBoolExp>;
   chestHistoriesByTeacherIdAggregate?: InputMaybe<ChestHistoryAggregateBoolExp>;
   firstName?: InputMaybe<StringComparisonExp>;
+  fullName?: InputMaybe<StringComparisonExp>;
   indexNumber?: InputMaybe<IntComparisonExp>;
   label?: InputMaybe<StringComparisonExp>;
   nick?: InputMaybe<StringComparisonExp>;
@@ -6685,6 +6698,8 @@ export type UsersInsertInput = {
 export type UsersMaxFields = {
   __typename?: "UsersMaxFields";
   firstName?: Maybe<Scalars["String"]["output"]>;
+  /** A computed field, executes function "users_fullname" */
+  fullName?: Maybe<Scalars["String"]["output"]>;
   indexNumber?: Maybe<Scalars["Int"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   nick?: Maybe<Scalars["String"]["output"]>;
@@ -6697,6 +6712,8 @@ export type UsersMaxFields = {
 export type UsersMinFields = {
   __typename?: "UsersMinFields";
   firstName?: Maybe<Scalars["String"]["output"]>;
+  /** A computed field, executes function "users_fullname" */
+  fullName?: Maybe<Scalars["String"]["output"]>;
   indexNumber?: Maybe<Scalars["Int"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   nick?: Maybe<Scalars["String"]["output"]>;
@@ -6733,6 +6750,7 @@ export type UsersOrderBy = {
   chestHistoriesAggregate?: InputMaybe<ChestHistoryAggregateOrderBy>;
   chestHistoriesByTeacherIdAggregate?: InputMaybe<ChestHistoryAggregateOrderBy>;
   firstName?: InputMaybe<OrderBy>;
+  fullName?: InputMaybe<OrderBy>;
   indexNumber?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   nick?: InputMaybe<OrderBy>;
@@ -6834,6 +6852,7 @@ export type UsersSumFields = {
 export type UsersType = {
   __typename?: "UsersType";
   firstName: Scalars["String"]["output"];
+  groups: Array<GroupType>;
   indexNumber: Scalars["Int"]["output"];
   label: Scalars["String"]["output"];
   nick: Scalars["String"]["output"];
