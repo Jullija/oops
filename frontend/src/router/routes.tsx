@@ -1,8 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
-import { HallOfFame, Welcome } from "../screens";
 import { Root } from "../components";
 import { paths } from "./paths";
 import { StudentProfile } from "../screens/StudentProfile";
+import HallOfFame from "../screens/HallOfFame";
+import { Welcome } from "../screens/Welcome";
 
 export const routes = createBrowserRouter([
   {
@@ -24,7 +25,7 @@ export const routes = createBrowserRouter([
       },
       {
         path: paths.HallOfFame,
-        element: <HallOfFame studentId={"6"} />,
+        element: <HallOfFame />,
       },
     ],
   },
