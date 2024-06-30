@@ -37,7 +37,7 @@ export default function HallOfFameRow({
         border: isCurrentUser ? "2px solid blue" : "1px solid black",
       }}
     >
-      <div>{index + 1}</div>
+      <div>{`${index + 1}.`}</div>
       <div>
         <div style={styles.logoPlaceholder} />
       </div>

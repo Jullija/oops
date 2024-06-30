@@ -5,7 +5,7 @@ const styles: Styles = {
     position: "sticky",
     top: 0,
     display: "grid",
-    gridTemplateColumns: "1fr 1fr 3fr 2fr 1fr",
+    gridTemplateColumns: "2fr 3fr 2fr 1fr",
     gap: 12,
     width: "100%",
     padding: "12px 0",
@@ -20,7 +20,6 @@ export default function HallOfFameHeader() {
   return (
     <div style={styles.header}>
       <div>Pozycja</div>
-      <div> </div>
       <div>Nick</div>
       <div>Poziom</div>
       <div>Punkty</div>

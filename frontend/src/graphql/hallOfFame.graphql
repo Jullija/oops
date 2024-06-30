@@ -1,4 +1,4 @@
-query hallOfFame($editionId: bigint!) {
+query hallOfFame($editionId: bigint) {
   hallOfFame(
     where: { editionId: { _eq: $editionId } }
     orderBy: [{ sumOfPoints: DESC }, { nick: ASC }]

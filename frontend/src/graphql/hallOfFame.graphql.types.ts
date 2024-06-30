@@ -4,7 +4,7 @@ import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
 const defaultOptions = {} as const;
 export type HallOfFameQueryVariables = Types.Exact<{
-  editionId: Types.Scalars["bigint"]["input"];
+  editionId?: Types.InputMaybe<Types.Scalars["bigint"]["input"]>;
 }>;
 
 export type HallOfFameQuery = {
@@ -22,7 +22,7 @@ export type HallOfFameQuery = {
 };
 
 export const HallOfFameDocument = gql`
-  query hallOfFame($editionId: bigint!) {
+  query hallOfFame($editionId: bigint) {
     hallOfFame(
       where: { editionId: { _eq: $editionId } }
       orderBy: [{ sumOfPoints: DESC }, { nick: ASC }]
@@ -55,14 +55,10 @@ export const HallOfFameDocument = gql`
  * });
  */
 export function useHallOfFameQuery(
-  baseOptions: Apollo.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     HallOfFameQuery,
     HallOfFameQueryVariables
-  > &
-    (
-      | { variables: HallOfFameQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
+  >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<HallOfFameQuery, HallOfFameQueryVariables>(

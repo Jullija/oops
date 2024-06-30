@@ -41,7 +41,7 @@ export default function HallOfFame() {
   const { selectedEdition } = useEditionSelection();
 
   const { loading, error, data } = useHallOfFameQuery({
-    variables: { editionId: selectedEdition?.editionId as string },
+    variables: { editionId: selectedEdition?.editionId },
     skip: !selectedEdition,
   });
 
