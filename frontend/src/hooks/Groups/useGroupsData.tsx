@@ -1,11 +1,11 @@
-import { useGetGroupsQuery } from "../../graphql/getGroups.graphql.types";
+import { useGroupsByEditionQuery } from "../../graphql/groupsByEdition.graphql.types";
 import { Group, SearchStudent } from "../../utils";
 import { useEditionSelection } from "../common/useEditionSelection";
 
 export const useGroupsData = () => {
   const { selectedEdition } = useEditionSelection();
 
-  const { data, loading, error } = useGetGroupsQuery({
+  const { data, loading, error } = useGroupsByEditionQuery({
     variables: {
       editionId: selectedEdition?.editionId ?? "-1",
     },

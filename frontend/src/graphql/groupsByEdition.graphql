@@ -1,9 +1,12 @@
-query getStudents($editionId: bigint!) {
+query groupsByEdition($editionId: bigint!) {
   edition(where: { editionId: { _eq: $editionId } }) {
     groups {
+      groupName
+      groupsId
       userGroups(where: { user: { role: { _eq: "student" } } }) {
         user {
           fullName
+          role
           userId
         }
       }
