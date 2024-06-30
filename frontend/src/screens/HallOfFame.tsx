@@ -1,72 +1,90 @@
-import { useRef } from "react";
-import { getStudents } from "../api";
-import { Student, Styles } from "../utils";
+import { useRef, useEffect, useCallback } from "react";
+import { useUser } from "../hooks/useUser";
+import { useHallOfFameQuery } from "../graphql/hallOfFame.graphql.types";
+import { useEditionSelection } from "../hooks/useEditionSelection";
+import { Roles, Styles } from "../utils";
+import HallOfFameRow from "../components/hallOfFame/hallOfFameRow";
+import HallOfFameHeader from "../components/hallOfFame/hallOfFameHeader";
 
 const styles: Styles = {
   container: {
+    position: "relative",
     display: "flex",
     flexDirection: "column",
     gap: 12,
     margin: 12,
+    minHeight: "100vh",
+    alignItems: "center",
   },
   scrollButton: {
+    position: "fixed",
+    bottom: 12,
+    right: 12,
     width: 100,
+    zIndex: 10,
   },
   itemsContainer: {
     display: "flex",
     flexDirection: "column",
     gap: 12,
-  },
-  item: {
-    display: "flex",
-    border: "1px solid black",
-    gap: 12,
-    padding: 12,
-  },
-  firstCell: {
-    width: 180,
+    marginBottom: 60,
+    width: "90vw",
+    maxWidth: "90vw",
   },
 };
 
-type HallOfFameProps = {
-  studentId: string;
-};
-
-export const HallOfFame = ({ studentId = "6" }: HallOfFameProps) => {
+export default function HallOfFame() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const scrollToStudent = () => {
-    const studentElement = document.getElementById(`student-${studentId}`);
+  const { user } = useUser();
+  const { selectedEdition } = useEditionSelection();
+
+  const { loading, error, data } = useHallOfFameQuery({
+    variables: { editionId: selectedEdition?.editionId },
+    skip: !selectedEdition,
+  });
+
+  const scrollToStudent = useCallback(() => {
+    const studentElement = document.getElementById(`student-${user?.userId}`);
     if (studentElement) {
-      studentElement.scrollIntoView({ behavior: "smooth" });
+      studentElement.scrollIntoView({ behavior: "smooth", block: "center" });
     }
-  };
+  }, [user?.userId]);
 
-  const students = getStudents();
-  students.sort((a: Student, b: Student) => b.level - a.level);
+  useEffect(() => {
+    if (!loading && user?.userId) {
+      scrollToStudent();
+    }
+  }, [loading, scrollToStudent, user?.userId]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  const students = data?.hallOfFame || [];
+
   return (
-    <div style={styles.container}>
-      <button style={styles.scrollButton} onClick={scrollToStudent}>
-        scroll to me
-      </button>
-      <div ref={containerRef} style={styles.itemsContainer}>
-        {/* TODO separate component */}
+    <div style={styles.container} ref={containerRef}>
+      <div style={styles.itemsContainer}>
+        <HallOfFameHeader />
         {students.map((s, index) => (
-          <div
-            key={s.id}
-            id={`student-${s.id}`}
-            style={{
-              ...styles.item,
-              border: s.id === studentId ? "2px solid blue" : "1px solid black",
-            }}
-          >
-            <div style={styles.firstCell}>
-              {index + 1}. {s.name}
-            </div>
-            <div>{s.level}</div>
-          </div>
+          <HallOfFameRow
+            key={s.userId}
+            student={s}
+            index={index}
+            isCurrentUser={s.userId === user?.userId}
+          />
         ))}
       </div>
+      {user.role === Roles.STUDENT && (
+        <button
+          style={styles.scrollButton}
+          ref={buttonRef}
+          onClick={scrollToStudent}
+        >
+          Moja pozycja
+        </button>
+      )}
     </div>
   );
-};
+}
