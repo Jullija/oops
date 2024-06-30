@@ -3,6 +3,7 @@ import { Styles } from "../../../utils";
 import { StudentCard } from "./StudentCard";
 import { TextInput } from "../../../components";
 import { useGetStudentsQuery } from "../../../graphql/getStudents.graphql.types";
+import { useEditionSelection } from "../../../hooks/common/useEditionSelection";
 
 const styles: Styles = {
   screenContainer: {
@@ -18,8 +19,24 @@ const styles: Styles = {
   },
 };
 
+type SearchStudentData = {
+  fullName?: string;
+  userId: string;
+};
+
 export const SearchStudent = () => {
-  const { data: studentsData } = useGetStudentsQuery();
+  const { selectedEdition } = useEditionSelection();
+  const { data: studentsData } = useGetStudentsQuery({
+    variables: { editionId: selectedEdition?.editionId ?? "-1" },
+  });
+
+  const students: SearchStudentData[] =
+    studentsData?.edition[0].groups.flatMap((group) =>
+      group.userGroups.map((userGroup) => ({
+        fullName: userGroup.user.fullName ?? undefined,
+        userId: userGroup.user.userId,
+      })),
+    ) ?? [];
 
   const [searchInputValue, setSearchInputValue] = useState("");
 
@@ -29,12 +46,11 @@ export const SearchStudent = () => {
 
   const getFilteredStudents = () => {
     const filteredStudents =
-      studentsData?.users?.filter((user) => {
-        return (
-          !!user.fullName &&
-          user.fullName.toLowerCase().includes(searchInputValue.toLowerCase())
-        );
-      }) ?? [];
+      students.filter((student) =>
+        student.fullName
+          ?.toLowerCase()
+          .includes(searchInputValue.toLowerCase()),
+      ) ?? [];
     return filteredStudents;
   };
 
@@ -49,7 +65,6 @@ export const SearchStudent = () => {
 
       <div style={styles.studentsContainer}>
         {getFilteredStudents().map((user, index) => {
-          console.log("fullNAme: ", user.fullName);
           return (
             <StudentCard
               key={index}

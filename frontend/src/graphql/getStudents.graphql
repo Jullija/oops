@@ -1,7 +1,12 @@
-# TODO add editionId
-query getStudents {
-  users(where: { role: { _eq: "student" } }) {
-    fullName
-    userId
+query getStudents($editionId: bigint!) {
+  edition(where: { editionId: { _eq: $editionId } }) {
+    groups {
+      userGroups(where: { user: { role: { _eq: "student" } } }) {
+        user {
+          fullName
+          userId
+        }
+      }
+    }
   }
 }

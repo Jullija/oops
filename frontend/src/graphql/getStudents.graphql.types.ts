@@ -3,22 +3,39 @@ import * as Types from "../__generated__/schema.graphql.types";
 import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
 const defaultOptions = {} as const;
-export type GetStudentsQueryVariables = Types.Exact<{ [key: string]: never }>;
+export type GetStudentsQueryVariables = Types.Exact<{
+  editionId: Types.Scalars["bigint"]["input"];
+}>;
 
 export type GetStudentsQuery = {
   __typename?: "query_root";
-  users: Array<{
-    __typename?: "Users";
-    fullName?: string | null;
-    userId: string;
+  edition: Array<{
+    __typename?: "Edition";
+    groups: Array<{
+      __typename?: "Groups";
+      userGroups: Array<{
+        __typename?: "UserGroups";
+        user: {
+          __typename?: "Users";
+          fullName?: string | null;
+          userId: string;
+        };
+      }>;
+    }>;
   }>;
 };
 
 export const GetStudentsDocument = gql`
-  query getStudents {
-    users(where: { role: { _eq: "student" } }) {
-      fullName
-      userId
+  query getStudents($editionId: bigint!) {
+    edition(where: { editionId: { _eq: $editionId } }) {
+      groups {
+        userGroups(where: { user: { role: { _eq: "student" } } }) {
+          user {
+            fullName
+            userId
+          }
+        }
+      }
     }
   }
 `;
@@ -35,14 +52,19 @@ export const GetStudentsDocument = gql`
  * @example
  * const { data, loading, error } = useGetStudentsQuery({
  *   variables: {
+ *      editionId: // value for 'editionId'
  *   },
  * });
  */
 export function useGetStudentsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetStudentsQuery,
     GetStudentsQueryVariables
-  >,
+  > &
+    (
+      | { variables: GetStudentsQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetStudentsQuery, GetStudentsQueryVariables>(
