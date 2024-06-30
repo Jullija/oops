@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAllUsersQuery } from "../graphql/allUsers.graphql.types";
-import { pathsWithParameters } from "../router/paths";
 import { Roles, Styles } from "../utils";
 import { User } from "../contexts/userContext";
-import { useUser } from "../hooks/useUser";
+import { useUser } from "../hooks/common/useUser";
+import { pathsGenerator } from "../router";
 
 // TODO: again - chat gptd styles, also do not bother about this component, it is temporary till login isn't implemented
 const styles: Styles = {
@@ -58,7 +58,7 @@ export const Welcome = () => {
 
   const handleUserSelect = (user: User) => {
     setUser(user);
-    navigate(pathsWithParameters.StudentProfile);
+    navigate(pathsGenerator.student.StudentProfile);
   };
 
   if (loading) return <div>Ładowanie...</div>;

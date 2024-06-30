@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { navigationItems } from "../router";
 import { Styles } from "../utils";
-import { useEditionSelection } from "../hooks/useEditionSelection";
+import { useEditionSelection } from "../hooks/common/useEditionSelection";
 
 const styles: Styles = {
   container: {

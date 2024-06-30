@@ -27,9 +27,6 @@ export const SearchStudent = () => {
     setSearchInputValue(e.target.value);
   };
 
-  // TODO connect with student profile
-  const handleStudentCardClick = () => {};
-
   return (
     <div style={styles.screenContainer}>
       <TextInput
@@ -42,17 +39,17 @@ export const SearchStudent = () => {
       <div style={styles.studentsContainer}>
         {studentsData?.users
           ?.filter((user) => {
-            const fullName =
-              `${user.firstName} ${user.secondName}`.toLowerCase();
-            return fullName.includes(searchInputValue.toLowerCase());
+            return (
+              !!user.fullName &&
+              user.fullName.includes(searchInputValue.toLowerCase())
+            );
           })
           .map((user, index) => {
             return (
               <StudentCard
                 key={index}
-                firstName={user.firstName}
-                secondName={user.secondName}
-                onClick={handleStudentCardClick}
+                fullName={user.fullName ?? undefined}
+                userId={user.userId}
               />
             );
           })}

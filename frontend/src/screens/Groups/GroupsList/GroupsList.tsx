@@ -32,7 +32,7 @@ export const GroupsList = () => {
         <GroupsListItem
           groupName={group.groupName}
           key={index}
-          onClick={() => navigate(pathsGenerator.Group(group.groupsId))}
+          onClick={() => navigate(pathsGenerator.teacher.Group(group.groupsId))}
         />
       ))}
     </div>

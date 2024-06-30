@@ -1,7 +1,8 @@
 import { UserCard } from "../../components/StudentProfile/userCard";
 import { Styles } from "../../utils";
 import StudentPoints from "../../components/StudentProfile/StudentPoints";
-import { useStudentData } from "../../hooks/StudentProfile/useStudentData";
+import { useParams } from "react-router-dom";
+import { useTeacherStudentData } from "../../hooks/TeacherStudentProfile/useTeacherStudentData";
 
 const styles: Styles = {
   container: {
@@ -12,8 +13,14 @@ const styles: Styles = {
   },
 };
 
-export function StudentProfile() {
-  const { userData, loading, error } = useStudentData();
+// TODO add teachers functionalities
+
+export function TeacherStudentProfile() {
+  const params = useParams();
+  const studentId = params.id;
+  const { userData, loading, error } = useTeacherStudentData({
+    studentId: studentId ?? "-1",
+  });
 
   // TODO: add components for loading state and error message
   if (loading) return <p>Loading...</p>;

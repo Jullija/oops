@@ -7,14 +7,18 @@ export type GetStudentsQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetStudentsQuery = {
   __typename?: "query_root";
-  users: Array<{ __typename?: "Users"; firstName: string; secondName: string }>;
+  users: Array<{
+    __typename?: "Users";
+    fullName?: string | null;
+    userId: string;
+  }>;
 };
 
 export const GetStudentsDocument = gql`
   query getStudents {
     users(where: { role: { _eq: "student" } }) {
-      firstName
-      secondName
+      fullName
+      userId
     }
   }
 `;

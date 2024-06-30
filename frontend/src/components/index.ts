@@ -1,2 +1,2 @@
 export * from "./Root";
-export * from "./form";
+export * from "./inputs";

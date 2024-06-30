@@ -14,7 +14,6 @@ export type GetGroupsQuery = {
     editionId: string;
     groupName: string;
     groupsId: string;
-    label?: string | null;
   }>;
 };
 
@@ -24,7 +23,6 @@ export const GetGroupsDocument = gql`
       editionId
       groupName
       groupsId
-      label
     }
   }
 `;

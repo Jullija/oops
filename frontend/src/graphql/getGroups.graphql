@@ -3,6 +3,5 @@ query getGroups($editionId: bigint!) {
     editionId
     groupName
     groupsId
-    label
   }
 }

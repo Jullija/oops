@@ -24,7 +24,7 @@ export const Group = () => {
   return (
     <div style={styles.screenContainer}>
       <div style={styles.header}>
-        <button onClick={() => navigate(pathsGenerator.Groups)}>
+        <button onClick={() => navigate(pathsGenerator.teacher.Groups)}>
           go back to groups list
         </button>
         <div>params - group id: {id}</div>
