@@ -1,5 +1,7 @@
+import { User } from "../../contexts/userContext";
 import { useUserPointsQuery } from "../../graphql/userPoints.graphql.types";
 import { UserPoints } from "../../utils";
+import { useUser } from "../common/useUser";
 import { useUserEditions } from "../common/useUserEditions";
 
 type UserData = {
@@ -9,7 +11,8 @@ type UserData = {
 };
 
 type UseUserDataResult = {
-  userData?: UserData;
+  user: User;
+  studentData?: UserData;
   loading: boolean;
   error?: Error;
 };
@@ -21,6 +24,8 @@ export function useTeacherStudentData({
 }): UseUserDataResult {
   const { selectedEdition: edition } = useUserEditions();
 
+  const { user } = useUser();
+
   const editionId = edition ? edition.editionId : "0";
   const { data, loading, error } = useUserPointsQuery({
     skip: !edition,
@@ -29,6 +34,7 @@ export function useTeacherStudentData({
 
   if (loading || error || !data?.usersByPk) {
     return {
+      user,
       loading,
       error: error,
     };
@@ -43,7 +49,8 @@ export function useTeacherStudentData({
   };
 
   return {
-    userData,
+    user,
+    studentData: userData,
     loading,
     error,
   };
