@@ -27,6 +27,17 @@ export const SearchStudent = () => {
     setSearchInputValue(e.target.value);
   };
 
+  const getFilteredStudents = () => {
+    const filteredStudents =
+      studentsData?.users?.filter((user) => {
+        return (
+          !!user.fullName &&
+          user.fullName.toLowerCase().includes(searchInputValue.toLowerCase())
+        );
+      }) ?? [];
+    return filteredStudents;
+  };
+
   return (
     <div style={styles.screenContainer}>
       <TextInput
@@ -37,22 +48,16 @@ export const SearchStudent = () => {
       />
 
       <div style={styles.studentsContainer}>
-        {studentsData?.users
-          ?.filter((user) => {
-            return (
-              !!user.fullName &&
-              user.fullName.includes(searchInputValue.toLowerCase())
-            );
-          })
-          .map((user, index) => {
-            return (
-              <StudentCard
-                key={index}
-                fullName={user.fullName ?? undefined}
-                userId={user.userId}
-              />
-            );
-          })}
+        {getFilteredStudents().map((user, index) => {
+          console.log("fullNAme: ", user.fullName);
+          return (
+            <StudentCard
+              key={index}
+              fullName={user.fullName ?? undefined}
+              userId={user.userId}
+            />
+          );
+        })}
       </div>
     </div>
   );
