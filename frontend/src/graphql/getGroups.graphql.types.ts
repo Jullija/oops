@@ -9,20 +9,39 @@ export type GetGroupsQueryVariables = Types.Exact<{
 
 export type GetGroupsQuery = {
   __typename?: "query_root";
-  groups: Array<{
-    __typename?: "Groups";
-    editionId: string;
-    groupName: string;
-    groupsId: string;
+  edition: Array<{
+    __typename?: "Edition";
+    groups: Array<{
+      __typename?: "Groups";
+      groupName: string;
+      groupsId: string;
+      userGroups: Array<{
+        __typename?: "UserGroups";
+        user: {
+          __typename?: "Users";
+          fullName?: string | null;
+          role: string;
+          userId: string;
+        };
+      }>;
+    }>;
   }>;
 };
 
 export const GetGroupsDocument = gql`
   query getGroups($editionId: bigint!) {
-    groups(where: { editionId: { _eq: $editionId } }) {
-      editionId
-      groupName
-      groupsId
+    edition(where: { editionId: { _eq: $editionId } }) {
+      groups {
+        groupName
+        groupsId
+        userGroups(where: { user: { role: { _eq: "student" } } }) {
+          user {
+            fullName
+            role
+            userId
+          }
+        }
+      }
     }
   }
 `;

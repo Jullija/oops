@@ -5,6 +5,7 @@ import { useGetGroupsQuery } from "../../../graphql/getGroups.graphql.types";
 import { Styles } from "../../../utils";
 import { pathsGenerator } from "../../../router";
 import { useNavigate } from "react-router-dom";
+import { useEditionSelection } from "../../../hooks/common/useEditionSelection";
 
 const styles: Styles = {
   groupsContainer: {
@@ -19,16 +20,18 @@ const styles: Styles = {
 export const GroupsList = () => {
   const navigate = useNavigate();
 
+  const { selectedEdition } = useEditionSelection();
   const { data: groupsData } = useGetGroupsQuery({
     variables: {
-      // TODO editionId should be changed
-      editionId: "1",
+      editionId: selectedEdition?.editionId ?? "-1",
     },
   });
 
+  console.log(groupsData);
+
   return (
     <div style={styles.groupsContainer}>
-      {groupsData?.groups.map((group, index) => (
+      {groupsData?.edition[0].groups.map((group, index) => (
         <GroupsListItem
           groupName={group.groupName}
           key={index}
