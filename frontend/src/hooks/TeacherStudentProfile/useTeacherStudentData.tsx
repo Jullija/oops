@@ -23,7 +23,6 @@ export function useTeacherStudentData({
   studentId: string;
 }): UseUserDataResult {
   const { selectedEdition: edition } = useUserEditions();
-
   const { user } = useUser();
 
   const editionId = edition ? edition.editionId : "0";

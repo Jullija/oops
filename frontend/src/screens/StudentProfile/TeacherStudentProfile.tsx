@@ -40,7 +40,7 @@ export function TeacherStudentProfile() {
   return (
     <div style={styles.container}>
       <UserCard
-        fullName={data?.fullName}
+        fullName={data.fullName}
         index={data.index}
         points={data.points}
       />

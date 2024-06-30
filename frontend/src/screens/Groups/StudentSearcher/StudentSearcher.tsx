@@ -52,7 +52,7 @@ export const StudentSearcher = ({ students }: SearchStudentProps) => {
           return (
             <StudentCard
               key={index}
-              fullName={user.fullName ?? undefined}
+              fullName={user.fullName}
               userId={user.userId}
             />
           );
