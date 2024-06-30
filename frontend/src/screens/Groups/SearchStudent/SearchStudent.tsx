@@ -2,8 +2,7 @@ import { ChangeEvent, useState } from "react";
 import { Styles } from "../../../utils";
 import { StudentCard } from "./StudentCard";
 import { TextInput } from "../../../components";
-import { useGetStudentsQuery } from "../../../graphql/getStudents.graphql.types";
-import { useEditionSelection } from "../../../hooks/common/useEditionSelection";
+import { SearchStudentData } from "../../../hooks/Groups/useGroupsData";
 
 const styles: Styles = {
   screenContainer: {
@@ -19,25 +18,11 @@ const styles: Styles = {
   },
 };
 
-type SearchStudentData = {
-  fullName?: string;
-  userId: string;
+type SearchStudentProps = {
+  students: SearchStudentData[];
 };
 
-export const SearchStudent = () => {
-  const { selectedEdition } = useEditionSelection();
-  const { data: studentsData } = useGetStudentsQuery({
-    variables: { editionId: selectedEdition?.editionId ?? "-1" },
-  });
-
-  const students: SearchStudentData[] =
-    studentsData?.edition[0].groups.flatMap((group) =>
-      group.userGroups.map((userGroup) => ({
-        fullName: userGroup.user.fullName ?? undefined,
-        userId: userGroup.user.userId,
-      })),
-    ) ?? [];
-
+export const SearchStudent = ({ students }: SearchStudentProps) => {
   const [searchInputValue, setSearchInputValue] = useState("");
 
   const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {

@@ -1,11 +1,8 @@
-// import { useNavigate } from "react-router-dom";
 import { GroupsListItem } from "./GroupsListItem";
-// import { pathsGenerator } from "../../../router";
-import { useGetGroupsQuery } from "../../../graphql/getGroups.graphql.types";
 import { Styles } from "../../../utils";
 import { pathsGenerator } from "../../../router";
 import { useNavigate } from "react-router-dom";
-import { useEditionSelection } from "../../../hooks/common/useEditionSelection";
+import { GroupData } from "../../../hooks/Groups/useGroupsData";
 
 const styles: Styles = {
   groupsContainer: {
@@ -17,25 +14,20 @@ const styles: Styles = {
   },
 };
 
-export const GroupsList = () => {
+type GroupsProps = {
+  groups: GroupData[];
+};
+
+export const GroupsList = ({ groups }: GroupsProps) => {
   const navigate = useNavigate();
-
-  const { selectedEdition } = useEditionSelection();
-  const { data: groupsData } = useGetGroupsQuery({
-    variables: {
-      editionId: selectedEdition?.editionId ?? "-1",
-    },
-  });
-
-  console.log(groupsData);
 
   return (
     <div style={styles.groupsContainer}>
-      {groupsData?.edition[0].groups.map((group, index) => (
+      {groups.map((group) => (
         <GroupsListItem
-          groupName={group.groupName}
-          key={index}
-          onClick={() => navigate(pathsGenerator.teacher.Group(group.groupsId))}
+          key={group.id}
+          groupName={group.name}
+          onClick={() => navigate(pathsGenerator.teacher.Group(group.id))}
         />
       ))}
     </div>
