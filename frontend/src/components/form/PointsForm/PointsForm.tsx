@@ -2,13 +2,13 @@ import {
   getCategories,
   getProviders,
   getSubcategoriesByCategory,
-} from "../../api";
+} from "../../../api";
 import { useFormik } from "formik";
-import { Subcategory } from "../../utils";
+import { Subcategory } from "../../../utils";
 import { ZodError, z } from "zod";
 import { useState } from "react";
-import { FormPoints } from "../../screens/StudentProfile/types";
-import { NumberInput, SelectInput } from "..";
+import { FormPoints } from "./types";
+import { NumberInput, SelectInput } from "../..";
 
 type PointFormProps = {
   studentId: string;

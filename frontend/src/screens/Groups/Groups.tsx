@@ -1,6 +1,6 @@
 import { useGroupsData } from "../../hooks/Groups/useGroupsData";
 import { GroupsList } from "./GroupsList/GroupsList";
-import { SearchStudent } from "./SearchStudent";
+import { StudentSearcher } from "./StudentSearcher";
 
 export const Groups = () => {
   const { loading, error, students, groups } = useGroupsData();
@@ -11,7 +11,7 @@ export const Groups = () => {
   return (
     <div>
       {groups && <GroupsList groups={groups} />}
-      {students && <SearchStudent students={students} />}
+      {students && <StudentSearcher students={students} />}
     </div>
   );
 };

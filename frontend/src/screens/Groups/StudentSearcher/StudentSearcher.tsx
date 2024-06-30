@@ -1,8 +1,7 @@
 import { ChangeEvent, useState } from "react";
-import { Styles } from "../../../utils";
+import { Styles, SearchStudent } from "../../../utils";
 import { StudentCard } from "./StudentCard";
 import { TextInput } from "../../../components";
-import { SearchStudentData } from "../../../hooks/Groups/useGroupsData";
 
 const styles: Styles = {
   screenContainer: {
@@ -19,10 +18,10 @@ const styles: Styles = {
 };
 
 type SearchStudentProps = {
-  students: SearchStudentData[];
+  students: SearchStudent[];
 };
 
-export const SearchStudent = ({ students }: SearchStudentProps) => {
+export const StudentSearcher = ({ students }: SearchStudentProps) => {
   const [searchInputValue, setSearchInputValue] = useState("");
 
   const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {

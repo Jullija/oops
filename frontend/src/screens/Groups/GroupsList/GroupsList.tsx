@@ -1,8 +1,7 @@
 import { GroupsListItem } from "./GroupsListItem";
-import { Styles } from "../../../utils";
+import { Styles, Group } from "../../../utils";
 import { pathsGenerator } from "../../../router";
 import { useNavigate } from "react-router-dom";
-import { GroupData } from "../../../hooks/Groups/useGroupsData";
 
 const styles: Styles = {
   groupsContainer: {
@@ -15,7 +14,7 @@ const styles: Styles = {
 };
 
 type GroupsProps = {
-  groups: GroupData[];
+  groups: Group[];
 };
 
 export const GroupsList = ({ groups }: GroupsProps) => {
