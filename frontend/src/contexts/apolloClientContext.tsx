@@ -1,4 +1,4 @@
-import { ReactNode, useContext } from "react";
+// apolloClient.ts
 import {
   ApolloClient,
   InMemoryCache,
@@ -6,6 +6,7 @@ import {
   createHttpLink,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { User, UserContext } from "../contexts/userContext";
 import { Roles } from "../utils";
 
@@ -17,16 +18,18 @@ const httpLink = createHttpLink({
 
 const createAuthLink = (user?: User) =>
   setContext((_, { headers }) => {
+    const roleHeader =
+      user && user.userId !== "unauthenticated"
+        ? {
+            "x-hasura-user-id": user.userId,
+            "x-hasura-role": user.role.toLowerCase(),
+          }
+        : { "x-hasura-role": Roles.UNAUTHENTICATED_USER };
     return {
       headers: {
         ...headers,
         "x-hasura-admin-secret": "admin_secret",
-        ...(user?.userId !== "unauthenticated" && user
-          ? {
-              "x-hasura-user-id": user?.userId,
-              "x-hasura-role": user?.role.toLowerCase(),
-            }
-          : { "x-hasura-role": Roles.UNAUTHENTICATED_USER }),
+        ...roleHeader,
       },
     };
   });
@@ -40,9 +43,14 @@ const initializeApolloClient = (user?: User) => {
 };
 
 export const ApolloClientProvider = ({ children }: { children: ReactNode }) => {
-  const userContext = useContext(UserContext);
+  const context = useContext(UserContext);
+  const [client, setClient] = useState(() =>
+    initializeApolloClient(context?.user),
+  );
 
-  const client = initializeApolloClient(userContext?.user);
+  useEffect(() => {
+    setClient(initializeApolloClient(context?.user));
+  }, [context]);
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };

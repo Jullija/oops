@@ -6,7 +6,6 @@ import { Roles, Styles } from "../utils";
 import { User } from "../contexts/userContext";
 import { useUser } from "../hooks/useUser";
 
-// TODO: again - chat gptd styles, also do not bother about this component, it is temporary till login isn't implemented
 const styles: Styles = {
   container: {
     display: "flex",
@@ -38,8 +37,7 @@ export const Welcome = () => {
   const { user: selectedUser, setUser } = useUser();
   const { loading, error, data } = useAllUsersQuery({
     context: {
-      header: { "X-hasura-role": Roles.UNAUTHENTICATED_USER },
-      noAuth: true,
+      headers: { "x-hasura-role": Roles.UNAUTHENTICATED_USER },
     },
   });
   const [searchTerm, setSearchTerm] = useState("");
@@ -62,7 +60,7 @@ export const Welcome = () => {
   };
 
   if (loading) return <div>Ładowanie...</div>;
-  if (error) return <div>Błąd podczas ładowania uzytkowników.</div>;
+  if (error) return <div>Błąd podczas ładowania użytkowników.</div>;
 
   return (
     <div style={styles.container}>
@@ -101,7 +99,7 @@ export const Welcome = () => {
       <div style={styles.selectedUser}>
         {selectedUser && (
           <div>
-            <h2>Wybrany uzytkownik:</h2>
+            <h2>Wybrany użytkownik:</h2>
             <p>Nick: {selectedUser.nick}</p>
             <p>Rola: {selectedUser.role}</p>
             <p>ID: {selectedUser.userId}</p>
