@@ -1,7 +1,8 @@
-import { ChangeEvent, useState } from "react";
-import { Styles, SearchStudent } from "../../../utils";
+import { ChangeEvent, useMemo, useState } from "react";
+import { Styles, ShortStudent } from "../../../utils";
 import { StudentCard } from "./StudentCard";
 import { TextInput } from "../../../components";
+import { isPartOfAString } from "../../../utils/strings";
 
 const styles: Styles = {
   screenContainer: {
@@ -18,7 +19,7 @@ const styles: Styles = {
 };
 
 type SearchStudentProps = {
-  students: SearchStudent[];
+  students: ShortStudent[];
 };
 
 export const StudentSearcher = ({ students }: SearchStudentProps) => {
@@ -28,15 +29,15 @@ export const StudentSearcher = ({ students }: SearchStudentProps) => {
     setSearchInputValue(e.target.value);
   };
 
-  const getFilteredStudents = () => {
-    const filteredStudents =
-      students.filter((student) =>
-        student.fullName
-          ?.toLowerCase()
-          .includes(searchInputValue.toLowerCase()),
-      ) ?? [];
-    return filteredStudents;
-  };
+  const filteredStudents = useMemo(() => {
+    return (
+      students.filter(
+        (student) =>
+          student.fullName &&
+          isPartOfAString(searchInputValue, student.fullName),
+      ) ?? []
+    );
+  }, [students, searchInputValue]);
 
   return (
     <div style={styles.screenContainer}>
@@ -48,12 +49,11 @@ export const StudentSearcher = ({ students }: SearchStudentProps) => {
       />
 
       <div style={styles.studentsContainer}>
-        {getFilteredStudents().map((user, index) => {
+        {filteredStudents.map((user, index) => {
           return (
             <StudentCard
               key={index}
-              fullName={user.fullName}
-              userId={user.userId}
+              student={{ fullName: user.fullName, id: user.id }}
             />
           );
         })}

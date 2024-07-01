@@ -4,7 +4,7 @@ import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
 const defaultOptions = {} as const;
 export type GroupsByEditionQueryVariables = Types.Exact<{
-  editionId: Types.Scalars["bigint"]["input"];
+  editionId?: Types.InputMaybe<Types.Scalars["bigint"]["input"]>;
 }>;
 
 export type GroupsByEditionQuery = {
@@ -29,7 +29,7 @@ export type GroupsByEditionQuery = {
 };
 
 export const GroupsByEditionDocument = gql`
-  query groupsByEdition($editionId: bigint!) {
+  query groupsByEdition($editionId: bigint) {
     edition(where: { editionId: { _eq: $editionId } }) {
       groups {
         groupName
@@ -63,14 +63,10 @@ export const GroupsByEditionDocument = gql`
  * });
  */
 export function useGroupsByEditionQuery(
-  baseOptions: Apollo.QueryHookOptions<
+  baseOptions?: Apollo.QueryHookOptions<
     GroupsByEditionQuery,
     GroupsByEditionQueryVariables
-  > &
-    (
-      | { variables: GroupsByEditionQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
+  >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GroupsByEditionQuery, GroupsByEditionQueryVariables>(

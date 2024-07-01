@@ -27,7 +27,7 @@ export function useTeacherStudentData({
 
   const editionId = edition ? edition.editionId : "0";
   const { data, loading, error } = useUserPointsQuery({
-    skip: !edition,
+    skip: !edition || !studentId,
     variables: { id: studentId, editionId },
   });
 

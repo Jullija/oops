@@ -36,9 +36,9 @@ export type Group = {
   id: string;
 };
 
-export type SearchStudent = {
+export type ShortStudent = {
   fullName?: string;
-  userId: string;
+  id: string;
 };
 
 export enum Roles {

@@ -1,10 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { Styles } from "../../../utils";
+import { ShortStudent, Styles } from "../../../utils";
 import { pathsGenerator } from "../../../router";
 
 type StudentCardProps = {
-  fullName?: string;
-  userId: string;
+  student: ShortStudent;
 };
 
 const styles: Styles = {
@@ -14,15 +13,17 @@ const styles: Styles = {
   },
 };
 
-export const StudentCard = ({ fullName, userId }: StudentCardProps) => {
+export const StudentCard = ({ student }: StudentCardProps) => {
   const navigate = useNavigate();
 
   return (
     <div
       style={styles.container}
-      onClick={() => navigate(pathsGenerator.teacher.StudentProfile(userId))}
+      onClick={() =>
+        navigate(pathsGenerator.teacher.StudentProfile(student.id))
+      }
     >
-      {fullName}
+      {student.fullName}
     </div>
   );
 };

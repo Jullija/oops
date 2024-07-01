@@ -1,5 +1,5 @@
 import { useGroupsByEditionQuery } from "../../graphql/groupsByEdition.graphql.types";
-import { Group, SearchStudent } from "../../utils";
+import { Group, ShortStudent } from "../../utils";
 import { useEditionSelection } from "../common/useEditionSelection";
 
 export const useGroupsData = () => {
@@ -7,8 +7,9 @@ export const useGroupsData = () => {
 
   const { data, loading, error } = useGroupsByEditionQuery({
     variables: {
-      editionId: selectedEdition?.editionId ?? "-1",
+      editionId: selectedEdition?.editionId as string,
     },
+    skip: !selectedEdition,
   });
 
   const groups: Group[] | undefined = data?.edition[0].groups.map((group) => {
@@ -18,11 +19,11 @@ export const useGroupsData = () => {
     };
   });
 
-  const students: SearchStudent[] | undefined = data?.edition[0].groups.flatMap(
+  const students: ShortStudent[] | undefined = data?.edition[0].groups.flatMap(
     (group) =>
       group.userGroups.map((userGroup) => ({
         fullName: userGroup.user.fullName ?? undefined,
-        userId: userGroup.user.userId,
+        id: userGroup.user.userId,
       })),
   );
 

@@ -1,4 +1,4 @@
-query groupsByEdition($editionId: bigint!) {
+query groupsByEdition($editionId: bigint) {
   edition(where: { editionId: { _eq: $editionId } }) {
     groups {
       groupName
