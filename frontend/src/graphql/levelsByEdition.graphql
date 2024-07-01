@@ -1,0 +1,14 @@
+query LevelsByEdition($editionId: bigint!) {
+  editionByPk(editionId: $editionId) {
+    levels {
+      grade
+      highest
+      imageFileId
+      label
+      levelId
+      maximumPoints
+      minimumPoints
+      name
+    }
+  }
+}
