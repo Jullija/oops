@@ -1,4 +1,6 @@
+import { useUserPointsImage } from "../../hooks/useUserPointsImage";
 import { Styles, UserPoints } from "../../utils";
+import ImageCache from "../imageCache";
 
 type UserCardProps = {
   fullName?: string;
@@ -6,7 +8,6 @@ type UserCardProps = {
   points: UserPoints;
 };
 
-// TODO: those styles will be changed, i've just chat-gptd them
 const styles: Styles = {
   userCard: {
     display: "flex",
@@ -19,12 +20,22 @@ const styles: Styles = {
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     width: "250px",
   },
-  userImage: {
-    width: "50px",
-    height: "50px",
-    borderRadius: "50%",
-    backgroundColor: "#ccc", // Placeholder for image background
+  userImageContainer: {
+    width: "200px",
+    height: "200px",
+    backgroundColor: "#fff",
     marginBottom: "10px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
+    borderRadius: "8px",
+  },
+  userImage: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    borderRadius: "8px",
   },
   progressBar: {
     width: "100%",
@@ -41,15 +52,26 @@ const styles: Styles = {
 
 export function UserCard({ fullName, index, points }: UserCardProps) {
   const totalPoints = points.reduce((acc, point) => acc + +point.value, 0);
+  const { imageId, loading, error } = useUserPointsImage(totalPoints);
 
   return (
     <div style={styles.userCard}>
-      <div style={styles.userImage}></div>
+      <div style={styles.userImageContainer}>
+        {loading && <div>Loading image...</div>}
+        {error && <div>Error loading image</div>}
+        {imageId && !loading && !error && (
+          <ImageCache
+            imageId={imageId}
+            style={styles.userImageContainer}
+            imgStyle={styles.userImage}
+          />
+        )}
+      </div>
       <div>{fullName}</div>
       <div>Indeks Studenta: {index}</div>
       <div>Punkty całkowite: {totalPoints}</div>
       <div style={styles.progressBar}>
-        <div style={{ ...styles.progress, width: `${totalPoints / 5}%` }}></div>
+        <div style={{ ...styles.progress, width: `${totalPoints}%` }}></div>
       </div>
     </div>
   );
