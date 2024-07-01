@@ -1,4 +1,4 @@
-import { Student } from "../utils";
+import { Student } from "../utils/types";
 
 export const getStudents = (): Student[] => {
   return students;

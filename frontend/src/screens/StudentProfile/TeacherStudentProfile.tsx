@@ -1,5 +1,5 @@
 import { UserCard } from "../../components/StudentProfile/userCard";
-import { Styles } from "../../utils";
+import { Styles } from "../../utils/Styles";
 import StudentPoints from "../../components/StudentProfile/StudentPoints";
 import { useParams } from "react-router-dom";
 import { useTeacherStudentData } from "../../hooks/TeacherStudentProfile/useTeacherStudentData";

@@ -1,6 +1,7 @@
 import { GroupsListItem } from "./GroupsListItem";
-import { Styles, Group } from "../../../utils";
-import { pathsGenerator } from "../../../router";
+import { Group } from "../../../utils/types";
+import { Styles } from "../../../utils/Styles";
+import { pathsGenerator } from "../../../router/paths";
 import { useNavigate } from "react-router-dom";
 
 const styles: Styles = {

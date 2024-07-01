@@ -1,11 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import HallOfFame from "../screens/HallOfFame";
-import { Root } from "../components";
+import { Root } from "../components/Root";
 import { pathsWithParameters } from "./paths";
-import { StudentProfile } from "../screens/StudentProfile";
-import { TeacherStudentProfile } from "../screens/StudentProfile";
-import { Groups } from "../screens/Groups";
-import { Group } from "../screens/Group";
+import { StudentProfile } from "../screens/StudentProfile/StudentProfile";
+import { TeacherStudentProfile } from "../screens/StudentProfile/TeacherStudentProfile";
+import { Groups } from "../screens/Groups/Groups";
+import { Group } from "../screens/Group/Group";
 import { Welcome } from "../screens/Welcome";
 
 export const routes = createBrowserRouter([

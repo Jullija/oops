@@ -1,4 +1,4 @@
-import { Provider } from "../utils";
+import { Provider } from "../utils/types";
 
 export const getProviders = (): Provider[] => {
   return providers;

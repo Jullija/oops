@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { Navbar } from "./Navbar";
-import { Styles } from "../utils";
+import { Styles } from "../utils/Styles";
 
 const styles: Styles = {
   screenContainer: {

@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAllUsersQuery } from "../graphql/allUsers.graphql.types";
-import { Roles, Styles } from "../utils";
+import { Styles } from "../utils/Styles";
+import { Roles } from "../utils/types";
 import { User } from "../contexts/userContext";
 import { useUser } from "../hooks/common/useUser";
-import { pathsGenerator } from "../router";
+import { pathsGenerator } from "../router/paths";
 
 // TODO: again - chat gptd styles, also do not bother about this component, it is temporary till login isn't implemented
 const styles: Styles = {
