@@ -31,6 +31,16 @@ export type Points = {
   number: number;
 };
 
+export type Group = {
+  name: string;
+  id: string;
+};
+
+export type ShortStudent = {
+  fullName?: string;
+  id: string;
+};
+
 export enum Roles {
   ADMIN = "admin",
   COORDINATOR = "coordinator",

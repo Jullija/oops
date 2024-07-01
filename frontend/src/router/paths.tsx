@@ -1,8 +1,38 @@
-export const paths = {
+const commonPaths = {
   Default: "/",
   Welcome: "/welcome",
-  StudentProfile: "/student-profile",
   HallOfFame: "/hall-of-fame",
+};
+
+const studentPaths = {
+  StudentProfile: "/student-profile",
+};
+
+const teacherPaths = {
+  StudentProfile: "/teacher/student-profile",
+  Groups: "/groups",
+  Group: "/group",
+};
+
+// do not use outside ./router
+export const pathsWithParameters = {
+  common: { ...commonPaths },
+  student: { ...studentPaths },
+  teacher: {
+    ...teacherPaths,
+    StudentProfile: `${teacherPaths.StudentProfile}/:id`,
+    Group: `${teacherPaths.Group}/:id`,
+  },
+};
+
+export const pathsGenerator = {
+  common: { ...commonPaths },
+  student: { ...studentPaths },
+  teacher: {
+    ...teacherPaths,
+    StudentProfile: (id: string) => `${teacherPaths.StudentProfile}/${id}`,
+    Group: (id: string) => `${teacherPaths.Group}/${id}`,
+  },
 };
 
 type NavigationItem = {
@@ -10,17 +40,26 @@ type NavigationItem = {
   path: string;
 };
 
+// TODO return navbar items based on user role
 export const navigationItems: NavigationItem[] = [
   {
     title: "Witaj",
-    path: paths.Welcome,
+    path: pathsWithParameters.common.Welcome,
   },
   {
     title: "Profil studenta",
-    path: paths.StudentProfile,
+    path: pathsWithParameters.student.StudentProfile,
   },
   {
     title: "Hala Chwały",
-    path: paths.HallOfFame,
+    path: pathsWithParameters.common.HallOfFame,
+  },
+  {
+    title: "Grupy",
+    path: pathsWithParameters.teacher.Groups,
+  },
+  {
+    title: "Grupa",
+    path: pathsWithParameters.teacher.Group,
   },
 ];

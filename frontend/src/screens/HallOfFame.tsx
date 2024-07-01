@@ -1,7 +1,7 @@
 import { useRef, useEffect, useCallback } from "react";
-import { useUser } from "../hooks/useUser";
+import { useUser } from "../hooks/common/useUser";
 import { useHallOfFameQuery } from "../graphql/hallOfFame.graphql.types";
-import { useEditionSelection } from "../hooks/useEditionSelection";
+import { useEditionSelection } from "../hooks/common/useEditionSelection";
 import { Roles, Styles } from "../utils";
 import HallOfFameRow from "../components/hallOfFame/hallOfFameRow";
 import HallOfFameHeader from "../components/hallOfFame/hallOfFameHeader";

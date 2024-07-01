@@ -1,7 +1,7 @@
-import { UserCard } from "../../components/userProfile/userCard";
+import { UserCard } from "../../components/StudentProfile/userCard";
 import { Styles } from "../../utils";
-import StudentPoints from "../../components/userProfile/StudentPoints";
-import { useStudentData } from "../../hooks/useStudentData";
+import StudentPoints from "../../components/StudentProfile/StudentPoints";
+import { useStudentData } from "../../hooks/StudentProfile/useStudentData";
 
 const styles: Styles = {
   container: {

@@ -1,31 +1,47 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Root } from "../components";
-import { paths } from "./paths";
-import { StudentProfile } from "../screens/StudentProfile";
 import HallOfFame from "../screens/HallOfFame";
+import { Root } from "../components";
+import { pathsWithParameters } from "./paths";
+import { StudentProfile } from "../screens/StudentProfile";
+import { TeacherStudentProfile } from "../screens/StudentProfile";
+import { Groups } from "../screens/Groups";
+import { Group } from "../screens/Group";
 import { Welcome } from "../screens/Welcome";
 
 export const routes = createBrowserRouter([
   {
-    path: paths.Default,
+    path: pathsWithParameters.common.Default,
     element: <Root />,
     children: [
       {
-        path: paths.Default,
+        path: pathsWithParameters.common.Default,
         element: <Welcome />,
         index: true,
       },
       {
-        path: paths.Welcome,
+        path: pathsWithParameters.common.Welcome,
         element: <Welcome />,
       },
       {
-        path: paths.StudentProfile,
+        path: pathsWithParameters.student.StudentProfile,
         element: <StudentProfile />,
       },
+      // TODO probably distinct teacher and user hall of fame
       {
-        path: paths.HallOfFame,
+        path: pathsWithParameters.common.HallOfFame,
         element: <HallOfFame />,
+      },
+      {
+        path: pathsWithParameters.teacher.Groups,
+        element: <Groups />,
+      },
+      {
+        path: pathsWithParameters.teacher.Group,
+        element: <Group />,
+      },
+      {
+        path: pathsWithParameters.teacher.StudentProfile,
+        element: <TeacherStudentProfile />,
       },
     ],
   },

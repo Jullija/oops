@@ -1,7 +1,7 @@
-import { useUserPointsQuery } from "../graphql/userPoints.graphql.types";
-import { UserPoints } from "../utils";
-import { useUser } from "./useUser";
-import { useUserEditions } from "./useUserEditions";
+import { useUserPointsQuery } from "../../graphql/userPoints.graphql.types";
+import { UserPoints } from "../../utils";
+import { useUser } from "../common/useUser";
+import { useUserEditions } from "../common/useUserEditions";
 
 type UserData = {
   fullName: string;

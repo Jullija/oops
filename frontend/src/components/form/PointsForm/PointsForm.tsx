@@ -1,14 +1,10 @@
-import {
-  getCategories,
-  getProviders,
-  getSubcategoriesByCategory,
-} from "../../api";
+import { getCategories, getSubcategoriesByCategory } from "../../../api";
 import { useFormik } from "formik";
-import { Subcategory } from "../../utils";
+import { Subcategory } from "../../../utils";
 import { ZodError, z } from "zod";
 import { useState } from "react";
 import { FormPoints } from "./types";
-import { NumberInput, SelectInput } from "../../components";
+import { NumberInput, SelectInput } from "../..";
 
 type PointFormProps = {
   studentId: string;
@@ -20,7 +16,6 @@ type PointsFormValues = z.infer<typeof ValidationSchema>;
 const ValidationSchema = z.object({
   categoryId: z.string().min(1, "required"),
   subcategoryId: z.string().min(1, "required"),
-  providerId: z.string().min(1, "required"),
   points: z
     .number()
     .min(0, "min number of points is 0")
@@ -30,7 +25,7 @@ const ValidationSchema = z.object({
 export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
   const categories = getCategories();
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
-  const providers = getProviders();
+
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const categoryId = e.target.value;
     const categorySubcategories = getSubcategoriesByCategory(categoryId);
@@ -52,7 +47,6 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
   const onSubmit = (values: PointsFormValues) => {
     const points: FormPoints = {
       studentId: studentId,
-      providerId: values.providerId,
       number: values.points,
       subcategoryId: values.subcategoryId,
     };
@@ -64,7 +58,6 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
       categoryId: "",
       subcategoryId: "",
       points: 0,
-      providerId: "",
     },
     validate: validate,
     onSubmit: onSubmit,
@@ -104,18 +97,6 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
         touched={formik.touched.points}
         name="points"
         label="points"
-      />
-      <SelectInput
-        handleChange={formik.handleChange}
-        handleBlur={formik.handleBlur}
-        value={formik.values.providerId}
-        error={formik.errors.providerId}
-        touched={formik.touched.providerId}
-        name="providerId"
-        optionItems={providers.map((provider) => {
-          return { value: provider.id, title: provider.name };
-        })}
-        label="provider"
       />
       <button type="submit">add points</button>
     </form>

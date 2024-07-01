@@ -4,7 +4,7 @@ import {
   UserEditionsQuery,
 } from "../graphql/userEditions.graphql.types";
 import { Roles } from "../utils";
-import { useUser } from "../hooks/useUser";
+import { useUser } from "../hooks/common/useUser";
 
 export type Edition = UserEditionsQuery["edition"][number];
 
