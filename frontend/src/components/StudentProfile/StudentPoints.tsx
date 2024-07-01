@@ -1,8 +1,6 @@
 import { UserPoints } from "../../utils/types";
 import { Styles } from "../../utils/Styles";
-
 import FilterMenu from "./FilterMenu";
-
 import { useState } from "react";
 import PointsTable from "./PointsTable";
 

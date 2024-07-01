@@ -4,7 +4,6 @@ import { useHallOfFameQuery } from "../graphql/hallOfFame.graphql.types";
 import { useEditionSelection } from "../hooks/common/useEditionSelection";
 import { Styles } from "../utils/Styles";
 import { Roles } from "../utils/types";
-
 import HallOfFameRow from "../components/hallOfFame/hallOfFameRow";
 import HallOfFameHeader from "../components/hallOfFame/hallOfFameHeader";
 

@@ -1,6 +1,5 @@
 import { getCategories } from "../../../api/categories";
 import { getSubcategoriesByCategory } from "../../../api/subcategories";
-
 import { useFormik } from "formik";
 import { Subcategory } from "../../../utils/types";
 import { ZodError, z } from "zod";
