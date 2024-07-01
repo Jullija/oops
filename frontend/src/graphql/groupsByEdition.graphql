@@ -1,13 +1,13 @@
-query groupsByEdition($editionId: bigint) {
-  edition(where: { editionId: { _eq: $editionId } }) {
+query groupsByEdition($editionId: bigint!) {
+  editionByPk(editionId: $editionId) {
     groups {
       groupName
       groupsId
       userGroups(where: { user: { role: { _eq: "student" } } }) {
         user {
+          userId
           fullName
           role
-          userId
         }
       }
     }

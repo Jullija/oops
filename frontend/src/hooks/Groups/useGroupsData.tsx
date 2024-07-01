@@ -12,20 +12,20 @@ export const useGroupsData = () => {
     skip: !selectedEdition,
   });
 
-  const groups: Group[] | undefined = data?.edition[0].groups.map((group) => {
+  const groups: Group[] | undefined = data?.editionByPk?.groups.map((group) => {
     return {
       name: group.groupName,
       id: group.groupsId,
     };
   });
 
-  const students: ShortStudent[] | undefined = data?.edition[0].groups.flatMap(
-    (group) =>
+  const students: ShortStudent[] | undefined =
+    data?.editionByPk?.groups.flatMap((group) =>
       group.userGroups.map((userGroup) => ({
         fullName: userGroup.user.fullName ?? undefined,
         id: userGroup.user.userId,
       })),
-  );
+    );
 
   return { loading, error, groups, students };
 };

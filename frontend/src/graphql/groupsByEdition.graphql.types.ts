@@ -4,12 +4,12 @@ import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
 const defaultOptions = {} as const;
 export type GroupsByEditionQueryVariables = Types.Exact<{
-  editionId?: Types.InputMaybe<Types.Scalars["bigint"]["input"]>;
+  editionId: Types.Scalars["bigint"]["input"];
 }>;
 
 export type GroupsByEditionQuery = {
   __typename?: "query_root";
-  edition: Array<{
+  editionByPk?: {
     __typename?: "Edition";
     groups: Array<{
       __typename?: "Groups";
@@ -19,26 +19,26 @@ export type GroupsByEditionQuery = {
         __typename?: "UserGroups";
         user: {
           __typename?: "Users";
+          userId: string;
           fullName?: string | null;
           role: string;
-          userId: string;
         };
       }>;
     }>;
-  }>;
+  } | null;
 };
 
 export const GroupsByEditionDocument = gql`
-  query groupsByEdition($editionId: bigint) {
-    edition(where: { editionId: { _eq: $editionId } }) {
+  query groupsByEdition($editionId: bigint!) {
+    editionByPk(editionId: $editionId) {
       groups {
         groupName
         groupsId
         userGroups(where: { user: { role: { _eq: "student" } } }) {
           user {
+            userId
             fullName
             role
-            userId
           }
         }
       }
@@ -63,10 +63,14 @@ export const GroupsByEditionDocument = gql`
  * });
  */
 export function useGroupsByEditionQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GroupsByEditionQuery,
     GroupsByEditionQueryVariables
-  >,
+  > &
+    (
+      | { variables: GroupsByEditionQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GroupsByEditionQuery, GroupsByEditionQueryVariables>(
