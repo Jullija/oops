@@ -1,10 +1,13 @@
-import { getCategories, getSubcategoriesByCategory } from "../../../api";
+import { getCategories } from "../../../api/categories";
+import { getSubcategoriesByCategory } from "../../../api/subcategories";
+
 import { useFormik } from "formik";
-import { Subcategory } from "../../../utils";
+import { Subcategory } from "../../../utils/types";
 import { ZodError, z } from "zod";
 import { useState } from "react";
 import { FormPoints } from "./types";
-import { NumberInput, SelectInput } from "../..";
+import { NumberInput } from "../../inputs/NumberInput";
+import { SelectInput } from "../../inputs/SelectInput";
 
 type PointFormProps = {
   studentId: string;

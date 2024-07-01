@@ -1,6 +1,6 @@
 import { User } from "../../contexts/userContext";
 import { useUserPointsQuery } from "../../graphql/userPoints.graphql.types";
-import { UserPoints } from "../../utils";
+import { UserPoints } from "../../utils/types";
 import { useUser } from "../common/useUser";
 import { useUserEditions } from "../common/useUserEditions";
 

@@ -1,4 +1,5 @@
-import { Styles, UserPoints } from "../../utils";
+import { UserPoints } from "../../utils/types";
+import { Styles } from "../../utils/Styles";
 
 type UserCardProps = {
   fullName?: string;
