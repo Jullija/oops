@@ -1,9 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
-import { HallOfFame, Welcome, Groups, Group } from "../screens";
+import HallOfFame from "../screens/HallOfFame";
 import { Root } from "../components";
 import { pathsWithParameters } from "./paths";
 import { StudentProfile } from "../screens/StudentProfile";
 import { TeacherStudentProfile } from "../screens/StudentProfile";
+import { Groups } from "../screens/Groups";
+import { Group } from "../screens/Group";
+import { Welcome } from "../screens/Welcome";
 
 export const routes = createBrowserRouter([
   {
@@ -23,11 +26,10 @@ export const routes = createBrowserRouter([
         path: pathsWithParameters.student.StudentProfile,
         element: <StudentProfile />,
       },
-      // TODO change prop to params
       // TODO probably distinct teacher and user hall of fame
       {
         path: pathsWithParameters.common.HallOfFame,
-        element: <HallOfFame studentId={"6"} />,
+        element: <HallOfFame />,
       },
       {
         path: pathsWithParameters.teacher.Groups,
