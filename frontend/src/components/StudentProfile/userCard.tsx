@@ -1,5 +1,6 @@
 import { useUserPointsImage } from "../../hooks/useUserPointsImage";
-import { Styles, UserPoints } from "../../utils";
+import { UserPoints } from "../../utils/types";
+import { Styles } from "../../utils/Styles";
 import ImageCache from "../imageCache";
 
 type UserCardProps = {

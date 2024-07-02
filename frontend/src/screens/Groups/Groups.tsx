@@ -1,6 +1,6 @@
 import { useGroupsData } from "../../hooks/Groups/useGroupsData";
 import { GroupsList } from "./GroupsList/GroupsList";
-import { StudentSearcher } from "./StudentSearcher";
+import { StudentSearcher } from "./StudentSearcher/StudentSearcher";
 
 export const Groups = () => {
   const { loading, error, students, groups } = useGroupsData();

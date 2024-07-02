@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { ShortStudent, Styles } from "../../../utils";
-import { pathsGenerator } from "../../../router";
+import { ShortStudent } from "../../../utils/types";
+import { Styles } from "../../../utils/Styles";
+import { pathsGenerator } from "../../../router/paths";
 
 type StudentCardProps = {
   student: ShortStudent;

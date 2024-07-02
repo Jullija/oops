@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { navigationItems } from "../router";
-import { Styles } from "../utils";
+import { navigationItems } from "../router/paths";
+import { Styles } from "../utils/Styles";
 import { useEditionSelection } from "../hooks/common/useEditionSelection";
 
 const styles: Styles = {
