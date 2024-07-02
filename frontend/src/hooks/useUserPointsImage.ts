@@ -19,17 +19,18 @@ export const useUserPointsImage = (points: number) => {
     const level = data.editionByPk.levels.find((level) => {
       if (
         level.highest &&
-        points >
+        points >=
           (level.maximumPoints
             ? +level.maximumPoints
             : Number.POSITIVE_INFINITY)
       ) {
         return true;
       }
-      if (level.minimumPoints && points >= +level.minimumPoints) {
-        if (level.maximumPoints) {
-          return points <= +level.maximumPoints;
-        }
+      if (
+        level.minimumPoints &&
+        points >= +level.minimumPoints &&
+        (level.maximumPoints ? points < +level.maximumPoints : true)
+      ) {
         return true;
       }
       return false;

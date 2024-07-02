@@ -1,6 +1,6 @@
 import { useUserPointsImage } from "../../hooks/useUserPointsImage";
 import { Styles, UserPoints } from "../../utils";
-import ImageCache from "../imageCache";
+import { FILES_URL } from "../../utils/constants";
 
 type UserCardProps = {
   fullName?: string;
@@ -59,12 +59,14 @@ export function UserCard({ fullName, index, points }: UserCardProps) {
       <div style={styles.userImageContainer}>
         {loading && <div>Loading image...</div>}
         {error && <div>Error loading image</div>}
-        {imageId && !loading && !error && (
-          <ImageCache
-            imageId={imageId}
-            style={styles.userImageContainer}
-            imgStyle={styles.userImage}
+        {imageId && !loading && !error ? (
+          <img
+            src={`${FILES_URL}${imageId}`}
+            alt={`Image id ${imageId}`}
+            style={styles.userImage}
           />
+        ) : (
+          !loading && !error && <div style={styles.userImageContainer} />
         )}
       </div>
       <div>{fullName}</div>
