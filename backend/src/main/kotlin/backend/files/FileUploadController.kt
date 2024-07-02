@@ -9,9 +9,9 @@ import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
-
 @RestController
 @RequestMapping("/files")
+@CrossOrigin(origins = ["http://localhost:5173"], allowedHeaders = ["*"])
 class FileUploadController(
     private val fileUploadService: FileUploadService,
     private val fileRetrievalService: FileRetrievalService

@@ -1,45 +1,47 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Root } from "../components";
-import { Welcome, HallOfFame } from "../screens";
-import { StudentProfile } from "../screens/StudentProfile";
-import { Forbidden } from "../screens/forbidden";
-import { ProtectedRoute } from "./protectedRoute";
-import { paths, navigationItems, NavigationItem } from "./paths";
-
-const generateRoutes = (navigationItems: NavigationItem[]) => {
-  return navigationItems.map((item) => ({
-    path: item.path,
-    element: (
-      <ProtectedRoute
-        element={
-          item.path === paths.HallOfFame ? (
-            <HallOfFame studentId={"6"} />
-          ) : item.path === paths.StudentProfile ? (
-            <StudentProfile />
-          ) : (
-            <Welcome />
-          )
-        }
-        allowedRoles={item.allowedRoles}
-      />
-    ),
-  }));
-};
+import HallOfFame from "../screens/HallOfFame";
+import { Root } from "../components/Root";
+import { pathsWithParameters } from "./paths";
+import { StudentProfile } from "../screens/StudentProfile/StudentProfile";
+import { TeacherStudentProfile } from "../screens/StudentProfile/TeacherStudentProfile";
+import { Groups } from "../screens/Groups/Groups";
+import { Group } from "../screens/Group/Group";
+import { Welcome } from "../screens/Welcome";
 
 export const routes = createBrowserRouter([
   {
-    path: paths.Default,
+    path: pathsWithParameters.common.Default,
     element: <Root />,
     children: [
       {
-        path: paths.Default,
+        path: pathsWithParameters.common.Default,
         element: <Welcome />,
         index: true,
       },
-      ...generateRoutes(navigationItems),
       {
-        path: "/403",
-        element: <Forbidden />,
+        path: pathsWithParameters.common.Welcome,
+        element: <Welcome />,
+      },
+      {
+        path: pathsWithParameters.student.StudentProfile,
+        element: <StudentProfile />,
+      },
+      // TODO probably distinct teacher and user hall of fame
+      {
+        path: pathsWithParameters.common.HallOfFame,
+        element: <HallOfFame />,
+      },
+      {
+        path: pathsWithParameters.teacher.Groups,
+        element: <Groups />,
+      },
+      {
+        path: pathsWithParameters.teacher.Group,
+        element: <Group />,
+      },
+      {
+        path: pathsWithParameters.teacher.StudentProfile,
+        element: <TeacherStudentProfile />,
       },
     ],
   },

@@ -1,9 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { navigationItems } from "../router";
-import { Styles } from "../utils";
-import { useEditionSelection } from "../hooks/useEditionSelection";
-import { useUser } from "../hooks/useUser";
-import { hasRole } from "../utils/utils";
+import { navigationItems } from "../router/paths";
+import { Styles } from "../utils/Styles";
+import { useEditionSelection } from "../hooks/common/useEditionSelection";
 
 const styles: Styles = {
   container: {
@@ -33,17 +31,12 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const { editions, selectedEdition, handleEditionChange } =
     useEditionSelection();
-  const { user } = useUser();
 
   const showEditionSelection = editions.length > 1;
 
-  const filteredNavigationItems = navigationItems.filter((item) =>
-    hasRole(user, item.allowedRoles),
-  );
-
   return (
     <div style={styles.container}>
-      {filteredNavigationItems.map((item, index) => (
+      {navigationItems.map((item, index) => (
         <div
           key={index}
           onClick={() => navigate(item.path)}

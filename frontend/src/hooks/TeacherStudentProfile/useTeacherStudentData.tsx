@@ -1,7 +1,8 @@
-import { useUserPointsQuery } from "../graphql/userPoints.graphql.types";
-import { UserPoints } from "../utils";
-import { useUser } from "./useUser";
-import { useUserEditions } from "./useUserEditions";
+import { User } from "../../contexts/userContext";
+import { useUserPointsQuery } from "../../graphql/userPoints.graphql.types";
+import { UserPoints } from "../../utils/types";
+import { useUser } from "../common/useUser";
+import { useUserEditions } from "../common/useUserEditions";
 
 type UserData = {
   fullName: string;
@@ -10,22 +11,29 @@ type UserData = {
 };
 
 type UseUserDataResult = {
-  userData?: UserData;
+  user: User;
+  studentData?: UserData;
   loading: boolean;
   error?: Error;
 };
-export function useStudentData(): UseUserDataResult {
-  const { user } = useUser();
+
+export function useTeacherStudentData({
+  studentId,
+}: {
+  studentId: string;
+}): UseUserDataResult {
   const { selectedEdition: edition } = useUserEditions();
+  const { user } = useUser();
 
   const editionId = edition ? edition.editionId : "0";
   const { data, loading, error } = useUserPointsQuery({
-    skip: !edition,
-    variables: { id: user.userId, editionId },
+    skip: !edition || !studentId,
+    variables: { id: studentId, editionId },
   });
 
   if (loading || error || !data?.usersByPk) {
     return {
+      user,
       loading,
       error: error,
     };
@@ -40,7 +48,8 @@ export function useStudentData(): UseUserDataResult {
   };
 
   return {
-    userData,
+    user,
+    studentData: userData,
     loading,
     error,
   };
