@@ -1,6 +1,7 @@
 import { useUserPointsImage } from "../../hooks/useUserPointsImage";
-import { Styles, UserPoints } from "../../utils";
+import { Styles } from "../../utils/Styles";
 import { FILES_URL } from "../../utils/constants";
+import { UserPoints } from "../../utils/types";
 
 type UserCardProps = {
   fullName?: string;

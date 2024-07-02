@@ -1,5 +1,5 @@
 import { useGroupsByEditionQuery } from "../../graphql/groupsByEdition.graphql.types";
-import { Group, ShortStudent } from "../../utils";
+import { Group, ShortStudent } from "../../utils/types";
 import { useEditionSelection } from "../common/useEditionSelection";
 
 export const useGroupsData = () => {

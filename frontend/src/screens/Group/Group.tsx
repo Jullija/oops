@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Styles } from "../../utils";
-import { pathsGenerator } from "../../router";
+import { Styles } from "../../utils/Styles";
+import { pathsGenerator } from "../../router/paths";
 
 const styles: Styles = {
   screenContainer: {

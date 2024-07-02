@@ -1,4 +1,4 @@
-import { Category } from "../utils";
+import { Category } from "../utils/types";
 
 export const getCategories = (): Category[] => {
   return categories;
