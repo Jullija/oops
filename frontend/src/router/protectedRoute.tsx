@@ -1,8 +1,8 @@
 import { ReactElement } from "react";
-import { useUser } from "../hooks/useUser";
 import { hasRole } from "../utils/utils";
-import { Roles } from "../utils";
 import { Forbidden } from "../screens/forbidden";
+import { useUser } from "../hooks/common/useUser";
+import { Roles } from "../utils/types";
 
 function ProtectedRoute({
   element,

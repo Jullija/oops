@@ -57,7 +57,11 @@ export const Welcome = () => {
 
   const handleUserSelect = (user: User) => {
     setUser(user);
-    navigate(pathsGenerator.student.StudentProfile);
+    navigate(
+      user.role === Roles.STUDENT
+        ? pathsGenerator.student.StudentProfile
+        : pathsGenerator.teacher.Groups,
+    );
   };
 
   if (loading) return <div>Ładowanie...</div>;
