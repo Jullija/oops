@@ -17,5 +17,6 @@ interface BonusesRepository : JpaRepository<Bonuses, Long> {
 
     fun findByAward_AwardTypeAndPoints_Student(awardType: AwardType, student: Users): List<Bonuses>
 
+    fun findByChestHistory_User_UserIdIn(userId: List<Long>): List<Bonuses>
 
 }

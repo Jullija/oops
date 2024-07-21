@@ -4,14 +4,40 @@ type Mutation {
 
     addPointsMutation (studentId: Int!,
         teacherId: Int!,
-        value: Int!,
+        value: Float!,
         subcategoryId: Int!): PointsType
+}
+
+type Query {
+    getUsersInGroupWithPoints(groupId: Int!): [UserPointsType]
 }
 
 type AddBonusReturnType {
     bonus: BonusType
     points: PointsType
 }
+
+type UserPointsType {
+    user: UsersType
+    subcategoriesPoints: [SubcategoryPointsType]
+}
+
+type SubcategoryPointsType {
+    subcategory: SubcategoriesType
+    points: PurePointsType
+}
+
+type PurePointsType {
+    purePoints: PointsType
+    partialBonusType: [PartialBonusType]
+}
+
+type PartialBonusType {
+    bonuses: BonusType
+    partialValue: Float
+}
+
+
 
 type BonusType {
     bonusId: Int!
@@ -27,7 +53,7 @@ type PointsType {
     pointsId: Int!
     student: UsersType!
     teacher: UsersType!
-    value: Int!
+    value: Float!
     subcategory: SubcategoriesType!
     label: String!
     createdAt: String!
