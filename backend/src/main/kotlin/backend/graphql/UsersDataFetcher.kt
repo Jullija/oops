@@ -2,6 +2,7 @@ package backend.graphql
 
 import backend.award.AwardType
 import backend.bonuses.BonusesRepository
+import backend.edition.EditionRepository
 import backend.points.PointsRepository
 import backend.users.UsersRepository
 import backend.users.Users
@@ -17,6 +18,9 @@ import java.time.ZoneOffset
 class UsersDataFetcher {
 
     @Autowired
+    private lateinit var editionRepository: EditionRepository
+
+    @Autowired
     private lateinit var bonusesRepository: BonusesRepository
 
     @Autowired
@@ -27,9 +31,10 @@ class UsersDataFetcher {
 
     @DgsQuery
     @Transactional
-    fun getStudentPoints(@InputArgument studentId: Long): StudentPointsType {
+    fun getStudentPoints(@InputArgument studentId: Long, @InputArgument editionId: Long): StudentPointsType {
         val user = usersRepository.findById(studentId).orElseThrow { IllegalArgumentException("Invalid student ID") }
-        val points = pointsRepository.findByStudent_UserId(studentId)
+        val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
+        val points = pointsRepository.findAllByStudentAndSubcategory_Edition(user, edition)
         val bonuses = bonusesRepository.findByChestHistory_User_UserId(studentId)
 
         val subcategoryPoints = points.groupBy { it.subcategory }
@@ -43,9 +48,9 @@ class UsersDataFetcher {
                             PartialBonusType(
                                 bonuses = bonus,
                                 partialValue = if (bonus.award.awardType == AwardType.ADDITIVE) {
-                                    bonus.points.value.toFloat()
+                                    bonus.points.value
                                 } else {
-                                    purePoints.firstOrNull()?.value?.toFloat()?.times(bonus.award.awardValue) ?: 0f
+                                    purePoints.firstOrNull()?.value?.times(bonus.award.awardValue) ?: 0f
                                 }
                             )
                         }
