@@ -3,6 +3,7 @@ package backend.graphql
 import backend.award.AwardType
 import backend.bonuses.Bonuses
 import backend.bonuses.BonusesRepository
+import backend.categories.Categories
 import backend.points.Points
 import backend.points.PointsRepository
 import backend.subcategories.Subcategories
@@ -83,6 +84,24 @@ class GroupsDataFetcher {
                             )
                         )
                     }
+                }.groupBy { it.subcategory.category } // Grouping by category
+                .map { (category, subcategoryPoints) ->
+                    val sumOfPurePoints = subcategoryPoints.sumOf { it.points.purePoints?.value?.toDouble() ?: 0.0 }.toFloat()
+                    val sumOfBonuses = subcategoryPoints.sumOf { subcategory ->
+                        subcategory.points.partialBonusType.sumOf { it.partialValue.toDouble() }
+                    }.toFloat()
+                    val sumOfAll = sumOfPurePoints + sumOfBonuses
+
+                    CategoryPointsType(
+                        category = category,
+                        subcategoryPoints = subcategoryPoints,
+                        aggregate = CategoryAggregate(
+                            category = category,
+                            sumOfPurePoints = sumOfPurePoints,
+                            sumOfBonuses = sumOfBonuses,
+                            sumOfAll = sumOfAll
+                        )
+                    )
                 }
             UserPointsType(user, userPoints)
         }
@@ -91,7 +110,20 @@ class GroupsDataFetcher {
 
 data class UserPointsType(
     val user: Users,
-    val subcategoriesPoints: List<SubcategoryPointsType>
+    val categoriesPoints: List<CategoryPointsType>
+)
+
+data class CategoryPointsType(
+    val category: Categories,
+    val subcategoryPoints: List<SubcategoryPointsType>,
+    val aggregate: CategoryAggregate
+)
+
+data class CategoryAggregate(
+    val category: Categories,
+    val sumOfPurePoints: Float,
+    val sumOfBonuses: Float,
+    val sumOfAll: Float
 )
 
 data class SubcategoryPointsType(

@@ -19,7 +19,21 @@ type AddBonusReturnType {
 
 type UserPointsType {
     user: UsersType
-    subcategoriesPoints: [SubcategoryPointsType]
+    categoriesPoints: [CategoryPointsType]
+}
+
+type CategoryAggregate {
+    category: CategoriesType
+    sumOfPurePoints: Float
+    sumOfBonuses: Float
+    sumOfAll: Float
+}
+
+
+type CategoryPointsType {
+    category: CategoriesType
+    subcategoryPoints: [SubcategoryPointsType]
+    aggregate: CategoryAggregate
 }
 
 type SubcategoryPointsType {
