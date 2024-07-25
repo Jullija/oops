@@ -10,6 +10,15 @@ type Mutation {
 
 type Query {
     getUsersInGroupWithPoints(groupId: Int!): [UserPointsType]
+    getStudentPoints(studentId: Int!): StudentPointsType
+}
+
+type StudentPointsType{
+    user: UsersType
+    subcategoryPoints: [SubcategoryPointsType]
+    sumOfPurePoints: Float
+    sumOfBonuses: Float
+    sumOfAll: Float
 }
 
 type AddBonusReturnType {
