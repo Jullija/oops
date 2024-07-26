@@ -18,7 +18,7 @@ type PointFormProps = {
   handleAddPoints: (formPoints: FormPoints) => void;
 };
 
-export const PointsForm = ({ handleAddPoints: handleAdd }: PointFormProps) => {
+export const PointsForm = ({ handleAddPoints }: PointFormProps) => {
   const formik = useFormik({
     initialValues: {
       categoryId: "",
@@ -39,7 +39,7 @@ export const PointsForm = ({ handleAddPoints: handleAdd }: PointFormProps) => {
         points: values.points,
         subcategoryId: values.subcategoryId,
       };
-      handleAdd(points);
+      handleAddPoints(points);
     },
   });
 
