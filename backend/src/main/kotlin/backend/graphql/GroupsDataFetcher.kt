@@ -54,6 +54,7 @@ class GroupsDataFetcher {
 
         return users.map { user ->
             val userBonuses = bonuses.filter { it.chestHistory.user.userId == user.userId }
+
             val userPoints = points.filter { it.student.userId == user.userId }
                 .groupBy { it.subcategory }
                 .mapNotNull { (subcategory, points) ->
@@ -109,58 +110,70 @@ class GroupsDataFetcher {
                 }
                 .groupBy { it.subcategory.category } // Grouping by category
                 .map { (category, subcategoryPoints) ->
-                    val allSubcategoriesForCategory = subcategories.filter { it.category == category }
-                    val subcategoryPointsWithDefaults = allSubcategoriesForCategory.map { subcat ->
-                        subcategoryPoints.find { it.subcategory == subcat } ?: SubcategoryPointsType(
-                            subcategory = subcat,
-                            points = PurePointsType(
-                                purePoints = null,
-                                partialBonusType = emptyList()
-                            )
-                        )
-                    }
-                    val sumOfPurePoints = subcategoryPointsWithDefaults.sumOf { it.points.purePoints?.value?.toDouble() ?: 0.0 }.toFloat()
-                    val sumOfBonuses = subcategoryPointsWithDefaults.sumOf { subcategory ->
-                        subcategory.points.partialBonusType.sumOf { it.partialValue.toDouble() }
-                    }.toFloat()
-                    val sumOfAll = sumOfPurePoints + sumOfBonuses
-
-                    CategoryPointsType(
-                        category = category,
-                        subcategoryPoints = subcategoryPointsWithDefaults,
-                        aggregate = CategoryAggregate(
-                            category = category,
-                            sumOfPurePoints = sumOfPurePoints,
-                            sumOfBonuses = sumOfBonuses,
-                            sumOfAll = sumOfAll
-                        )
-                    )
+                    createCategoryPointsType(category, subcategoryPoints, subcategories)
                 }
 
             // Ensure all categories are included
-            val userCategoriesWithDefaults = categories.map { category ->
-                userPoints.find { it.category == category } ?: CategoryPointsType(
-                    category = category,
-                    subcategoryPoints = subcategories.filter { it.category == category }.map { subcat ->
-                        SubcategoryPointsType(
-                            subcategory = subcat,
-                            points = PurePointsType(
-                                purePoints = null,
-                                partialBonusType = emptyList()
-                            )
-                        )
-                    },
-                    aggregate = CategoryAggregate(
-                        category = category,
-                        sumOfPurePoints = 0f,
-                        sumOfBonuses = 0f,
-                        sumOfAll = 0f
-                    )
-                )
-            }
+            val userCategoriesWithDefaults = getUserCategoriesWithDefaults(categories, userPoints, subcategories)
 
             UserPointsType(user, userCategoriesWithDefaults)
         }
+    }
+    private fun getUserCategoriesWithDefaults(categories: List<Categories>, userPoints: List<CategoryPointsType>, subcategories: List<Subcategories>): List<CategoryPointsType> {
+        return categories.map { category ->
+            userPoints.find { it.category == category } ?: CategoryPointsType(
+                category = category,
+                subcategoryPoints = subcategories.filter { it.category == category }.map { subcat ->
+                    SubcategoryPointsType(
+                        subcategory = subcat,
+                        points = PurePointsType(
+                            purePoints = null,
+                            partialBonusType = emptyList()
+                        )
+                    )
+                },
+                aggregate = CategoryAggregate(
+                    category = category,
+                    sumOfPurePoints = 0f,
+                    sumOfBonuses = 0f,
+                    sumOfAll = 0f
+                )
+            )
+        }
+    }
+
+    private fun getSubcategoryPointsWithDefaults(subcategoryPoints: List<SubcategoryPointsType>, subcategories: List<Subcategories>, category: Categories): List<SubcategoryPointsType> {
+        val allSubcategoriesForCategory = subcategories.filter { it.category == category }
+        return allSubcategoriesForCategory.map { subcat ->
+            subcategoryPoints.find { it.subcategory == subcat } ?: SubcategoryPointsType(
+                subcategory = subcat,
+                points = PurePointsType(
+                    purePoints = null,
+                    partialBonusType = emptyList()
+                )
+            )
+        }
+    }
+
+    private fun createCategoryPointsType(category: Categories, subcategoryPoints: List<SubcategoryPointsType>, subcategories: List<Subcategories>): CategoryPointsType{
+        val subcategoryPointsWithDefaults = getSubcategoryPointsWithDefaults(subcategoryPoints, subcategories, category)
+
+        val sumOfPurePoints = subcategoryPointsWithDefaults.sumOf { it.points.purePoints?.value?.toDouble() ?: 0.0 }.toFloat()
+        val sumOfBonuses = subcategoryPointsWithDefaults.sumOf { subcategory ->
+            subcategory.points.partialBonusType.sumOf { it.partialValue.toDouble() }
+        }.toFloat()
+        val sumOfAll = sumOfPurePoints + sumOfBonuses
+
+        return CategoryPointsType(
+            category = category,
+            subcategoryPoints = subcategoryPointsWithDefaults,
+            aggregate = CategoryAggregate(
+                category = category,
+                sumOfPurePoints = sumOfPurePoints,
+                sumOfBonuses = sumOfBonuses,
+                sumOfAll = sumOfAll
+            )
+        )
     }
 }
 
