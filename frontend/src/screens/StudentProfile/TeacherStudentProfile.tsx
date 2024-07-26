@@ -49,10 +49,10 @@ export function TeacherStudentProfile() {
     console.log("teacheId: ", user.userId);
     createPoints({
       variables: {
-        studentId: parseInt(formPoints.studentId),
+        studentId: parseInt(studentId),
         subcategoryId: parseInt(formPoints.subcategoryId),
         teacherId: parseInt(user.userId),
-        value: formPoints.number,
+        value: formPoints.points,
       },
     });
   };
@@ -65,7 +65,7 @@ export function TeacherStudentProfile() {
         points={data.points}
       />
       <StudentPoints pointsList={data.points} />
-      <PointsForm studentId={studentId} handleAdd={handleAdd} />
+      <PointsForm handleAddPoints={handleAdd} />
     </div>
   );
 }
