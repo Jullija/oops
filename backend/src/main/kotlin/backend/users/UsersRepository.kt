@@ -8,4 +8,5 @@ import java.util.*
 interface UsersRepository : JpaRepository<Users, Long> {
     fun findByNick(nick:String) : Users
     fun findByUserId(userId: Long) : Optional<Users>
+    fun findByGroups_GroupsId(groupId: Long) : List<Users>
 }
