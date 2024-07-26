@@ -123,13 +123,14 @@ def insert_data(data_count_multiplier=1):
                                (award_id, editions[year], ""))
 
     # Insert data into groups
+    weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday"]
     groups = []
     year_group_counts = {year: random.randint(12, 15) for year in range(2020, 2026)}
     for year, count in year_group_counts.items():
         for i in range(1, count + 1):
             group_name = f"gr_{i}"
-            cursor.execute("INSERT INTO groups (group_name, edition_id, label) VALUES (%s, %s, %s) RETURNING groups_id",
-                           (group_name, editions[year], ""))
+            cursor.execute("INSERT INTO groups (group_name, edition_id, label, weekday) VALUES (%s, %s, %s, %s) RETURNING groups_id",
+                           (group_name, editions[year], "", random.choice(weekdays)))
             groups.append(cursor.fetchone()[0])
 
     total_groups = sum(year_group_counts.values())

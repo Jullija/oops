@@ -148,6 +148,9 @@ type GroupType {
     group_name: String!
     label: String
     users: [UsersType!]!
+    weekday: String!
+    start_time: String!
+    end_time: String!
 }
 
 type UsersType {
@@ -159,6 +162,7 @@ type UsersType {
     role: UsersRolesType!
     label: String!
     groups: [GroupType!]!
+    image_file_id: Int
 }
 
 type UserGroupType {

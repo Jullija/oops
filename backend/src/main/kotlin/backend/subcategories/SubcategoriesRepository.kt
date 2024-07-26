@@ -16,4 +16,6 @@ interface SubcategoriesRepository : JpaRepository<Subcategories, Long> {
     fun findFirstByCategoryOrderByOrdinalNumberAsc(category: Categories): Optional<Subcategories>
     fun findFirstByCategoryAndEditionOrderByOrdinalNumberAsc(category: Categories, edition: Edition): Optional<Subcategories>
     fun findByCategoryAndEdition(category: Categories, edition: Edition): List<Subcategories>
+
+    fun findByEdition_EditionId(editionId: Long): List<Subcategories>
 }

@@ -4,9 +4,13 @@ import backend.award.AwardType
 import backend.bonuses.Bonuses
 import backend.bonuses.BonusesRepository
 import backend.categories.Categories
+import backend.categories.CategoriesRepository
+import backend.edition.EditionRepository
+import backend.groups.GroupsRepository
 import backend.points.Points
 import backend.points.PointsRepository
 import backend.subcategories.Subcategories
+import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
 import backend.users.Users
 import com.netflix.graphql.dgs.DgsComponent
@@ -27,37 +31,54 @@ class GroupsDataFetcher {
     @Autowired
     lateinit var pointsRepository: PointsRepository
 
+    @Autowired
+    lateinit var categoriesRepository: CategoriesRepository
+
+    @Autowired
+    lateinit var subcategoriesRepository: SubcategoriesRepository
+
+
+    @Autowired
+    lateinit var groupsRepository: GroupsRepository
+
     @DgsQuery
     @Transactional
     fun getUsersInGroupWithPoints(@InputArgument groupId: Long): List<UserPointsType> {
+        val group = groupsRepository.findById(groupId).orElseThrow { IllegalArgumentException("Invalid group ID") }
         val users = usersRepository.findByGroups_GroupsId(groupId)
         val userIds = users.map { it.userId }
         val points = pointsRepository.findByStudent_UserIdIn(userIds)
         val bonuses = bonusesRepository.findByChestHistory_User_UserIdIn(userIds)
+        val categories = categoriesRepository.findAll()
+        val subcategories = subcategoriesRepository.findByEdition_EditionId(group.edition.editionId)
 
         return users.map { user ->
-            val userBonuses = bonuses.filter{it.chestHistory.user.userId == user.userId}
+            val userBonuses = bonuses.filter { it.chestHistory.user.userId == user.userId }
             val userPoints = points.filter { it.student.userId == user.userId }
                 .groupBy { it.subcategory }
                 .mapNotNull { (subcategory, points) ->
                     val purePoints = points.filter { bonusesRepository.findByPoints(it).isEmpty() }
-                    if (purePoints.isEmpty()){
-                        if (points.any { bonusesRepository.findByPoints(it).isNotEmpty() }){
+                    if (purePoints.isEmpty()) {
+                        if (points.any { bonusesRepository.findByPoints(it).isNotEmpty() }) {
                             SubcategoryPointsType(
                                 subcategory = subcategory,
                                 points = PurePointsType(
                                     purePoints = null,
                                     partialBonusType = userBonuses.map { bonus ->
-                                        if (bonus.award.awardType == AwardType.ADDITIVE) {
-                                            PartialBonusType(
+                                        when (bonus.award.awardType) {
+                                            AwardType.ADDITIVE -> PartialBonusType(
                                                 bonuses = bonus,
                                                 partialValue = bonus.points.value
                                             )
-                                        } else
-                                            PartialBonusType(
+                                            AwardType.MULTIPLICATIVE -> PartialBonusType(
                                                 bonuses = bonus,
-                                                partialValue = 0 * bonus.award.awardValue
+                                                partialValue = 0f
                                             )
+                                            else -> PartialBonusType(
+                                                bonuses = bonus,
+                                                partialValue = bonus.award.awardValue
+                                            )
+                                        }
                                     }
                                 )
                             )
@@ -75,26 +96,38 @@ class GroupsDataFetcher {
                                             bonuses = bonus,
                                             partialValue = bonus.points.value
                                         )
-                                    } else
+                                    } else {
                                         PartialBonusType(
                                             bonuses = bonus,
                                             partialValue = purePoints.first().value * bonus.award.awardValue
                                         )
+                                    }
                                 }
                             )
                         )
                     }
-                }.groupBy { it.subcategory.category } // Grouping by category
+                }
+                .groupBy { it.subcategory.category } // Grouping by category
                 .map { (category, subcategoryPoints) ->
-                    val sumOfPurePoints = subcategoryPoints.sumOf { it.points.purePoints?.value?.toDouble() ?: 0.0 }.toFloat()
-                    val sumOfBonuses = subcategoryPoints.sumOf { subcategory ->
+                    val allSubcategoriesForCategory = subcategories.filter { it.category == category }
+                    val subcategoryPointsWithDefaults = allSubcategoriesForCategory.map { subcat ->
+                        subcategoryPoints.find { it.subcategory == subcat } ?: SubcategoryPointsType(
+                            subcategory = subcat,
+                            points = PurePointsType(
+                                purePoints = null,
+                                partialBonusType = emptyList()
+                            )
+                        )
+                    }
+                    val sumOfPurePoints = subcategoryPointsWithDefaults.sumOf { it.points.purePoints?.value?.toDouble() ?: 0.0 }.toFloat()
+                    val sumOfBonuses = subcategoryPointsWithDefaults.sumOf { subcategory ->
                         subcategory.points.partialBonusType.sumOf { it.partialValue.toDouble() }
                     }.toFloat()
                     val sumOfAll = sumOfPurePoints + sumOfBonuses
 
                     CategoryPointsType(
                         category = category,
-                        subcategoryPoints = subcategoryPoints,
+                        subcategoryPoints = subcategoryPointsWithDefaults,
                         aggregate = CategoryAggregate(
                             category = category,
                             sumOfPurePoints = sumOfPurePoints,
@@ -103,7 +136,30 @@ class GroupsDataFetcher {
                         )
                     )
                 }
-            UserPointsType(user, userPoints)
+
+            // Ensure all categories are included
+            val userCategoriesWithDefaults = categories.map { category ->
+                userPoints.find { it.category == category } ?: CategoryPointsType(
+                    category = category,
+                    subcategoryPoints = subcategories.filter { it.category == category }.map { subcat ->
+                        SubcategoryPointsType(
+                            subcategory = subcat,
+                            points = PurePointsType(
+                                purePoints = null,
+                                partialBonusType = emptyList()
+                            )
+                        )
+                    },
+                    aggregate = CategoryAggregate(
+                        category = category,
+                        sumOfPurePoints = 0f,
+                        sumOfBonuses = 0f,
+                        sumOfAll = 0f
+                    )
+                )
+            }
+
+            UserPointsType(user, userCategoriesWithDefaults)
         }
     }
 }

@@ -3,9 +3,9 @@ package backend.graphql
 import backend.award.AwardType
 import backend.bonuses.BonusesRepository
 import backend.categories.Categories
+import backend.categories.CategoriesRepository
 import backend.edition.EditionRepository
 import backend.points.PointsRepository
-import backend.subcategories.Subcategories
 import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
 import backend.users.Users
@@ -34,6 +34,9 @@ class UsersDataFetcher {
 
     @Autowired
     lateinit var pointsRepository: PointsRepository
+
+    @Autowired
+    lateinit var categoriesRepository: CategoriesRepository
 
     @DgsQuery
     @Transactional
@@ -88,25 +91,26 @@ class UsersDataFetcher {
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
         val points = pointsRepository.findAllByStudentAndSubcategory_Edition(user, edition)
         val bonuses = bonusesRepository.findByChestHistory_User_UserId(studentId)
+        val categories = categoriesRepository.findAll()
 
-        return points.groupBy { it.subcategory.category }
-            .map { (category, points) ->
-                val purePoints = points.filter { bonusesRepository.findByPoints(it).isEmpty() }
-                val purePointsSum = purePoints.sumOf { it.value.toDouble() }.toFloat()
-                val bonusesSum = bonuses.filter { it.points.subcategory.category == category && it.points.subcategory.edition == edition }
-                    .sumOf { it.points.value.toDouble() }.toFloat()
-                val totalSum = purePointsSum + bonusesSum
-                val maxPoints = subcategoriesRepository.findByCategoryAndEdition(category, edition)
-                    .sumOf { it.maxPoints.toDouble() }.toFloat()
+        return categories.map { category ->
+            val categoryPoints = points.filter { it.subcategory.category == category }
+            val purePoints = categoryPoints.filter { bonusesRepository.findByPoints(it).isEmpty() }
+            val purePointsSum = purePoints.sumOf { it.value.toDouble() }.toFloat()
+            val bonusesSum = bonuses.filter { it.points.subcategory.category == category && it.points.subcategory.edition == edition }
+                .sumOf { it.points.value.toDouble() }.toFloat()
+            val totalSum = purePointsSum + bonusesSum
+            val maxPoints = subcategoriesRepository.findByCategoryAndEdition(category, edition)
+                .sumOf { it.maxPoints.toDouble() }.toFloat()
 
-                CategoryPointsSumType(
-                    category = category,
-                    sumOfPurePoints = purePointsSum,
-                    sumOfBonuses = bonusesSum,
-                    sumOfAll = totalSum,
-                    maxPoints = maxPoints
-                )
-            }
+            CategoryPointsSumType(
+                category = category,
+                sumOfPurePoints = purePointsSum,
+                sumOfBonuses = bonusesSum,
+                sumOfAll = totalSum,
+                maxPoints = maxPoints
+            )
+        }
     }
 }
 
