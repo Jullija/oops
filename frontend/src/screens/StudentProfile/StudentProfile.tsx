@@ -2,7 +2,6 @@ import { UserCard } from "../../components/StudentProfile/userCard";
 import { Styles } from "../../utils/Styles";
 import StudentPoints from "../../components/StudentProfile/StudentPoints";
 import { useStudentData } from "../../hooks/StudentProfile/useStudentData";
-import { PointsForm } from "../../components/form/PointsForm/PointsForm";
 
 const styles: Styles = {
   container: {
@@ -31,7 +30,6 @@ export function StudentProfile() {
             points={userData.points}
           />
           <StudentPoints pointsList={userData.points} />
-          <PointsForm handleAddPoints={() => {}} />
         </>
       )}
     </div>
