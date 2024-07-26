@@ -1,12 +1,10 @@
-import { getCategories } from "../../../api/categories";
-import { getSubcategoriesByCategory } from "../../../api/subcategories";
 import { useFormik } from "formik";
-import { Subcategory } from "../../../utils/types";
 import { ZodError, z } from "zod";
 import { useState } from "react";
 import { FormPoints } from "./types";
 import { NumberInput } from "../../inputs/NumberInput";
 import { SelectInput } from "../../inputs/SelectInput";
+import { useCategoriesQuery } from "../../../graphql/categories.graphql.types";
 
 type PointFormProps = {
   studentId: string;
@@ -18,24 +16,15 @@ type PointsFormValues = z.infer<typeof ValidationSchema>;
 const ValidationSchema = z.object({
   categoryId: z.string().min(1, "required"),
   subcategoryId: z.string().min(1, "required"),
-  points: z
-    .number()
-    .min(0, "min number of points is 0")
-    .max(12, "max number of points is 12"),
+  points: z.number().min(0, "min number of points is 0"),
 });
 
+type Subcategory = {
+  id: string;
+  name: string;
+};
+
 export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
-  const categories = getCategories();
-  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
-
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const categoryId = e.target.value;
-    const categorySubcategories = getSubcategoriesByCategory(categoryId);
-    setSubcategories(categorySubcategories);
-    formik.setFieldValue("categoryId", categoryId);
-    formik.setFieldValue("subcategoryId", "");
-  };
-
   const validate = (values: PointsFormValues) => {
     try {
       ValidationSchema.parse(values);
@@ -54,7 +43,6 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
     };
     handleAdd(points);
   };
-
   const formik = useFormik({
     initialValues: {
       categoryId: "",
@@ -65,6 +53,35 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
     onSubmit: onSubmit,
   });
 
+  const [subcategories, setSubcategories] = useState<
+    Subcategory[] | undefined
+  >();
+  const { data, loading, error } = useCategoriesQuery();
+
+  if (loading) {
+    return <div>loading...</div>;
+  }
+  if (error) {
+    return <div>ERROR: {error.message}</div>;
+  }
+
+  const categories = data?.categories;
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const categoryId = e.target.value;
+    const categorySubcategories: Subcategory[] | undefined = categories
+      ?.find((category) => category.categoryId === categoryId)
+      ?.subcategories.map((subcategory) => {
+        return {
+          id: subcategory.subcategoryId,
+          name: subcategory.subcategoryName,
+        };
+      });
+    setSubcategories(categorySubcategories);
+    formik.setFieldValue("categoryId", categoryId);
+    formik.setFieldValue("subcategoryId", "-");
+  };
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <SelectInput
@@ -74,8 +91,8 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
         error={formik.errors.categoryId}
         touched={formik.touched.categoryId}
         name="categoryId"
-        optionItems={categories.map((category) => {
-          return { value: category.id, title: category.name };
+        optionItems={categories?.map((category) => {
+          return { value: category.categoryId, title: category.categoryName };
         })}
         label="category"
       />
@@ -86,7 +103,7 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
         error={formik.errors.subcategoryId}
         touched={formik.touched.subcategoryId}
         name="subcategoryId"
-        optionItems={subcategories.map((subcategory) => {
+        optionItems={subcategories?.map((subcategory) => {
           return { value: subcategory.id, title: subcategory.name };
         })}
         label="subcategory"

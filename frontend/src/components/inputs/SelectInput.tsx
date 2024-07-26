@@ -8,7 +8,7 @@ type SelectInputProps = {
   touched?: boolean;
   name: string;
   label?: string;
-  optionItems: SelectOptionItem[];
+  optionItems?: SelectOptionItem[];
 };
 
 export type SelectOptionItem = {
@@ -36,7 +36,7 @@ export const SelectInput = ({
         value={value}
       >
         <option value="">-</option>
-        {optionItems.map((item, index) => (
+        {optionItems?.map((item, index) => (
           <option value={item.value} key={index}>
             {item.title}
           </option>
