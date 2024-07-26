@@ -1,7 +1,6 @@
 import { CategoriesQuery } from "../../../graphql/categories.graphql.types";
 
 export type FormPoints = {
-  studentId: string;
   subcategoryId: string;
   points: number;
 };

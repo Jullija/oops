@@ -31,7 +31,7 @@ export function StudentProfile() {
             points={userData.points}
           />
           <StudentPoints pointsList={userData.points} />
-          <PointsForm studentId={userData.id} handleAdd={() => {}} />
+          <PointsForm handleAddPoints={() => {}} />
         </>
       )}
     </div>

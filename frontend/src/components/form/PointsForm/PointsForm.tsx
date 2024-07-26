@@ -15,11 +15,10 @@ const ValidationSchema = z.object({
 });
 
 type PointFormProps = {
-  studentId: string;
-  handleAdd: (formPoints: FormPoints) => void;
+  handleAddPoints: (formPoints: FormPoints) => void;
 };
 
-export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
+export const PointsForm = ({ handleAddPoints: handleAdd }: PointFormProps) => {
   const formik = useFormik({
     initialValues: {
       categoryId: "",
@@ -37,7 +36,6 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
     },
     onSubmit: (values: PointsFormValues) => {
       const points: FormPoints = {
-        studentId: studentId,
         points: values.points,
         subcategoryId: values.subcategoryId,
       };
@@ -70,11 +68,11 @@ export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
   };
 
   const maxPoints = subcategories?.find(
-    (s) => s.subcategoryId === formik.values.subcategoryId,
+    (subcategory) => subcategory.subcategoryId === formik.values.subcategoryId,
   )?.maxPoints;
   const maxPointsError =
     maxPoints && formik.values.points > maxPoints
-      ? `max points is ${maxPoints}`
+      ? `max number of points is ${maxPoints}`
       : undefined;
 
   return (
