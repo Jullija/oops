@@ -67,17 +67,13 @@ class GroupsDataFetcher {
                                     purePoints = null,
                                     partialBonusType = userBonuses.map { bonus ->
                                         when (bonus.award.awardType) {
-                                            AwardType.ADDITIVE -> PartialBonusType(
-                                                bonuses = bonus,
-                                                partialValue = bonus.points.value
-                                            )
                                             AwardType.MULTIPLICATIVE -> PartialBonusType(
                                                 bonuses = bonus,
                                                 partialValue = 0f
                                             )
                                             else -> PartialBonusType(
                                                 bonuses = bonus,
-                                                partialValue = bonus.award.awardValue
+                                                partialValue = bonus.points.value
                                             )
                                         }
                                     }
@@ -92,15 +88,15 @@ class GroupsDataFetcher {
                             points = PurePointsType(
                                 purePoints = purePoints.first(),
                                 partialBonusType = userBonuses.map { bonus ->
-                                    if (bonus.award.awardType == AwardType.ADDITIVE) {
+                                    if (bonus.award.awardType == AwardType.MULTIPLICATIVE) {
                                         PartialBonusType(
                                             bonuses = bonus,
-                                            partialValue = bonus.points.value
+                                            partialValue = purePoints.first().value * bonus.award.awardValue
                                         )
                                     } else {
                                         PartialBonusType(
                                             bonuses = bonus,
-                                            partialValue = purePoints.first().value * bonus.award.awardValue
+                                            partialValue = bonus.points.value
                                         )
                                     }
                                 }
