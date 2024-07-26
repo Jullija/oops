@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import { useTeacherStudentData } from "../../hooks/TeacherStudentProfile/useTeacherStudentData";
 import { PointsForm } from "../../components/form/PointsForm/PointsForm";
 import { FormPoints } from "../../components/form/PointsForm/types";
+import { useCreatePointsMutation } from "../../graphql/createPoints.graphql.types";
+import { useEffect } from "react";
 
 const styles: Styles = {
   container: {
@@ -26,15 +28,33 @@ export function TeacherStudentProfile() {
   } = useTeacherStudentData({
     studentId: studentId ?? "-1",
   });
+  const [createPoints, { data: mData, error: mError, loading: mLoading }] =
+    useCreatePointsMutation();
 
-  if (loading) return <p>Loading...</p>;
-  if (error || !studentId) return <p>Error: {error?.message}</p>;
+  useEffect(() => {
+    console.log("data: ", mData);
+  }, [mData]);
+
+  if (loading || mLoading) return <p>Loading...</p>;
+  if (error || mError || !studentId)
+    return (
+      <p>
+        Error: {error?.message} {mError?.message}
+      </p>
+    );
   if (!data) return <p>Please select an edition.</p>;
 
   // TODO add backend here
   const handleAdd = (formPoints: FormPoints) => {
-    console.log("teacher id: ", user.userId);
-    console.log("form points: ", formPoints);
+    console.log("teacheId: ", user.userId);
+    createPoints({
+      variables: {
+        studentId: parseInt(formPoints.studentId),
+        subcategoryId: parseInt(formPoints.subcategoryId),
+        teacherId: parseInt(user.userId),
+        value: formPoints.number,
+      },
+    });
   };
 
   return (

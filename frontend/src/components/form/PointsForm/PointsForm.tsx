@@ -24,6 +24,7 @@ const ValidationSchema = z.object({
     .max(12, "max number of points is 12"),
 });
 
+// we need real data here
 export const PointsForm = ({ studentId, handleAdd }: PointFormProps) => {
   const categories = getCategories();
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);

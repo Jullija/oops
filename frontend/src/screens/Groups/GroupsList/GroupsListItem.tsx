@@ -15,12 +15,18 @@ const styles: Styles = {
 type GroupsListItem = {
   groupName: string;
   onClick: () => void;
+  withEditableRights: boolean;
 };
 
-export const GroupsListItem = ({ groupName, onClick }: GroupsListItem) => {
+export const GroupsListItem = ({
+  groupName,
+  onClick,
+  withEditableRights,
+}: GroupsListItem) => {
   return (
     <div style={styles.container} onClick={onClick}>
-      {groupName}
+      <div>{groupName}</div>
+      {withEditableRights && <div style={{ color: "blue" }}>editable</div>}
     </div>
   );
 };

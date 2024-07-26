@@ -91,7 +91,11 @@ export const Welcome = () => {
                 onClick={() => handleUserSelect(user)}
                 style={styles.tableRow}
               >
-                <td>{user.nick}</td>
+                <td
+                  style={{ color: user.role === "teacher" ? "red" : "black" }}
+                >
+                  {user.nick}
+                </td>
                 <td>{user.role}</td>
                 <td>{user.userId}</td>
               </tr>

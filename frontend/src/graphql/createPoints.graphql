@@ -1,0 +1,39 @@
+mutation createPoints(
+  $studentId: Int!
+  $subcategoryId: Int!
+  $teacherId: Int!
+  $value: Int!
+) {
+  addPointsMutation(
+    studentId: $studentId
+    subcategoryId: $subcategoryId
+    teacherId: $teacherId
+    value: $value
+  ) {
+    value
+    updatedAt
+    createdAt
+    pointsId
+    student {
+      firstName
+      role
+      secondName
+      userId
+    }
+    subcategory {
+      subcategoryId
+      subcategoryName
+      category {
+        categoryId
+        categoryName
+      }
+    }
+    teacher {
+      firstName
+      secondName
+      userId
+      role
+    }
+    label
+  }
+}
