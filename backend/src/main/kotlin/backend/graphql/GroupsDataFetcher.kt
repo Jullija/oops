@@ -49,6 +49,28 @@ class GroupsDataFetcher {
     @Autowired
     lateinit var fileRepository: FileEntityRepository
 
+    @DgsMutation
+    @Transactional
+    fun assignPhotosToGroups(@InputArgument editionId: Long): Boolean {
+        val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
+        val groups = groupsRepository.findByEdition(edition)
+        val photosForGroups = fileRepository.findAllByFileType("image/group")
+
+        if (groups.size > photosForGroups.size) {
+            throw IllegalArgumentException("Not enough photos to assign to all groups. Missing ${groups.size - photosForGroups.size} photos." +
+                    " Please upload more photos with fileType = image/group and try again.")
+        }
+
+        val shuffledPhotos = photosForGroups.shuffled()
+
+        groups.zip(shuffledPhotos).forEach { (group, photo) ->
+            group.imageFile = photo
+            groupsRepository.save(group)
+        }
+
+        return true
+    }
+
     @DgsQuery
     @Transactional
     fun getUsersInGroupWithPoints(@InputArgument groupId: Long): List<UserPointsType> {
@@ -178,28 +200,6 @@ class GroupsDataFetcher {
                 sumOfAll = sumOfAll
             )
         )
-    }
-
-    @DgsMutation
-    @Transactional
-    fun assignPhotosToGroups(@InputArgument editionId: Long): Boolean {
-        val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
-        val groups = groupsRepository.findByEdition(edition)
-        val photosForGroups = fileRepository.findAllByFileType("image/group")
-
-        if (groups.size > photosForGroups.size) {
-            throw IllegalArgumentException("Not enough photos to assign to all groups. Missing ${groups.size - photosForGroups.size} photos." +
-                    " Please upload more photos with fileType = image/group and try again.")
-        }
-
-        val shuffledPhotos = photosForGroups.shuffled()
-
-        groups.zip(shuffledPhotos).forEach { (group, photo) ->
-            group.imageFile = photo
-            groupsRepository.save(group)
-        }
-
-        return true
     }
 }
 
