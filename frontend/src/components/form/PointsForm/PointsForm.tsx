@@ -5,6 +5,7 @@ import { FormPoints, Subcategory } from "./types";
 import { NumberInput } from "../../inputs/NumberInput";
 import { SelectInput } from "../../inputs/SelectInput";
 import { useCategoriesQuery } from "../../../graphql/categories.graphql.types";
+import { useEditionSelection } from "../../../hooks/common/useEditionSelection";
 
 type PointsFormValues = z.infer<typeof ValidationSchema>;
 
@@ -46,7 +47,10 @@ export const PointsForm = ({ handleAddPoints }: PointFormProps) => {
   const [subcategories, setSubcategories] = useState<
     Subcategory[] | undefined
   >();
-  const { data, loading, error } = useCategoriesQuery();
+  const { selectedEdition } = useEditionSelection();
+  const { data, loading, error } = useCategoriesQuery({
+    variables: { editionId: selectedEdition?.editionId ?? "-1" },
+  });
 
   if (loading) {
     return <div>loading...</div>;
