@@ -50,7 +50,7 @@ def insert_data(data_count_multiplier=1):
     owlbear_filenames = ["owlbear1.png", "owlbear2.png", "owlbear3.png", "owlbear4.png",
                          "owlbear5.png", "owlbear6.png", "owlbear7.png"]
 
-    group_filenames = [f"gr{i}.png" for i in range(1, 20)]
+    group_filenames = [f"gr{i}.png" for i in range(1, 21)]
 
     for filename in owlbear_filenames:
         file_path = os.path.abspath(f"../../../resources/files/{filename}")
