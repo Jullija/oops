@@ -296,7 +296,7 @@ def insert_data(data_count_multiplier=1):
                                             "SELECT 1 FROM subcategories WHERE subcategory_id = %s AND edition_id = %s",
                                             (s, edition_id)) and cursor.fetchone() is not None])
         cursor.execute(
-            "INSERT INTO chest_history (user_id, chest_id, subcategory_id, label, created_at, updated_at, teacher_id) VALUES (%s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, %s) RETURNING chest_history_id",
+            "INSERT INTO chest_history (user_id, chest_id, subcategory_id, label, created_at, updated_at, teacher_id) VALUES (%s, %s, %s, %s, NOW(), NOW(), %s) RETURNING chest_history_id",
             (student_id, chest_id, subcategory_id, "", teacher_id)
         )
         chest_history_id = cursor.fetchone()[0]
@@ -309,14 +309,14 @@ def insert_data(data_count_multiplier=1):
         # 3. Create an initial point record in the points table for the student by the teacher.
         initial_points = 0
         cursor.execute(
-            "INSERT INTO points (student_id, teacher_id, value, subcategory_id, label, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING points_id",
+            "INSERT INTO points (student_id, teacher_id, value, subcategory_id, label, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, NOW(), NOW()) RETURNING points_id",
             (student_id, teacher_id, initial_points, subcategory_id, "")
         )
         points_id = cursor.fetchone()[0]
 
         # 4. Insert a record in the bonuses table for the chosen award.
         cursor.execute(
-            "INSERT INTO bonuses (points_id, award_id, created_at, updated_at, label, chest_history_id) VALUES (%s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, %s, %s) RETURNING bonus_id",
+            "INSERT INTO bonuses (points_id, award_id, created_at, updated_at, label, chest_history_id) VALUES (%s, %s, NOW(), NOW(), %s, %s) RETURNING bonus_id",
             (points_id, chosen_award_id, "", chest_history_id)
         )
         bonus_id = cursor.fetchone()[0]
@@ -372,7 +372,7 @@ def insert_data(data_count_multiplier=1):
         # Add points to the student for the chosen subcategory
         points = random.randint(5, 20)
         cursor.execute(
-            "INSERT INTO points (student_id, teacher_id, value, subcategory_id, label, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)",
+            "INSERT INTO points (student_id, teacher_id, value, subcategory_id, label, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, NOW(), NOW())",
             (student_id, teacher_id, points, subcategory_id, "")
         )
 

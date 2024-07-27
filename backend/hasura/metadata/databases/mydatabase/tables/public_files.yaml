@@ -23,6 +23,13 @@ array_relationships:
         table:
           name: levels
           schema: public
+  - name: users
+    using:
+      foreign_key_constraint_on:
+        column: image_file_id
+        table:
+          name: users
+          schema: public
 insert_permissions:
   - role: coordinator
     permission:

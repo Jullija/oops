@@ -1,6 +1,10 @@
 table:
   name: users
   schema: public
+object_relationships:
+  - name: file
+    using:
+      foreign_key_constraint_on: image_file_id
 array_relationships:
   - name: chestHistories
     using:
