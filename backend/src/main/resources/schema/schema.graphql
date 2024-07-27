@@ -6,6 +6,7 @@ type Mutation {
         teacherId: Int!,
         value: Float!,
         subcategoryId: Int!): PointsType
+    assignPhotosToGroups(editionId: Int!): Boolean
 }
 
 type Query {

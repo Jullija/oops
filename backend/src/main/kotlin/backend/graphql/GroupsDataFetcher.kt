@@ -6,6 +6,8 @@ import backend.bonuses.BonusesRepository
 import backend.categories.Categories
 import backend.categories.CategoriesRepository
 import backend.edition.EditionRepository
+import backend.files.FileEntity
+import backend.files.FileEntityRepository
 import backend.groups.GroupsRepository
 import backend.points.Points
 import backend.points.PointsRepository
@@ -14,6 +16,7 @@ import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
 import backend.users.Users
 import com.netflix.graphql.dgs.DgsComponent
+import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.DgsQuery
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
@@ -37,9 +40,14 @@ class GroupsDataFetcher {
     @Autowired
     lateinit var subcategoriesRepository: SubcategoriesRepository
 
-
     @Autowired
     lateinit var groupsRepository: GroupsRepository
+
+    @Autowired
+    lateinit var editionRepository: EditionRepository
+
+    @Autowired
+    lateinit var fileRepository: FileEntityRepository
 
     @DgsQuery
     @Transactional
@@ -170,6 +178,28 @@ class GroupsDataFetcher {
                 sumOfAll = sumOfAll
             )
         )
+    }
+
+    @DgsMutation
+    @Transactional
+    fun assignPhotosToGroups(@InputArgument editionId: Long): Boolean {
+        val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
+        val groups = groupsRepository.findByEdition(edition)
+        val photosForGroups = fileRepository.findAllByFileType("image/group")
+
+        if (groups.size > photosForGroups.size) {
+            throw IllegalArgumentException("Not enough photos to assign to all groups. Missing ${groups.size - photosForGroups.size} photos." +
+                    " Please upload more photos with fileType = image/group and try again.")
+        }
+
+        val shuffledPhotos = photosForGroups.shuffled()
+
+        groups.zip(shuffledPhotos).forEach { (group, photo) ->
+            group.imageFile = photo
+            groupsRepository.save(group)
+        }
+
+        return true
     }
 }
 
