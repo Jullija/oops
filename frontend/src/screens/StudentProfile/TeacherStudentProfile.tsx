@@ -36,15 +36,9 @@ export function TeacherStudentProfile() {
   }, [mData]);
 
   if (loading || mLoading) return <p>Loading...</p>;
-  if (error || mError || !studentId)
-    return (
-      <p>
-        Error: {error?.message} {mError?.message}
-      </p>
-    );
+  if (error || !studentId) return <p>Error: {error?.message}</p>;
   if (!data) return <p>Please select an edition.</p>;
 
-  // TODO add backend here
   const handleAdd = (formPoints: FormPoints) => {
     console.log("teacheId: ", user.userId);
     createPoints({
@@ -58,14 +52,19 @@ export function TeacherStudentProfile() {
   };
 
   return (
-    <div style={styles.container}>
-      <UserCard
-        fullName={data.fullName}
-        index={data.index}
-        points={data.points}
-      />
-      <StudentPoints pointsList={data.points} />
-      <PointsForm handleAddPoints={handleAdd} />
-    </div>
+    <>
+      <div style={styles.container}>
+        <UserCard
+          fullName={data.fullName}
+          index={data.index}
+          points={data.points}
+        />
+        <StudentPoints pointsList={data.points} />
+        <PointsForm handleAddPoints={handleAdd} />
+      </div>
+      {!!mError && (
+        <div style={{ color: "red" }}>MUTATION ERROR: {mError?.message}</div>
+      )}
+    </>
   );
 }

@@ -7,7 +7,7 @@ export type CreatePointsMutationVariables = Types.Exact<{
   studentId: Types.Scalars["Int"]["input"];
   subcategoryId: Types.Scalars["Int"]["input"];
   teacherId: Types.Scalars["Int"]["input"];
-  value: Types.Scalars["Int"]["input"];
+  value: Types.Scalars["Float"]["input"];
 }>;
 
 export type CreatePointsMutation = {
@@ -51,7 +51,7 @@ export const CreatePointsDocument = gql`
     $studentId: Int!
     $subcategoryId: Int!
     $teacherId: Int!
-    $value: Int!
+    $value: Float!
   ) {
     addPointsMutation(
       studentId: $studentId

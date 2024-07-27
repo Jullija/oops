@@ -71,14 +71,6 @@ export const PointsForm = ({ handleAddPoints }: PointFormProps) => {
     formik.setFieldValue("subcategoryId", "-");
   };
 
-  const maxPoints = subcategories?.find(
-    (subcategory) => subcategory.subcategoryId === formik.values.subcategoryId,
-  )?.maxPoints;
-  const maxPointsError =
-    maxPoints && formik.values.points > maxPoints
-      ? `max number of points is ${maxPoints}`
-      : undefined;
-
   return (
     <form onSubmit={formik.handleSubmit}>
       <SelectInput
@@ -111,7 +103,7 @@ export const PointsForm = ({ handleAddPoints }: PointFormProps) => {
         handleChange={formik.handleChange}
         handleBlur={formik.handleBlur}
         value={formik.values.points}
-        error={formik.errors.points ?? maxPointsError}
+        error={formik.errors.points}
         touched={formik.touched.points}
         name="points"
         label="points"
