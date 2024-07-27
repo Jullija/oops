@@ -4,14 +4,72 @@ type Mutation {
 
     addPointsMutation (studentId: Int!,
         teacherId: Int!,
-        value: Int!,
+        value: Float!,
         subcategoryId: Int!): PointsType
+}
+
+type Query {
+    getUsersInGroupWithPoints(groupId: Int!): [UserPointsType]
+    getStudentPoints(studentId: Int!, editionId: Int!): StudentPointsType
+    getSumOfPointsForStudentByCategory(studentId: Int!, editionId: Int!): [CategoryPointsSumType]
+}
+
+type CategoryPointsSumType{
+    category: CategoriesType
+    sumOfPurePoints: Float
+    sumOfBonuses: Float
+    sumOfAll: Float
+    maxPoints: Float
+}
+
+type StudentPointsType{
+    user: UsersType
+    subcategoryPoints: [SubcategoryPointsType]
+    sumOfPurePoints: Float
+    sumOfBonuses: Float
+    sumOfAll: Float
 }
 
 type AddBonusReturnType {
     bonus: BonusType
     points: PointsType
 }
+
+type UserPointsType {
+    user: UsersType
+    categoriesPoints: [CategoryPointsType]
+}
+
+type CategoryAggregate {
+    category: CategoriesType
+    sumOfPurePoints: Float
+    sumOfBonuses: Float
+    sumOfAll: Float
+}
+
+
+type CategoryPointsType {
+    category: CategoriesType
+    subcategoryPoints: [SubcategoryPointsType]
+    aggregate: CategoryAggregate
+}
+
+type SubcategoryPointsType {
+    subcategory: SubcategoriesType
+    points: PurePointsType
+}
+
+type PurePointsType {
+    purePoints: PointsType
+    partialBonusType: [PartialBonusType]
+}
+
+type PartialBonusType {
+    bonuses: BonusType
+    partialValue: Float
+}
+
+
 
 type BonusType {
     bonusId: Int!
@@ -27,7 +85,7 @@ type PointsType {
     pointsId: Int!
     student: UsersType!
     teacher: UsersType!
-    value: Int!
+    value: Float!
     subcategory: SubcategoriesType!
     label: String!
     createdAt: String!
@@ -90,6 +148,9 @@ type GroupType {
     group_name: String!
     label: String
     users: [UsersType!]!
+    weekday: String!
+    start_time: String!
+    end_time: String!
 }
 
 type UsersType {
@@ -101,6 +162,7 @@ type UsersType {
     role: UsersRolesType!
     label: String!
     groups: [GroupType!]!
+    image_file_id: Int
 }
 
 type UserGroupType {
