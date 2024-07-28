@@ -1,8 +1,25 @@
 import { Styles } from "../utils/Styles";
 
 const styles: Styles = {
-  bar: { backgroundColor: "lightgrey", width: "100%" },
-  filled: { height: 24, backgroundColor: "lightblue" },
+  bar: {
+    height: 24,
+    width: "100%",
+    backgroundColor: "lightgrey",
+    position: "relative",
+  },
+  filled: {
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    backgroundColor: "lightblue",
+  },
+  pointsContainer: {
+    position: "absolute",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+  },
 };
 
 export type PointsBarProps = {
@@ -31,12 +48,12 @@ export const PointsBar = ({
   return (
     <div>
       {label && <div>{label}</div>}
-      {showPoints && (
-        <div>
-          {points}/{bounds.upper}
-        </div>
-      )}
       <div style={styles.bar}>
+        {showPoints && (
+          <div style={styles.pointsContainer}>
+            {points}/{bounds.upper}
+          </div>
+        )}
         <div style={{ ...styles.filled, width: `${filledPercent}%` }} />
       </div>
     </div>
