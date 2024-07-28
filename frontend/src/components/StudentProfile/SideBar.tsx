@@ -43,7 +43,7 @@ export const SideBar = ({ student }: SideBarProps) => {
         bounds: {
           upper: cat?.maxPoints ?? 1,
         },
-        points: cat?.sumOfPurePoints ?? 0,
+        points: cat?.sumOfAll ?? 0,
       };
     }) ?? [];
 
