@@ -6,6 +6,8 @@ type Mutation {
         teacherId: Int!,
         value: Float!,
         subcategoryId: Int!): PointsType
+    assignPhotosToGroups(editionId: Int!): Boolean
+    assignAvatarToUser(userId: Int!, fileId: Int!): Boolean
 }
 
 type Query {
@@ -15,48 +17,48 @@ type Query {
 }
 
 type CategoryPointsSumType{
-    category: CategoriesType
-    sumOfPurePoints: Float
-    sumOfBonuses: Float
-    sumOfAll: Float
-    maxPoints: Float
+    category: CategoriesType!
+    sumOfPurePoints: Float!
+    sumOfBonuses: Float!
+    sumOfAll: Float!
+    maxPoints: Float!
 }
 
 type StudentPointsType{
-    user: UsersType
+    user: UsersType!
     subcategoryPoints: [SubcategoryPointsType]
-    sumOfPurePoints: Float
-    sumOfBonuses: Float
-    sumOfAll: Float
+    sumOfPurePoints: Float!
+    sumOfBonuses: Float!
+    sumOfAll: Float!
 }
 
 type AddBonusReturnType {
-    bonus: BonusType
-    points: PointsType
+    bonus: BonusType!
+    points: PointsType!
 }
 
 type UserPointsType {
-    user: UsersType
+    user: UsersType!
     categoriesPoints: [CategoryPointsType]
 }
 
 type CategoryAggregate {
-    category: CategoriesType
-    sumOfPurePoints: Float
-    sumOfBonuses: Float
-    sumOfAll: Float
+    category: CategoriesType!
+    sumOfPurePoints: Float!
+    sumOfBonuses: Float!
+    sumOfAll: Float!
 }
 
 
 type CategoryPointsType {
-    category: CategoriesType
+    category: CategoriesType!
     subcategoryPoints: [SubcategoryPointsType]
-    aggregate: CategoryAggregate
+    aggregate: CategoryAggregate!
 }
 
 type SubcategoryPointsType {
-    subcategory: SubcategoriesType
-    points: PurePointsType
+    subcategory: SubcategoriesType!
+    points: PurePointsType!
 }
 
 type PurePointsType {
@@ -65,8 +67,8 @@ type PurePointsType {
 }
 
 type PartialBonusType {
-    bonuses: BonusType
-    partialValue: Float
+    bonuses: BonusType!
+    partialValue: Float!
 }
 
 
