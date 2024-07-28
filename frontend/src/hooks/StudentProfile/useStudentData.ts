@@ -3,7 +3,7 @@ import { UserPoints } from "../../utils/types";
 import { useUser } from "../common/useUser";
 import { useUserEditions } from "../common/useUserEditions";
 
-type UserData = {
+export type StudentData = {
   id: string;
   fullName: string;
   index: number;
@@ -11,7 +11,7 @@ type UserData = {
 };
 
 type UseUserDataResult = {
-  userData?: UserData;
+  student?: StudentData;
   loading: boolean;
   error?: Error;
 };
@@ -33,15 +33,13 @@ export function useStudentData(): UseUserDataResult {
 
   const { userId, fullName, indexNumber, points } = data.usersByPk;
 
-  const userData = {
-    id: userId,
-    fullName: fullName ?? "",
-    index: indexNumber,
-    points: points,
-  };
-
   return {
-    userData,
+    student: {
+      id: userId,
+      fullName: fullName ?? "",
+      index: indexNumber,
+      points: points,
+    },
     loading,
     error,
   };

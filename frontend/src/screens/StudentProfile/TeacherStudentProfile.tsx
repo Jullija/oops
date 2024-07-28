@@ -1,10 +1,10 @@
-import { UserCard } from "../../components/StudentProfile/userCard";
+import { UserCard } from "../../components/StudentProfile/cards/userCard";
 import { Styles } from "../../utils/Styles";
-import StudentPoints from "../../components/StudentProfile/StudentPoints";
 import { useParams } from "react-router-dom";
 import { useTeacherStudentData } from "../../hooks/TeacherStudentProfile/useTeacherStudentData";
 import { PointsForm } from "../../components/form/PointsForm/PointsForm";
 import { FormPoints } from "../../components/form/PointsForm/types";
+import PointsTableWithFilter from "../../components/StudentProfile/table/PointsTableWithFilter";
 
 const styles: Styles = {
   container: {
@@ -44,7 +44,7 @@ export function TeacherStudentProfile() {
         index={data.index}
         points={data.points}
       />
-      <StudentPoints pointsList={data.points} />
+      <PointsTableWithFilter pointsList={data.points} />
       <PointsForm handleAddPoints={handleAdd} />
     </div>
   );

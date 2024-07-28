@@ -5,7 +5,7 @@ const styles: Styles = {
   filled: { height: 24, backgroundColor: "lightblue" },
 };
 
-type PointsBarProps = {
+export type PointsBarProps = {
   points: number;
   bounds: { lower?: number; upper: number };
   showPoints?: boolean;
@@ -29,7 +29,7 @@ export const PointsBar = ({
   );
 
   return (
-    <>
+    <div>
       {label && <div>{label}</div>}
       {showPoints && (
         <div>
@@ -39,6 +39,6 @@ export const PointsBar = ({
       <div style={styles.bar}>
         <div style={{ ...styles.filled, width: `${filledPercent}%` }} />
       </div>
-    </>
+    </div>
   );
 };
