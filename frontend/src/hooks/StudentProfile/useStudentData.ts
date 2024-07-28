@@ -1,6 +1,6 @@
 import { ApolloError } from "@apollo/client";
-import { useUserPointsQuery } from "../../../graphql/userPoints.graphql.types";
-import { UserPoints } from "../../../utils/types";
+import { useUserPointsQuery } from "../../graphql/userPoints.graphql.types";
+import { UserPoints } from "../../utils/types";
 
 type UseStudentCardDataResult = {
   student?: StudentData;
@@ -39,8 +39,6 @@ export function useStudentCardData(props: {
       studentRefetch,
     };
   }
-
-  console.log(data);
 
   const student: StudentData = {
     id: studentId,

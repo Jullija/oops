@@ -1,4 +1,4 @@
-import { useEditionSelection } from "../../../hooks/common/useEditionSelection";
+import { useEditionSelection } from "../common/useEditionSelection";
 import { useCategoriesCardData } from "./useCategoriesCardData";
 import { useStudentCardData } from "./useStudentData";
 

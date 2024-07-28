@@ -2,10 +2,10 @@ import { PointsBarProps } from "../PointsBar";
 import { UserCard } from "./cards/userCard";
 import { CategoriesCard } from "./cards/CategoriesCard";
 import { Styles } from "../../utils/Styles";
-import { StudentData } from "../../screens/StudentProfile/hooks/useStudentData";
+import { StudentData } from "../../hooks/StudentProfile/useStudentData";
 
 const styles: Styles = {
-  sideBar: {
+  container: {
     display: "flex",
     flexDirection: "column",
     gap: 20,
@@ -14,14 +14,14 @@ const styles: Styles = {
 
 type SideBarProps = {
   student: StudentData;
-  categories: PointsBarProps[];
+  categoriesBarProps: PointsBarProps[];
 };
 
-export const SideBar = ({ student, categories }: SideBarProps) => {
+export const SideBar = ({ student, categoriesBarProps }: SideBarProps) => {
   return (
-    <div style={styles.sideBar}>
+    <div style={styles.container}>
       <UserCard {...student} />
-      <CategoriesCard entries={categories} />
+      <CategoriesCard categoriesBarProps={categoriesBarProps} />
     </div>
   );
 };

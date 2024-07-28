@@ -6,7 +6,7 @@ import { useCreatePointsMutation } from "../../graphql/createPoints.graphql.type
 import PointsTableWithFilter from "../../components/StudentProfile/table/PointsTableWithFilter";
 import { SideBar } from "../../components/StudentProfile/SideBar";
 import { useUser } from "../../hooks/common/useUser";
-import { useStudentProfileData } from "./hooks/useStudentProfileData";
+import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
 
 const styles: Styles = {
   container: {
@@ -54,7 +54,7 @@ export function TeacherStudentProfile() {
 
   return (
     <div style={styles.container}>
-      <SideBar student={student} categories={categories} />
+      <SideBar student={student} categoriesBarProps={categories} />
       <div style={styles.rightContainer}>
         <PointsTableWithFilter pointsList={student.points} />
         <PointsForm

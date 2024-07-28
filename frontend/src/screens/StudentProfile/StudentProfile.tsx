@@ -2,7 +2,7 @@ import { Styles } from "../../utils/Styles";
 import PointsTableWithFilter from "../../components/StudentProfile/table/PointsTableWithFilter";
 import { SideBar } from "../../components/StudentProfile/SideBar";
 import { useUser } from "../../hooks/common/useUser";
-import { useStudentProfileData } from "./hooks/useStudentProfileData";
+import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
 
 const styles: Styles = {
   container: {
@@ -25,7 +25,7 @@ export function StudentProfile() {
 
   return (
     <div style={styles.container}>
-      <SideBar student={student} categories={categories} />
+      <SideBar student={student} categoriesBarProps={categories} />
       <PointsTableWithFilter pointsList={student.points} />
     </div>
   );

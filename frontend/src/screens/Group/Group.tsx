@@ -40,7 +40,6 @@ export const Group = () => {
         </button>
         <div>params - group id: {id}</div>
       </div>
-
       {students && <StudentSearcher students={students} />}
     </div>
   );

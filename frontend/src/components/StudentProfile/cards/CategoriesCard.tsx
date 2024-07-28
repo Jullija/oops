@@ -1,10 +1,6 @@
 import { PointsBar, PointsBarProps } from "../../PointsBar";
 import { Styles } from "../../../utils/Styles";
 
-type CategoriesCardProps = {
-  entries: PointsBarProps[];
-};
-
 const styles: Styles = {
   container: {
     display: "flex",
@@ -13,11 +9,15 @@ const styles: Styles = {
   },
 };
 
-export const CategoriesCard = ({ entries }: CategoriesCardProps) => {
+type CategoriesCardProps = {
+  categoriesBarProps: PointsBarProps[];
+};
+
+export const CategoriesCard = ({ categoriesBarProps }: CategoriesCardProps) => {
   return (
     <div style={styles.container}>
-      {entries.map((entry, index) => (
-        <PointsBar key={index} {...entry} showPoints={true} />
+      {categoriesBarProps.map((props, index) => (
+        <PointsBar key={index} {...props} showPoints />
       ))}
     </div>
   );
