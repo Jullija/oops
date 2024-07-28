@@ -45,7 +45,7 @@ export function TeacherStudentProfile() {
         points={data.points}
       />
       <StudentPoints pointsList={data.points} />
-      <PointsForm studentId={studentId} handleAdd={handleAdd} />
+      <PointsForm handleAddPoints={handleAdd} />
     </div>
   );
 }

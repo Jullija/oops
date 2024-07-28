@@ -5,6 +5,7 @@ import backend.award.Award
 import backend.bonuses.BonusesRepository
 import backend.categories.Categories
 import backend.edition.Edition
+import backend.files.FileEntity
 import backend.groups.Groups
 import backend.points.Points
 import backend.points.PointsRepository
@@ -45,7 +46,11 @@ class Users(
     val groups: Set<Groups> = HashSet(),
 
     @Column(name = "label", nullable = false, length = 256)
-    var label: String
+    var label: String,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_file_id")
+    var imageFile: FileEntity? = null
 
 ) {
     constructor() : this(

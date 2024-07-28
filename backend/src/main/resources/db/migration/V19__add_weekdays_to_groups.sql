@@ -1,0 +1,2 @@
+ALTER TABLE groups
+    ADD COLUMN weekday VARCHAR(255) NOT NULL DEFAULT 'monday';
