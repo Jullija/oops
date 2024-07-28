@@ -5,6 +5,9 @@ object_relationships:
   - name: edition
     using:
       foreign_key_constraint_on: edition_id
+  - name: file
+    using:
+      foreign_key_constraint_on: image_file_id
 array_relationships:
   - name: userGroups
     using:
