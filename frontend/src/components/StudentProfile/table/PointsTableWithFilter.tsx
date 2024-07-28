@@ -1,5 +1,5 @@
-import { UserPoints } from "../../utils/types";
-import { Styles } from "../../utils/Styles";
+import { UserPoints } from "../../../utils/types";
+import { Styles } from "../../../utils/Styles";
 import FilterMenu from "./FilterMenu";
 import { useState } from "react";
 import PointsTable from "./PointsTable";
@@ -12,13 +12,12 @@ const styles: Styles = {
   },
 };
 
-export default function StudentPoints({
+export default function PointsTableWithFilter({
   pointsList,
 }: {
   pointsList: UserPoints;
 }) {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
-
   const onSelectChange = (updatedSelectedCategoryIds: string[]) => {
     setSelectedCategoryIds(updatedSelectedCategoryIds);
   };

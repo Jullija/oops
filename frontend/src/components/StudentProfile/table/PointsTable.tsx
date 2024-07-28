@@ -1,5 +1,5 @@
-import { UserPoints } from "../../utils/types";
-import { Styles } from "../../utils/Styles";
+import { UserPoints } from "../../../utils/types";
+import { Styles } from "../../../utils/Styles";
 
 const styles: Styles = {
   table: {

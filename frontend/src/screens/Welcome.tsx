@@ -85,23 +85,21 @@ export const Welcome = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers
-              .filter((user) => user.role === "teacher")
-              .map((user) => (
-                <tr
-                  key={user.userId}
-                  onClick={() => handleUserSelect(user)}
-                  style={styles.tableRow}
+            {filteredUsers.map((user) => (
+              <tr
+                key={user.userId}
+                onClick={() => handleUserSelect(user)}
+                style={styles.tableRow}
+              >
+                <td
+                  style={{ color: user.role === "teacher" ? "red" : "black" }}
                 >
-                  <td
-                    style={{ color: user.role === "teacher" ? "red" : "black" }}
-                  >
-                    {user.nick}
-                  </td>
-                  <td>{user.role}</td>
-                  <td>{user.userId}</td>
-                </tr>
-              ))}
+                  {user.nick}
+                </td>
+                <td>{user.role}</td>
+                <td>{user.userId}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
