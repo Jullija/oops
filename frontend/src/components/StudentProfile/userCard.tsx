@@ -21,7 +21,7 @@ const styles: Styles = {
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     width: "250px",
   },
-  userImageContainer: {
+  imgPlaceholder: {
     width: "200px",
     height: "200px",
     backgroundColor: "#fff",
@@ -55,26 +55,36 @@ export function UserCard({ fullName, index, points }: UserCardProps) {
   const totalPoints = points.reduce((acc, point) => acc + +point.value, 0);
   const { imageId, loading, error } = useUserPointsImage(totalPoints);
 
+  const getImageContent = () => {
+    if (loading || error) {
+      return loading ? (
+        <div>Loading image...</div>
+      ) : (
+        <div>Error loading image - {error?.message}</div>
+      );
+    }
+    if (imageId) {
+      return (
+        <img
+          src={`${FILES_URL}${imageId}`}
+          alt={`Image id ${imageId}`}
+          style={styles.userImage}
+        />
+      );
+    }
+    return <div style={styles.userImageContainer} />;
+  };
+
   return (
     <div style={styles.userCard}>
-      <div style={styles.userImageContainer}>
-        {loading && <div>Loading image...</div>}
-        {error && <div>Error loading image</div>}
-        {imageId && !loading && !error ? (
-          <img
-            src={`${FILES_URL}${imageId}`}
-            alt={`Image id ${imageId}`}
-            style={styles.userImage}
-          />
-        ) : (
-          !loading && !error && <div style={styles.userImageContainer} />
-        )}
-      </div>
-      <div>{fullName}</div>
-      <div>Indeks Studenta: {index}</div>
-      <div>Punkty całkowite: {totalPoints}</div>
-      <div style={styles.progressBar}>
-        <div style={{ ...styles.progress, width: `${totalPoints}%` }}></div>
+      <div style={styles.userImageContainer}>{getImageContent()}</div>
+      <div>
+        <div>{fullName}</div>
+        <div>Indeks Studenta: {index}</div>
+        <div>Punkty całkowite: {totalPoints}</div>
+        <div style={styles.progressBar}>
+          <div style={{ ...styles.progress, width: `${totalPoints}%` }}></div>
+        </div>
       </div>
     </div>
   );
