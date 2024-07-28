@@ -15,6 +15,11 @@ const styles: Styles = {
     gap: 20,
     margin: 12,
   },
+  rightContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 24,
+  },
 };
 
 export function TeacherStudentProfile() {
@@ -50,13 +55,13 @@ export function TeacherStudentProfile() {
   return (
     <div style={styles.container}>
       <SideBar student={student} categories={categories} />
-      <PointsTableWithFilter pointsList={student.points} />
-      <PointsForm handleAddPoints={handleAdd} />
-      {!!createPointsError && (
-        <div style={{ color: "red" }}>
-          MUTATION ERROR: {createPointsError?.message}
-        </div>
-      )}
+      <div style={styles.rightContainer}>
+        <PointsTableWithFilter pointsList={student.points} />
+        <PointsForm
+          handleAddPoints={handleAdd}
+          createError={createPointsError?.message}
+        />
+      </div>
     </div>
   );
 }
