@@ -1,6 +1,5 @@
 import { useUserPointsQuery } from "../../graphql/userPoints.graphql.types";
 import { UserPoints } from "../../utils/types";
-import { useUser } from "../common/useUser";
 import { useUserEditions } from "../common/useUserEditions";
 
 export type StudentData = {
@@ -14,14 +13,14 @@ type UseUserDataResult = {
   student?: StudentData;
   loading: boolean;
   error?: Error;
+  refetch?: () => void;
 };
-export function useStudentData(): UseUserDataResult {
-  const { user } = useUser();
+export function useStudentData(studentId: string): UseUserDataResult {
   const { selectedEdition: edition } = useUserEditions();
 
-  const { data, loading, error } = useUserPointsQuery({
+  const { data, loading, error, refetch } = useUserPointsQuery({
     skip: !edition,
-    variables: { id: user.userId, editionId: edition?.editionId ?? "0" },
+    variables: { id: studentId, editionId: edition?.editionId ?? "-1" },
   });
 
   if (loading || error || !data?.usersByPk) {
@@ -42,5 +41,6 @@ export function useStudentData(): UseUserDataResult {
     },
     loading,
     error,
+    refetch,
   };
 }
