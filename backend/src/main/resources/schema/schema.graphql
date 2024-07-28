@@ -11,9 +11,9 @@ type Mutation {
 }
 
 type Query {
-    getUsersInGroupWithPoints(groupId: Int!): [UserPointsType]
-    getStudentPoints(studentId: Int!, editionId: Int!): StudentPointsType
-    getSumOfPointsForStudentByCategory(studentId: Int!, editionId: Int!): [CategoryPointsSumType]
+    getUsersInGroupWithPoints(groupId: Int!): [UserPointsType]!
+    getStudentPoints(studentId: Int!, editionId: Int!): StudentPointsType!
+    getSumOfPointsForStudentByCategory(studentId: Int!, editionId: Int!): [CategoryPointsSumType!]!
 }
 
 type CategoryPointsSumType{
@@ -26,7 +26,7 @@ type CategoryPointsSumType{
 
 type StudentPointsType{
     user: UsersType!
-    subcategoryPoints: [SubcategoryPointsType]
+    subcategoryPoints: [SubcategoryPointsType]!
     sumOfPurePoints: Float!
     sumOfBonuses: Float!
     sumOfAll: Float!
@@ -39,7 +39,7 @@ type AddBonusReturnType {
 
 type UserPointsType {
     user: UsersType!
-    categoriesPoints: [CategoryPointsType]
+    categoriesPoints: [CategoryPointsType!]!
 }
 
 type CategoryAggregate {
@@ -52,7 +52,7 @@ type CategoryAggregate {
 
 type CategoryPointsType {
     category: CategoriesType!
-    subcategoryPoints: [SubcategoryPointsType]
+    subcategoryPoints: [SubcategoryPointsType!]!
     aggregate: CategoryAggregate!
 }
 
@@ -63,7 +63,7 @@ type SubcategoryPointsType {
 
 type PurePointsType {
     purePoints: PointsType
-    partialBonusType: [PartialBonusType]
+    partialBonusType: [PartialBonusType]!
 }
 
 type PartialBonusType {
