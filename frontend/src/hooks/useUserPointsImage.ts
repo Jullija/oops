@@ -16,6 +16,7 @@ export const useUserPointsImage = (points: number) => {
       return null;
     }
 
+    // TODO logic to find out which level is user
     const level = data.editionByPk.levels.find((level) => {
       if (
         level.highest &&
