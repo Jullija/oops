@@ -5,7 +5,6 @@ import { useTeacherStudentData } from "../../hooks/TeacherStudentProfile/useTeac
 import { PointsForm } from "../../components/form/PointsForm/PointsForm";
 import { FormPoints } from "../../components/form/PointsForm/types";
 import { useCreatePointsMutation } from "../../graphql/createPoints.graphql.types";
-import { useEffect } from "react";
 import PointsTableWithFilter from "../../components/StudentProfile/table/PointsTableWithFilter";
 
 const styles: Styles = {
@@ -25,22 +24,18 @@ export function TeacherStudentProfile() {
     studentData: data,
     loading,
     error,
+    refetch,
   } = useTeacherStudentData({
     studentId: studentId ?? "-1",
   });
-  const [createPoints, { data: mData, error: mError, loading: mLoading }] =
+  const [createPoints, { error: mError, loading: mLoading }] =
     useCreatePointsMutation();
-
-  useEffect(() => {
-    console.log("data: ", mData);
-  }, [mData]);
 
   if (loading || mLoading) return <p>Loading...</p>;
   if (error || !studentId) return <p>Error: {error?.message}</p>;
   if (!data) return <p>Please select an edition.</p>;
 
   const handleAdd = (formPoints: FormPoints) => {
-    console.log("teacheId: ", user.userId);
     createPoints({
       variables: {
         studentId: parseInt(studentId),
@@ -48,7 +43,7 @@ export function TeacherStudentProfile() {
         teacherId: parseInt(user.userId),
         value: formPoints.points,
       },
-    });
+    }).finally(() => refetch?.());
   };
 
   return (

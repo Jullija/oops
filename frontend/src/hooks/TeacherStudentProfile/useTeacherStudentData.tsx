@@ -15,6 +15,7 @@ type UseUserDataResult = {
   studentData?: UserData;
   loading: boolean;
   error?: Error;
+  refetch?: () => void;
 };
 
 export function useTeacherStudentData({
@@ -26,7 +27,7 @@ export function useTeacherStudentData({
   const { user } = useUser();
 
   const editionId = edition ? edition.editionId : "0";
-  const { data, loading, error } = useUserPointsQuery({
+  const { data, loading, error, refetch } = useUserPointsQuery({
     skip: !edition || !studentId,
     variables: { id: studentId, editionId },
   });
@@ -52,5 +53,6 @@ export function useTeacherStudentData({
     studentData: userData,
     loading,
     error,
+    refetch,
   };
 }
