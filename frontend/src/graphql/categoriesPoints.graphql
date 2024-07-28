@@ -1,0 +1,16 @@
+query categoriesPoints($editionId: Int!, $studentId: Int!) {
+  getSumOfPointsForStudentByCategory(
+    editionId: $editionId
+    studentId: $studentId
+  ) {
+    maxPoints
+    sumOfAll
+    sumOfBonuses
+    sumOfPurePoints
+    category {
+      categoryName
+      categoryId
+      label
+    }
+  }
+}

@@ -51,6 +51,7 @@ def insert_data(data_count_multiplier=1):
                          "owlbear5.png", "owlbear6.png", "owlbear7.png"]
 
     group_filenames = [f"gr{i}.png" for i in range(1, 21)]
+    avatar_filenames = [f"avatar{i}.png" for i in range(1, 5)]
 
     for filename in owlbear_filenames:
         file_path = os.path.abspath(f"../../../resources/files/{filename}")
@@ -61,6 +62,11 @@ def insert_data(data_count_multiplier=1):
         file_path = os.path.abspath(f"../../../resources/files/{filename}")
         cursor.execute("INSERT INTO files (path_to_file, file_name, file_type, label) VALUES (%s, %s, %s, %s)",
                        (file_path, filename, "image/group", ""))
+
+    for filename in avatar_filenames:
+        file_path = os.path.abspath(f"../../../resources/files/{filename}")
+        cursor.execute("INSERT INTO files (path_to_file, file_name, file_type, label) VALUES (%s, %s, %s, %s)",
+                       (file_path, filename, "image/avatar", ""))
 
     category_names = ["LABORATORY", "TEST", "PROJECT", "EVENT"]
 

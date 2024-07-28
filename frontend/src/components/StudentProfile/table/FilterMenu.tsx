@@ -1,6 +1,6 @@
-import { UserPoints } from "../../utils/types";
-import { Styles } from "../../utils/Styles";
-import { UserPointsQuery } from "../../graphql/userPoints.graphql.types";
+import { UserPoints } from "../../../utils/types";
+import { Styles } from "../../../utils/Styles";
+import { UserPointsQuery } from "../../../graphql/userPoints.graphql.types";
 
 const styles: Styles = {
   container: {
