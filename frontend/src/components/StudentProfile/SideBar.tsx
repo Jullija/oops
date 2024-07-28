@@ -1,8 +1,8 @@
 import { PointsBarProps } from "../PointsBar";
 import { UserCard } from "./cards/userCard";
 import { CategoriesCard } from "./cards/CategoriesCard";
-import type { StudentData } from "../../hooks/StudentProfile/useStudentData";
 import { Styles } from "../../utils/Styles";
+import { StudentData } from "../../screens/StudentProfile/hooks/useStudentData";
 
 const styles: Styles = {
   sideBar: {
