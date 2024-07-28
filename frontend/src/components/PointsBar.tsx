@@ -46,7 +46,7 @@ export const PointsBar = ({
     );
   }
 
-  const diff = bounds.lower === undefined ? 0 : bounds.lower;
+  const diff = bounds.lower ?? 0;
   const filledPercent = Math.min(
     Math.round(((points - diff) / (bounds.upper - diff)) * 100),
     100,
