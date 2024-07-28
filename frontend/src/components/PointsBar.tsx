@@ -1,7 +1,12 @@
 import { Styles } from "../utils/Styles";
 
 const styles: Styles = {
-  bar: {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 4,
+  },
+  empty: {
     height: 24,
     width: "100%",
     backgroundColor: "lightgrey",
@@ -36,7 +41,9 @@ export const PointsBar = ({
   label,
 }: PointsBarProps) => {
   if ((bounds.lower && points < bounds.lower) || points < 0) {
-    throw new Error("points cannot be lower than lower bound or negative");
+    throw new Error(
+      "points cannot be lower than lower bound or be negative number",
+    );
   }
 
   const diff = bounds.lower === undefined ? 0 : bounds.lower;
@@ -46,9 +53,9 @@ export const PointsBar = ({
   );
 
   return (
-    <div>
+    <div style={styles.container}>
       {label && <div>{label}</div>}
-      <div style={styles.bar}>
+      <div style={styles.empty}>
         {showPoints && (
           <div style={styles.pointsContainer}>
             {points}/{bounds.upper}
