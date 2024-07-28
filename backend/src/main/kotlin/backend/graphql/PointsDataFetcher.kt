@@ -51,11 +51,11 @@ class PointsDataFetcher {
         }
         val studentEditions = student.groups.map { group -> group.edition }
         if (!studentEditions.contains(subcategory.edition)) {
-            throw IllegalArgumentException("Student is not participating in this edition")
+            throw IllegalArgumentException("Student is not participating in subcategory edition")
         }
         val teacherEditions = teacher.groups.map { group -> group.edition }
         if (!teacherEditions.contains(subcategory.edition)) {
-            throw IllegalArgumentException("Teacher is not participating in this edition")
+            throw IllegalArgumentException("Teacher is not participating in subcategory edition")
         }
         if (value < 0) {
             throw IllegalArgumentException("Value cannot be negative")
