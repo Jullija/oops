@@ -38,7 +38,7 @@ class Levels(
     @JoinColumn(name = "edition_id", nullable = false)
     var edition: Edition
 ) {
-    protected constructor() : this(
+    constructor() : this(
         levelName = "",
         minimumPoints = 0.0,
         maximumPoints = 0.0,
