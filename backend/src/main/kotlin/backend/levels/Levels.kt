@@ -18,8 +18,8 @@ class Levels(
     @Column(name = "minimum_points", nullable = false)
     var minimumPoints: Double,
 
-    @Column(name = "maximum_points")
-    var maximumPoints: Double? = null,
+    @Column(name = "maximum_points", nullable = false)
+    var maximumPoints: Double,
 
     @Column(name = "grade", nullable = false)
     var grade: Double,
@@ -47,7 +47,7 @@ class Levels(
         edition = Edition()
     )
 
-    constructor(name: String, minimumPoints: Double, maximumPoints: Double?, grade: Double) : this(
+    constructor(name: String, minimumPoints: Double, maximumPoints: Double, grade: Double) : this(
         levelName = name,
         minimumPoints = minimumPoints,
         maximumPoints = maximumPoints,
