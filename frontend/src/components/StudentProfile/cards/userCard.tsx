@@ -1,7 +1,7 @@
-import { useUserPointsImage } from "../../hooks/useUserPointsImage";
-import { UserPoints } from "../../utils/types";
-import { Styles } from "../../utils/Styles";
-import ImageCache from "../imageCache";
+import { useUserPointsImage } from "../../../hooks/useUserPointsImage";
+import { UserPoints } from "../../../utils/types";
+import { Styles } from "../../../utils/Styles";
+import ImageCache from "../../imageCache";
 
 type UserCardProps = {
   fullName?: string;
@@ -71,9 +71,6 @@ export function UserCard({ fullName, index, points }: UserCardProps) {
       <div>{fullName}</div>
       <div>Indeks Studenta: {index}</div>
       <div>Punkty całkowite: {totalPoints}</div>
-      <div style={styles.progressBar}>
-        <div style={{ ...styles.progress, width: `${totalPoints}%` }}></div>
-      </div>
     </div>
   );
 }
