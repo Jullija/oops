@@ -1,5 +1,6 @@
 import { HallOfFameQuery } from "../../graphql/hallOfFame.graphql.types";
 import { Styles } from "../../utils/Styles";
+import { FILES_URL } from "../../utils/constants";
 
 const styles: Styles = {
   item: {
@@ -8,15 +9,29 @@ const styles: Styles = {
     alignItems: "center",
     border: "1px solid black",
     gap: 12,
-    padding: 12,
+    padding: 6,
     boxSizing: "border-box",
     width: "100%",
   },
   logoPlaceholder: {
-    width: 30,
-    height: 30,
+    width: 40,
+    height: 40,
     borderRadius: "50%",
     backgroundColor: "gray",
+  },
+  imageContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: "50%",
+    overflow: "clip",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
   },
 };
 
@@ -38,8 +53,16 @@ export default function HallOfFameRow({
       }}
     >
       <div>{`${index + 1}.`}</div>
-      <div>
-        <div style={styles.logoPlaceholder} />
+      <div style={styles.imageContainer}>
+        {student.imageFileId ? (
+          <img
+            src={`${FILES_URL}${student.imageFileId}`}
+            alt={`Image of ${student.nick}`}
+            style={styles.image}
+          />
+        ) : (
+          <div style={styles.logoPlaceholder} />
+        )}
       </div>
       <div>{student.nick}</div>
       <div>{student.levelName}</div>
