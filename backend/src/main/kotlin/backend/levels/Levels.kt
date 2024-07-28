@@ -18,8 +18,8 @@ class Levels(
     @Column(name = "minimum_points", nullable = false)
     var minimumPoints: Double,
 
-    @Column(name = "maximum_points", nullable = false)
-    var maximumPoints: Double,
+    @Column(name = "maximum_points")
+    var maximumPoints: Double? = null,
 
     @Column(name = "grade", nullable = false)
     var grade: Double,
@@ -27,6 +27,9 @@ class Levels(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_file_id")
     var imageFile: FileEntity? = null,
+
+    @Column(name = "highest", nullable = false)
+    var highest: Boolean = false,
 
     @Column(name = "label", nullable = false, length = 256)
     var label: String,
@@ -44,7 +47,7 @@ class Levels(
         edition = Edition()
     )
 
-    constructor(name: String, minimumPoints: Double, maximumPoints: Double, grade: Double) : this(
+    constructor(name: String, minimumPoints: Double, maximumPoints: Double?, grade: Double) : this(
         levelName = name,
         minimumPoints = minimumPoints,
         maximumPoints = maximumPoints,
