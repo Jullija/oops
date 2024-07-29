@@ -80,7 +80,7 @@ class BonusDataFetcher {
         val points = when (award.awardType) {
             AwardType.ADDITIVE -> createAdditivePoints(chestHistory, award)
             AwardType.ADDITIVE_NEXT -> createAdditiveNextPoints(chestHistory, award, edition)
-            AwardType.ADDITIVE_PREV -> updateAdditivePrevPoints(chestHistory, award, edition)
+            AwardType.ADDITIVE_PREV -> createAdditivePrevPoints(chestHistory, award, edition)
             AwardType.MULTIPLICATIVE -> createMultiplicativePoints(chestHistory, award, edition)
         }
 
@@ -113,7 +113,7 @@ class BonusDataFetcher {
         return Points(
             student = chestHistory.user,
             teacher = chestHistory.teacher,
-            value = award.awardValue.toLong(),
+            value = award.awardValue,
             subcategory = chestHistory.subcategory,
             label = "Points awarded for ${award.awardName}"
         )
@@ -145,26 +145,30 @@ class BonusDataFetcher {
         return Points(
             student = chestHistory.user,
             teacher = chestHistory.teacher,
-            value = award.awardValue.toLong(),
+            value = award.awardValue,
             subcategory = nextSubcategory,
             label = "Points awarded for ${award.awardName}"
         )
     }
 
-    private fun updateAdditivePrevPoints(chestHistory: ChestHistory, award: Award, edition: Edition): Points {
+    private fun createAdditivePrevPoints(chestHistory: ChestHistory, award: Award, edition: Edition): Points {
         val pointsInAwardCategory = chestHistory.user.getPointsByEditionAndCategory(edition,
             award.category, pointsRepository).filter{
                 point -> bonusRepository.findByPoints(point).isEmpty()  // discard points connected to bonuses
         }
         val lastPoints = pointsInAwardCategory.maxByOrNull { it.subcategory.ordinalNumber }
 
-        return if (lastPoints != null) {
-            lastPoints.value = min((lastPoints.value + award.awardValue).toLong(), lastPoints.subcategory.maxPoints.toLong())
-            lastPoints.label = "Points awarded for ${award.awardName}"
-            pointsRepository.save(lastPoints)
-        } else {
+        if (lastPoints == null) {
             throw IllegalArgumentException("No previous points found in the specified category.")
         }
+
+        return Points(
+            student = chestHistory.user,
+            teacher = chestHistory.teacher,
+            value = min(lastPoints.subcategory.maxPoints - lastPoints.value, award.awardValue),
+            subcategory = lastPoints.subcategory,
+            label = "Points awarded for ${award.awardName}"
+        )
     }
 
     private fun createMultiplicativePoints(chestHistory: ChestHistory, award: Award, edition: Edition): Points {
@@ -172,12 +176,12 @@ class BonusDataFetcher {
             award.category, pointsRepository).filter{
                 point -> bonusRepository.findByPoints(point).isEmpty()  // discard points connected to bonuses
         }
-        val totalPointsValue = pointsInAwardCategory.sumOf { it.value }
+        val totalPointsValue = pointsInAwardCategory.sumOf { it.value.toDouble() }.toFloat()
 
         return Points(
             student = chestHistory.user,
             teacher = chestHistory.teacher,
-            value = (totalPointsValue * award.awardValue).toLong(),
+            value = totalPointsValue * award.awardValue,
             subcategory = chestHistory.subcategory,
             label = "Points awarded for ${award.awardName}"
         )

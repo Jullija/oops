@@ -17,9 +17,9 @@ insert_permissions:
       columns:
         - edition_id
         - grade
+        - highest
         - image_file_id
         - label
-        - level_id
         - maximum_points
         - minimum_points
         - name
@@ -29,22 +29,24 @@ select_permissions:
     permission:
       columns:
         - edition_id
-        - level_id
+        - grade
+        - highest
         - image_file_id
         - label
-        - name
-        - grade
+        - level_id
         - maximum_points
         - minimum_points
+        - name
       filter: {}
       allow_aggregations: true
     comment: ""
   - role: student
     permission:
       columns:
-        - image_file_id
         - edition_id
         - grade
+        - highest
+        - image_file_id
         - label
         - level_id
         - maximum_points
@@ -60,9 +62,10 @@ select_permissions:
   - role: teacher
     permission:
       columns:
-        - image_file_id
         - edition_id
         - grade
+        - highest
+        - image_file_id
         - label
         - level_id
         - maximum_points
@@ -79,8 +82,9 @@ update_permissions:
   - role: coordinator
     permission:
       columns:
-        - image_file_id
         - grade
+        - highest
+        - image_file_id
         - label
         - maximum_points
         - minimum_points

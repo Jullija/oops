@@ -1,4 +1,4 @@
-import { styles } from "./form.styles";
+import { styles } from "./inputs.styles";
 
 type TextInputProps = {
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;

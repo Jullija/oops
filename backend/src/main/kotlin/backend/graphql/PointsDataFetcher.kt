@@ -32,7 +32,7 @@ class PointsDataFetcher {
 
     @DgsMutation
     @Transactional
-    fun addPointsMutation(@InputArgument studentId: Long, @InputArgument teacherId: Long, value: Long,
+    fun addPointsMutation(@InputArgument studentId: Long, @InputArgument teacherId: Long, value: Float,
                           @InputArgument subcategoryId: Long): Points {
         val student = usersRepository.findByUserId(studentId)
             .orElseThrow { IllegalArgumentException("Invalid user ID") }
@@ -51,17 +51,21 @@ class PointsDataFetcher {
         }
         val studentEditions = student.groups.map { group -> group.edition }
         if (!studentEditions.contains(subcategory.edition)) {
-            throw IllegalArgumentException("Student is not participating in this edition")
+            throw IllegalArgumentException("Student is not participating in subcategory edition")
         }
         val teacherEditions = teacher.groups.map { group -> group.edition }
         if (!teacherEditions.contains(subcategory.edition)) {
-            throw IllegalArgumentException("Teacher is not participating in this edition")
+            throw IllegalArgumentException("Teacher is not participating in subcategory edition")
         }
         if (value < 0) {
             throw IllegalArgumentException("Value cannot be negative")
         }
         val studentPoints = student.getPointsBySubcategory(subcategoryId, pointsRepository)
-        val studentPointsSum = studentPoints.sumOf { it.value }
+        val studentPointsWithoutBonuses = studentPoints.filter { bonusRepository.findByPoints(it).isEmpty() }
+        if (studentPointsWithoutBonuses.isNotEmpty()) {
+            throw IllegalArgumentException("This student already has points in this subcategory")
+        }
+        val studentPointsSum = studentPoints.sumOf { it.value.toDouble() }.toFloat()
         if (studentPointsSum + value > subcategory.maxPoints) {
             throw IllegalArgumentException("Student cannot have more than ${subcategory.maxPoints} points in this subcategory")
         }

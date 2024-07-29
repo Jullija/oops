@@ -22,7 +22,7 @@ class Points(
     var teacher: Users,
 
     @Column(name = "value", nullable = false)
-    var value: Long,
+    var value: Float,
 
     @ManyToOne
     @JoinColumn(name = "subcategory_id", referencedColumnName = "subcategory_id")
@@ -35,7 +35,7 @@ class Points(
     constructor() : this(
         student = Users(),
         teacher = Users(),
-        value = 0,
+        value = 0f,
         subcategory = Subcategories(),
         label = ""
     )
@@ -45,6 +45,6 @@ class Points(
 data class PointsInput(
     val student: Long,
     val teacher: Long,
-    val value: Long,
+    val value: Float,
     val subcategory: Long
 )

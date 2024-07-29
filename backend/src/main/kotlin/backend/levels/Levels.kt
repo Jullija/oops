@@ -28,6 +28,9 @@ class Levels(
     @JoinColumn(name = "image_file_id")
     var imageFile: FileEntity? = null,
 
+    @Column(name = "highest", nullable = false)
+    var highest: Boolean = false,
+
     @Column(name = "label", nullable = false, length = 256)
     var label: String,
 

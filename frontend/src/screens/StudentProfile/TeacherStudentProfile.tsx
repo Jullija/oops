@@ -1,10 +1,12 @@
-import { UserCard } from "../../components/StudentProfile/userCard";
 import { Styles } from "../../utils/Styles";
-import StudentPoints from "../../components/StudentProfile/StudentPoints";
 import { useParams } from "react-router-dom";
-import { useTeacherStudentData } from "../../hooks/TeacherStudentProfile/useTeacherStudentData";
-import { PointsForm } from "../../components/form/PointsForm/PointsForm";
-import { FormPoints } from "../../components/form/PointsForm/types";
+import { PointsForm } from "../../components/StudentProfile/PointsForm/PointsForm";
+import { FormPoints } from "../../components/StudentProfile/PointsForm/types";
+import { useCreatePointsMutation } from "../../graphql/createPoints.graphql.types";
+import PointsTableWithFilter from "../../components/StudentProfile/table/PointsTableWithFilter";
+import { useUser } from "../../hooks/common/useUser";
+import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
+import { SideBar } from "../../components/StudentProfile/SideBar";
 
 const styles: Styles = {
   container: {
@@ -13,39 +15,53 @@ const styles: Styles = {
     gap: 20,
     margin: 12,
   },
+  rightContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 24,
+  },
 };
 
 export function TeacherStudentProfile() {
+  const { user } = useUser();
+
   const params = useParams();
   const studentId = params.id;
-  const {
-    user,
-    studentData: data,
-    loading,
-    error,
-  } = useTeacherStudentData({
-    studentId: studentId ?? "-1",
-  });
 
+  const { categories, student, loading, error, refetch } =
+    useStudentProfileData(studentId ?? "-1");
+
+  const [createPoints, { error: createPointsError }] =
+    useCreatePointsMutation();
+
+  // TODO: add components for loading state and error message
   if (loading) return <p>Loading...</p>;
-  if (error || !studentId) return <p>Error: {error?.message}</p>;
-  if (!data) return <p>Please select an edition.</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (!student) return <p>Student is undefined</p>;
 
-  // TODO add backend here
   const handleAdd = (formPoints: FormPoints) => {
-    console.log("teacher id: ", user.userId);
-    console.log("form points: ", formPoints);
+    createPoints({
+      variables: {
+        studentId: parseInt(studentId ?? "-1"),
+        subcategoryId: parseInt(formPoints.subcategoryId),
+        teacherId: parseInt(user.userId),
+        value: formPoints.points,
+      },
+    }).finally(() => {
+      refetch();
+    });
   };
 
   return (
     <div style={styles.container}>
-      <UserCard
-        fullName={data.fullName}
-        index={data.index}
-        points={data.points}
-      />
-      <StudentPoints pointsList={data.points} />
-      <PointsForm studentId={studentId} handleAdd={handleAdd} />
+      <SideBar student={student} categoriesBarProps={categories} />
+      <div style={styles.rightContainer}>
+        <PointsTableWithFilter pointsList={student.points} />
+        <PointsForm
+          handleAddPoints={handleAdd}
+          createError={createPointsError?.message}
+        />
+      </div>
     </div>
   );
 }

@@ -34,6 +34,7 @@ export type Points = {
 export type Group = {
   name: string;
   id: string;
+  teacherId: string;
 };
 
 export type ShortStudent = {

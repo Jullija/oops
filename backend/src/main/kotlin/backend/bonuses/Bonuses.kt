@@ -23,7 +23,6 @@ class Bonuses(
     @JoinColumn(name = "award_id", referencedColumnName = "award_id")
     var award: Award,
 
-
     @OneToOne
     @JoinColumn(name = "chest_history_id", referencedColumnName = "chest_history_id")
     var chestHistory: ChestHistory,
@@ -44,8 +43,8 @@ class Bonuses(
             award.category, pointsRepository).filter{
                 point -> bonusRepository.findByPoints(point).isEmpty()
         }
-        val totalPointsValue = pointsInAwardCategory.sumOf { it.value }
-        points.value = (totalPointsValue * award.awardValue).toLong()
+        val totalPointsValue = pointsInAwardCategory.sumOf { it.value.toDouble() }.toFloat()
+        points.value = (totalPointsValue * award.awardValue)
         pointsRepository.save(points)
     }
 
