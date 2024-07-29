@@ -1,5 +1,5 @@
+import { GroupsList } from "../../components/Groups/GroupsList/GroupsList";
 import { useGroupsData } from "../../hooks/Groups/useGroupsData";
-import { GroupsList } from "./GroupsList/GroupsList";
 
 export const Groups = () => {
   const { loading, error, groups } = useGroupsData();

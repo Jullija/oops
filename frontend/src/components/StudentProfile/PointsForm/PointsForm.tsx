@@ -2,11 +2,11 @@ import { useFormik } from "formik";
 import { ZodError, z } from "zod";
 import { useState } from "react";
 import { FormPoints, Subcategory } from "./types";
-import { NumberInput } from "../../inputs/NumberInput";
-import { SelectInput } from "../../inputs/SelectInput";
 import { useCategoriesQuery } from "../../../graphql/categories.graphql.types";
 import { useEditionSelection } from "../../../hooks/common/useEditionSelection";
 import { Styles } from "../../../utils/Styles";
+import { NumberInput } from "../../inputs/NumberInput";
+import { SelectInput } from "../../inputs/SelectInput";
 
 const styles: Styles = {
   container: {

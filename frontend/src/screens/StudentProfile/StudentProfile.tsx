@@ -1,8 +1,8 @@
 import { Styles } from "../../utils/Styles";
 import PointsTableWithFilter from "../../components/StudentProfile/table/PointsTableWithFilter";
-import { SideBar } from "../../components/StudentProfile/SideBar";
 import { useUser } from "../../hooks/common/useUser";
 import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
+import { SideBar } from "../../components/StudentProfile/SideBar";
 
 const styles: Styles = {
   container: {

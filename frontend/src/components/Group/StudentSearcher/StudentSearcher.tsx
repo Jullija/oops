@@ -2,7 +2,7 @@ import { ChangeEvent, useMemo, useState } from "react";
 import { ShortStudent } from "../../../utils/types";
 import { Styles } from "../../../utils/Styles";
 import { StudentCard } from "./StudentCard";
-import { TextInput } from "../../../components/inputs/TextInput";
+import { TextInput } from "../../inputs/TextInput";
 import { isPartOfAString } from "../../../utils/strings";
 
 const styles: Styles = {

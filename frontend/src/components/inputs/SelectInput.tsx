@@ -1,4 +1,4 @@
-import { styles } from "./form.styles";
+import { styles } from "./inputs.styles";
 
 type SelectInputProps = {
   handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;

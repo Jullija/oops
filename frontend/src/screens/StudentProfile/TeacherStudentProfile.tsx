@@ -1,12 +1,12 @@
 import { Styles } from "../../utils/Styles";
 import { useParams } from "react-router-dom";
-import { PointsForm } from "../../components/form/PointsForm/PointsForm";
-import { FormPoints } from "../../components/form/PointsForm/types";
+import { PointsForm } from "../../components/StudentProfile/PointsForm/PointsForm";
+import { FormPoints } from "../../components/StudentProfile/PointsForm/types";
 import { useCreatePointsMutation } from "../../graphql/createPoints.graphql.types";
 import PointsTableWithFilter from "../../components/StudentProfile/table/PointsTableWithFilter";
-import { SideBar } from "../../components/StudentProfile/SideBar";
 import { useUser } from "../../hooks/common/useUser";
 import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
+import { SideBar } from "../../components/StudentProfile/SideBar";
 
 const styles: Styles = {
   container: {
