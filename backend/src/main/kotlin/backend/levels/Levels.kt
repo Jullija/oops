@@ -24,6 +24,9 @@ class Levels(
     @Column(name = "grade", nullable = false)
     var grade: Double,
 
+    @Column(name = "ordinal_number", nullable = false)
+    var ordinalNumber: Int = 1,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_file_id")
     var imageFile: FileEntity? = null,
