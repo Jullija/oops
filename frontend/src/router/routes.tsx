@@ -7,41 +7,75 @@ import { TeacherStudentProfile } from "../screens/StudentProfile/TeacherStudentP
 import { Groups } from "../screens/Groups/Groups";
 import { Group } from "../screens/Group/Group";
 import { Welcome } from "../screens/Welcome/Welcome";
+import { ProtectedRoute } from "./ProtectedRoute";
+
+const commonPaths = pathsWithParameters.common;
+const studentPaths = pathsWithParameters.student;
+const teacherPaths = pathsWithParameters.teacher;
 
 export const routes = createBrowserRouter([
   {
-    path: pathsWithParameters.common.Default,
+    path: commonPaths.Default.path,
     element: <Root />,
     children: [
       {
-        path: pathsWithParameters.common.Default,
+        path: commonPaths.Default.path,
         element: <Welcome />,
         index: true,
       },
       {
-        path: pathsWithParameters.common.Welcome,
-        element: <Welcome />,
+        path: commonPaths.Welcome.path,
+        element: (
+          <ProtectedRoute
+            element={<Welcome />}
+            allowedRoles={commonPaths.Welcome.allowedRoles}
+          />
+        ),
       },
       {
-        path: pathsWithParameters.student.StudentProfile,
-        element: <StudentProfile />,
-      },
-      // TODO probably distinct teacher and user hall of fame
-      {
-        path: pathsWithParameters.common.HallOfFame,
-        element: <HallOfFame />,
-      },
-      {
-        path: pathsWithParameters.teacher.Groups,
-        element: <Groups />,
+        path: studentPaths.StudentProfile.path,
+        element: (
+          <ProtectedRoute
+            element={<StudentProfile />}
+            allowedRoles={studentPaths.StudentProfile.allowedRoles}
+          />
+        ),
       },
       {
-        path: pathsWithParameters.teacher.Group,
-        element: <Group />,
+        path: commonPaths.HallOfFame.path,
+        element: (
+          <ProtectedRoute
+            element={<HallOfFame />}
+            allowedRoles={commonPaths.HallOfFame.allowedRoles}
+          />
+        ),
       },
       {
-        path: pathsWithParameters.teacher.StudentProfile,
-        element: <TeacherStudentProfile />,
+        path: teacherPaths.Groups.path,
+        element: (
+          <ProtectedRoute
+            element={<Groups />}
+            allowedRoles={teacherPaths.Groups.allowedRoles}
+          />
+        ),
+      },
+      {
+        path: teacherPaths.Group.path,
+        element: (
+          <ProtectedRoute
+            element={<Group />}
+            allowedRoles={teacherPaths.Group.allowedRoles}
+          />
+        ),
+      },
+      {
+        path: teacherPaths.StudentProfile.path,
+        element: (
+          <ProtectedRoute
+            element={<TeacherStudentProfile />}
+            allowedRoles={teacherPaths.StudentProfile.allowedRoles}
+          />
+        ),
       },
     ],
   },
