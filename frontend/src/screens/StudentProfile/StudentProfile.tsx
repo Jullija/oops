@@ -1,37 +1,32 @@
-import { UserCard } from "../../components/StudentProfile/userCard";
 import { Styles } from "../../utils/Styles";
-import StudentPoints from "../../components/StudentProfile/StudentPoints";
-import { useStudentData } from "../../hooks/StudentProfile/useStudentData";
+import PointsTableWithFilter from "../../components/StudentProfile/table/PointsTableWithFilter";
+import { useUser } from "../../hooks/common/useUser";
+import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
+import { SideBar } from "../../components/StudentProfile/SideBar";
 
 const styles: Styles = {
   container: {
     display: "flex",
-    flexDirection: "row",
     gap: 20,
     margin: 12,
   },
 };
 
 export function StudentProfile() {
-  const { userData, loading, error } = useStudentData();
+  const { user } = useUser();
+  const { categories, student, loading, error } = useStudentProfileData(
+    user.userId,
+  );
 
   // TODO: add components for loading state and error message
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-  if (!userData) return <p>Please select an edition.</p>;
+  if (!student) return <p>Student is undefined</p>;
 
   return (
     <div style={styles.container}>
-      {!loading && (
-        <>
-          <UserCard
-            fullName={userData?.fullName}
-            index={userData.index}
-            points={userData.points}
-          />
-          <StudentPoints pointsList={userData.points} />
-        </>
-      )}
+      <SideBar student={student} categoriesBarProps={categories} />
+      <PointsTableWithFilter pointsList={student.points} />
     </div>
   );
 }

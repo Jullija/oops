@@ -1,12 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
-import HallOfFame from "../screens/HallOfFame";
+import HallOfFame from "../screens/HallOfFame/HallOfFame";
 import { Root } from "../components/Root";
 import { pathsWithParameters } from "./paths";
 import { StudentProfile } from "../screens/StudentProfile/StudentProfile";
 import { TeacherStudentProfile } from "../screens/StudentProfile/TeacherStudentProfile";
 import { Groups } from "../screens/Groups/Groups";
 import { Group } from "../screens/Group/Group";
-import { Welcome } from "../screens/Welcome";
+import { Welcome } from "../screens/Welcome/Welcome";
 import { ProtectedRoute } from "./protectedRoute";
 
 const commonPaths = pathsWithParameters.common;

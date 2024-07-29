@@ -1,8 +1,11 @@
 package backend.groups
 
 import backend.edition.Edition
+import backend.files.FileEntity
 import backend.users.Users
+import backend.users.WeekdayEnum
 import jakarta.persistence.*
+import java.sql.Time
 
 @Entity
 @Table(name = "groups")
@@ -21,13 +24,30 @@ class Groups(
     @ManyToMany(mappedBy = "groups")
     val users: Set<Users> = HashSet(),
 
+    @Column(name = "weekday", nullable = false)
+    @Convert(converter = WeekdayConverter::class)
+    var weekday: WeekdayEnum,
+
+    @Column(name = "start_time", nullable = false)
+    var startTime: Time,
+
+    @Column(name = "end_time", nullable = false)
+    var endTime: Time,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "edition_id", nullable = false)
-    var edition: Edition
+    var edition: Edition,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_file_id")
+    var imageFile: FileEntity? = null
 ) {
     constructor() : this(
         groupName = "",
         label = "",
+        weekday = WeekdayEnum.MONDAY,
+        startTime = Time(0),
+        endTime = Time(0),
         edition = Edition()
     )
 }

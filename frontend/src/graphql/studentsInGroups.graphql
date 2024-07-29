@@ -1,0 +1,11 @@
+# requires x-hasura-user-id header
+query StudentsInGroup($groupId: bigint!) {
+  userGroups(
+    where: { groupId: { _eq: $groupId }, user: { role: { _eq: "student" } } }
+  ) {
+    user {
+      fullName
+      userId
+    }
+  }
+}
