@@ -1,9 +1,14 @@
-query groupsListByEdition($editionId: bigint!) {
+query groups($editionId: bigint!) {
   editionByPk(editionId: $editionId) {
     groups {
       groupName
       groupsId
-      userGroups(where: { user: { role: { _eq: "teacher" } } }) {
+      startTime
+      weekday
+      endTime
+      userGroups(
+        where: { user: { role: { _in: ["teacher", "coordinator"] } } }
+      ) {
         user {
           userId
           fullName

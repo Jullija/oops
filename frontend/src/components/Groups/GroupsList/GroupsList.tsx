@@ -1,9 +1,9 @@
-import { GroupsListItem } from "./GroupsListItem";
-import { Group } from "../../../utils/types";
-import { Styles } from "../../../utils/Styles";
-import { pathsGenerator } from "../../../router/paths";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../hooks/common/useUser";
+import { Group } from "../../../hooks/Groups/useGroupsData";
+import { pathsGenerator } from "../../../router/paths";
+import { Styles } from "../../../utils/Styles";
+import { GroupCard } from "./GroupCard";
 
 const styles: Styles = {
   groupsContainer: {
@@ -26,11 +26,11 @@ export const GroupsList = ({ groups }: GroupsProps) => {
   return (
     <div style={styles.groupsContainer}>
       {groups.map((group) => (
-        <GroupsListItem
+        <GroupCard
           key={group.id}
-          groupName={group.name}
+          group={group}
           onClick={() => navigate(pathsGenerator.teacher.Group(group.id))}
-          withEditableRights={group.teacherId === user.user.userId}
+          withEditableRights={group.teacher.id === user.user.userId}
         />
       ))}
     </div>

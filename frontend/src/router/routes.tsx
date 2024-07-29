@@ -7,7 +7,7 @@ import { TeacherStudentProfile } from "../screens/StudentProfile/TeacherStudentP
 import { Groups } from "../screens/Groups/Groups";
 import { Group } from "../screens/Group/Group";
 import { Welcome } from "../screens/Welcome/Welcome";
-import { ProtectedRoute } from "./ProtectedRoute";
+import { ProtectedRoute } from "./protectedRoute";
 
 const commonPaths = pathsWithParameters.common;
 const studentPaths = pathsWithParameters.student;
