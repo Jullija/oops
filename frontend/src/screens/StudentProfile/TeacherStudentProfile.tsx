@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom";
 import { PointsForm } from "../../components/StudentProfile/PointsForm/PointsForm";
 import { FormPoints } from "../../components/StudentProfile/PointsForm/types";
 import { useCreatePointsMutation } from "../../graphql/createPoints.graphql.types";
-import PointsTableWithFilter from "../../components/StudentProfile/table/PointsTableWithFilter";
 import { useUser } from "../../hooks/common/useUser";
 import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
 import { SideBar } from "../../components/StudentProfile/SideBar";
+import { PointsTableWithFilter } from "../../components/StudentProfile/table/PointsTableWithFilter";
 
 const styles: Styles = {
   container: {
@@ -28,8 +28,15 @@ export function TeacherStudentProfile() {
   const params = useParams();
   const studentId = params.id;
 
-  const { categories, student, loading, error, refetch } =
-    useStudentProfileData(studentId ?? "-1");
+  const {
+    categories,
+    student,
+    points,
+    filterHeaderNames,
+    loading,
+    error,
+    refetch,
+  } = useStudentProfileData(studentId ?? "-1");
 
   const [createPoints, { error: createPointsError }] =
     useCreatePointsMutation();
@@ -56,7 +63,10 @@ export function TeacherStudentProfile() {
     <div style={styles.container}>
       <SideBar student={student} categoriesBarProps={categories} />
       <div style={styles.rightContainer}>
-        <PointsTableWithFilter pointsList={student.points} />
+        <PointsTableWithFilter
+          points={points}
+          filterHeaderNames={filterHeaderNames}
+        />
         <PointsForm
           handleAddPoints={handleAdd}
           createError={createPointsError?.message}

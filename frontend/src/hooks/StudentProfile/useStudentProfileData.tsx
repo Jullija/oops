@@ -1,6 +1,7 @@
 import { useEditionSelection } from "../common/useEditionSelection";
 import { useCategoriesCardData } from "./useCategoriesCardData";
 import { useStudentCardData } from "./useStudentData";
+import { useStudentPointsData } from "./useStudentPointsData";
 
 export const useStudentProfileData = (studentId: string) => {
   const { selectedEdition } = useEditionSelection();
@@ -16,17 +17,28 @@ export const useStudentProfileData = (studentId: string) => {
       editionId,
       studentId,
     });
+  const {
+    points,
+    filterHeaderNames,
+    studentPointsLoading,
+    studentPointsError,
+    studentPointsRefetch,
+  } = useStudentPointsData({ editionId, studentId });
 
   const refetch = () => {
     studentRefetch();
     categoriesRefetch();
+    studentPointsRefetch();
   };
 
   return {
     categories,
     student,
-    loading: categoriesLoading || studentLoading,
-    error: categoriesError || studentError,
+    points,
+    filterHeaderNames,
+    // TODO loading and error probably should be separated to sidebar and table
+    loading: categoriesLoading || studentLoading || studentPointsLoading,
+    error: categoriesError || studentError || studentPointsError,
     refetch,
   };
 };

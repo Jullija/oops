@@ -1,8 +1,8 @@
 import { Styles } from "../../utils/Styles";
-import PointsTableWithFilter from "../../components/StudentProfile/table/PointsTableWithFilter";
 import { useUser } from "../../hooks/common/useUser";
 import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
 import { SideBar } from "../../components/StudentProfile/SideBar";
+import { PointsTableWithFilter } from "../../components/StudentProfile/table/PointsTableWithFilter";
 
 const styles: Styles = {
   container: {
@@ -14,9 +14,8 @@ const styles: Styles = {
 
 export function StudentProfile() {
   const { user } = useUser();
-  const { categories, student, loading, error } = useStudentProfileData(
-    user.userId,
-  );
+  const { categories, student, points, filterHeaderNames, loading, error } =
+    useStudentProfileData(user.userId);
 
   // TODO: add components for loading state and error message
   if (loading) return <p>Loading...</p>;
@@ -26,7 +25,10 @@ export function StudentProfile() {
   return (
     <div style={styles.container}>
       <SideBar student={student} categoriesBarProps={categories} />
-      <PointsTableWithFilter pointsList={student.points} />
+      <PointsTableWithFilter
+        points={points}
+        filterHeaderNames={filterHeaderNames}
+      />
     </div>
   );
 }

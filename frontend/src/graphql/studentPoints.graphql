@@ -1,0 +1,37 @@
+query StudentPoints($editionId: Int!, $studentId: Int!) {
+  getStudentPoints(editionId: $editionId, studentId: $studentId) {
+    user {
+      firstName
+      secondName
+    }
+    sumOfAll
+    sumOfBonuses
+    sumOfPurePoints
+    subcategoryPoints {
+      subcategory {
+        subcategoryName
+        category {
+          categoryId
+          categoryName
+        }
+      }
+      points {
+        purePoints {
+          value
+          teacher {
+            firstName
+            secondName
+          }
+        }
+        partialBonusType {
+          partialValue
+          bonuses {
+            award {
+              awardName
+            }
+          }
+        }
+      }
+    }
+  }
+}

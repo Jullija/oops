@@ -1,6 +1,4 @@
-import { UserPoints } from "../../../utils/types";
 import { Styles } from "../../../utils/Styles";
-import { UserPointsQuery } from "../../../graphql/userPoints.graphql.types";
 
 const styles: Styles = {
   container: {
@@ -16,62 +14,49 @@ const styles: Styles = {
   },
 };
 
-type Category = NonNullable<
-  UserPointsQuery["usersByPk"]
->["points"][number]["subcategory"]["category"];
+export type FilterItem = {
+  id: string;
+  name: string;
+};
 
 type FilterMenuProps = {
   pickedCategoryIds: string[];
   onSelectChange: (pickedCategoryIds: string[]) => void;
-  points: UserPoints;
+  filterItems: FilterItem[];
 };
 
 export default function FilterMenu({
   pickedCategoryIds,
   onSelectChange,
-  points,
+  filterItems,
 }: FilterMenuProps) {
-  const categoryMap = new Map<string, Category>();
-  points.forEach((point) => {
-    categoryMap.set(
-      point.subcategory.category.categoryId,
-      point.subcategory.category,
-    );
-  });
-
-  const categories = Array.from(categoryMap.values()).sort((a, b) =>
-    a.categoryName.localeCompare(b.categoryName),
-  );
-
-  const isSelected = (category: Category) => {
-    return pickedCategoryIds.some(
-      (selectedId) => selectedId === category.categoryId,
-    );
+  const isSelected = (item: FilterItem) => {
+    return pickedCategoryIds.some((selectedId) => selectedId === item.id);
   };
 
-  const handleCategoryClick = (category: Category) => {
-    if (isSelected(category)) {
+  const handleCategoryClick = (item: FilterItem) => {
+    if (isSelected(item)) {
       const updatedSelectedCategories = pickedCategoryIds.filter(
-        (selectedId) => selectedId !== category.categoryId,
+        (selectedId) => selectedId !== item.id,
       );
       onSelectChange(updatedSelectedCategories);
     } else {
-      onSelectChange([...pickedCategoryIds, category.categoryId]);
+      onSelectChange([...pickedCategoryIds, item.id]);
     }
   };
 
   return (
     <div style={styles.container}>
-      {categories.map((category) => (
+      {filterItems.map((item) => (
         <div
           style={{
             ...styles.item,
-            backgroundColor: isSelected(category) ? "green" : undefined,
+            backgroundColor: isSelected(item) ? "green" : undefined,
           }}
-          key={category.categoryId}
-          onClick={() => handleCategoryClick(category)}
+          key={item.id}
+          onClick={() => handleCategoryClick(item)}
         >
-          {category.categoryName}
+          {item.name}
         </div>
       ))}
     </div>
