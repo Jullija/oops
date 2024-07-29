@@ -109,9 +109,4 @@ export const navigationItems: NavigationItem[] = [
     path: pathsWithParameters.teacher.Groups.path,
     allowedRoles: pathsWithParameters.teacher.Groups.allowedRoles,
   },
-  {
-    title: "Grupa",
-    path: pathsWithParameters.teacher.Group.path.split("/:id")[0],
-    allowedRoles: pathsWithParameters.teacher.Group.allowedRoles,
-  },
 ];
