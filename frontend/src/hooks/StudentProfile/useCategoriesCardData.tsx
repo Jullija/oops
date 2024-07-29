@@ -19,15 +19,14 @@ export const useCategoriesCardData = (props: {
     },
   });
 
-  // why so many undefines here
   const categories: PointsBarProps[] =
-    data?.getSumOfPointsForStudentByCategory?.map((cat) => {
+    data?.getSumOfPointsForStudentByCategory.map((category) => {
       return {
-        label: cat?.category?.categoryName ?? "-",
+        label: category.category.categoryName,
         bounds: {
-          upper: cat?.maxPoints ?? 1,
+          upper: category.maxPoints,
         },
-        points: cat?.sumOfAll ?? 0,
+        points: category.sumOfAll,
       };
     }) ?? [];
 

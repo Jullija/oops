@@ -21,7 +21,7 @@ export function StudentProfile() {
   // TODO: add components for loading state and error message
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-  if (!student) return <p>student is undefined</p>;
+  if (!student) return <p>Student is undefined</p>;
 
   return (
     <div style={styles.container}>

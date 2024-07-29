@@ -18,7 +18,7 @@ export type LevelsByEditionQuery = {
       imageFileId?: string | null;
       label: string;
       levelId: string;
-      maximumPoints?: string | null;
+      maximumPoints: string;
       minimumPoints: string;
       name: string;
     }>;
