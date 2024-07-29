@@ -3,7 +3,9 @@ import * as Types from "../__generated__/schema.graphql.types";
 import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
 const defaultOptions = {} as const;
-export type CategoriesQueryVariables = Types.Exact<{ [key: string]: never }>;
+export type CategoriesQueryVariables = Types.Exact<{
+  editionId: Types.Scalars["bigint"]["input"];
+}>;
 
 export type CategoriesQuery = {
   __typename?: "query_root";
@@ -13,6 +15,7 @@ export type CategoriesQuery = {
     categoryName: string;
     subcategories: Array<{
       __typename?: "Subcategories";
+      editionId: string;
       subcategoryId: string;
       subcategoryName: string;
       maxPoints: number;
@@ -21,11 +24,15 @@ export type CategoriesQuery = {
 };
 
 export const CategoriesDocument = gql`
-  query categories {
+  query categories($editionId: bigint!) {
     categories(orderBy: { categoryName: ASC }) {
       categoryId
       categoryName
-      subcategories(orderBy: { subcategoryName: ASC }) {
+      subcategories(
+        orderBy: { subcategoryName: ASC }
+        where: { editionId: { _eq: $editionId } }
+      ) {
+        editionId
         subcategoryId
         subcategoryName
         maxPoints
@@ -46,14 +53,19 @@ export const CategoriesDocument = gql`
  * @example
  * const { data, loading, error } = useCategoriesQuery({
  *   variables: {
+ *      editionId: // value for 'editionId'
  *   },
  * });
  */
 export function useCategoriesQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     CategoriesQuery,
     CategoriesQueryVariables
-  >,
+  > &
+    (
+      | { variables: CategoriesQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<CategoriesQuery, CategoriesQueryVariables>(

@@ -3,6 +3,7 @@ import { Group } from "../../../utils/types";
 import { Styles } from "../../../utils/Styles";
 import { pathsGenerator } from "../../../router/paths";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../../hooks/common/useUser";
 
 const styles: Styles = {
   groupsContainer: {
@@ -20,6 +21,7 @@ type GroupsProps = {
 
 export const GroupsList = ({ groups }: GroupsProps) => {
   const navigate = useNavigate();
+  const user = useUser();
 
   return (
     <div style={styles.groupsContainer}>
@@ -28,6 +30,7 @@ export const GroupsList = ({ groups }: GroupsProps) => {
           key={group.id}
           groupName={group.name}
           onClick={() => navigate(pathsGenerator.teacher.Group(group.id))}
+          withEditableRights={group.teacherId === user.user.userId}
         />
       ))}
     </div>

@@ -1,7 +1,13 @@
+import { ApolloError } from "@apollo/client";
 import { useUserPointsQuery } from "../../graphql/userPoints.graphql.types";
 import { UserPoints } from "../../utils/types";
-import { useUser } from "../common/useUser";
-import { useUserEditions } from "../common/useUserEditions";
+
+type UseStudentCardDataResult = {
+  student?: StudentData;
+  studentLoading: boolean;
+  studentError?: ApolloError;
+  studentRefetch: () => void;
+};
 
 export type StudentData = {
   id: string;
@@ -10,37 +16,41 @@ export type StudentData = {
   points: UserPoints;
 };
 
-type UseUserDataResult = {
-  student?: StudentData;
-  loading: boolean;
-  error?: Error;
-};
-export function useStudentData(): UseUserDataResult {
-  const { user } = useUser();
-  const { selectedEdition: edition } = useUserEditions();
+export function useStudentCardData(props: {
+  editionId: string;
+  studentId: string;
+}): UseStudentCardDataResult {
+  const { editionId, studentId } = props;
 
-  const { data, loading, error } = useUserPointsQuery({
-    skip: !edition,
-    variables: { id: user.userId, editionId: edition?.editionId ?? "0" },
+  const {
+    data,
+    loading: studentLoading,
+    error: studentError,
+    refetch: studentRefetch,
+  } = useUserPointsQuery({
+    variables: { id: studentId, editionId },
   });
 
-  if (loading || error || !data?.usersByPk) {
+  if (!data?.usersByPk) {
     return {
-      loading,
-      error: error,
+      student: undefined,
+      studentLoading,
+      studentError,
+      studentRefetch,
     };
   }
 
-  const { userId, fullName, indexNumber, points } = data.usersByPk;
+  const student: StudentData = {
+    id: studentId,
+    fullName: data.usersByPk?.fullName ?? "-",
+    index: data.usersByPk?.indexNumber ?? -1,
+    points: data.usersByPk?.points ?? [],
+  };
 
   return {
-    student: {
-      id: userId,
-      fullName: fullName ?? "",
-      index: indexNumber,
-      points: points,
-    },
-    loading,
-    error,
+    student: !data ? undefined : student,
+    studentLoading,
+    studentError,
+    studentRefetch,
   };
 }

@@ -1,8 +1,12 @@
-query categories {
+query categories($editionId: bigint!) {
   categories(orderBy: { categoryName: ASC }) {
     categoryId
     categoryName
-    subcategories(orderBy: { subcategoryName: ASC }) {
+    subcategories(
+      orderBy: { subcategoryName: ASC }
+      where: { editionId: { _eq: $editionId } }
+    ) {
+      editionId
       subcategoryId
       subcategoryName
       maxPoints

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAllUsersQuery } from "../graphql/allUsers.graphql.types";
-import { Styles } from "../utils/Styles";
-import { Roles } from "../utils/types";
-import { User } from "../contexts/userContext";
-import { useUser } from "../hooks/common/useUser";
-import { pathsGenerator } from "../router/paths";
+import { User } from "../../contexts/userContext";
+import { useAllUsersQuery } from "../../graphql/allUsers.graphql.types";
+import { useUser } from "../../hooks/common/useUser";
+import { pathsGenerator } from "../../router/paths";
+import { Styles } from "../../utils/Styles";
+import { Roles } from "../../utils/types";
 
 // TODO: again - chat gptd styles, also do not bother about this component, it is temporary till login isn't implemented
 const styles: Styles = {
@@ -91,7 +91,11 @@ export const Welcome = () => {
                 onClick={() => handleUserSelect(user)}
                 style={styles.tableRow}
               >
-                <td>{user.nick}</td>
+                <td
+                  style={{ color: user.role === "teacher" ? "red" : "black" }}
+                >
+                  {user.nick}
+                </td>
                 <td>{user.role}</td>
                 <td>{user.userId}</td>
               </tr>

@@ -1,6 +1,7 @@
 import { Styles } from "../../utils/Styles";
 import PointsTableWithFilter from "../../components/StudentProfile/table/PointsTableWithFilter";
-import { useStudentData } from "../../hooks/StudentProfile/useStudentData";
+import { useUser } from "../../hooks/common/useUser";
+import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
 import { SideBar } from "../../components/StudentProfile/SideBar";
 
 const styles: Styles = {
@@ -12,16 +13,19 @@ const styles: Styles = {
 };
 
 export function StudentProfile() {
-  const { student, loading, error } = useStudentData();
+  const { user } = useUser();
+  const { categories, student, loading, error } = useStudentProfileData(
+    user.userId,
+  );
 
   // TODO: add components for loading state and error message
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-  if (!student) return <p>Please select an edition.</p>;
+  if (!student) return <p>Student is undefined</p>;
 
   return (
     <div style={styles.container}>
-      <SideBar student={student} />
+      <SideBar student={student} categoriesBarProps={categories} />
       <PointsTableWithFilter pointsList={student.points} />
     </div>
   );

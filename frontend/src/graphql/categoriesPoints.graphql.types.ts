@@ -10,19 +10,19 @@ export type CategoriesPointsQueryVariables = Types.Exact<{
 
 export type CategoriesPointsQuery = {
   __typename?: "query_root";
-  getSumOfPointsForStudentByCategory?: Array<{
+  getSumOfPointsForStudentByCategory: Array<{
     __typename?: "CategoryPointsSumType";
-    maxPoints?: number | null;
-    sumOfAll?: number | null;
-    sumOfBonuses?: number | null;
-    sumOfPurePoints?: number | null;
-    category?: {
+    maxPoints: number;
+    sumOfAll: number;
+    sumOfBonuses: number;
+    sumOfPurePoints: number;
+    category: {
       __typename?: "CategoriesType";
       categoryName: string;
       categoryId: number;
       label: string;
-    } | null;
-  } | null> | null;
+    };
+  }>;
 };
 
 export const CategoriesPointsDocument = gql`
