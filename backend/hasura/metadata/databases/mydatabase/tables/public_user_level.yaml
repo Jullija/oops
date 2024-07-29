@@ -1,0 +1,10 @@
+table:
+  name: user_level
+  schema: public
+object_relationships:
+  - name: level
+    using:
+      foreign_key_constraint_on: level_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
