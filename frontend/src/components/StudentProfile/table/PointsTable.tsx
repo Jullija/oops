@@ -1,5 +1,5 @@
 import { Styles } from "../../../utils/Styles";
-import { Points } from "../../../hooks/StudentProfile/useStudentPointsData";
+import { Points } from "../../../hooks/StudentProfile/useStudentData";
 
 const styles: Styles = {
   table: {

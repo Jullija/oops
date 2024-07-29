@@ -30,7 +30,7 @@ export function TeacherStudentProfile() {
 
   const {
     categories,
-    student,
+    studentData,
     points,
     filterHeaderNames,
     loading,
@@ -44,7 +44,7 @@ export function TeacherStudentProfile() {
   // TODO: add components for loading state and error message
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-  if (!student) return <p>Student is undefined</p>;
+  if (!studentData) return <p>Student is undefined</p>;
 
   const handleAdd = (formPoints: FormPoints) => {
     createPoints({
@@ -61,7 +61,7 @@ export function TeacherStudentProfile() {
 
   return (
     <div style={styles.container}>
-      <SideBar student={student} categoriesBarProps={categories} />
+      <SideBar student={studentData} categoriesBarProps={categories} />
       <div style={styles.rightContainer}>
         <PointsTableWithFilter
           points={points}

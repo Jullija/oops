@@ -14,17 +14,17 @@ const styles: Styles = {
 
 export function StudentProfile() {
   const { user } = useUser();
-  const { categories, student, points, filterHeaderNames, loading, error } =
+  const { categories, studentData, points, filterHeaderNames, loading, error } =
     useStudentProfileData(user.userId);
 
   // TODO: add components for loading state and error message
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-  if (!student) return <p>Student is undefined</p>;
+  if (!studentData) return <p>Student is undefined</p>;
 
   return (
     <div style={styles.container}>
-      <SideBar student={student} categoriesBarProps={categories} />
+      <SideBar student={studentData} categoriesBarProps={categories} />
       <PointsTableWithFilter
         points={points}
         filterHeaderNames={filterHeaderNames}

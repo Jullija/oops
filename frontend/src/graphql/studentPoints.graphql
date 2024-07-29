@@ -3,6 +3,17 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
     user {
       firstName
       secondName
+      image_file_id
+      indexNumber
+      nick
+      userId
+      # groups {
+      #   start_time
+      #   end_time
+      #   weekday
+      #   group_name
+      #   groups_id
+      # }
     }
     sumOfAll
     sumOfBonuses

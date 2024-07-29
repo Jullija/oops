@@ -2,7 +2,7 @@ import { Styles } from "../../../utils/Styles";
 import FilterMenu, { FilterItem } from "./FilterMenu";
 import { useState } from "react";
 import PointsTable from "./PointsTable";
-import { Points } from "../../../hooks/StudentProfile/useStudentPointsData";
+import { Points } from "../../../hooks/StudentProfile/useStudentData";
 
 const styles: Styles = {
   container: {

@@ -8,7 +8,27 @@ export type Points = NonNullable<
   StudentPointsQuery["getStudentPoints"]
 >["subcategoryPoints"][number];
 
-export const useStudentPointsData = (props: {
+export type StudentCardData = {
+  // TODO add student avatar
+  id: string;
+  displayName: string;
+  index: number;
+  level: number;
+  // TODO group do not work for now
+  // group: {
+  //   name: string;
+  //   id: string;
+  //   weekday: string;
+  //   time: {
+  //     start: string;
+  //     end: string;
+  //   };
+  //   teacherDisplayName: string;
+  // };
+  totalPoints: number;
+};
+
+export const useStudentData = (props: {
   editionId: string;
   studentId: string;
 }) => {
@@ -27,6 +47,28 @@ export const useStudentPointsData = (props: {
   });
 
   const points: Points[] = data?.getStudentPoints.subcategoryPoints ?? [];
+
+  const user = data?.getStudentPoints.user;
+
+  const studentData: StudentCardData | undefined = user
+    ? {
+        id: user.userId.toString(),
+        displayName: `${user.firstName} ${user.secondName}`,
+        index: user.indexNumber,
+        level: -1,
+        // group: {
+        //   name: user.groups[0].group_name,
+        //   id: user.groups[0].groups_id,
+        //   weekday: user.groups[0].weekday,
+        //   time: {
+        //     start: user.groups[0].start_time,
+        //     end: user.groups[0].end_time,
+        //   },
+        //   teacherDisplayName: "TBA",
+        // },
+        totalPoints: data.getStudentPoints.sumOfAll,
+      }
+    : undefined;
 
   const uniqueCategories: Map<string, FilterItem> = new Map();
 
@@ -47,6 +89,7 @@ export const useStudentPointsData = (props: {
     Array.from(uniqueCategories.values()) ?? [];
 
   return {
+    studentData,
     points,
     filterHeaderNames,
     studentPointsLoading,
