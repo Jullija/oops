@@ -1,5 +1,6 @@
 package backend.userLevel
 
+import backend.edition.Edition
 import backend.levels.Levels
 import backend.users.Users
 import jakarta.persistence.*
@@ -17,6 +18,10 @@ class UserLevel(
     var user: Users,
 
     @ManyToOne
+    @JoinColumn(name = "edition_id", referencedColumnName = "edition_id")
+    var edition: Edition,
+
+    @ManyToOne
     @JoinColumn(name = "level_id", referencedColumnName = "level_id")
     var level: Levels,
 
@@ -25,6 +30,7 @@ class UserLevel(
 ) {
     constructor() : this(
         user = Users(),
+        edition = Edition(),
         level = Levels(),
         label = ""
     )
