@@ -4,8 +4,6 @@ import { useHallOfFameQuery } from "../../graphql/hallOfFame.graphql.types";
 import { useEditionSelection } from "../../hooks/common/useEditionSelection";
 import { Styles } from "../../utils/Styles";
 import { Roles } from "../../utils/types";
-import HallOfFameHeader from "../../components/HallOfFame/HallOfFameHeader";
-import HallOfFameRow from "../../components/HallOfFame/HallOfFameRow";
 
 const styles: Styles = {
   container: {
