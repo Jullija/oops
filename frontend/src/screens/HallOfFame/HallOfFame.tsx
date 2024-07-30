@@ -21,8 +21,7 @@ const styles: Styles = {
 };
 
 export default function HallOfFame() {
-  const { students, highlightedStudentId, loading, error } =
-    useHallOfFameData();
+  const { students, highlightedStudent, loading, error } = useHallOfFameData();
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -33,10 +32,7 @@ export default function HallOfFame() {
         <Podium students={students} />
         <StatisticsBox />
       </div>
-      <SideBar
-        students={students}
-        highlightedStudentId={highlightedStudentId}
-      />
+      <SideBar students={students} highlightedStudent={highlightedStudent} />
     </div>
   );
 }

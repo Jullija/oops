@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Styles } from "../../utils/Styles";
 import { HallOfFameStudentData, StudentCard } from "./StudentCard";
 import { HallOfFameStudentSearcher } from "./HallOfFameSearcher";
+import { FilterButtonGroup } from "../FilterButtonsGroup/FilterButtonGroup";
 
 const styles: Styles = {
   container: {
@@ -24,41 +25,34 @@ const styles: Styles = {
     padding: 12,
     backgroundColor: "lightgrey",
   },
-  chooseButton: {
-    padding: 4,
-    backgroundColor: "white",
-  },
-  active: {
-    backgroundColor: "pink",
-  },
 };
 
 type SideBarProps = {
   students: HallOfFameStudentData[];
-  highlightedStudentId?: string;
+  highlightedStudent?: HallOfFameStudentData;
 };
 
-export const SideBar = ({ students, highlightedStudentId }: SideBarProps) => {
+export const SideBar = ({ students, highlightedStudent }: SideBarProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [filteredStudents, setFilteredStudents] = useState<
     HallOfFameStudentData[] | undefined
   >();
-  const [showAllStudents, setShowAllStudents] = useState(false);
+  const [showAllStudents, setShowAllStudents] = useState(true);
 
   const scrollToStudent = useCallback(() => {
     const studentElement = document.getElementById(
-      `student-${highlightedStudentId}`,
+      `student-${highlightedStudent?.id}`,
     );
     if (studentElement) {
       studentElement.scrollIntoView({ behavior: "smooth", block: "center" });
     }
-  }, [highlightedStudentId]);
+  }, [highlightedStudent?.id]);
 
   useEffect(() => {
-    if (highlightedStudentId) {
+    if (highlightedStudent?.id) {
       scrollToStudent();
     }
-  }, [scrollToStudent, highlightedStudentId]);
+  }, [scrollToStudent, highlightedStudent?.id]);
 
   const onInputChange = (students: HallOfFameStudentData[]) => {
     setFilteredStudents(students);
@@ -74,32 +68,21 @@ export const SideBar = ({ students, highlightedStudentId }: SideBarProps) => {
           onInputChange={onInputChange}
           students={students}
         />
-        <div
-          style={{
-            ...styles.chooseButton,
-            ...(showAllStudents ? undefined : styles.active),
+        {/* TODO Im not sure if there is a need to create component */}
+        <FilterButtonGroup
+          options={["moje", "wszystkie"]}
+          selectedOption={showAllStudents ? "wszystkie" : "moje"}
+          onSelectionChange={(option: string) => {
+            setShowAllStudents(option === "wszystkie");
           }}
-          onClick={() => setShowAllStudents(false)}
-        >
-          moja
-        </div>
-        {/* TODO figure out how to add multiple styles in [] */}
-        <div
-          style={{
-            ...styles.chooseButton,
-            ...(showAllStudents ? styles.active : undefined),
-          }}
-          onClick={() => setShowAllStudents(true)}
-        >
-          wszystkie
-        </div>
+        />
       </div>
       <div style={styles.cardsContainer}>
         {(filteredStudents ?? students).map((student) => (
           <StudentCard
             key={student.id}
             student={student}
-            isHighlighted={student.id === highlightedStudentId}
+            isHighlighted={student.id === highlightedStudent?.id}
           />
         ))}
       </div>

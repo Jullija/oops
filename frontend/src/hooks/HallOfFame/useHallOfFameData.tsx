@@ -23,12 +23,18 @@ export const useHallOfFameData = () => {
         animalId: "-",
         level: -1,
         totalPoints: student?.sumOfPoints ?? -1,
+        groupId: index % 2 === 1 ? "group" : "groups",
       };
     }) ?? [];
 
   return {
     students,
-    highlightedStudentId: user.role === Roles.STUDENT ? user.userId : undefined,
+    highlightedStudent:
+      user.role === Roles.STUDENT
+        ? students.find((student) => {
+            return student.id === user.userId;
+          })
+        : undefined,
     loading,
     error,
   };

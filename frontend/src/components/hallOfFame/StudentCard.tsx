@@ -32,6 +32,7 @@ export type HallOfFameStudentData = {
   level: number;
   // TODO string wtf
   totalPoints: number | string;
+  groupId: string;
 };
 
 // TODO it would be nice to show animal name ?
