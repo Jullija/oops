@@ -23,6 +23,7 @@ insert_permissions:
         - maximum_points
         - minimum_points
         - name
+        - ordinal_number
     comment: ""
 select_permissions:
   - role: coordinator
@@ -37,6 +38,7 @@ select_permissions:
         - maximum_points
         - minimum_points
         - name
+        - ordinal_number
       filter: {}
       allow_aggregations: true
     comment: ""
@@ -52,6 +54,7 @@ select_permissions:
         - maximum_points
         - minimum_points
         - name
+        - ordinal_number
       filter:
         edition:
           groups:
@@ -71,6 +74,7 @@ select_permissions:
         - maximum_points
         - minimum_points
         - name
+        - ordinal_number
       filter:
         edition:
           groups:
@@ -89,6 +93,7 @@ update_permissions:
         - maximum_points
         - minimum_points
         - name
+        - ordinal_number
       filter: {}
       check: {}
       set:
