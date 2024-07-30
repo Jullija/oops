@@ -26,7 +26,10 @@ export const useHallOfFameData = () => {
         animalId: "-",
         level: -1,
         totalPoints: student?.sumOfPoints ?? -1,
-        groupId: index % 2 === 1 ? MY_GROUP : ALL_STUDENTS,
+        groupId:
+          index % 2 === 1 || student.userId === user.userId
+            ? MY_GROUP
+            : ALL_STUDENTS,
       };
     }) ?? [];
 
@@ -37,12 +40,7 @@ export const useHallOfFameData = () => {
   return {
     students,
     highlightedStudent:
-      user.role === Roles.STUDENT
-        ? ({
-            ...highlightedStudent,
-            groupId: MY_GROUP,
-          } as HallOfFameStudentData)
-        : undefined,
+      user.role === Roles.STUDENT ? highlightedStudent : undefined,
     loading,
     error,
   };

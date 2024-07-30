@@ -1,5 +1,5 @@
 import { Styles } from "../../utils/Styles";
-import { SideBar } from "../../components/hallOfFame/SideBar";
+import { HallOfFameMenu } from "../../components/hallOfFame/HallOfFameMenu";
 import {
   MY_GROUP,
   useHallOfFameData,
@@ -7,7 +7,10 @@ import {
 import { NAV_BAR_HEIGHT } from "../../components/Navbar";
 import { Podium } from "../../components/hallOfFame/Podium/Podium";
 import { StatisticsBox } from "../../components/hallOfFame/StatisticsBox";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { StudentCardsList } from "../../components/hallOfFame/StudentCardsList";
+import { isPartOfAString } from "../../utils/strings";
+import { HALL_OF_FAME_STUDENT_CARD_ID_PREFIX } from "../../components/hallOfFame/StudentCard";
 
 const styles: Styles = {
   container: {
@@ -22,23 +25,45 @@ const styles: Styles = {
     display: "flex",
     flexDirection: "column",
   },
+  sideBarContainer: {
+    display: "flex",
+    flexDirection: "column",
+    backgroundColor: "lightblue",
+  },
 };
 
 // TODO add this screen variant for teacher as well
 
 export default function HallOfFame() {
   const { students, highlightedStudent, loading, error } = useHallOfFameData();
-  const [showAllStudents, setShowAllStudents] = useState(true);
+  const [showStudentsFromAllGroups, setShowStudentsFromAllGroups] =
+    useState(true);
+  const [searchInput, setSearchInput] = useState<string>("");
+
+  const scrollToStudent = useCallback(() => {
+    const studentElement = document.getElementById(
+      HALL_OF_FAME_STUDENT_CARD_ID_PREFIX + highlightedStudent?.id,
+    );
+    if (studentElement) {
+      studentElement.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [highlightedStudent?.id]);
+
+  useEffect(() => {
+    if (highlightedStudent?.id) {
+      scrollToStudent();
+    }
+  }, [scrollToStudent, highlightedStudent?.id, showStudentsFromAllGroups]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  const displayStudents = showAllStudents
+  const displayStudents = showStudentsFromAllGroups
     ? students
     : students
         .filter((student) => student.groupId === MY_GROUP)
         .map((student, index) => {
-          return { ...student, position: index };
+          return { ...student, position: index + 1 };
         }) ?? [];
 
   return (
@@ -47,14 +72,28 @@ export default function HallOfFame() {
         <Podium students={displayStudents} />
         <StatisticsBox />
       </div>
-      <SideBar
-        students={displayStudents}
-        highlightedStudent={highlightedStudent}
-        onShowChange={(showAllStudents: boolean) =>
-          setShowAllStudents(showAllStudents)
-        }
-        showAllStudents={showAllStudents}
-      />
+
+      <div style={styles.sideBarContainer}>
+        <HallOfFameMenu
+          students={displayStudents}
+          onShowStudentsFromAllGroupsChange={(
+            showAllSGroupsStudents: boolean,
+          ) => {
+            setShowStudentsFromAllGroups(showAllSGroupsStudents);
+          }}
+          showStudentsFromAllGroups={showStudentsFromAllGroups}
+          onSearchChange={(input: string) => {
+            setSearchInput(input);
+          }}
+          scrollToStudent={scrollToStudent}
+        />
+        <StudentCardsList
+          students={displayStudents.filter((s) =>
+            isPartOfAString(searchInput, [s.nick]),
+          )}
+          highlightedStudent={highlightedStudent}
+        />
+      </div>
     </div>
   );
 }

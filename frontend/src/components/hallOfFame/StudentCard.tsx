@@ -1,5 +1,7 @@
 import { Styles } from "../../utils/Styles";
 
+export const HALL_OF_FAME_STUDENT_CARD_ID_PREFIX = "student-";
+
 const styles: Styles = {
   item: {
     display: "grid",
@@ -45,7 +47,7 @@ export const StudentCard = ({
 
   return (
     <div
-      id={`student-${id}`}
+      id={HALL_OF_FAME_STUDENT_CARD_ID_PREFIX + id}
       style={{
         ...styles.item,
         backgroundColor: isHighlighted ? "pink" : "white",
