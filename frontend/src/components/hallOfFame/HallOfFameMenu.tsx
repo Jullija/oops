@@ -18,30 +18,36 @@ type HallOfFameMenuProps = {
   onShowStudentsFromAllGroupsChange: (showAllStudents: boolean) => void;
   onSearchChange: (input: string) => void;
   scrollToStudent: () => void;
+  studentScreen: boolean;
 };
 
 export const HallOfFameMenu = ({
   onShowStudentsFromAllGroupsChange,
   showStudentsFromAllGroups,
-  onSearchChange: onInputChange,
+  onSearchChange,
   scrollToStudent,
+  studentScreen,
 }: HallOfFameMenuProps) => {
   return (
     <div style={styles.container}>
-      <button onClick={scrollToStudent}>znajdź swoją pozycję</button>
-      <HallOfFameStudentSearcher onInputChange={onInputChange} />
-      <>
-        <FilterButton
-          option={"moje grupy"}
-          isActive={!showStudentsFromAllGroups}
-          onClick={() => onShowStudentsFromAllGroupsChange(false)}
-        />
-        <FilterButton
-          option={"wszystkie grupy"}
-          isActive={showStudentsFromAllGroups}
-          onClick={() => onShowStudentsFromAllGroupsChange(true)}
-        />
-      </>
+      {studentScreen && (
+        <button onClick={scrollToStudent}>znajdź swoją pozycję</button>
+      )}
+      <HallOfFameStudentSearcher onInputChange={onSearchChange} />
+      {studentScreen && (
+        <>
+          <FilterButton
+            option={"moje grupy"}
+            isActive={!showStudentsFromAllGroups}
+            onClick={() => onShowStudentsFromAllGroupsChange(false)}
+          />
+          <FilterButton
+            option={"wszystkie grupy"}
+            isActive={showStudentsFromAllGroups}
+            onClick={() => onShowStudentsFromAllGroupsChange(true)}
+          />
+        </>
+      )}
     </div>
   );
 };

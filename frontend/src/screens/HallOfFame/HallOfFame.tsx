@@ -32,10 +32,9 @@ const styles: Styles = {
   },
 };
 
-// TODO add this screen variant for teacher as well
-
 export default function HallOfFame() {
-  const { students, highlightedStudent, loading, error } = useHallOfFameData();
+  const { studentScreen, students, highlightedStudent, loading, error } =
+    useHallOfFameData();
   const [showStudentsFromAllGroups, setShowStudentsFromAllGroups] =
     useState(true);
   const [searchInput, setSearchInput] = useState<string>("");
@@ -86,6 +85,7 @@ export default function HallOfFame() {
             setSearchInput(input);
           }}
           scrollToStudent={scrollToStudent}
+          studentScreen={studentScreen}
         />
         <StudentCardsList
           students={displayStudents.filter((s) =>
