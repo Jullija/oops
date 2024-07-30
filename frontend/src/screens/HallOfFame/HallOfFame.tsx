@@ -2,6 +2,8 @@ import { Styles } from "../../utils/Styles";
 import { SideBar } from "../../components/hallOfFame/SideBar";
 import { useHallOfFameData } from "../../hooks/HallOfFame/useHallOfFameData";
 import { NAV_BAR_HEIGHT } from "../../components/Navbar";
+import { Podium } from "../../components/hallOfFame/Podium/Podium";
+import { StatisticsBox } from "../../components/hallOfFame/StatisticsBox";
 
 const styles: Styles = {
   container: {
@@ -12,6 +14,9 @@ const styles: Styles = {
   },
   leftSide: {
     flex: 1,
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
   },
 };
 
@@ -24,7 +29,10 @@ export default function HallOfFame() {
 
   return (
     <div style={styles.container}>
-      <div style={styles.leftSide}>koej</div>
+      <div style={styles.leftSide}>
+        <Podium students={students} />
+        <StatisticsBox />
+      </div>
       <SideBar
         students={students}
         highlightedStudentId={highlightedStudentId}
