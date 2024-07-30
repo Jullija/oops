@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Styles } from "../../utils/Styles";
 import { HallOfFameStudentData, StudentCard } from "./StudentCard";
+import { HallOfFameStudentSearcher } from "./HallOfFameSearcher";
 
 const styles: Styles = {
   container: {
@@ -32,6 +33,9 @@ type SideBarProps = {
 
 export const SideBar = ({ students, highlightedStudentId }: SideBarProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const [filteredStudents, setFilteredStudents] = useState<
+    HallOfFameStudentData[] | undefined
+  >();
 
   const scrollToStudent = useCallback(() => {
     const studentElement = document.getElementById(
@@ -48,9 +52,17 @@ export const SideBar = ({ students, highlightedStudentId }: SideBarProps) => {
     }
   }, [scrollToStudent, highlightedStudentId]);
 
+  const onInputChange = (students: HallOfFameStudentData[]) => {
+    setFilteredStudents(students);
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.sideBarMenu}>
+        <HallOfFameStudentSearcher
+          onInputChange={onInputChange}
+          students={students}
+        />
         <button
           style={styles.scrollButton}
           ref={buttonRef}
@@ -60,12 +72,11 @@ export const SideBar = ({ students, highlightedStudentId }: SideBarProps) => {
         </button>
       </div>
       <div style={styles.cardsContainer}>
-        {students.map((s, index) => (
+        {(filteredStudents ?? students).map((student) => (
           <StudentCard
-            key={s.id}
-            data={s}
-            position={index}
-            isHighlighted={s.id === highlightedStudentId}
+            key={student.id}
+            student={student}
+            isHighlighted={student.id === highlightedStudentId}
           />
         ))}
       </div>

@@ -5,8 +5,8 @@ import { useEditionSelection } from "../common/useEditionSelection";
 import { useUser } from "../common/useUser";
 
 export const useHallOfFameData = () => {
-  const { user } = useUser();
   const { selectedEdition } = useEditionSelection();
+  const { user } = useUser();
 
   const { loading, error, data } = useHallOfFameQuery({
     variables: { editionId: selectedEdition?.editionId },
@@ -14,8 +14,9 @@ export const useHallOfFameData = () => {
   });
 
   const students: HallOfFameStudentData[] =
-    data?.hallOfFame.map((student) => {
+    data?.hallOfFame.map((student, index) => {
       return {
+        position: index + 1,
         id: student.userId ?? "-",
         avatarId: "-",
         nick: student.nick ?? "-",

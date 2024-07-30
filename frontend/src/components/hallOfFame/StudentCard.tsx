@@ -19,12 +19,12 @@ const styles: Styles = {
 };
 
 type HallOfFameStudentCardProps = {
-  position: number;
-  data: HallOfFameStudentData;
+  student: HallOfFameStudentData;
   isHighlighted?: boolean;
 };
 
 export type HallOfFameStudentData = {
+  position: number;
   id: string;
   avatarId: string;
   nick: string;
@@ -34,16 +34,17 @@ export type HallOfFameStudentData = {
   totalPoints: number | string;
 };
 
-// TODO it would be nice to show animal name
+// TODO it would be nice to show animal name ?
 
 export const StudentCard = ({
-  position,
-  data,
+  student,
   isHighlighted,
 }: HallOfFameStudentCardProps) => {
+  const { id, position, nick, level, totalPoints } = student;
+
   return (
     <div
-      id={`student-${data.id}`}
+      id={`student-${id}`}
       style={{
         ...styles.item,
         backgroundColor: isHighlighted ? "pink" : "white",
@@ -51,10 +52,10 @@ export const StudentCard = ({
     >
       <div>{position}.</div>
       <div style={styles.logoPlaceholder} />
-      <div>{data.nick}</div>
+      <div>{nick}</div>
       <div style={styles.logoPlaceholder} />
-      <div>lvl {data.level}</div>
-      <div>{data.totalPoints} pkt</div>
+      <div>lvl {level}</div>
+      <div>{totalPoints} pkt</div>
     </div>
   );
 };
