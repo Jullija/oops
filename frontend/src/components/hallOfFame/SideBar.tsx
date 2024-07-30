@@ -24,6 +24,13 @@ const styles: Styles = {
     padding: 12,
     backgroundColor: "lightgrey",
   },
+  chooseButton: {
+    padding: 4,
+    backgroundColor: "white",
+  },
+  active: {
+    backgroundColor: "pink",
+  },
 };
 
 type SideBarProps = {
@@ -36,6 +43,7 @@ export const SideBar = ({ students, highlightedStudentId }: SideBarProps) => {
   const [filteredStudents, setFilteredStudents] = useState<
     HallOfFameStudentData[] | undefined
   >();
+  const [showAllStudents, setShowAllStudents] = useState(false);
 
   const scrollToStudent = useCallback(() => {
     const studentElement = document.getElementById(
@@ -59,17 +67,32 @@ export const SideBar = ({ students, highlightedStudentId }: SideBarProps) => {
   return (
     <div style={styles.container}>
       <div style={styles.sideBarMenu}>
+        <button ref={buttonRef} onClick={scrollToStudent}>
+          scroll to me
+        </button>
         <HallOfFameStudentSearcher
           onInputChange={onInputChange}
           students={students}
         />
-        <button
-          style={styles.scrollButton}
-          ref={buttonRef}
-          onClick={scrollToStudent}
+        <div
+          style={{
+            ...styles.chooseButton,
+            ...(showAllStudents ? undefined : styles.active),
+          }}
+          onClick={() => setShowAllStudents(false)}
         >
-          scroll to me
-        </button>
+          moja
+        </div>
+        {/* TODO figure out how to add multiple styles in [] */}
+        <div
+          style={{
+            ...styles.chooseButton,
+            ...(showAllStudents ? styles.active : undefined),
+          }}
+          onClick={() => setShowAllStudents(true)}
+        >
+          wszystkie
+        </div>
       </div>
       <div style={styles.cardsContainer}>
         {(filteredStudents ?? students).map((student) => (
