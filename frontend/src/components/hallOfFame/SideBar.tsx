@@ -30,14 +30,20 @@ const styles: Styles = {
 type SideBarProps = {
   students: HallOfFameStudentData[];
   highlightedStudent?: HallOfFameStudentData;
+  onShowChange: (showAllStudents: boolean) => void;
+  showAllStudents: boolean;
 };
 
-export const SideBar = ({ students, highlightedStudent }: SideBarProps) => {
+export const SideBar = ({
+  students,
+  highlightedStudent,
+  onShowChange,
+  showAllStudents,
+}: SideBarProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [filteredStudents, setFilteredStudents] = useState<
     HallOfFameStudentData[] | undefined
   >();
-  const [showAllStudents, setShowAllStudents] = useState(true);
 
   const scrollToStudent = useCallback(() => {
     const studentElement = document.getElementById(
@@ -52,7 +58,7 @@ export const SideBar = ({ students, highlightedStudent }: SideBarProps) => {
     if (highlightedStudent?.id) {
       scrollToStudent();
     }
-  }, [scrollToStudent, highlightedStudent?.id]);
+  }, [scrollToStudent, highlightedStudent?.id, showAllStudents]);
 
   const onInputChange = (students: HallOfFameStudentData[]) => {
     setFilteredStudents(students);
@@ -73,7 +79,7 @@ export const SideBar = ({ students, highlightedStudent }: SideBarProps) => {
           options={["moje", "wszystkie"]}
           selectedOption={showAllStudents ? "wszystkie" : "moje"}
           onSelectionChange={(option: string) => {
-            setShowAllStudents(option === "wszystkie");
+            onShowChange(option === "wszystkie");
           }}
         />
       </div>
