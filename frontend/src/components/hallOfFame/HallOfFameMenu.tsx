@@ -1,7 +1,7 @@
 import { Styles } from "../../utils/Styles";
 import { HallOfFameStudentData } from "./StudentCard";
 import { HallOfFameStudentSearcher } from "./HallOfFameSearcher";
-import { FilterButtonGroup } from "../FilterButtonsGroup/FilterButtonGroup";
+import { FilterButton } from "../FilterButton";
 
 const styles: Styles = {
   container: {
@@ -28,16 +28,20 @@ export const HallOfFameMenu = ({
 }: HallOfFameMenuProps) => {
   return (
     <div style={styles.container}>
-      <button onClick={scrollToStudent}>scroll to me</button>
+      <button onClick={scrollToStudent}>znajdź swoją pozycję</button>
       <HallOfFameStudentSearcher onInputChange={onInputChange} />
-      {/* TODO Im not sure if there is a need to create component */}
-      <FilterButtonGroup
-        options={["moje", "wszystkie"]}
-        selectedOption={showStudentsFromAllGroups ? "wszystkie" : "moje"}
-        onSelectionChange={(option: string) => {
-          onShowStudentsFromAllGroupsChange(option === "wszystkie");
-        }}
-      />
+      <>
+        <FilterButton
+          option={"moje grupy"}
+          isActive={!showStudentsFromAllGroups}
+          onClick={() => onShowStudentsFromAllGroupsChange(false)}
+        />
+        <FilterButton
+          option={"wszystkie grupy"}
+          isActive={showStudentsFromAllGroups}
+          onClick={() => onShowStudentsFromAllGroupsChange(true)}
+        />
+      </>
     </div>
   );
 };

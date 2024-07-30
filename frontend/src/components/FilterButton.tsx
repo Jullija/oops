@@ -1,4 +1,4 @@
-import { Styles } from "../../utils/Styles";
+import { Styles } from "../utils/Styles";
 
 const styles: Styles = {
   button: {
