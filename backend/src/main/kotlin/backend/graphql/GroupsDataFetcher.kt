@@ -97,7 +97,7 @@ class GroupsDataFetcher {
     @Transactional
     fun getUsersInGroupWithPoints(@InputArgument groupId: Long): List<UserPointsType> {
         val group = groupsRepository.findById(groupId).orElseThrow { IllegalArgumentException("Invalid group ID") }
-        val users = usersRepository.findByGroups_GroupsId(groupId)
+        val users = usersRepository.findByUserGroups_Group_GroupsId(groupId)
         val userIds = users.map { it.userId }
         val points = pointsRepository.findByStudent_UserIdIn(userIds)
         val bonuses = bonusesRepository.findByChestHistory_User_UserIdIn(userIds)

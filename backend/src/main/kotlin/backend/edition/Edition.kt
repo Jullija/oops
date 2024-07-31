@@ -1,5 +1,6 @@
 package backend.edition
 
+import backend.userLevel.UserLevel
 import jakarta.persistence.*
 
 @Entity
@@ -17,7 +18,10 @@ class Edition(
     var editionYear: Int,
 
     @Column(name = "label", nullable = false, length = 256)
-    var label: String
+    var label: String,
+
+    @OneToMany(mappedBy = "edition", fetch = FetchType.LAZY)
+    val userLevels: Set<UserLevel> = HashSet(),
 ) {
     constructor() : this(
         editionName = "",
