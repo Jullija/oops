@@ -21,6 +21,7 @@ import com.netflix.graphql.dgs.DgsQuery
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.sql.Time
 
 @DgsComponent
 class GroupsDataFetcher {
@@ -69,6 +70,27 @@ class GroupsDataFetcher {
         }
 
         return true
+    }
+
+    @DgsQuery
+    @Transactional
+    fun getPossibleGroupsWeekdays(@InputArgument editionId: Long): List<String> {
+        val edition = editionRepository
+            .findById(editionId)
+            .orElseThrow { IllegalArgumentException("Invalid edition ID") }
+        val groups = groupsRepository.findByEdition(edition)
+        val weekdays = groups.map { it.weekday.name }.distinct()
+        return weekdays
+    }
+
+    @DgsQuery
+    @Transactional
+    fun getPossibleGroupsTimeSpans(@InputArgument editionId: Long): List<TimeSpansType> {
+        val edition = editionRepository
+            .findById(editionId)
+            .orElseThrow { IllegalArgumentException("Invalid edition ID") }
+        val groups = groupsRepository.findByEdition(edition)
+        return groups.map { TimeSpansType(it.startTime, it.endTime) }.distinct()
     }
 
     @DgsQuery
@@ -234,6 +256,11 @@ data class PurePointsType(
 data class PartialBonusType(
     val bonuses: Bonuses,
     val partialValue: Float
+)
+
+data class TimeSpansType(
+    val startTime: Time,
+    val endTime: Time
 )
 
 
