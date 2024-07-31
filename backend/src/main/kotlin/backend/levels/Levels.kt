@@ -2,6 +2,8 @@ package backend.levels
 
 import backend.edition.Edition
 import backend.files.FileEntity
+import backend.userGroups.UserGroups
+import backend.userLevel.UserLevel
 import jakarta.persistence.*
 
 @Entity
@@ -39,7 +41,10 @@ class Levels(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "edition_id", nullable = false)
-    var edition: Edition
+    var edition: Edition,
+
+    @OneToMany(mappedBy = "level", fetch = FetchType.LAZY)
+    val userLevels: Set<UserLevel> = HashSet(),
 ) {
     constructor() : this(
         levelName = "",

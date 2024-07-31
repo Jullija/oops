@@ -97,7 +97,7 @@ class BonusDataFetcher {
     }
 
     private fun getUserEditions(userId: Long): Set<Edition> {
-        val userGroups = groupsRepository.findByUsers_UserId(userId)
+        val userGroups = groupsRepository.findByUserGroups_User_UserId(userId)
         return userGroups.map { it.edition }.toSet()
     }
 
