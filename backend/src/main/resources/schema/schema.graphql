@@ -14,6 +14,8 @@ type Query {
     getUsersInGroupWithPoints(groupId: Int!): [UserPointsType]!
     getStudentPoints(studentId: Int!, editionId: Int!): StudentPointsType!
     getSumOfPointsForStudentByCategory(studentId: Int!, editionId: Int!): [CategoryPointsSumType!]!
+    getPossibleGroupsWeekdays(editionId: Int!): [String!]!
+    getPossibleGroupsTimeSpans(editionId: Int!): [TimeSpansType!]!
 }
 
 type AwardType {
@@ -235,4 +237,9 @@ type PurePointsType {
 type PartialBonusType {
     bonuses: BonusType!
     partialValue: Float!
+}
+
+type TimeSpansType {
+    startTime: String
+    endTime: String
 }
