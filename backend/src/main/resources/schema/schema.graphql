@@ -5,7 +5,7 @@ type Mutation {
     addPointsMutation (studentId: Int!,
         teacherId: Int!,
         value: Float!,
-        subcategoryId: Int!): PointsType
+        subcategoryId: Int!): PointType
     assignPhotosToGroups(editionId: Int!): Boolean
     assignAvatarToUser(userId: Int!, fileId: Int!): Boolean
 }
@@ -16,162 +16,155 @@ type Query {
     getSumOfPointsForStudentByCategory(studentId: Int!, editionId: Int!): [CategoryPointsSumType!]!
 }
 
-type CategoryPointsSumType{
-    category: CategoriesType!
-    sumOfPurePoints: Float!
-    sumOfBonuses: Float!
-    sumOfAll: Float!
-    maxPoints: Float!
+type AwardType {
+    awardId: ID!
+    awardName: String!
+    awardType: AwardTypeType!
+    label: String!
+    maxUsages: Int!
+    awardValue: Float!
+    category: CategoryType
+    imageFile: FileType
+    awardEditions: [AwardEditionType]
 }
 
-type StudentPointsType{
-    user: UsersType!
-    subcategoryPoints: [SubcategoryPointsType]!
-    sumOfPurePoints: Float!
-    sumOfBonuses: Float!
-    sumOfAll: Float!
+type AwardEditionType {
+    award: AwardType!
+    edition: EditionType!
+    awardEditionId: ID!
+    label: String!
 }
-
-type AddBonusReturnType {
-    bonus: BonusType!
-    points: PointsType!
-}
-
-type UserPointsType {
-    user: UsersType!
-    categoriesPoints: [CategoryPointsType!]!
-}
-
-type CategoryAggregate {
-    category: CategoriesType!
-    sumOfPurePoints: Float!
-    sumOfBonuses: Float!
-    sumOfAll: Float!
-}
-
-
-type CategoryPointsType {
-    category: CategoriesType!
-    subcategoryPoints: [SubcategoryPointsType!]!
-    aggregate: CategoryAggregate!
-}
-
-type SubcategoryPointsType {
-    subcategory: SubcategoriesType!
-    points: PurePointsType!
-}
-
-type PurePointsType {
-    purePoints: PointsType
-    partialBonusType: [PartialBonusType]!
-}
-
-type PartialBonusType {
-    bonuses: BonusType!
-    partialValue: Float!
-}
-
-
 
 type BonusType {
-    bonusId: Int!
-    points: PointsType!
+    bonusId: ID!
+    points: PointType!
     award: AwardType!
+    createdAt: String!
+    updatedAt: String!
+    label: String!
     chestHistory: ChestHistoryType!
-    label: String!
-    createdAt: String!
-    updatedAt: String!
 }
 
-type PointsType {
-    pointsId: Int!
-    student: UsersType!
-    teacher: UsersType!
-    value: Float!
-    subcategory: SubcategoriesType!
-    label: String!
-    createdAt: String!
-    updatedAt: String!
-}
-
-type AwardType {
-    awardId: Int!
-    awardName: String!
-    image_file_id: Int
-    awardType: AwardTypeType!
-    maxUsages: Int!
-    label: String!
-}
-
-type SubcategoriesType {
-    subcategoryId: Int!
-    subcategoryName: String!
-    maxPoints: Int!
-    ordinalNumber: Int!
-    category: CategoriesType!
-    edition: EditionType!
-    label: String!
-}
-
-type ChestHistoryType {
-    chestHistoryId: Int!
-    user: UsersType!
-    teacher: UsersType!
-    chest: ChestType!
-    subcategory: SubcategoriesType!
-    label: String!
-    createdAt: String!
-    updatedAt: String!
-}
-
-type ChestType {
-    chestId: Int!
-    chestType: String!
-    image_file_id: Int
-    label: String!
-    edition: EditionType!
-}
-
-type CategoriesType {
-    categoryId: Int!
+type CategoryType {
+    categoryId: ID!
     categoryName: String!
     label: String!
 }
 
+type ChestAwardType {
+    chestAwardId: ID!
+    chest: ChestType!
+    award: AwardType!
+    label: String!
+}
+
+type ChestHistoryType {
+    chestHistoryId: ID!
+    user: UserType!
+    chest: ChestType!
+    subcategory: SubcategoryType!
+    label: String!
+    createdAt: String!
+    updatedAt: String!
+    teacher: UserType!
+}
+
+type ChestType {
+    chestId: ID!
+    chestType: String!
+    label: String!
+    edition: EditionType!
+    imageFile: FileType
+}
+
 type EditionType {
-    editionId: Int!
+    editionId: ID!
     editionName: String!
     editionYear: Int!
     label: String!
 }
 
-type GroupType {
-    groups_id: ID!
-    group_name: String!
-    label: String
-    users: [UsersType!]!
-    weekday: String!
-    start_time: String!
-    end_time: String!
+type FileType {
+    fileId: ID!
+    pathToFile: String!
+    fileName: String!
+    fileType: String!
+    label: String!
 }
 
-type UsersType {
-    userId: Int!
-    indexNumber: Int!
-    nick: String!
-    firstName: String!
-    secondName: String!
-    role: UsersRolesType!
+type GroupType {
+    groupsId: ID!
+    groupName: String!
+    label: String
+    weekday: String!
+    startTime: String!
+    endTime: String!
+    imageFile: FileType
+    userGroups: [UserGroupType]!
+    edition: EditionType!
+}
+
+type LevelType {
+    levelId: ID!
+    levelName: String!
+    minimumPoints: Float!
+    maximumPoints: Float!
+    grade: Float!
+    ordinalNumber: Int!
     label: String!
-    groups: [GroupType!]!
-    image_file_id: Int
+    edition: EditionType!
+    highest: Boolean!
+    imageFile: FileType
+    userLevels: [UserLevelType]
+}
+
+type PointType {
+    pointsId: ID!
+    student: UserType!
+    teacher: UserType!
+    value: Float!
+    subcategory: SubcategoryType!
+    label: String!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type SubcategoryType {
+    subcategoryId: ID!
+    subcategoryName: String!
+    category: CategoryType!
+    label: String!
+    edition: EditionType!
+    maxPoints: Int!
+    ordinalNumber: Int!
 }
 
 type UserGroupType {
-    user_id: ID!
-    group_id: ID!
+    userGroupsId: ID!
+    group: GroupType!
+    user: UserType!
 }
 
+type UserLevelType {
+    user: UserType!
+    level: LevelType!
+    edition: EditionType!
+    label: String!
+    userLevelId: ID!
+}
+
+type UserType {
+    userId: ID!
+    nick: String!
+    role: UsersRolesType!
+    indexNumber: Int!
+    firstName: String!
+    secondName: String!
+    label: String!
+    imageFile: FileType
+    userGroups: [UserGroupType]!
+    userLevels: [UserLevelType]!
+}
 
 enum UsersRolesType {
     STUDENT
@@ -184,4 +177,62 @@ enum AwardTypeType {
     ADDITIVE_PREV
     ADDITIVE
     MULTIPLICATIVE
+}
+
+
+
+
+
+type CategoryPointsSumType{
+    category: CategoryType!
+    sumOfPurePoints: Float!
+    sumOfBonuses: Float!
+    sumOfAll: Float!
+    maxPoints: Float!
+}
+
+type StudentPointsType{
+    user: UserType!
+    subcategoryPoints: [SubcategoryPointsType]!
+    sumOfPurePoints: Float!
+    sumOfBonuses: Float!
+    sumOfAll: Float!
+}
+
+type AddBonusReturnType {
+    bonus: BonusType!
+    points: PointType!
+}
+
+type UserPointsType {
+    user: UserType!
+    categoriesPoints: [CategoryPointsType!]!
+}
+
+type CategoryAggregate {
+    category: CategoryType!
+    sumOfPurePoints: Float!
+    sumOfBonuses: Float!
+    sumOfAll: Float!
+}
+
+type CategoryPointsType {
+    category: CategoryType!
+    subcategoryPoints: [SubcategoryPointsType!]!
+    aggregate: CategoryAggregate!
+}
+
+type SubcategoryPointsType {
+    subcategory: SubcategoryType!
+    points: PurePointsType!
+}
+
+type PurePointsType {
+    purePoints: PointType
+    partialBonusType: [PartialBonusType]!
+}
+
+type PartialBonusType {
+    bonuses: BonusType!
+    partialValue: Float!
 }

@@ -2,6 +2,9 @@ table:
   name: user_level
   schema: public
 object_relationships:
+  - name: edition
+    using:
+      foreign_key_constraint_on: edition_id
   - name: level
     using:
       foreign_key_constraint_on: level_id
