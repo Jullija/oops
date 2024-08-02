@@ -110,51 +110,26 @@ class GroupsDataFetcher {
             val userPoints = points.filter { it.student.userId == user.userId }
                 .groupBy { it.subcategory }
                 .mapNotNull { (subcategory, points) ->
+
                     val purePoints = points.filter { bonusesRepository.findByPoints(it).isEmpty() }
-                    if (purePoints.isEmpty()) {
-                        if (points.any { bonusesRepository.findByPoints(it).isNotEmpty() }) {
-                            SubcategoryPointsType(
-                                subcategory = subcategory,
-                                points = PurePointsType(
-                                    purePoints = null,
-                                    partialBonusType = userBonuses.map { bonus ->
-                                        when (bonus.award.awardType) {
-                                            AwardType.MULTIPLICATIVE -> PartialBonusType(
-                                                bonuses = bonus,
-                                                partialValue = 0f
-                                            )
-                                            else -> PartialBonusType(
-                                                bonuses = bonus,
-                                                partialValue = bonus.points.value
-                                            )
-                                        }
+                    val allBonuses = userBonuses.filter { it.points.subcategory == subcategory }
+                    SubcategoryPointsType(
+                        subcategory = subcategory,
+                        points = PurePointsType(
+                            purePoints = if (purePoints.isNotEmpty()) purePoints.first() else null,
+                            partialBonusType = allBonuses.map { bonus ->
+                                PartialBonusType(
+                                    bonuses = bonus,
+                                    partialValue = if (bonus.award.awardType != AwardType.MULTIPLICATIVE) {
+                                        bonus.points.value
+                                    } else {
+                                        purePoints.firstOrNull()?.value?.times(bonus.award.awardValue) ?: 0f
                                     }
                                 )
-                            )
-                        } else {
-                            null
-                        }
-                    } else {
-                        SubcategoryPointsType(
-                            subcategory = subcategory,
-                            points = PurePointsType(
-                                purePoints = purePoints.first(),
-                                partialBonusType = userBonuses.map { bonus ->
-                                    if (bonus.award.awardType == AwardType.MULTIPLICATIVE) {
-                                        PartialBonusType(
-                                            bonuses = bonus,
-                                            partialValue = purePoints.first().value * bonus.award.awardValue
-                                        )
-                                    } else {
-                                        PartialBonusType(
-                                            bonuses = bonus,
-                                            partialValue = bonus.points.value
-                                        )
-                                    }
-                                }
-                            )
+                            }
                         )
-                    }
+                    )
+
                 }
                 .groupBy { it.subcategory.category } // Grouping by category
                 .map { (category, subcategoryPoints) ->
