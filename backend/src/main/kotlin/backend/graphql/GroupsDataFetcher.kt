@@ -15,6 +15,7 @@ import backend.subcategories.Subcategories
 import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
 import backend.users.Users
+import backend.users.WeekdayEnum
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.DgsQuery
@@ -91,6 +92,16 @@ class GroupsDataFetcher {
             .orElseThrow { IllegalArgumentException("Invalid edition ID") }
         val groups = groupsRepository.findByEdition(edition)
         return groups.map { TimeSpansType(it.startTime, it.endTime) }.distinct()
+    }
+
+    @DgsQuery
+    @Transactional
+    fun getPossibleGroupDates(@InputArgument editionId: Long): List<GroupDateType> {
+        val edition = editionRepository
+            .findById(editionId)
+            .orElseThrow { IllegalArgumentException("Invalid edition ID") }
+        val groups = groupsRepository.findByEdition(edition)
+        return groups.map { GroupDateType(it.weekday, it.startTime, it.endTime) }.distinct()
     }
 
     @DgsQuery
@@ -238,4 +249,8 @@ data class TimeSpansType(
     val endTime: Time
 )
 
-
+data class GroupDateType(
+    val weekday: WeekdayEnum,
+    val startTime: Time,
+    val endTime: Time
+)
