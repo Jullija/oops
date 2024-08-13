@@ -13,34 +13,34 @@ export type CreatePointsMutationVariables = Types.Exact<{
 export type CreatePointsMutation = {
   __typename?: "mutation_root";
   addPointsMutation?: {
-    __typename?: "PointsType";
+    __typename?: "PointType";
     value: number;
     updatedAt: string;
     createdAt: string;
-    pointsId: number;
+    pointsId: string;
     label: string;
     student: {
-      __typename?: "UsersType";
+      __typename?: "UserType";
       firstName: string;
       role: Types.UsersRolesType;
       secondName: string;
-      userId: number;
+      userId: string;
     };
     subcategory: {
-      __typename?: "SubcategoriesType";
-      subcategoryId: number;
+      __typename?: "SubcategoryType";
+      subcategoryId: string;
       subcategoryName: string;
       category: {
-        __typename?: "CategoriesType";
-        categoryId: number;
+        __typename?: "CategoryType";
+        categoryId: string;
         categoryName: string;
       };
     };
     teacher: {
-      __typename?: "UsersType";
+      __typename?: "UserType";
       firstName: string;
       secondName: string;
-      userId: number;
+      userId: string;
       role: Types.UsersRolesType;
     };
   } | null;
