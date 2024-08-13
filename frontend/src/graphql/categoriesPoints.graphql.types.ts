@@ -17,9 +17,9 @@ export type CategoriesPointsQuery = {
     sumOfBonuses: number;
     sumOfPurePoints: number;
     category: {
-      __typename?: "CategoriesType";
+      __typename?: "CategoryType";
       categoryName: string;
-      categoryId: number;
+      categoryId: string;
       label: string;
     };
   }>;
