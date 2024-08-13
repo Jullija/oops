@@ -2,30 +2,33 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
   getStudentPoints(editionId: $editionId, studentId: $studentId) {
     user {
       firstName
-      secondName
-      image_file_id
       indexNumber
+      label
       nick
+      role
+      secondName
+      imageFile {
+        fileId
+        fileName
+        fileType
+        label
+        pathToFile
+      }
       userId
-      # groups {
-      #   start_time
-      #   end_time
-      #   weekday
-      #   group_name
-      #   groups_id
-      # }
+      userGroups {
+        group {
+          groupsId
+          endTime
+          groupName
+          startTime
+          weekday
+        }
+      }
     }
     sumOfAll
     sumOfBonuses
     sumOfPurePoints
     subcategoryPoints {
-      subcategory {
-        subcategoryName
-        category {
-          categoryId
-          categoryName
-        }
-      }
       points {
         purePoints {
           value
@@ -41,6 +44,13 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
               awardName
             }
           }
+        }
+      }
+      subcategory {
+        subcategoryName
+        category {
+          categoryId
+          categoryName
         }
       }
     }

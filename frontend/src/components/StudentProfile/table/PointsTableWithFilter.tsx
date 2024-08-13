@@ -28,8 +28,7 @@ export const PointsTableWithFilter = ({
 
   const isInSelectedCategoryIds = (points: Points) => {
     return selectedCategoryIds.some(
-      (selectedId) =>
-        parseInt(selectedId) === points.subcategory.category.categoryId,
+      (selectedId) => selectedId === points.subcategory.category.categoryId,
     );
   };
 

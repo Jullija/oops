@@ -1,19 +1,14 @@
 DROP VIEW IF EXISTS hall_of_fame;
 
-UPDATE levels
-    SET maximum_points = 0
-    WHERE maximum_points IS NULL;
-
-ALTER TABLE levels
-    ALTER COLUMN maximum_points SET NOT NULL;
-
 CREATE VIEW hall_of_fame AS
 WITH user_points AS (
     SELECT
         u.user_id,
         u.nick,
         COALESCE(SUM(p.value), 0) AS sum_of_points,
-        g.edition_id
+        g.edition_id,
+        g.groups_id,
+        g.group_name
     FROM
         users u
             LEFT JOIN user_groups ug ON u.user_id = ug.user_id
@@ -22,7 +17,7 @@ WITH user_points AS (
     WHERE
             u.role = 'student'
     GROUP BY
-        u.user_id, u.nick, g.edition_id
+        u.user_id, u.nick, g.edition_id, g.groups_id, g.group_name
 )
 SELECT
     up.user_id,
@@ -31,7 +26,9 @@ SELECT
     up.edition_id,
     l.level_id,
     l.name as level_name,
-    l.image_file_id
+    l.image_file_id,
+    up.groups_id,
+    up.group_name
 FROM
     user_points up
         LEFT JOIN levels l ON l.edition_id = up.edition_id

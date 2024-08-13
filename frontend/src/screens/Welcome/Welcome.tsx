@@ -7,7 +7,6 @@ import { pathsGenerator } from "../../router/paths";
 import { Styles } from "../../utils/Styles";
 import { Roles } from "../../utils/types";
 
-// TODO: again - chat gptd styles, also do not bother about this component, it is temporary till login isn't implemented
 const styles: Styles = {
   container: {
     display: "flex",
@@ -39,8 +38,7 @@ export const Welcome = () => {
   const { user: selectedUser, setUser } = useUser();
   const { loading, error, data } = useAllUsersQuery({
     context: {
-      header: { "X-hasura-role": Roles.UNAUTHENTICATED_USER },
-      noAuth: true,
+      headers: { "x-hasura-role": Roles.UNAUTHENTICATED_USER },
     },
   });
   const [searchTerm, setSearchTerm] = useState("");
@@ -59,11 +57,15 @@ export const Welcome = () => {
 
   const handleUserSelect = (user: User) => {
     setUser(user);
-    navigate(pathsGenerator.student.StudentProfile);
+    navigate(
+      user.role === Roles.STUDENT
+        ? pathsGenerator.student.StudentProfile
+        : pathsGenerator.teacher.Groups,
+    );
   };
 
   if (loading) return <div>Ładowanie...</div>;
-  if (error) return <div>Błąd podczas ładowania uzytkowników.</div>;
+  if (error) return <div>Błąd podczas ładowania użytkowników.</div>;
 
   return (
     <div style={styles.container}>
@@ -106,7 +108,7 @@ export const Welcome = () => {
       <div style={styles.selectedUser}>
         {selectedUser && (
           <div>
-            <h2>Wybrany uzytkownik:</h2>
+            <h2>Wybrany użytkownik:</h2>
             <p>Nick: {selectedUser.nick}</p>
             <p>Rola: {selectedUser.role}</p>
             <p>ID: {selectedUser.userId}</p>

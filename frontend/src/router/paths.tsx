@@ -1,65 +1,112 @@
+export enum Roles {
+  ADMIN = "admin",
+  COORDINATOR = "coordinator",
+  STUDENT = "student",
+  TEACHER = "teacher",
+  UNAUTHENTICATED_USER = "unauthenticated_user",
+}
+
 const commonPaths = {
-  Default: "/",
-  Welcome: "/welcome",
-  HallOfFame: "/hall-of-fame",
-};
-
-const studentPaths = {
-  StudentProfile: "/student-profile",
-};
-
-const teacherPaths = {
-  StudentProfile: "/teacher/student-profile",
-  Groups: "/groups",
-  Group: "/group",
-};
-
-// do not use outside ./router
-export const pathsWithParameters = {
-  common: { ...commonPaths },
-  student: { ...studentPaths },
-  teacher: {
-    ...teacherPaths,
-    StudentProfile: `${teacherPaths.StudentProfile}/:id`,
-    Group: `${teacherPaths.Group}/:id`,
+  Default: {
+    path: "/",
+    allowedRoles: [
+      Roles.UNAUTHENTICATED_USER,
+      Roles.STUDENT,
+      Roles.TEACHER,
+      Roles.ADMIN,
+      Roles.COORDINATOR,
+    ],
+  },
+  Welcome: {
+    path: "/welcome",
+    allowedRoles: [
+      Roles.UNAUTHENTICATED_USER,
+      Roles.STUDENT,
+      Roles.TEACHER,
+      Roles.ADMIN,
+      Roles.COORDINATOR,
+    ],
+  },
+  HallOfFame: {
+    path: "/hall-of-fame",
+    allowedRoles: [
+      Roles.UNAUTHENTICATED_USER,
+      Roles.STUDENT,
+      Roles.TEACHER,
+      Roles.ADMIN,
+      Roles.COORDINATOR,
+    ],
   },
 };
 
+const studentPaths = {
+  StudentProfile: {
+    path: "/student-profile",
+    allowedRoles: [Roles.STUDENT],
+  },
+};
+
+const teacherPaths = {
+  StudentProfile: {
+    path: "/teacher/student-profile/:id",
+    allowedRoles: [Roles.TEACHER, Roles.ADMIN, Roles.COORDINATOR],
+  },
+  Groups: {
+    path: "/groups",
+    allowedRoles: [Roles.TEACHER, Roles.ADMIN, Roles.COORDINATOR],
+  },
+  Group: {
+    path: "/group/:id",
+    allowedRoles: [Roles.TEACHER, Roles.ADMIN, Roles.COORDINATOR],
+  },
+};
+
+export const pathsWithParameters = {
+  common: commonPaths,
+  student: studentPaths,
+  teacher: teacherPaths,
+};
+
 export const pathsGenerator = {
-  common: { ...commonPaths },
-  student: { ...studentPaths },
+  common: Object.fromEntries(
+    Object.entries(commonPaths).map(([key, value]) => [key, value.path]),
+  ),
+  student: Object.fromEntries(
+    Object.entries(studentPaths).map(([key, value]) => [key, value.path]),
+  ),
   teacher: {
-    ...teacherPaths,
-    StudentProfile: (id: string) => `${teacherPaths.StudentProfile}/${id}`,
-    Group: (id: string) => `${teacherPaths.Group}/${id}`,
+    Groups: teacherPaths.Groups.path,
+    Group: (id: string) => `${teacherPaths.Group.path.replace(":id", id)}`,
+    StudentProfile: (id: string) =>
+      `${teacherPaths.StudentProfile.path.replace(":id", id)}`,
   },
 };
 
 type NavigationItem = {
   title: string;
   path: string;
+  allowedRoles: Roles[];
 };
 
-// TODO return navbar items based on user role
 export const navigationItems: NavigationItem[] = [
   {
     title: "Witaj",
-    path: pathsWithParameters.common.Welcome,
+    path: pathsWithParameters.common.Welcome.path,
+    allowedRoles: pathsWithParameters.common.Welcome.allowedRoles,
   },
   {
     title: "Profil studenta",
-    path: pathsWithParameters.student.StudentProfile,
+    path: pathsWithParameters.student.StudentProfile.path,
+    allowedRoles: pathsWithParameters.student.StudentProfile.allowedRoles,
   },
   {
     title: "Hala Chwały",
-    path: pathsWithParameters.common.HallOfFame,
+    path: pathsWithParameters.common.HallOfFame.path,
+    allowedRoles: pathsWithParameters.common.HallOfFame.allowedRoles,
   },
   {
     title: "Grupy",
-    path: pathsWithParameters.teacher.Groups,
-  },
-  {
-    title: "Grupa",
-    path: pathsWithParameters.teacher.Group,
+    path: pathsWithParameters.teacher.Groups.path,
+    allowedRoles: pathsWithParameters.teacher.Groups.allowedRoles,
   },
 ];

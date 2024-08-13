@@ -9,6 +9,8 @@ import backend.files.FileEntity
 import backend.groups.Groups
 import backend.points.Points
 import backend.points.PointsRepository
+import backend.userGroups.UserGroups
+import backend.userLevel.UserLevel
 import jakarta.persistence.*
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
@@ -37,20 +39,18 @@ class Users(
     @Convert(converter = UsersRolesConverter::class)
     var role: UsersRoles,
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "user_groups",
-        joinColumns = [JoinColumn(name = "user_id")],
-        inverseJoinColumns = [JoinColumn(name = "group_id")]
-    )
-    val groups: Set<Groups> = HashSet(),
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    val userGroups: Set<UserGroups> = HashSet(),
 
     @Column(name = "label", nullable = false, length = 256)
     var label: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_file_id")
-    var imageFile: FileEntity? = null
+    var imageFile: FileEntity? = null,
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    val userLevels: Set<UserLevel> = HashSet(),
 
 ) {
     constructor() : this(
@@ -59,7 +59,6 @@ class Users(
         firstName = "",
         secondName = "",
         role = UsersRoles.STUDENT,
-        groups = HashSet(),
         label = ""
     )
     fun getAwardUsageCount(award: Award, bonusRepository: BonusesRepository): Long {
