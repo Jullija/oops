@@ -21,6 +21,7 @@ import com.netflix.graphql.dgs.DgsQuery
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.sql.Time
 
 @DgsComponent
 class GroupsDataFetcher {
@@ -73,9 +74,30 @@ class GroupsDataFetcher {
 
     @DgsQuery
     @Transactional
+    fun getPossibleGroupsWeekdays(@InputArgument editionId: Long): List<String> {
+        val edition = editionRepository
+            .findById(editionId)
+            .orElseThrow { IllegalArgumentException("Invalid edition ID") }
+        val groups = groupsRepository.findByEdition(edition)
+        val weekdays = groups.map { it.weekday.name }.distinct()
+        return weekdays
+    }
+
+    @DgsQuery
+    @Transactional
+    fun getPossibleGroupsTimeSpans(@InputArgument editionId: Long): List<TimeSpansType> {
+        val edition = editionRepository
+            .findById(editionId)
+            .orElseThrow { IllegalArgumentException("Invalid edition ID") }
+        val groups = groupsRepository.findByEdition(edition)
+        return groups.map { TimeSpansType(it.startTime, it.endTime) }.distinct()
+    }
+
+    @DgsQuery
+    @Transactional
     fun getUsersInGroupWithPoints(@InputArgument groupId: Long): List<UserPointsType> {
         val group = groupsRepository.findById(groupId).orElseThrow { IllegalArgumentException("Invalid group ID") }
-        val users = usersRepository.findByGroups_GroupsId(groupId)
+        val users = usersRepository.findByUserGroups_Group_GroupsId(groupId)
         val userIds = users.map { it.userId }
         val points = pointsRepository.findByStudent_UserIdIn(userIds)
         val bonuses = bonusesRepository.findByChestHistory_User_UserIdIn(userIds)
@@ -88,51 +110,26 @@ class GroupsDataFetcher {
             val userPoints = points.filter { it.student.userId == user.userId }
                 .groupBy { it.subcategory }
                 .mapNotNull { (subcategory, points) ->
+
                     val purePoints = points.filter { bonusesRepository.findByPoints(it).isEmpty() }
-                    if (purePoints.isEmpty()) {
-                        if (points.any { bonusesRepository.findByPoints(it).isNotEmpty() }) {
-                            SubcategoryPointsType(
-                                subcategory = subcategory,
-                                points = PurePointsType(
-                                    purePoints = null,
-                                    partialBonusType = userBonuses.map { bonus ->
-                                        when (bonus.award.awardType) {
-                                            AwardType.MULTIPLICATIVE -> PartialBonusType(
-                                                bonuses = bonus,
-                                                partialValue = 0f
-                                            )
-                                            else -> PartialBonusType(
-                                                bonuses = bonus,
-                                                partialValue = bonus.points.value
-                                            )
-                                        }
+                    val allBonuses = userBonuses.filter { it.points.subcategory == subcategory }
+                    SubcategoryPointsType(
+                        subcategory = subcategory,
+                        points = PurePointsType(
+                            purePoints = if (purePoints.isNotEmpty()) purePoints.first() else null,
+                            partialBonusType = allBonuses.map { bonus ->
+                                PartialBonusType(
+                                    bonuses = bonus,
+                                    partialValue = if (bonus.award.awardType != AwardType.MULTIPLICATIVE) {
+                                        bonus.points.value
+                                    } else {
+                                        purePoints.firstOrNull()?.value?.times(bonus.award.awardValue) ?: 0f
                                     }
                                 )
-                            )
-                        } else {
-                            null
-                        }
-                    } else {
-                        SubcategoryPointsType(
-                            subcategory = subcategory,
-                            points = PurePointsType(
-                                purePoints = purePoints.first(),
-                                partialBonusType = userBonuses.map { bonus ->
-                                    if (bonus.award.awardType == AwardType.MULTIPLICATIVE) {
-                                        PartialBonusType(
-                                            bonuses = bonus,
-                                            partialValue = purePoints.first().value * bonus.award.awardValue
-                                        )
-                                    } else {
-                                        PartialBonusType(
-                                            bonuses = bonus,
-                                            partialValue = bonus.points.value
-                                        )
-                                    }
-                                }
-                            )
+                            }
                         )
-                    }
+                    )
+
                 }
                 .groupBy { it.subcategory.category } // Grouping by category
                 .map { (category, subcategoryPoints) ->
@@ -234,6 +231,11 @@ data class PurePointsType(
 data class PartialBonusType(
     val bonuses: Bonuses,
     val partialValue: Float
+)
+
+data class TimeSpansType(
+    val startTime: Time,
+    val endTime: Time
 )
 
 

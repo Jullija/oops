@@ -53,6 +53,11 @@ def insert_data(data_count_multiplier=1):
     group_filenames = [f"gr{i}.png" for i in range(1, 21)]
     avatar_filenames = [f"avatar{i}.png" for i in range(1, 5)]
 
+    sample_pictures = [("sampleAvatar.png", "image/avatar/sample"), ("sampleGroup.png", "image/group/sample"),
+                       ("sampleLevel.png", "image/level/sample"), ("sampleChest.png", "image/chest/sample"),
+                       ("sampleAward.png", "image/award/sample")]
+
+
     for filename in owlbear_filenames:
         file_path = os.path.abspath(f"../../../resources/files/{filename}")
         cursor.execute("INSERT INTO files (path_to_file, file_name, file_type, label) VALUES (%s, %s, %s, %s)",
@@ -67,6 +72,11 @@ def insert_data(data_count_multiplier=1):
         file_path = os.path.abspath(f"../../../resources/files/{filename}")
         cursor.execute("INSERT INTO files (path_to_file, file_name, file_type, label) VALUES (%s, %s, %s, %s)",
                        (file_path, filename, "image/avatar", ""))
+
+    for filename, file_type in sample_pictures:
+        file_path = os.path.abspath(f"../../../resources/files/{filename}")
+        cursor.execute("INSERT INTO files (path_to_file, file_name, file_type, label) VALUES (%s, %s, %s, %s)",
+                       (file_path, filename, file_type, ""))
 
     category_names = ["LABORATORY", "TEST", "PROJECT", "EVENT"]
 
@@ -221,19 +231,19 @@ def insert_data(data_count_multiplier=1):
     for i, edition_id in enumerate(editions.values()):
         levels_values = random_levels[i]
         levels_data = [
-            ("Jajo", levels_values[0], levels_values[1], 1, 2.0, "", False),
-            ("Pisklak", levels_values[1], levels_values[2], 2, 2.0, "", False),
-            ("Podlot", levels_values[2], levels_values[3], 3, 3.0, "", False),
-            ("Żółtodziób", levels_values[3], levels_values[4], 4, 3.5, "", False),
-            ("Nieopierzony odkrywca", levels_values[4], levels_values[5], 5, 4.0, "", False),
-            ("Samodzielny Zwierzak", levels_values[5], levels_values[6], 6, 4.5, "", False),
-            ("Majestatyczna Bestia", levels_values[6], levels_values[7], 7, 5.0, "", True)
+            ("Jajo", levels_values[0], levels_values[1], 1, 2.0, "", False, 0),
+            ("Pisklak", levels_values[1], levels_values[2], 2, 2.0, "", False, 1),
+            ("Podlot", levels_values[2], levels_values[3], 3, 3.0, "", False, 2),
+            ("Żółtodziób", levels_values[3], levels_values[4], 4, 3.5, "", False, 3),
+            ("Nieopierzony odkrywca", levels_values[4], levels_values[5], 5, 4.0, "", False, 4),
+            ("Samodzielny Zwierzak", levels_values[5], levels_values[6], 6, 4.5, "", False, 5),
+            ("Majestatyczna Bestia", levels_values[6], levels_values[7], 7, 5.0, "", True, 6)
         ]
 
-        for name, min_points, max_points, image_file_id, grade, label, highest in levels_data:
+        for name, min_points, max_points, image_file_id, grade, label, highest, ordinal_number in levels_data:
             cursor.execute(
-                "INSERT INTO levels (name, minimum_points, maximum_points, image_file_id, grade, label, edition_id, highest) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING level_id",
-                (name, min_points, max_points, image_file_id, grade, "", edition_id, highest))
+                "INSERT INTO levels (name, minimum_points, maximum_points, image_file_id, grade, label, edition_id, highest, ordinal_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING level_id",
+                (name, min_points, max_points, image_file_id, grade, "", edition_id, highest, ordinal_number))
     # Insert data into subcategories
     subcategories_data = {
         "LABORATORY": [(f"lab_{i}", 10) for i in range(1, 15)],
