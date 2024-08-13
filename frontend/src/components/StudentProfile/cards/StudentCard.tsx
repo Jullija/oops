@@ -21,7 +21,7 @@ export function StudentCard({
   displayName,
   index,
   level,
-  // group,
+  group,
   totalPoints,
 }: StudentCardData) {
   // const { imageId, loading, error } = useUserPointsImage(totalPoints);
@@ -43,11 +43,11 @@ export function StudentCard({
       <div>{displayName}</div>
       <div>level: {level}</div>
       <div>index: {index}</div>
-      {/* <div>group: {group.name}</div>
+      <div>group: {group.name}</div>
       <div>
-        {group.weekday} {group.time.start}-{group.time.end},{" "}
-        {group.teacherDisplayName}
-      </div> */}
+        {group.weekday} {group.time.start}-{group.time.end}
+      </div>
+      <div>prowadzący: {group.teacherDisplayName}</div>
       <div>total points: {totalPoints}</div>
     </div>
   );

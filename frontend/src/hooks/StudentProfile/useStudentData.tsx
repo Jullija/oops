@@ -14,17 +14,16 @@ export type StudentCardData = {
   displayName: string;
   index: number;
   level: number;
-  // TODO group do not work for now
-  // group: {
-  //   name: string;
-  //   id: string;
-  //   weekday: string;
-  //   time: {
-  //     start: string;
-  //     end: string;
-  //   };
-  //   teacherDisplayName: string;
-  // };
+  group: {
+    name: string;
+    id: string;
+    weekday: string;
+    time: {
+      start: string;
+      end: string;
+    };
+    teacherDisplayName: string;
+  };
   totalPoints: number;
 };
 
@@ -55,17 +54,20 @@ export const useStudentData = (props: {
         id: user.userId.toString(),
         displayName: `${user.firstName} ${user.secondName}`,
         index: user.indexNumber,
+        // TODO add level to backend
         level: -1,
-        // group: {
-        //   name: user.groups[0].group_name,
-        //   id: user.groups[0].groups_id,
-        //   weekday: user.groups[0].weekday,
-        //   time: {
-        //     start: user.groups[0].start_time,
-        //     end: user.groups[0].end_time,
-        //   },
-        //   teacherDisplayName: "TBA",
-        // },
+        group: {
+          // TODO userGroups cannot be null
+          name: user.userGroups[0]?.group.groupName ?? "-",
+          id: user.userGroups[0]?.group.groupsId ?? "-1",
+          weekday: user.userGroups[0]?.group.weekday ?? "-",
+          time: {
+            start: user.userGroups[0]?.group.startTime ?? "-",
+            end: user.userGroups[0]?.group.endTime ?? "-",
+          },
+          // TODO: later on
+          teacherDisplayName: "TBA",
+        },
         totalPoints: data.getStudentPoints.sumOfAll,
       }
     : undefined;
