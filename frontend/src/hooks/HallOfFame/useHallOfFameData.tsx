@@ -16,6 +16,8 @@ export const useHallOfFameData = () => {
     skip: !selectedEdition,
   });
 
+  // TODO add backend data!
+
   const students: HallOfFameStudentData[] =
     data?.hallOfFame.map((student, index) => {
       return {
