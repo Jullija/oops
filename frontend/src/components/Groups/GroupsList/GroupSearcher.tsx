@@ -31,7 +31,7 @@ export const GroupSearchField = ({
     <TextInput
       handleChange={handleSearchInputChange}
       value={searchInputValue}
-      name={"searchText"}
+      name={"searchGroup"}
       label="search group"
     />
   );
