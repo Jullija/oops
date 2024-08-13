@@ -8,6 +8,14 @@ object_relationships:
   - name: file
     using:
       foreign_key_constraint_on: image_file_id
+array_relationships:
+  - name: userLevels
+    using:
+      foreign_key_constraint_on:
+        column: level_id
+        table:
+          name: user_level
+          schema: public
 insert_permissions:
   - role: coordinator
     permission:
@@ -23,6 +31,7 @@ insert_permissions:
         - maximum_points
         - minimum_points
         - name
+        - ordinal_number
     comment: ""
 select_permissions:
   - role: coordinator
@@ -37,6 +46,7 @@ select_permissions:
         - maximum_points
         - minimum_points
         - name
+        - ordinal_number
       filter: {}
       allow_aggregations: true
     comment: ""
@@ -52,6 +62,7 @@ select_permissions:
         - maximum_points
         - minimum_points
         - name
+        - ordinal_number
       filter:
         edition:
           groups:
@@ -71,6 +82,7 @@ select_permissions:
         - maximum_points
         - minimum_points
         - name
+        - ordinal_number
       filter:
         edition:
           groups:
@@ -89,6 +101,7 @@ update_permissions:
         - maximum_points
         - minimum_points
         - name
+        - ordinal_number
       filter: {}
       check: {}
       set:
