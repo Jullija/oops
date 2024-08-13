@@ -28,22 +28,18 @@ type HallOfFameStudentCardProps = {
 export type HallOfFameStudentData = {
   position: number;
   id: string;
-  avatarId: string;
   nick: string;
-  animalId: string;
-  level: number;
+  levelName: string;
   // TODO string wtf
   totalPoints: number | string;
   groupId: string;
 };
 
-// TODO it would be nice to show animal name ?
-
 export const StudentCard = ({
   student,
   isHighlighted,
 }: HallOfFameStudentCardProps) => {
-  const { id, position, nick, level, totalPoints } = student;
+  const { id, position, nick, levelName, totalPoints } = student;
 
   return (
     <div
@@ -57,7 +53,7 @@ export const StudentCard = ({
       <div style={styles.logoPlaceholder} />
       <div>{nick}</div>
       <div style={styles.logoPlaceholder} />
-      <div>lvl {level}</div>
+      <div>{levelName}</div>
       <div>{totalPoints} pkt</div>
     </div>
   );

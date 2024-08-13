@@ -4,9 +4,6 @@ import { Roles } from "../../router/paths";
 import { useEditionSelection } from "../common/useEditionSelection";
 import { useUser } from "../common/useUser";
 
-export const MY_GROUP = "my_group";
-export const ALL_STUDENTS = "all_students";
-
 export const useHallOfFameData = () => {
   const { selectedEdition } = useEditionSelection();
   const { user } = useUser();
@@ -16,22 +13,17 @@ export const useHallOfFameData = () => {
     skip: !selectedEdition,
   });
 
-  // TODO add backend data!
-
+  // TODO backend - missing avatarId and animalId (photos)
+  // TODO backend - nulls fix
   const students: HallOfFameStudentData[] =
     data?.hallOfFame.map((student, index) => {
       return {
         position: index + 1,
         id: student.userId ?? "-",
-        avatarId: "-",
         nick: student.nick ?? "-",
-        animalId: "-",
-        level: -1,
+        levelName: student.levelName ?? "-",
         totalPoints: student?.sumOfPoints ?? -1,
-        groupId:
-          index % 2 === 1 || student.userId === user.userId
-            ? MY_GROUP
-            : ALL_STUDENTS,
+        groupId: student.groupsId ?? "1",
       };
     }) ?? [];
 

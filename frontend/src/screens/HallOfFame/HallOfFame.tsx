@@ -1,9 +1,6 @@
 import { Styles } from "../../utils/Styles";
 import { HallOfFameMenu } from "../../components/hallOfFame/HallOfFameMenu";
-import {
-  MY_GROUP,
-  useHallOfFameData,
-} from "../../hooks/HallOfFame/useHallOfFameData";
+import { useHallOfFameData } from "../../hooks/HallOfFame/useHallOfFameData";
 import { NAV_BAR_HEIGHT } from "../../components/Navbar";
 import { Podium } from "../../components/hallOfFame/Podium/Podium";
 import { StatisticsBox } from "../../components/hallOfFame/StatisticsBox";
@@ -60,7 +57,7 @@ export default function HallOfFame() {
   const displayStudents = showStudentsFromAllGroups
     ? students
     : students
-        .filter((student) => student.groupId === MY_GROUP)
+        .filter((student) => student.groupId === highlightedStudent?.groupId)
         .map((student, index) => {
           return { ...student, position: index + 1 };
         }) ?? [];

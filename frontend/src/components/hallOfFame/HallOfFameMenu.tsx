@@ -37,7 +37,7 @@ export const HallOfFameMenu = ({
       {studentScreen && (
         <>
           <FilterButton
-            option={"moje grupy"}
+            option={"moja grupa"}
             isActive={!showStudentsFromAllGroups}
             onClick={() => onShowStudentsFromAllGroupsChange(false)}
           />
