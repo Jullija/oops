@@ -31,7 +31,7 @@ export const Navbar = () => {
   const { editions } = useEditionSelection();
   const { user } = useUser();
 
-  const showEditionSelection = editions.length > 1;
+  const showCurrentEdition = editions.length > 1;
 
   return (
     <div style={styles.container}>
@@ -46,7 +46,7 @@ export const Navbar = () => {
             {item.title}
           </div>
         ))}
-      {!showEditionSelection && (
+      {!showCurrentEdition && (
         <div style={styles.editionName}>{editions[0]?.name}</div>
       )}
     </div>

@@ -1,6 +1,6 @@
 import { Styles } from "../../utils/Styles";
 import { HallOfFameStudentData } from "./StudentCard";
-import { HallOfFameStudentSearcher } from "./HallOfFameSearcher";
+import { HallOfFameStudentSearcher } from "./HallOfFameStudentSearcher";
 import { FilterButton } from "../FilterButton";
 
 const styles: Styles = {
@@ -18,7 +18,7 @@ type HallOfFameMenuProps = {
   onShowStudentsFromAllGroupsChange: (showAllStudents: boolean) => void;
   onSearchChange: (input: string) => void;
   scrollToStudent: () => void;
-  studentScreen: boolean;
+  isUserRoleStudent: boolean;
 };
 
 export const HallOfFameMenu = ({
@@ -26,16 +26,14 @@ export const HallOfFameMenu = ({
   showStudentsFromAllGroups,
   onSearchChange,
   scrollToStudent,
-  studentScreen,
+  isUserRoleStudent,
 }: HallOfFameMenuProps) => {
   return (
     <div style={styles.container}>
-      {studentScreen && (
-        <button onClick={scrollToStudent}>znajdź swoją pozycję</button>
-      )}
-      <HallOfFameStudentSearcher onInputChange={onSearchChange} />
-      {studentScreen && (
+      {isUserRoleStudent ? (
         <>
+          <button onClick={scrollToStudent}>znajdź swoją pozycję</button>
+          <HallOfFameStudentSearcher onInputChange={onSearchChange} />
           <FilterButton
             option={"moja grupa"}
             isActive={!showStudentsFromAllGroups}
@@ -47,6 +45,8 @@ export const HallOfFameMenu = ({
             onClick={() => onShowStudentsFromAllGroupsChange(true)}
           />
         </>
+      ) : (
+        <HallOfFameStudentSearcher onInputChange={onSearchChange} />
       )}
     </div>
   );

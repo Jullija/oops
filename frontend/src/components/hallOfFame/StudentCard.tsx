@@ -12,7 +12,7 @@ const styles: Styles = {
     padding: 12,
     boxSizing: "border-box",
   },
-  logoPlaceholder: {
+  photoPlaceholder: {
     width: 30,
     height: 30,
     borderRadius: "50%",
@@ -50,9 +50,9 @@ export const StudentCard = ({
       }}
     >
       <div>{position}.</div>
-      <div style={styles.logoPlaceholder} />
+      <div style={styles.photoPlaceholder} />
       <div>{nick}</div>
-      <div style={styles.logoPlaceholder} />
+      <div style={styles.photoPlaceholder} />
       <div>{levelName}</div>
       <div>{totalPoints} pkt</div>
     </div>

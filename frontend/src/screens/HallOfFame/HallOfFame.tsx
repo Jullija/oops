@@ -30,11 +30,11 @@ const styles: Styles = {
 };
 
 export default function HallOfFame() {
-  const { studentScreen, students, highlightedStudent, loading, error } =
+  const { isUserRoleStudent, students, highlightedStudent, loading, error } =
     useHallOfFameData();
   const [showStudentsFromAllGroups, setShowStudentsFromAllGroups] =
     useState(true);
-  const [searchInput, setSearchInput] = useState<string>("");
+  const [searchInput, setSearchInput] = useState("");
 
   const scrollToStudent = useCallback(() => {
     const studentElement = document.getElementById(
@@ -73,16 +73,16 @@ export default function HallOfFame() {
         <HallOfFameMenu
           students={displayStudents}
           onShowStudentsFromAllGroupsChange={(
-            showAllSGroupsStudents: boolean,
+            showAllGroupsStudents: boolean,
           ) => {
-            setShowStudentsFromAllGroups(showAllSGroupsStudents);
+            setShowStudentsFromAllGroups(showAllGroupsStudents);
           }}
           showStudentsFromAllGroups={showStudentsFromAllGroups}
           onSearchChange={(input: string) => {
             setSearchInput(input);
           }}
           scrollToStudent={scrollToStudent}
-          studentScreen={studentScreen}
+          isUserRoleStudent={isUserRoleStudent}
         />
         <StudentCardsList
           students={displayStudents.filter((s) =>

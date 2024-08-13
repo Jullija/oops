@@ -32,7 +32,7 @@ export const useHallOfFameData = () => {
   });
 
   return {
-    studentScreen: user.role === Roles.STUDENT,
+    isUserRoleStudent: user.role === Roles.STUDENT,
     students,
     highlightedStudent:
       user.role === Roles.STUDENT ? highlightedStudent : undefined,
