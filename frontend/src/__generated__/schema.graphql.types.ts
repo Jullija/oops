@@ -4538,6 +4538,8 @@ export type GroupsVarianceOrderBy = {
 export type HallOfFame = {
   __typename?: "HallOfFame";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  groupName?: Maybe<Scalars["String"]["output"]>;
+  groupsId?: Maybe<Scalars["bigint"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
   levelName?: Maybe<Scalars["String"]["output"]>;
@@ -4579,6 +4581,7 @@ export type HallOfFameAggregateFieldsCountArgs = {
 export type HallOfFameAvgFields = {
   __typename?: "HallOfFameAvgFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
@@ -4591,6 +4594,8 @@ export type HallOfFameBoolExp = {
   _not?: InputMaybe<HallOfFameBoolExp>;
   _or?: InputMaybe<Array<HallOfFameBoolExp>>;
   editionId?: InputMaybe<BigintComparisonExp>;
+  groupName?: InputMaybe<StringComparisonExp>;
+  groupsId?: InputMaybe<BigintComparisonExp>;
   imageFileId?: InputMaybe<BigintComparisonExp>;
   levelId?: InputMaybe<BigintComparisonExp>;
   levelName?: InputMaybe<StringComparisonExp>;
@@ -4603,6 +4608,8 @@ export type HallOfFameBoolExp = {
 export type HallOfFameMaxFields = {
   __typename?: "HallOfFameMaxFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  groupName?: Maybe<Scalars["String"]["output"]>;
+  groupsId?: Maybe<Scalars["bigint"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
   levelName?: Maybe<Scalars["String"]["output"]>;
@@ -4615,6 +4622,8 @@ export type HallOfFameMaxFields = {
 export type HallOfFameMinFields = {
   __typename?: "HallOfFameMinFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  groupName?: Maybe<Scalars["String"]["output"]>;
+  groupsId?: Maybe<Scalars["bigint"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
   levelName?: Maybe<Scalars["String"]["output"]>;
@@ -4626,6 +4635,8 @@ export type HallOfFameMinFields = {
 /** Ordering options when selecting data from "hall_of_fame". */
 export type HallOfFameOrderBy = {
   editionId?: InputMaybe<OrderBy>;
+  groupName?: InputMaybe<OrderBy>;
+  groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   levelName?: InputMaybe<OrderBy>;
@@ -4638,6 +4649,10 @@ export type HallOfFameOrderBy = {
 export enum HallOfFameSelectColumn {
   /** column name */
   EditionId = "editionId",
+  /** column name */
+  GroupName = "groupName",
+  /** column name */
+  GroupsId = "groupsId",
   /** column name */
   ImageFileId = "imageFileId",
   /** column name */
@@ -4656,6 +4671,7 @@ export enum HallOfFameSelectColumn {
 export type HallOfFameStddevFields = {
   __typename?: "HallOfFameStddevFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
@@ -4666,6 +4682,7 @@ export type HallOfFameStddevFields = {
 export type HallOfFameStddevPopFields = {
   __typename?: "HallOfFameStddevPopFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
@@ -4676,6 +4693,7 @@ export type HallOfFameStddevPopFields = {
 export type HallOfFameStddevSampFields = {
   __typename?: "HallOfFameStddevSampFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
@@ -4693,6 +4711,8 @@ export type HallOfFameStreamCursorInput = {
 /** Initial value of the column from where the streaming should start */
 export type HallOfFameStreamCursorValueInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
+  groupName?: InputMaybe<Scalars["String"]["input"]>;
+  groupsId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   levelId?: InputMaybe<Scalars["bigint"]["input"]>;
   levelName?: InputMaybe<Scalars["String"]["input"]>;
@@ -4705,6 +4725,7 @@ export type HallOfFameStreamCursorValueInput = {
 export type HallOfFameSumFields = {
   __typename?: "HallOfFameSumFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  groupsId?: Maybe<Scalars["bigint"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
   sumOfPoints?: Maybe<Scalars["float8"]["output"]>;
@@ -4715,6 +4736,7 @@ export type HallOfFameSumFields = {
 export type HallOfFameVarPopFields = {
   __typename?: "HallOfFameVarPopFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
@@ -4725,6 +4747,7 @@ export type HallOfFameVarPopFields = {
 export type HallOfFameVarSampFields = {
   __typename?: "HallOfFameVarSampFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
@@ -4735,6 +4758,7 @@ export type HallOfFameVarSampFields = {
 export type HallOfFameVarianceFields = {
   __typename?: "HallOfFameVarianceFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
+  groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;

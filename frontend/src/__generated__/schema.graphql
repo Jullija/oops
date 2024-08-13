@@ -6503,6 +6503,8 @@ columns and relationships of "hall_of_fame"
 """
 type HallOfFame {
   editionId: bigint
+  groupName: String
+  groupsId: bigint
   imageFileId: bigint
   levelId: bigint
   levelName: String
@@ -6541,6 +6543,7 @@ aggregate avg on columns
 """
 type HallOfFameAvgFields {
   editionId: Float
+  groupsId: Float
   imageFileId: Float
   levelId: Float
   sumOfPoints: Float
@@ -6555,6 +6558,8 @@ input HallOfFameBoolExp {
   _not: HallOfFameBoolExp
   _or: [HallOfFameBoolExp!]
   editionId: BigintComparisonExp
+  groupName: StringComparisonExp
+  groupsId: BigintComparisonExp
   imageFileId: BigintComparisonExp
   levelId: BigintComparisonExp
   levelName: StringComparisonExp
@@ -6568,6 +6573,8 @@ aggregate max on columns
 """
 type HallOfFameMaxFields {
   editionId: bigint
+  groupName: String
+  groupsId: bigint
   imageFileId: bigint
   levelId: bigint
   levelName: String
@@ -6581,6 +6588,8 @@ aggregate min on columns
 """
 type HallOfFameMinFields {
   editionId: bigint
+  groupName: String
+  groupsId: bigint
   imageFileId: bigint
   levelId: bigint
   levelName: String
@@ -6594,6 +6603,8 @@ Ordering options when selecting data from "hall_of_fame".
 """
 input HallOfFameOrderBy {
   editionId: OrderBy
+  groupName: OrderBy
+  groupsId: OrderBy
   imageFileId: OrderBy
   levelId: OrderBy
   levelName: OrderBy
@@ -6610,6 +6621,16 @@ enum HallOfFameSelectColumn {
   column name
   """
   editionId
+
+  """
+  column name
+  """
+  groupName
+
+  """
+  column name
+  """
+  groupsId
 
   """
   column name
@@ -6647,6 +6668,7 @@ aggregate stddev on columns
 """
 type HallOfFameStddevFields {
   editionId: Float
+  groupsId: Float
   imageFileId: Float
   levelId: Float
   sumOfPoints: Float
@@ -6658,6 +6680,7 @@ aggregate stddevPop on columns
 """
 type HallOfFameStddevPopFields {
   editionId: Float
+  groupsId: Float
   imageFileId: Float
   levelId: Float
   sumOfPoints: Float
@@ -6669,6 +6692,7 @@ aggregate stddevSamp on columns
 """
 type HallOfFameStddevSampFields {
   editionId: Float
+  groupsId: Float
   imageFileId: Float
   levelId: Float
   sumOfPoints: Float
@@ -6695,6 +6719,8 @@ Initial value of the column from where the streaming should start
 """
 input HallOfFameStreamCursorValueInput {
   editionId: bigint
+  groupName: String
+  groupsId: bigint
   imageFileId: bigint
   levelId: bigint
   levelName: String
@@ -6708,6 +6734,7 @@ aggregate sum on columns
 """
 type HallOfFameSumFields {
   editionId: bigint
+  groupsId: bigint
   imageFileId: bigint
   levelId: bigint
   sumOfPoints: float8
@@ -6719,6 +6746,7 @@ aggregate varPop on columns
 """
 type HallOfFameVarPopFields {
   editionId: Float
+  groupsId: Float
   imageFileId: Float
   levelId: Float
   sumOfPoints: Float
@@ -6730,6 +6758,7 @@ aggregate varSamp on columns
 """
 type HallOfFameVarSampFields {
   editionId: Float
+  groupsId: Float
   imageFileId: Float
   levelId: Float
   sumOfPoints: Float
@@ -6741,6 +6770,7 @@ aggregate variance on columns
 """
 type HallOfFameVarianceFields {
   editionId: Float
+  groupsId: Float
   imageFileId: Float
   levelId: Float
   sumOfPoints: Float
