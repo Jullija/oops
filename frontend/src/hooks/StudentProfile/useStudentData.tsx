@@ -74,16 +74,17 @@ export const useStudentData = (props: {
 
   const uniqueCategories: Map<string, FilterItem> = new Map();
 
+  // TODO: points undefined
   points
     .map((p) => {
       return {
-        id: p.subcategory.category.categoryId.toString(),
-        name: p.subcategory.category.categoryName,
+        id: p?.subcategory.category.categoryId.toString(),
+        name: p?.subcategory.category.categoryName,
       };
     })
     .forEach((entry) => {
-      if (!uniqueCategories.has(entry.id)) {
-        uniqueCategories.set(entry.id, entry);
+      if (!uniqueCategories.has(entry.id ?? "-1")) {
+        uniqueCategories.set(entry.id ?? "-1", { id: "1", name: "1" });
       }
     });
 
