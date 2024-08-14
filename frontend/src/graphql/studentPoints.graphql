@@ -36,6 +36,7 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
             firstName
             secondName
           }
+          createdAt
         }
         partialBonusType {
           partialValue
@@ -52,6 +53,7 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
           categoryId
           categoryName
         }
+        maxPoints
       }
     }
   }

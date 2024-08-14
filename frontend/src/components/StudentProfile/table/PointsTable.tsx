@@ -24,7 +24,16 @@ type PointsTableProps = {
 };
 
 export default function PointsTable({ points }: PointsTableProps) {
-  const headers = ["Kategoria", "Podkategoria", "Punkty", "Prowadzący"];
+  // name, category, points (pure + bonus), max points, date, teacher
+
+  const headers = [
+    "nazwa",
+    "kategoria",
+    "punkty",
+    "max punktów",
+    "data",
+    "prowadzący",
+  ];
 
   // TODO should be done on backed
   // backend:
@@ -50,15 +59,19 @@ export default function PointsTable({ points }: PointsTableProps) {
           </div>
         ))}
       </div>
-
+      {/* TODO max points is too big xd */}
       {points.map((item, index) => (
         <div key={index} style={styles.row}>
+          <div style={styles.cell}>{item.subcategory.subcategoryName}</div>
           <div style={styles.cell}>
             {item.subcategory.category.categoryName}
           </div>
-          <div style={styles.cell}>{item.subcategory.subcategoryName}</div>
           <div style={styles.cell}>{getPointsString(item)}</div>
           {/* TODO add fullName to backend */}
+          <div style={styles.cell}>{item.subcategory.maxPoints}</div>
+          {/* TODO I need to have one date to show - I don't know where to find it */}
+          {/* createAt is only temporary */}
+          <div style={styles.cell}>{item.points.purePoints?.createdAt}</div>
           <div style={styles.cell}>
             {item.points.purePoints?.teacher.firstName}{" "}
             {item.points.purePoints?.teacher.secondName}
