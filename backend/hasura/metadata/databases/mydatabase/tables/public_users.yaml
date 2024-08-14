@@ -1,6 +1,10 @@
 table:
   name: users
   schema: public
+object_relationships:
+  - name: file
+    using:
+      foreign_key_constraint_on: image_file_id
 array_relationships:
   - name: chestHistories
     using:
@@ -36,6 +40,13 @@ array_relationships:
         column: user_id
         table:
           name: user_groups
+          schema: public
+  - name: userLevels
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: user_level
           schema: public
 computed_fields:
   - name: fullName

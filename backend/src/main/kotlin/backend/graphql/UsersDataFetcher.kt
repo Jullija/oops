@@ -5,11 +5,13 @@ import backend.bonuses.BonusesRepository
 import backend.categories.Categories
 import backend.categories.CategoriesRepository
 import backend.edition.EditionRepository
+import backend.files.FileEntityRepository
 import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
 import backend.users.Users
 import com.netflix.graphql.dgs.DgsComponent
+import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.DgsQuery
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
@@ -38,6 +40,30 @@ class UsersDataFetcher {
     @Autowired
     lateinit var categoriesRepository: CategoriesRepository
 
+    @Autowired
+    lateinit var fileRepository: FileEntityRepository
+
+    @DgsMutation
+    @Transactional
+    fun assignAvatarToUser(@InputArgument userId: Long, @InputArgument fileId: Long): Boolean {
+        val user = usersRepository.findById(userId).orElseThrow { IllegalArgumentException("Invalid user ID") }
+
+        val avatar = fileRepository.findByFileId(fileId)
+            ?: throw IllegalArgumentException("File with ID $fileId not found.")
+
+
+        if (avatar.fileType != "image/avatar") {
+            throw IllegalArgumentException("File with ID $fileId is not an avatar. " +
+                    "Please upload an avatar with fileType = image/avatar and try again.")
+        }
+
+        user.imageFile = avatar
+
+        usersRepository.save(user)
+
+        return true
+    }
+
     @DgsQuery
     @Transactional
     fun getStudentPoints(@InputArgument studentId: Long, @InputArgument editionId: Long): StudentPointsType {
@@ -49,14 +75,15 @@ class UsersDataFetcher {
         val subcategoryPoints = points.groupBy { it.subcategory }
             .map { (subcategory, points) ->
                 val purePoints = points.filter { bonusesRepository.findByPoints(it).isEmpty() }
+                val allBonuses = bonuses.filter { it.points.subcategory == subcategory }
                 SubcategoryPointsType(
                     subcategory = subcategory,
                     points = PurePointsType(
                         purePoints = if (purePoints.isNotEmpty()) purePoints.first() else null,
-                        partialBonusType = bonuses.map { bonus ->
+                        partialBonusType = allBonuses.map { bonus ->
                             PartialBonusType(
                                 bonuses = bonus,
-                                partialValue = if (bonus.award.awardType == AwardType.ADDITIVE) {
+                                partialValue = if (bonus.award.awardType != AwardType.MULTIPLICATIVE) {
                                     bonus.points.value
                                 } else {
                                     purePoints.firstOrNull()?.value?.times(bonus.award.awardValue) ?: 0f

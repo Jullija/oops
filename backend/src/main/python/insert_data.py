@@ -50,10 +50,33 @@ def insert_data(data_count_multiplier=1):
     owlbear_filenames = ["owlbear1.png", "owlbear2.png", "owlbear3.png", "owlbear4.png",
                          "owlbear5.png", "owlbear6.png", "owlbear7.png"]
 
+    group_filenames = [f"gr{i}.png" for i in range(1, 21)]
+    avatar_filenames = [f"avatar{i}.png" for i in range(1, 5)]
+
+    sample_pictures = [("sampleAvatar.png", "image/avatar/sample"), ("sampleGroup.png", "image/group/sample"),
+                       ("sampleLevel.png", "image/level/sample"), ("sampleChest.png", "image/chest/sample"),
+                       ("sampleAward.png", "image/award/sample")]
+
+
     for filename in owlbear_filenames:
-        avatar_path = os.path.abspath(f"../../../resources/files/{filename}")
+        file_path = os.path.abspath(f"../../../resources/files/{filename}")
         cursor.execute("INSERT INTO files (path_to_file, file_name, file_type, label) VALUES (%s, %s, %s, %s)",
-                       (avatar_path, filename, "image/png", ""))
+                       (file_path, filename, "image/level", ""))
+
+    for filename in group_filenames:
+        file_path = os.path.abspath(f"../../../resources/files/{filename}")
+        cursor.execute("INSERT INTO files (path_to_file, file_name, file_type, label) VALUES (%s, %s, %s, %s)",
+                       (file_path, filename, "image/group", ""))
+
+    for filename in avatar_filenames:
+        file_path = os.path.abspath(f"../../../resources/files/{filename}")
+        cursor.execute("INSERT INTO files (path_to_file, file_name, file_type, label) VALUES (%s, %s, %s, %s)",
+                       (file_path, filename, "image/avatar", ""))
+
+    for filename, file_type in sample_pictures:
+        file_path = os.path.abspath(f"../../../resources/files/{filename}")
+        cursor.execute("INSERT INTO files (path_to_file, file_name, file_type, label) VALUES (%s, %s, %s, %s)",
+                       (file_path, filename, file_type, ""))
 
     category_names = ["LABORATORY", "TEST", "PROJECT", "EVENT"]
 
@@ -208,19 +231,19 @@ def insert_data(data_count_multiplier=1):
     for i, edition_id in enumerate(editions.values()):
         levels_values = random_levels[i]
         levels_data = [
-            ("Jajo", levels_values[0], levels_values[1], 1, 2.0, "", False),
-            ("Pisklak", levels_values[1], levels_values[2], 2, 2.0, "", False),
-            ("Podlot", levels_values[2], levels_values[3], 3, 3.0, "", False),
-            ("Żółtodziób", levels_values[3], levels_values[4], 4, 3.5, "", False),
-            ("Nieopierzony odkrywca", levels_values[4], levels_values[5], 5, 4.0, "", False),
-            ("Samodzielny Zwierzak", levels_values[5], levels_values[6], 6, 4.5, "", False),
-            ("Majestatyczna Bestia", levels_values[6], levels_values[7], 7, 5.0, "", True)
+            ("Jajo", levels_values[0], levels_values[1], 1, 2.0, "", False, 0),
+            ("Pisklak", levels_values[1], levels_values[2], 2, 2.0, "", False, 1),
+            ("Podlot", levels_values[2], levels_values[3], 3, 3.0, "", False, 2),
+            ("Żółtodziób", levels_values[3], levels_values[4], 4, 3.5, "", False, 3),
+            ("Nieopierzony odkrywca", levels_values[4], levels_values[5], 5, 4.0, "", False, 4),
+            ("Samodzielny Zwierzak", levels_values[5], levels_values[6], 6, 4.5, "", False, 5),
+            ("Majestatyczna Bestia", levels_values[6], levels_values[7], 7, 5.0, "", True, 6)
         ]
 
-        for name, min_points, max_points, image_file_id, grade, label, highest in levels_data:
+        for name, min_points, max_points, image_file_id, grade, label, highest, ordinal_number in levels_data:
             cursor.execute(
-                "INSERT INTO levels (name, minimum_points, maximum_points, image_file_id, grade, label, edition_id, highest) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING level_id",
-                (name, min_points, max_points, image_file_id, grade, "", edition_id, highest))
+                "INSERT INTO levels (name, minimum_points, maximum_points, image_file_id, grade, label, edition_id, highest, ordinal_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING level_id",
+                (name, min_points, max_points, image_file_id, grade, "", edition_id, highest, ordinal_number))
     # Insert data into subcategories
     subcategories_data = {
         "LABORATORY": [(f"lab_{i}", 10) for i in range(1, 15)],
@@ -296,7 +319,7 @@ def insert_data(data_count_multiplier=1):
                                             "SELECT 1 FROM subcategories WHERE subcategory_id = %s AND edition_id = %s",
                                             (s, edition_id)) and cursor.fetchone() is not None])
         cursor.execute(
-            "INSERT INTO chest_history (user_id, chest_id, subcategory_id, label, created_at, updated_at, teacher_id) VALUES (%s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, %s) RETURNING chest_history_id",
+            "INSERT INTO chest_history (user_id, chest_id, subcategory_id, label, created_at, updated_at, teacher_id) VALUES (%s, %s, %s, %s, NOW(), NOW(), %s) RETURNING chest_history_id",
             (student_id, chest_id, subcategory_id, "", teacher_id)
         )
         chest_history_id = cursor.fetchone()[0]
@@ -309,14 +332,14 @@ def insert_data(data_count_multiplier=1):
         # 3. Create an initial point record in the points table for the student by the teacher.
         initial_points = 0
         cursor.execute(
-            "INSERT INTO points (student_id, teacher_id, value, subcategory_id, label, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING points_id",
+            "INSERT INTO points (student_id, teacher_id, value, subcategory_id, label, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, NOW(), NOW()) RETURNING points_id",
             (student_id, teacher_id, initial_points, subcategory_id, "")
         )
         points_id = cursor.fetchone()[0]
 
         # 4. Insert a record in the bonuses table for the chosen award.
         cursor.execute(
-            "INSERT INTO bonuses (points_id, award_id, created_at, updated_at, label, chest_history_id) VALUES (%s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, %s, %s) RETURNING bonus_id",
+            "INSERT INTO bonuses (points_id, award_id, created_at, updated_at, label, chest_history_id) VALUES (%s, %s, NOW(), NOW(), %s, %s) RETURNING bonus_id",
             (points_id, chosen_award_id, "", chest_history_id)
         )
         bonus_id = cursor.fetchone()[0]
@@ -372,7 +395,7 @@ def insert_data(data_count_multiplier=1):
         # Add points to the student for the chosen subcategory
         points = random.randint(5, 20)
         cursor.execute(
-            "INSERT INTO points (student_id, teacher_id, value, subcategory_id, label, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)",
+            "INSERT INTO points (student_id, teacher_id, value, subcategory_id, label, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, NOW(), NOW())",
             (student_id, teacher_id, points, subcategory_id, "")
         )
 

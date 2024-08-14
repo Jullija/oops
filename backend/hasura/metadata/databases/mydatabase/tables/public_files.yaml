@@ -16,12 +16,26 @@ array_relationships:
         table:
           name: chests
           schema: public
+  - name: groups
+    using:
+      foreign_key_constraint_on:
+        column: image_file_id
+        table:
+          name: groups
+          schema: public
   - name: levels
     using:
       foreign_key_constraint_on:
         column: image_file_id
         table:
           name: levels
+          schema: public
+  - name: users
+    using:
+      foreign_key_constraint_on:
+        column: image_file_id
+        table:
+          name: users
           schema: public
 insert_permissions:
   - role: coordinator
