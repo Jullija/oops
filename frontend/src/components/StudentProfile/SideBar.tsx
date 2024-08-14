@@ -1,8 +1,8 @@
 import { PointsBarProps } from "../PointsBar";
-import { UserCard } from "./cards/userCard";
 import { CategoriesCard } from "./cards/CategoriesCard";
 import { Styles } from "../../utils/Styles";
 import { StudentData } from "../../hooks/StudentProfile/useStudentData";
+import { StudentCard } from "./cards/StudentCard";
 
 const styles: Styles = {
   container: {
@@ -20,7 +20,7 @@ type SideBarProps = {
 export const SideBar = ({ student, categoriesBarProps }: SideBarProps) => {
   return (
     <div style={styles.container}>
-      <UserCard {...student} />
+      <StudentCard {...student} />
       <CategoriesCard categoriesBarProps={categoriesBarProps} />
     </div>
   );
