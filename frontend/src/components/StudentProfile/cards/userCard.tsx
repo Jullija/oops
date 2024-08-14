@@ -1,4 +1,3 @@
-import { useUserPointsImage } from "../../../hooks/useUserPointsImage";
 import { FILES_URL } from "../../../utils/constants";
 import { Styles } from "../../../utils/Styles";
 import { UserPoints } from "../../../utils/types";
@@ -53,14 +52,16 @@ const styles: Styles = {
 
 export function UserCard({ fullName, index, points }: UserCardProps) {
   const totalPoints = points.reduce((acc, point) => acc + +point.value, 0);
-  const { imageId, loading, error } = useUserPointsImage(totalPoints);
+  const loading = false;
+  const error: Error | undefined = undefined;
+  const imageId = "1";
 
   const getImageContent = () => {
     if (loading || error) {
       return loading ? (
         <div>Loading image...</div>
       ) : (
-        <div>Error loading image - {error?.message}</div>
+        <div>Error loading image</div>
       );
     }
     if (imageId) {
