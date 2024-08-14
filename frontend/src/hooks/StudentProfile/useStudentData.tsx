@@ -57,7 +57,7 @@ export const useStudentData = (props: {
         // TODO add level to backend
         level: -1,
         group: {
-          // TODO userGroups cannot be null
+          // TODO these nulls are to be corrected
           name: user.userGroups[0]?.group.groupName ?? "-",
           id: user.userGroups[0]?.group.groupsId ?? "-1",
           weekday: user.userGroups[0]?.group.weekday ?? "-",
@@ -65,8 +65,8 @@ export const useStudentData = (props: {
             start: user.userGroups[0]?.group.startTime ?? "-",
             end: user.userGroups[0]?.group.endTime ?? "-",
           },
-          // TODO: later on
-          teacherDisplayName: "TBA",
+          // TODO: add group teacher to be added to backend
+          teacherDisplayName: "-",
         },
         totalPoints: data.getStudentPoints.sumOfAll,
       }
@@ -74,17 +74,16 @@ export const useStudentData = (props: {
 
   const uniqueCategories: Map<string, FilterItem> = new Map();
 
-  // TODO: points undefined
   points
     .map((p) => {
       return {
-        id: p?.subcategory.category.categoryId.toString(),
-        name: p?.subcategory.category.categoryName,
+        id: p.subcategory.category.categoryId.toString(),
+        name: p.subcategory.category.categoryName,
       };
     })
     .forEach((entry) => {
-      if (!uniqueCategories.has(entry.id ?? "-1")) {
-        uniqueCategories.set(entry.id ?? "-1", { id: "1", name: "1" });
+      if (!uniqueCategories.has(entry.id)) {
+        uniqueCategories.set(entry.id, entry);
       }
     });
 

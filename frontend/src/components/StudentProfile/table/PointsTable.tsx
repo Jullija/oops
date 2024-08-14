@@ -24,9 +24,7 @@ type PointsTableProps = {
 };
 
 export default function PointsTable({ points }: PointsTableProps) {
-  // name, category, points (pure + bonus), max points, date, teacher
-
-  const headers = [
+  const headerTitles = [
     "nazwa",
     "kategoria",
     "punkty",
@@ -38,13 +36,11 @@ export default function PointsTable({ points }: PointsTableProps) {
   // TODO should be done on backed
   // backend:
   // - separate request for student aggregate data
-  // - why points is 0?
   // - should not return chest categories only - event
-  // - results are wrong and inconsistent with progress bar
   const getPointsString = (points: Points) => {
-    const pure = points?.points.purePoints?.value ?? 0;
+    const pure = points.points.purePoints?.value ?? 0;
     let totalBonus = 0;
-    points?.points.partialBonusType.forEach(
+    points.points.partialBonusType.forEach(
       (bonus) => (totalBonus += bonus?.partialValue ?? 0),
     );
     return `${pure.toFixed(2)} + ${totalBonus.toFixed(2)} = ${(pure + totalBonus).toFixed(2)}`;
@@ -53,28 +49,27 @@ export default function PointsTable({ points }: PointsTableProps) {
   return (
     <div style={styles.table}>
       <div style={styles.row}>
-        {headers.map((header, index) => (
+        {headerTitles.map((header, index) => (
           <div key={index} style={styles.cell}>
             {header}
           </div>
         ))}
       </div>
-      {/* TODO max points is too big xd */}
       {points.map((item, index) => (
         <div key={index} style={styles.row}>
-          <div style={styles.cell}>{item?.subcategory.subcategoryName}</div>
+          <div style={styles.cell}>{item.subcategory.subcategoryName}</div>
           <div style={styles.cell}>
-            {item?.subcategory.category.categoryName}
+            {item.subcategory.category.categoryName}
           </div>
           <div style={styles.cell}>{getPointsString(item)}</div>
-          {/* TODO add fullName to backend */}
-          <div style={styles.cell}>{item?.subcategory.maxPoints}</div>
+          <div style={styles.cell}>{item.subcategory.maxPoints}</div>
           {/* TODO I need to have one date to show - I don't know where to find it */}
           {/* createAt is only temporary */}
-          <div style={styles.cell}>{item?.points.purePoints?.createdAt}</div>
+          {/* TODO add fullName to backend */}
+          <div style={styles.cell}>{item.points.purePoints?.createdAt}</div>
           <div style={styles.cell}>
-            {item?.points.purePoints?.teacher.firstName}{" "}
-            {item?.points.purePoints?.teacher.secondName}
+            {item.points.purePoints?.teacher.firstName}{" "}
+            {item.points.purePoints?.teacher.secondName}
           </div>
         </div>
       ))}

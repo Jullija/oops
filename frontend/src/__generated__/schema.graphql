@@ -8568,7 +8568,7 @@ input StringComparisonExp {
 }
 
 type StudentPointsType {
-  subcategoryPoints: [SubcategoryPointsType]!
+  subcategoryPoints: [SubcategoryPointsType!]!
   sumOfAll: Float!
   sumOfBonuses: Float!
   sumOfPurePoints: Float!

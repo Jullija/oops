@@ -64,12 +64,11 @@ export function StudentCard({
   group,
   totalPoints,
 }: StudentCardData) {
-  // const { imageId, loading, error } = useUserPointsImage(totalPoints);
+  // TODO it should be already fetched
   const loading = false;
   const error: Error | undefined = undefined;
   const imageId = "1";
 
-  // TODO correct in PR with student card
   const getImageContent = () => {
     if (loading || error) {
       return loading ? (
