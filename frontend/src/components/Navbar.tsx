@@ -12,10 +12,6 @@ const styles: Styles = {
     alignItems: "center",
     marginBottom: 12,
     borderBottom: "1px solid black",
-    position: "sticky",
-    top: 0,
-    backgroundColor: "white",
-    zIndex: 10,
   },
   navbarItem: {
     border: "1px solid black",

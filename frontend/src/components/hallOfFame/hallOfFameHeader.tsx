@@ -3,7 +3,7 @@ import { Styles } from "../../utils/Styles";
 const styles: Styles = {
   header: {
     position: "sticky",
-    top: 45,
+    top: 0,
     display: "grid",
     gridTemplateColumns: "2fr 3fr 2fr 1fr",
     gap: 12,
@@ -12,7 +12,7 @@ const styles: Styles = {
     backgroundColor: "white",
     borderBottom: "1px solid #ccc",
     fontWeight: "bold",
-    zIndex: 9,
+    zIndex: 100,
   },
 };
 

@@ -50,12 +50,13 @@ const styles: Styles = {
   },
 };
 
-export function UserCard({ fullName, index, points }: UserCardProps) {
+export function StudentCard({ fullName, index, points }: UserCardProps) {
   const totalPoints = points.reduce((acc, point) => acc + +point.value, 0);
   const loading = false;
   const error: Error | undefined = undefined;
   const imageId = "1";
 
+  // TODO correct in PR with student card
   const getImageContent = () => {
     if (loading || error) {
       return loading ? (
