@@ -69,6 +69,7 @@ type ChestHistoryType {
     createdAt: String!
     updatedAt: String!
     teacher: UserType!
+    opened: Boolean!
 }
 
 type ChestType {

@@ -1,4 +1,6 @@
-def insert_levels(cursor, editions, random):
+import requests
+
+def insert_levels(hasura_url, headers, editions, random):
     def generate_levels():
         levels = [0]
         for i in range(1, 8):
@@ -10,10 +12,11 @@ def insert_levels(cursor, editions, random):
             levels[i] = int(levels[i] / max(levels) * 100)
         return levels
 
-
     random_levels = [[0, 25, 50, 60, 70, 80, 90, 100]] + [generate_levels() for _ in range(len(editions.values()) - 1)]
+
     # Insert data into levels
     for i, edition_id in enumerate(editions.values()):
+        print(f"Processing levels for edition ID: {edition_id}")
         levels_values = random_levels[i]
         levels_data = [
             ("Jajo", levels_values[0], levels_values[1], 1, 2.0, "", False, 0),
@@ -26,6 +29,47 @@ def insert_levels(cursor, editions, random):
         ]
 
         for name, min_points, max_points, image_file_id, grade, label, highest, ordinal_number in levels_data:
-            cursor.execute(
-                "INSERT INTO levels (name, minimum_points, maximum_points, image_file_id, grade, label, edition_id, highest, ordinal_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING level_id",
-                (name, min_points, max_points, image_file_id, grade, "", edition_id, highest, ordinal_number))
+            print(f"  Attempting to insert level: {name} (Edition ID: {edition_id})")
+            mutation = """
+            mutation MyMutation($name: String!, $minimumPoints: float8!, $maximumPoints: float8!, $imageFileId: bigint!, $grade: float8!, $editionId: bigint!, $highest: Boolean!, $ordinalNumber: Int!) {
+                insertLevels(objects: {
+                    name: $name,
+                    minimumPoints: $minimumPoints,
+                    maximumPoints: $maximumPoints,
+                    imageFileId: $imageFileId,
+                    grade: $grade,
+                    label: "",
+                    editionId: $editionId,
+                    highest: $highest,
+                    ordinalNumber: $ordinalNumber
+                }) {
+                    returning {
+                        levelId
+                    }
+                }
+            }
+            """
+            variables = {
+                "name": name,
+                "minimumPoints": min_points,
+                "maximumPoints": max_points,
+                "imageFileId": image_file_id,
+                "grade": grade,
+                "editionId": edition_id,
+                "highest": highest,
+                "ordinalNumber": ordinal_number
+            }
+
+            response = requests.post(
+                hasura_url,
+                json={"query": mutation, "variables": variables},
+                headers=headers
+            )
+
+            data = response.json()
+            if "errors" in data:
+                print(f"    Error inserting level '{name}' for edition {edition_id}: {data['errors']}")
+            else:
+                print(f"    Successfully inserted level '{name}' for edition {edition_id}")
+
+    print("All levels have been processed.")

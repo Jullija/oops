@@ -1,0 +1,2 @@
+ALTER TABLE chest_history
+    ADD COLUMN opened BOOLEAN NOT NULL DEFAULT FALSE;

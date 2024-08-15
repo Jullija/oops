@@ -1,135 +1,310 @@
-def insert_points(cursor, coordinator_id, teacher_ids, subcategories, subcategory_to_category, award_name_map, random):
-    # Function to model giving a chest to a student, choosing an award, and applying the bonus
-    def give_chest_and_apply_award(teacher_id):
-        # Choose a random student from the teacher's group
-        cursor.execute("""
-             SELECT u.user_id, g.edition_id
-             FROM users u
-             JOIN user_groups ug ON u.user_id = ug.user_id
-             JOIN groups g ON ug.group_id = g.groups_id
-             WHERE ug.group_id IN (
-                 SELECT group_id
-                 FROM user_groups
-                 WHERE user_id = %s
-             ) AND u.role = 'student'
-         """, (teacher_id,))
-        student_record = cursor.fetchall()
-        student_record = random.choice(student_record)
-        student_id = student_record[0]
-        edition_id = student_record[1]
+import requests
 
-        # Check that both the teacher and student are in the same edition
-        cursor.execute("""
-             SELECT 1
-             FROM user_groups ug
-             JOIN groups g ON ug.group_id = g.groups_id
-             WHERE ug.user_id = %s AND g.edition_id = %s
-         """, (teacher_id, edition_id))
-        if cursor.fetchone() is None:
+def insert_points(hasura_url, headers, cursor, coordinator_id, teacher_ids, subcategories, subcategory_to_category, award_name_map, random, num_points=5):
+    def give_chest(hasura_url, headers, teacher_id):
+        # Step 1: Choose a random student from the teacher's group
+        query_students = """
+        query MyQuery($teacherId: bigint!) {
+            users(where: {userGroups: {group: {userGroups: {userId: {_eq: $teacherId}}}}}) {
+                userId
+                userGroups {
+                    group {
+                        editionId
+                    }
+                }
+                role
+            }
+        }
+        """
+        variables = {"teacherId": teacher_id}
+        response_students = requests.post(
+            hasura_url,
+            json={"query": query_students, "variables": variables},
+            headers=headers
+        )
+        students = response_students.json()["data"]["users"]
+
+        if not students:
+            print(f"No students found for teacher {teacher_id}")
+            return None
+
+        student_record = random.choice(students)
+        student_id = student_record["userId"]
+        edition_id = student_record["userGroups"][0]["group"]["editionId"]
+
+        # Step 2: Check that both the teacher and student are in the same edition
+        query_check = """
+        query MyQuery($teacherId: bigint!, $editionId: bigint!) {
+            userGroups(where: {userId: {_eq: $teacherId}, group: {editionId: {_eq: $editionId}}}) {
+                userId
+            }
+        }
+        """
+        response_check = requests.post(
+            hasura_url,
+            json={"query": query_check, "variables": {"teacherId": teacher_id, "editionId": edition_id}},
+            headers=headers
+        )
+
+        if not response_check.json()["data"]["userGroups"]:
             print(f"Teacher {teacher_id} is not in the same edition as student {student_id}")
-            return
+            return None
 
-        # 1. Insert a record in the chest_history table to represent the student receiving a chest from the teacher.
-        cursor.execute("SELECT chest_id FROM chests WHERE edition_id = %s", (edition_id,))
-        chest_id = cursor.fetchall()
-        chest_id = random.choice(chest_id)[0]
-        subcategory_id = random.choice([s for s in subcategories if
-                                        subcategory_to_category[s] in ["EVENT", "PROJECT"] and not cursor.execute(
-                                            "SELECT 1 FROM subcategories WHERE subcategory_id = %s AND edition_id = %s",
-                                            (s, edition_id)) and cursor.fetchone() is not None])
-        cursor.execute(
-            "INSERT INTO chest_history (user_id, chest_id, subcategory_id, label, created_at, updated_at, teacher_id) VALUES (%s, %s, %s, %s, NOW(), NOW(), %s) RETURNING chest_history_id",
-            (student_id, chest_id, subcategory_id, "", teacher_id)
+        # Step 3: Insert a record in the chest_history table
+        query_chests = """
+        query MyQuery($editionId: bigint!) {
+            chests(where: {editionId: {_eq: $editionId}}) {
+                chestId
+            }
+        }
+        """
+        response_chests = requests.post(
+            hasura_url,
+            json={"query": query_chests, "variables": {"editionId": edition_id}},
+            headers=headers
         )
-        chest_history_id = cursor.fetchone()[0]
+        chests = response_chests.json()["data"]["chests"]
 
-        # 2. The student chooses an award from the chest.
-        cursor.execute("SELECT award_id FROM chest_award WHERE chest_id = %s", (chest_id,))
-        available_awards = cursor.fetchall()
-        chosen_award_id = random.choice(available_awards)[0]
+        if not chests:
+            print(f"No chests found for edition {edition_id}")
+            return None
 
-        # 3. Create an initial point record in the points table for the student by the teacher.
-        initial_points = 0
-        cursor.execute(
-            "INSERT INTO points (student_id, teacher_id, value, subcategory_id, label, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, NOW(), NOW()) RETURNING points_id",
-            (student_id, teacher_id, initial_points, subcategory_id, "")
+        chest_id = random.choice(chests)["chestId"]
+
+        # Step 4: Retrieve eligible subcategories for "EVENT" and "PROJECT"
+        query_subcategories = """
+        query MyQuery($editionId: bigint!, $categoryNames: [String!]) {
+            subcategories(where: {editionId: {_eq: $editionId}, category: {categoryName: {_in: $categoryNames}}}) {
+                subcategoryId
+            }
+        }
+        """
+        variables_subcategories = {
+            "editionId": edition_id,
+            "categoryNames": ["EVENT", "PROJECT"]
+        }
+
+        response_subcategories = requests.post(
+            hasura_url,
+            json={"query": query_subcategories, "variables": variables_subcategories},
+            headers=headers
         )
-        points_id = cursor.fetchone()[0]
+        subcategories = response_subcategories.json()["data"]["subcategories"]
 
-        # 4. Insert a record in the bonuses table for the chosen award.
-        cursor.execute(
-            "INSERT INTO bonuses (points_id, award_id, created_at, updated_at, label, chest_history_id) VALUES (%s, %s, NOW(), NOW(), %s, %s) RETURNING bonus_id",
-            (points_id, chosen_award_id, "", chest_history_id)
+        if not subcategories:
+            print(f"No eligible subcategories found for edition {edition_id}")
+            return None
+
+        subcategory_id = random.choice(subcategories)["subcategoryId"]
+
+        # Step 5: Insert a record in the chest_history table
+        mutation_chest_history = """
+        mutation MyMutation($studentId: bigint!, $chestId: bigint!, $subcategoryId: bigint!, $teacherId: bigint!) {
+            insertChestHistory(objects: {
+                userId: $studentId,
+                chestId: $chestId,
+                subcategoryId: $subcategoryId,
+                label: "",
+                createdAt: "now()",
+                updatedAt: "now()",
+                teacherId: $teacherId
+            }) {
+                returning {
+                    chestHistoryId
+                }
+            }
+        }
+        """
+        variables_chest_history = {
+            "studentId": student_id,
+            "chestId": chest_id,
+            "subcategoryId": subcategory_id,
+            "teacherId": teacher_id
+        }
+
+        response_chest_history = requests.post(
+            hasura_url,
+            json={"query": mutation_chest_history, "variables": variables_chest_history},
+            headers=headers
         )
-        bonus_id = cursor.fetchone()[0]
 
-        # 5. Update the points in the points table based on the chosen award from the bonuses table.
-        cursor.execute("SELECT value FROM points WHERE points_id = %s", (points_id,))
-        current_points = cursor.fetchone()[0]
-        bonus_points = chosen_award_id * 10  # Each award gives points based on award_id * 10
-        updated_points = current_points + bonus_points
-        cursor.execute("UPDATE points SET value = %s WHERE points_id = %s", (updated_points, points_id))
+        chest_history_id = response_chest_history.json()["data"]["insertChestHistory"]["returning"][0]["chestHistoryId"]
 
-        # Print user roles and award names
-        cursor.execute("SELECT role FROM users WHERE user_id = %s", (teacher_id,))
-        teacher_role = cursor.fetchone()[0]
-        cursor.execute("SELECT role FROM users WHERE user_id = %s", (student_id,))
-        student_role = cursor.fetchone()[0]
+        return chest_history_id, chest_id, student_id, teacher_id
 
+    def apply_award_from_chest(chest_history_id, chest_id, student_id, teacher_id):
+        # Step 1: The student chooses an award from the chest
+        query_awards = """
+        query MyQuery($chestId: bigint!) {
+            chestAward(where: {chestId: {_eq: $chestId}}) {
+                awardId
+            }
+        }
+        """
+        variables = {"chestId": chest_id}
+
+        response_awards = requests.post(
+            hasura_url,
+            json={"query": query_awards, "variables": variables},
+            headers=headers
+        )
+        available_awards = response_awards.json()["data"]["chestAward"]
+
+        if not available_awards:
+            print(f"No awards available for chest {chest_id}")
+            return None
+
+        chosen_award_id = random.choice(available_awards)["awardId"]
+
+        # Step 2: Apply the chosen award using addBonusMutation
+        mutation_add_bonus = """
+        mutation AddBonus($chestHistoryId: Int!, $awardId: Int!) {
+            addBonusMutation(chestHistoryId: $chestHistoryId, awardId: $awardId) {
+                bonus {
+                    bonusId
+                }
+                points {
+                    pointsId
+                    value
+                }
+            }
+        }
+        """
+        variables_add_bonus = {
+            "chestHistoryId": chest_history_id,
+            "awardId": chosen_award_id
+        }
+
+        response_add_bonus = requests.post(
+            hasura_url,
+            json={"query": mutation_add_bonus, "variables": variables_add_bonus},
+            headers=headers
+        )
+
+        if "errors" in response_add_bonus.json():
+            print(f"Error applying bonus for chest history {chest_history_id}: {response_add_bonus.json()['errors']}")
+            return None
+
+        result = response_add_bonus.json()["data"]["addBonusMutation"]
+        bonus_id = result["bonus"]["bonusId"]
+        points_id = result["points"]["pointsId"]
+        points_value = result["points"]["value"]
+
+        # Step 3: Output the result
         print(
-            f"Teacher {teacher_id} ({teacher_role}) gave a chest to student {student_id} ({student_role}). Student chose award {chosen_award_id} ({award_name_map[chosen_award_id]}) and received {bonus_points} bonus points.")
+            f"Teacher {teacher_id} gave chest {chest_id} to student {student_id}. Award {chosen_award_id} applied. Bonus ID: {bonus_id}, Points ID: {points_id}, Points Value: {points_value}.")
 
-
-    # New function for adding points for laboratory or test
     def add_points_for_laboratory_or_test(teacher_id):
-        # Choose a random student from the teacher's group
-        cursor.execute("""
-             SELECT u.user_id, g.edition_id
-             FROM users u
-             JOIN user_groups ug ON u.user_id = ug.user_id
-             JOIN groups g ON ug.group_id = g.groups_id
-             WHERE ug.group_id IN (
-                 SELECT group_id
-                 FROM user_groups
-                 WHERE user_id = %s
-             ) AND u.role = 'student'
-         """, (teacher_id,))
-        student_record = cursor.fetchall()
-        student_record = random.choice(student_record)
-        student_id = student_record[0]
-        edition_id = student_record[1]
+        # Step 1: Choose a random student from the teacher's group
+        query_students = """
+        query MyQuery($teacherId: bigint!) {
+            users(where: {userGroups: {group: {userGroups: {userId: {_eq: $teacherId}}}}}) {
+                userId
+                userGroups {
+                    group {
+                        editionId
+                    }
+                }
+                role
+            }
+        }
+        """
+        variables = {"teacherId": teacher_id}
 
-        # Choose a subcategory from LABORATORY or TEST within the student's edition
-        cursor.execute("""
-             SELECT subcategory_id
-             FROM subcategories
-             WHERE category_id IN (
-                 SELECT category_id
-                 FROM categories
-                 WHERE category_name IN ('LABORATORY', 'TEST')
-             ) AND edition_id = %s
-         """, (edition_id,))
-        subcategory_id = cursor.fetchall()
-        subcategory_id = random.choice(subcategory_id)[0]
+        response_students = requests.post(
+            hasura_url,
+            json={"query": query_students, "variables": variables},
+            headers=headers
+        )
+        students = response_students.json()["data"]["users"]
 
-        # Add points to the student for the chosen subcategory
+        if not students:
+            print(f"No students found for teacher {teacher_id}")
+            return None
+
+        student_record = random.choice(students)
+        student_id = student_record["userId"]
+        edition_id = student_record["userGroups"][0]["group"]["editionId"]
+
+        # Step 2: Choose a subcategory from LABORATORY or TEST within the student's edition
+        query_subcategories = """
+        query MyQuery($editionId: bigint!) {
+            subcategories(where: {
+                editionId: {_eq: $editionId},
+                category: {categoryName: {_in: ["LABORATORY", "TEST"]}}
+            }) {
+                subcategoryId
+                maxPoints
+            }
+        }
+        """
+        response_subcategories = requests.post(
+            hasura_url,
+            json={"query": query_subcategories, "variables": {"editionId": edition_id}},
+            headers=headers
+        )
+        subcategories = response_subcategories.json()["data"]["subcategories"]
+
+        if not subcategories:
+            print(f"No subcategories found for edition {edition_id} in LABORATORY or TEST")
+            return None
+
+        subcategory_record = random.choice(subcategories)
+        subcategory_id = subcategory_record["subcategoryId"]
+        max_points = subcategory_record["maxPoints"]
+
+        # Step 3: Add points to the student for the chosen subcategory
         points = random.randint(5, 20)
-        cursor.execute(
-            "INSERT INTO points (student_id, teacher_id, value, subcategory_id, label, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, NOW(), NOW())",
-            (student_id, teacher_id, points, subcategory_id, "")
+
+        if points > max_points:
+            points = max_points
+
+        mutation_add_points = """
+        mutation AddPoints($studentId: Int!, $teacherId: Int!, $value: Float!, $subcategoryId: Int!) {
+            addPointsMutation(studentId: $studentId, teacherId: $teacherId, value: $value, subcategoryId: $subcategoryId) {
+                pointsId
+                value
+                subcategory {
+                    subcategoryName
+                }
+            }
+        }
+        """
+        variables_add_points = {
+            "studentId": student_id,
+            "teacherId": teacher_id,
+            "value": float(points),
+            "subcategoryId": subcategory_id
+        }
+
+        response_add_points = requests.post(
+            hasura_url,
+            json={"query": mutation_add_points, "variables": variables_add_points},
+            headers=headers
         )
 
-        print(
-            f"Teacher {teacher_id} added {points} points to student {student_id} for {subcategory_to_category[subcategory_id]} in edition {edition_id}.")
+        if "errors" in response_add_points.json():
+            print(f"Error adding points for student {student_id}: {response_add_points.json()['errors']}")
+            return None
 
+        result = response_add_points.json()["data"]["addPointsMutation"]
+        print(
+            f"Teacher {teacher_id} added {points} points to student {student_id} for subcategory {result['subcategory']['subcategoryName']} in edition {edition_id}.")
 
     # Example of modeling the chest-giving process
+    chests_given = []
     for teacher_id in teacher_ids:
-        for _ in range(500):  # Adjust the number of times you want to model this process per teacher
-            give_chest_and_apply_award(teacher_id)
+        for _ in range(num_points):
+            new_chest = give_chest(hasura_url, headers, teacher_id)
+            if new_chest:
+                chests_given.append(new_chest)
             add_points_for_laboratory_or_test(teacher_id)
 
-    # Coordinator gives chests to random students
-    for _ in range(500):  # Adjust the number of times you want to model this process for the coordinator
-        give_chest_and_apply_award(coordinator_id)
+    for _ in range(num_points):
+        new_chest = give_chest(hasura_url, headers, coordinator_id)
+        if new_chest:
+            chests_given.append(new_chest)
         add_points_for_laboratory_or_test(coordinator_id)
+
+    for new_chest in chests_given:
+        apply_award_from_chest(*new_chest)

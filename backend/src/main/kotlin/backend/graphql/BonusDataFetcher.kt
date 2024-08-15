@@ -55,10 +55,14 @@ class BonusDataFetcher {
             throw IllegalArgumentException("Bonus already exists for the given chest history.")
         }
 
+        if (chestHistory.opened) {
+            throw IllegalArgumentException("Chest is already opened.")
+        }
+
         val award = awardRepository.findById(awardId)
             .orElseThrow { IllegalArgumentException("Invalid award ID") }
 
-        if (chestHistory.user.getAwardUsageCount(award, bonusRepository) >= award.maxUsages) {
+        if (award.maxUsages != -1 && chestHistory.user.getAwardUsageCount(award, bonusRepository) >= award.maxUsages) {
             throw IllegalArgumentException("Cannot apply more than ${award.maxUsages} bonuses for this award.")
         }
 
@@ -92,6 +96,9 @@ class BonusDataFetcher {
             label = ""
         )
         val savedBonus = bonusRepository.save(bonus)
+
+        chestHistory.opened = true
+        chestHistoryRepository.save(chestHistory)
 
         return AddBonusReturnType(savedBonus, savedPoints)
     }
@@ -157,10 +164,7 @@ class BonusDataFetcher {
                 point -> bonusRepository.findByPoints(point).isEmpty()  // discard points connected to bonuses
         }
         val lastPoints = pointsInAwardCategory.maxByOrNull { it.subcategory.ordinalNumber }
-
-        if (lastPoints == null) {
-            throw IllegalArgumentException("No previous points found in the specified category.")
-        }
+            ?: throw IllegalArgumentException("No previous points found in the specified category.")
 
         return Points(
             student = chestHistory.user,

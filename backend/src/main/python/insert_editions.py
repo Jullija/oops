@@ -1,9 +1,39 @@
-def insert_editions(cursor):
-    # Insert data into editions
+import requests
+
+
+def insert_editions(hasura_url, headers):
     editions = {}
+
     for year in range(2020, 2026):
         name = f"Edition {year}"
-        cursor.execute("INSERT INTO edition (name, edition_year, label) VALUES (%s, %s, %s) RETURNING edition_id",
-                       (name, year, ""))
-        editions[year] = cursor.fetchone()[0]
+        print(f"Attempting to insert edition: {name}")
+
+        mutation = """
+        mutation MyMutation($name: String!, $year: Int!) {
+            insertEdition(objects: {name: $name, editionYear: $year, label: ""}) {
+                returning {
+                    editionId
+                    name
+                    editionYear
+                }
+            }
+        }
+        """
+        variables = {"name": name, "year": year}
+
+        response = requests.post(
+            hasura_url,
+            json={"query": mutation, "variables": variables},
+            headers=headers
+        )
+
+        data = response.json()
+        if "errors" in data:
+            print(f"Error inserting edition '{name}': {data['errors']}")
+        else:
+            returned_data = data["data"]["insertEdition"]["returning"][0]
+            editions[returned_data["editionYear"]] = returned_data["editionId"]
+            print(f"Successfully inserted edition '{name}' with ID {returned_data['editionId']} for year {year}")
+
+    print("All editions have been processed.")
     return editions

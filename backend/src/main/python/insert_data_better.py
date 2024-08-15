@@ -15,7 +15,12 @@ from insert_subcategories import insert_subcategories
 from insert_chest_awards import insert_chest_awards
 from insert_points import insert_points
 
-
+hasura_url = "http://localhost:9191/v1/graphql"
+headers = {
+    "Content-Type": "application/json",
+    "x-hasura-role": "admin",
+    "x-hasura-admin-secret": "admin_secret",
+}
 def create_connection():
     return psycopg2.connect(
         dbname="mydatabase",
@@ -60,18 +65,19 @@ def insert_data():
     random.seed(1234)
 
     insert_files(cursor)
-    categories = insert_categories(cursor)
-    editions = insert_editions(cursor)
-    chest_ids = insert_chests(cursor, editions)
-    award_ids, award_name_map = insert_awards(cursor)
-    insert_award_editions(cursor, award_ids, editions, award_name_map)
-    year_group_counts, groups = insert_groups(cursor, editions, random)
-    users, roles, students_in_group_count = insert_users(cursor, year_group_counts, fake, random)
-    coordinator_id, teacher_ids = insert_user_groups(cursor, users, roles, groups, students_in_group_count, random)
-    insert_levels(cursor, editions, random)
-    subcategories, subcategory_to_category = insert_subcategories(cursor, editions, categories)
-    insert_chest_awards(cursor, chest_ids)
-    insert_points(cursor, coordinator_id, teacher_ids, subcategories, subcategory_to_category, award_name_map, random)
+    conn.commit()
+    categories = insert_categories(hasura_url, headers)
+    editions = insert_editions(hasura_url, headers)
+    chest_ids = insert_chests(hasura_url, headers, editions)
+    award_ids, award_name_map = insert_awards(hasura_url, headers)
+    insert_award_editions(hasura_url, headers, award_ids, editions, award_name_map)
+    year_group_counts, groups = insert_groups(hasura_url, headers, editions, random)
+    users, roles, students_in_group_count = insert_users(hasura_url, headers, year_group_counts, fake, random)
+    coordinator_id, teacher_ids = insert_user_groups(hasura_url, headers, users, roles, groups, students_in_group_count, random)
+    insert_levels(hasura_url, headers, editions, random)
+    subcategories, subcategory_to_category = insert_subcategories(hasura_url, headers, editions, categories)
+    insert_chest_awards(hasura_url, headers, chest_ids)
+    insert_points(hasura_url, headers, cursor, coordinator_id, teacher_ids, subcategories, subcategory_to_category, award_name_map, random, 5)
 
     conn.commit()
     cursor.close()
