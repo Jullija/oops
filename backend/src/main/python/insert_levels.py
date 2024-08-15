@@ -14,50 +14,36 @@ def insert_levels(hasura_url, headers, editions, random):
 
     random_levels = [[0, 25, 50, 60, 70, 80, 90, 100]] + [generate_levels() for _ in range(len(editions.values()) - 1)]
 
-    # Insert data into levels
+    # Insert data into levels using the addLevel mutation
     for i, edition_id in enumerate(editions.values()):
         print(f"Processing levels for edition ID: {edition_id}")
         levels_values = random_levels[i]
         levels_data = [
-            ("Jajo", levels_values[0], levels_values[1], 1, 2.0, "", False, 0),
-            ("Pisklak", levels_values[1], levels_values[2], 2, 2.0, "", False, 1),
-            ("Podlot", levels_values[2], levels_values[3], 3, 3.0, "", False, 2),
-            ("Żółtodziób", levels_values[3], levels_values[4], 4, 3.5, "", False, 3),
-            ("Nieopierzony odkrywca", levels_values[4], levels_values[5], 5, 4.0, "", False, 4),
-            ("Samodzielny Zwierzak", levels_values[5], levels_values[6], 6, 4.5, "", False, 5),
-            ("Majestatyczna Bestia", levels_values[6], levels_values[7], 7, 5.0, "", True, 6)
+            ("Jajo", levels_values[1], 1, 2.0),
+            ("Pisklak", levels_values[2], 2, 2.0),
+            ("Podlot", levels_values[3], 3, 3.0),
+            ("Żółtodziób", levels_values[4], 4, 3.5),
+            ("Nieopierzony odkrywca", levels_values[5], 5, 4.0),
+            ("Samodzielny Zwierzak", levels_values[6], 6, 4.5),
+            ("Majestatyczna Bestia", levels_values[7], 7, 5.0)
         ]
 
-        for name, min_points, max_points, image_file_id, grade, label, highest, ordinal_number in levels_data:
+        for name, max_points, image_file_id, grade in levels_data:
             print(f"  Attempting to insert level: {name} (Edition ID: {edition_id})")
             mutation = """
-            mutation MyMutation($name: String!, $minimumPoints: float8!, $maximumPoints: float8!, $imageFileId: bigint!, $grade: float8!, $editionId: bigint!, $highest: Boolean!, $ordinalNumber: Int!) {
-                insertLevels(objects: {
-                    name: $name,
-                    minimumPoints: $minimumPoints,
-                    maximumPoints: $maximumPoints,
-                    imageFileId: $imageFileId,
-                    grade: $grade,
-                    label: "",
-                    editionId: $editionId,
-                    highest: $highest,
-                    ordinalNumber: $ordinalNumber
-                }) {
-                    returning {
-                        levelId
-                    }
+            mutation AddLevel($editionId: Int!, $name: String!, $maximumPoints: Float!, $grade: Float!, $imageFileId: Int) {
+                addLevel(editionId: $editionId, name: $name, maximumPoints: $maximumPoints, grade: $grade, imageFileId: $imageFileId) {
+                    levelId
+                    levelName
                 }
             }
             """
             variables = {
-                "name": name,
-                "minimumPoints": min_points,
-                "maximumPoints": max_points,
-                "imageFileId": image_file_id,
-                "grade": grade,
                 "editionId": edition_id,
-                "highest": highest,
-                "ordinalNumber": ordinal_number
+                "name": name,
+                "maximumPoints": float(max_points),
+                "grade": float(grade),
+                "imageFileId": image_file_id  # You can pass None if you don't want to specify an image
             }
 
             response = requests.post(
