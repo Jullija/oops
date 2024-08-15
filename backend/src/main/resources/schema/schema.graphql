@@ -8,6 +8,7 @@ type Mutation {
         subcategoryId: Int!): PointType
     assignPhotosToGroups(editionId: Int!): Boolean
     assignAvatarToUser(userId: Int!, fileId: Int!): Boolean
+    addLevel(editionId: Int!, name: String!, maximumPoints: Float!, grade: Float!, imageFileId: Int): LevelType
 }
 
 type Query {
