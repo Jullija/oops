@@ -198,7 +198,7 @@ def insert_points(hasura_url, headers, cursor, coordinator_id, teacher_ids, subc
         # Step 1: Choose a random student from the teacher's group
         query_students = """
         query MyQuery($teacherId: bigint!) {
-            users(where: {userGroups: {group: {userGroups: {userId: {_eq: $teacherId}}}}}) {
+            users(where: {userGroups: {group: {userGroups: {userId: {_eq: $teacherId}}}}, role: {_eq: "student"}}) {
                 userId
                 userGroups {
                     group {
@@ -253,8 +253,15 @@ def insert_points(hasura_url, headers, cursor, coordinator_id, teacher_ids, subc
         subcategory_id = subcategory_record["subcategoryId"]
         max_points = subcategory_record["maxPoints"]
 
-        # Step 3: Add points to the student for the chosen subcategory
-        points = random.randint(5, 20)
+        # Mean and standard deviation for the normal distribution
+        mean = max_points / 2
+        std_dev = max_points / 6
+
+        # Generating points from a normal distribution
+        points = round(random.gauss(mean, std_dev), 1)
+
+        # Ensure the points are within a valid range (0 to max_points)
+        points = max(0, min(points, max_points))
 
         if points > max_points:
             points = max_points

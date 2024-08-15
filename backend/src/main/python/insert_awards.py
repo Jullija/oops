@@ -5,9 +5,9 @@ def insert_awards(hasura_url, headers):
     awards = [
         ("Lekarstwo", "additive_next", 10, 1, 6, ""),
         ("Weterynarz", "additive_prev", 20, 2, 2, ""),
+        ("Rabat na sianko", "additive", 12, 1, 2, ""),
         ("Marchewka laboratoryjna", "multiplicative", 0.3, 1, 2, ""),
         ("Marchewka projektowa", "multiplicative", 0.6, 3, 2, ""),
-        ("Rabat na sianko", "additive", 12, 1, 2, ""),
         ("LekarstwoV2", "additive_next", 14, 1, 2, ""),
         ("WeterynarzV2", "additive_prev", 16, 2, -1, "")
     ]

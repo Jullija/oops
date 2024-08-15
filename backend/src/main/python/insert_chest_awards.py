@@ -1,17 +1,27 @@
 import requests
 
-
 def insert_chest_awards(hasura_url, headers, chest_ids):
     chest_awards = []
+    chest_award_objects = []
+
+    # Define the chest award rules
+    chest_awards_rules = {
+        "Gold Chest": ["Marchewka laboratoryjna", "Marchewka projektowa"],
+        "Silver Chest": ["Lekarstwo", "Weterynarz", "LekarstwoV2", "WeterynarzV2"],
+        "Bronze Chest": ["Lekarstwo", "Weterynarz", "Rabat na sianko"]
+    }
+
+    print("Preparing chest awards for bulk insertion...")
 
     for chest_id in chest_ids:
         print(f"Processing chest ID: {chest_id}")
 
-        # Fetch the edition_id associated with the chest
+        # Fetch the edition_id and chestType associated with the chest
         query_edition = """
         query MyQuery($chestId: bigint!) {
             chests(where: {chestId: {_eq: $chestId}}) {
                 editionId
+                type
             }
         }
         """
@@ -22,17 +32,27 @@ def insert_chest_awards(hasura_url, headers, chest_ids):
         )
         chest_data = response_edition.json()
         if "errors" in chest_data:
-            print(f"Error fetching edition for chest ID {chest_id}: {chest_data['errors']}")
+            print(f"Error fetching edition and type for chest ID {chest_id}: {chest_data['errors']}")
             continue
 
         chest_edition_id = chest_data["data"]["chests"][0]["editionId"]
-        print(f"  Edition ID for chest {chest_id}: {chest_edition_id}")
+        chest_type = chest_data["data"]["chests"][0]["type"]
+        print(f"  Edition ID for chest {chest_id}: {chest_edition_id}, Chest Type: {chest_type}")
+
+        # Get the award names that match the chest type based on the rules
+        eligible_award_names = chest_awards_rules.get(chest_type, [])
+        if not eligible_award_names:
+            print(f"  No eligible awards found for chest type '{chest_type}'")
+            continue
 
         # Fetch valid awards associated with the edition
         query_awards = """
         query MyQuery($editionId: bigint!) {
             awardEdition(where: {editionId: {_eq: $editionId}}) {
                 awardId
+                award {
+                    awardName
+                }
             }
         }
         """
@@ -47,38 +67,47 @@ def insert_chest_awards(hasura_url, headers, chest_ids):
             continue
 
         valid_awards = awards_data["data"]["awardEdition"]
-        print(f"  Valid awards for edition {chest_edition_id}: {[award['awardId'] for award in valid_awards]}")
+        print(f"  Valid awards for edition {chest_edition_id}: {[award['award']['awardName'] for award in valid_awards]}")
 
-        # Insert chest_award entries for each valid award
+        # Filter valid awards to only those that match the eligible award names
         for award in valid_awards:
-            award_id = award["awardId"]
-            print(f"    Inserting chest award for chest {chest_id} and award {award_id}")
-            mutation = """
-            mutation MyMutation($chestId: bigint!, $awardId: bigint!) {
-                insertChestAward(objects: {chestId: $chestId, awardId: $awardId, label: ""}) {
-                    returning {
-                        awardId
-                    }
+            if award["award"]["awardName"] in eligible_award_names:
+                award_id = award["awardId"]
+                chest_award_objects.append({
+                    "chestId": chest_id,
+                    "awardId": award_id,
+                    "label": ""
+                })
+                print(f"    Prepared chest award for chest {chest_id} and award {award['award']['awardName']}")
+
+    if chest_award_objects:
+        # Perform bulk insert
+        mutation = """
+        mutation MyMutation($chestAwards: [ChestAwardInsertInput!]!) {
+            insertChestAward(objects: $chestAwards) {
+                returning {
+                    chestId
+                    awardId
                 }
             }
-            """
-            variables = {
-                "chestId": chest_id,
-                "awardId": award_id
-            }
+        }
+        """
+        variables = {"chestAwards": chest_award_objects}
 
-            response = requests.post(
-                hasura_url,
-                json={"query": mutation, "variables": variables},
-                headers=headers
-            )
+        response = requests.post(
+            hasura_url,
+            json={"query": mutation, "variables": variables},
+            headers=headers
+        )
 
-            data = response.json()
-            if "errors" in data:
-                print(f"    Error inserting chest_award for chest {chest_id} and award {award_id}: {data['errors']}")
-            else:
-                print(f"    Successfully inserted chest_award for chest {chest_id} and award {award_id}")
-                chest_awards.append(award_id)
+        data = response.json()
+        if "errors" in data:
+            print(f"Error during bulk insert of chest awards: {data['errors']}")
+        else:
+            inserted_chest_awards = data["data"]["insertChestAward"]["returning"]
+            for chest_award in inserted_chest_awards:
+                chest_awards.append(chest_award["awardId"])
+                print(f"Successfully inserted chest award for chest ID {chest_award['chestId']} and award ID {chest_award['awardId']}")
 
     print("All chest awards have been processed.")
     return chest_awards

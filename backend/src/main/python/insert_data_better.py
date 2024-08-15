@@ -42,7 +42,7 @@ def truncate_and_restart_sequences():
     tables = [
         "bonuses", "chest_history", "chest_award", "user_groups", "points",
         "users", "subcategories", "levels", "groups", "chests", "categories",
-        "award", "edition", "award_edition", "files"
+        "award", "edition", "award_edition", "files", "user_level",
     ]
 
     for table in tables:
@@ -64,20 +64,25 @@ def insert_data():
     Faker.seed(1234)
     random.seed(1234)
 
+    number_of_editions = 6
+    number_of_groups_per_year_bounds = [12, 14]
+    students_per_group_bounds = [15, 20]
+    number_of_points_per_teacher = 250
+
     insert_files(cursor)
     conn.commit()
     categories = insert_categories(hasura_url, headers)
-    editions = insert_editions(hasura_url, headers)
+    editions = insert_editions(hasura_url, headers, number_of_editions)
     chest_ids = insert_chests(hasura_url, headers, editions)
     award_ids, award_name_map = insert_awards(hasura_url, headers)
     insert_award_editions(hasura_url, headers, award_ids, editions, award_name_map)
-    year_group_counts, groups = insert_groups(hasura_url, headers, editions, random)
-    users, roles, students_in_group_count = insert_users(hasura_url, headers, year_group_counts, fake, random)
+    year_group_counts, groups = insert_groups(hasura_url, headers, editions, random, number_of_groups_per_year_bounds)
+    users, roles, students_in_group_count = insert_users(hasura_url, headers, year_group_counts, fake, random, students_per_group_bounds)
     coordinator_id, teacher_ids = insert_user_groups(hasura_url, headers, users, roles, groups, students_in_group_count, random)
     insert_levels(hasura_url, headers, editions, random)
     subcategories, subcategory_to_category = insert_subcategories(hasura_url, headers, editions, categories)
     insert_chest_awards(hasura_url, headers, chest_ids)
-    insert_points(hasura_url, headers, cursor, coordinator_id, teacher_ids, subcategories, subcategory_to_category, award_name_map, random, 5)
+    insert_points(hasura_url, headers, cursor, coordinator_id, teacher_ids, subcategories, subcategory_to_category, award_name_map, random, number_of_points_per_teacher)
 
     conn.commit()
     cursor.close()

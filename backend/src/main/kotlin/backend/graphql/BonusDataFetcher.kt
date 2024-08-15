@@ -134,8 +134,8 @@ class BonusDataFetcher {
 
         val lastSubcategory = pointsInAwardCategory.maxByOrNull { it.subcategory.ordinalNumber }?.subcategory
         val nextSubcategory = if (lastSubcategory != null) {
-            subcategoriesRepository.findFirstByCategoryAndOrdinalNumberGreaterThanOrderByOrdinalNumberAsc(
-                lastSubcategory.category, lastSubcategory.ordinalNumber
+            subcategoriesRepository.findFirstByCategoryAndOrdinalNumberAndEditionGreaterThanOrderByOrdinalNumberAsc(
+                lastSubcategory.category, lastSubcategory.ordinalNumber, edition
             ).orElseGet {
                 subcategoriesRepository.findFirstByCategoryOrderByOrdinalNumberAsc(lastSubcategory.category)
                     .orElseThrow { IllegalArgumentException("No subcategory found in the specified category.") }
