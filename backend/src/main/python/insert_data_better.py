@@ -82,7 +82,8 @@ def insert_data():
     insert_levels(hasura_url, headers, editions, random)
     subcategories, subcategory_to_category = insert_subcategories(hasura_url, headers, editions, categories)
     insert_chest_awards(hasura_url, headers, chest_ids)
-    insert_points(hasura_url, headers, cursor, coordinator_id, teacher_ids, subcategories, subcategory_to_category, award_name_map, random, number_of_points_per_teacher)
+    insert_points(hasura_url, headers, cursor, editions, teacher_ids + [coordinator_id], random, subcategories_percentage=0.5,
+                  chest_percentage=0.01, open_chest_percentage=0.9)
 
     conn.commit()
     cursor.close()
