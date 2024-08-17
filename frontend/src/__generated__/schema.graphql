@@ -2866,6 +2866,7 @@ type ChestHistory {
   chestId: bigint!
   createdAt: timestamp!
   label: String!
+  opened: Boolean!
 
   """
   An object relationship
@@ -2896,6 +2897,8 @@ type ChestHistoryAggregate {
 }
 
 input ChestHistoryAggregateBoolExp {
+  bool_and: chestHistoryAggregateBoolExpBool_and
+  bool_or: chestHistoryAggregateBoolExpBool_or
   count: chestHistoryAggregateBoolExpCount
 }
 
@@ -2980,6 +2983,7 @@ input ChestHistoryBoolExp {
   chestId: BigintComparisonExp
   createdAt: TimestampComparisonExp
   label: StringComparisonExp
+  opened: BooleanComparisonExp
   subcategory: SubcategoriesBoolExp
   subcategoryId: BigintComparisonExp
   teacherId: BigintComparisonExp
@@ -3020,6 +3024,7 @@ input ChestHistoryInsertInput {
   chestId: bigint
   createdAt: timestamp
   label: String
+  opened: Boolean
   subcategory: SubcategoriesObjRelInsertInput
   subcategoryId: bigint
   teacherId: bigint
@@ -3131,6 +3136,7 @@ input ChestHistoryOrderBy {
   chestId: OrderBy
   createdAt: OrderBy
   label: OrderBy
+  opened: OrderBy
   subcategory: SubcategoriesOrderBy
   subcategoryId: OrderBy
   teacherId: OrderBy
@@ -3174,6 +3180,11 @@ enum ChestHistorySelectColumn {
   """
   column name
   """
+  opened
+
+  """
+  column name
+  """
   subcategoryId
 
   """
@@ -3193,6 +3204,26 @@ enum ChestHistorySelectColumn {
 }
 
 """
+select "chestHistoryAggregateBoolExpBool_andArgumentsColumns" columns of table "chest_history"
+"""
+enum ChestHistorySelectColumnChestHistoryAggregateBoolExpBool_andArgumentsColumns {
+  """
+  column name
+  """
+  opened
+}
+
+"""
+select "chestHistoryAggregateBoolExpBool_orArgumentsColumns" columns of table "chest_history"
+"""
+enum ChestHistorySelectColumnChestHistoryAggregateBoolExpBool_orArgumentsColumns {
+  """
+  column name
+  """
+  opened
+}
+
+"""
 input type for updating data in table "chest_history"
 """
 input ChestHistorySetInput {
@@ -3200,6 +3231,7 @@ input ChestHistorySetInput {
   chestId: bigint
   createdAt: timestamp
   label: String
+  opened: Boolean
   subcategoryId: bigint
   teacherId: bigint
   updatedAt: timestamp
@@ -3295,6 +3327,7 @@ input ChestHistoryStreamCursorValueInput {
   chestId: bigint
   createdAt: timestamp
   label: String
+  opened: Boolean
   subcategoryId: bigint
   teacherId: bigint
   updatedAt: timestamp
@@ -3328,6 +3361,7 @@ type ChestHistoryType {
   chestHistoryId: ID!
   createdAt: String!
   label: String!
+  opened: Boolean!
   subcategory: SubcategoryType!
   teacher: UserType!
   updatedAt: String!
@@ -3357,6 +3391,11 @@ enum ChestHistoryUpdateColumn {
   column name
   """
   label
+
+  """
+  column name
+  """
+  opened
 
   """
   column name
@@ -11295,6 +11334,20 @@ input chestAwardAggregateBoolExpCount {
   predicate: IntComparisonExp!
 }
 
+input chestHistoryAggregateBoolExpBool_and {
+  arguments: ChestHistorySelectColumnChestHistoryAggregateBoolExpBool_andArgumentsColumns!
+  distinct: Boolean
+  filter: ChestHistoryBoolExp
+  predicate: BooleanComparisonExp!
+}
+
+input chestHistoryAggregateBoolExpBool_or {
+  arguments: ChestHistorySelectColumnChestHistoryAggregateBoolExpBool_orArgumentsColumns!
+  distinct: Boolean
+  filter: ChestHistoryBoolExp
+  predicate: BooleanComparisonExp!
+}
+
 input chestHistoryAggregateBoolExpCount {
   arguments: [ChestHistorySelectColumn!]
   distinct: Boolean
@@ -11410,6 +11463,13 @@ mutation root
 """
 type mutation_root {
   addBonusMutation(awardId: Int!, chestHistoryId: Int!): AddBonusReturnType
+  addLevel(
+    editionId: Int!
+    grade: Float!
+    imageFileId: Int
+    maximumPoints: Float!
+    name: String!
+  ): LevelType
   addPointsMutation(
     studentId: Int!
     subcategoryId: Int!

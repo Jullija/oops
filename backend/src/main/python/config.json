@@ -1,0 +1,35 @@
+{
+    "database": {
+        "dbname": "mydatabase",
+        "user": "postgres",
+        "password": "password",
+        "host": "localhost",
+        "port": "6543"
+    },
+    "hasura": {
+        "url": "http://localhost:9191/v1/graphql",
+        "headers": {
+            "Content-Type": "application/json",
+            "x-hasura-role": "admin",
+            "x-hasura-admin-secret": "admin_secret"
+        }
+    },
+    "style": {
+        "old_style": false
+    },
+    "data_insertion": {
+        "number_of_editions": 2,
+        "number_of_groups_per_year_bounds": [
+            12,
+            14
+        ],
+        "students_per_group_bounds": [
+            15,
+            20
+        ],
+        "subcategories_percentage": 0.8,
+        "chest_percentage": 0.1,
+        "open_chest_percentage": 0.9,
+        "seed": 1234
+    }
+}

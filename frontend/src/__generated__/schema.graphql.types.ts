@@ -2100,6 +2100,7 @@ export type ChestHistory = {
   chestId: Scalars["bigint"]["output"];
   createdAt: Scalars["timestamp"]["output"];
   label: Scalars["String"]["output"];
+  opened: Scalars["Boolean"]["output"];
   /** An object relationship */
   subcategory: Subcategories;
   subcategoryId: Scalars["bigint"]["output"];
@@ -2120,6 +2121,8 @@ export type ChestHistoryAggregate = {
 };
 
 export type ChestHistoryAggregateBoolExp = {
+  bool_and?: InputMaybe<ChestHistoryAggregateBoolExpBool_And>;
+  bool_or?: InputMaybe<ChestHistoryAggregateBoolExpBool_Or>;
   count?: InputMaybe<ChestHistoryAggregateBoolExpCount>;
 };
 
@@ -2197,6 +2200,7 @@ export type ChestHistoryBoolExp = {
   chestId?: InputMaybe<BigintComparisonExp>;
   createdAt?: InputMaybe<TimestampComparisonExp>;
   label?: InputMaybe<StringComparisonExp>;
+  opened?: InputMaybe<BooleanComparisonExp>;
   subcategory?: InputMaybe<SubcategoriesBoolExp>;
   subcategoryId?: InputMaybe<BigintComparisonExp>;
   teacherId?: InputMaybe<BigintComparisonExp>;
@@ -2229,6 +2233,7 @@ export type ChestHistoryInsertInput = {
   chestId?: InputMaybe<Scalars["bigint"]["input"]>;
   createdAt?: InputMaybe<Scalars["timestamp"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
+  opened?: InputMaybe<Scalars["Boolean"]["input"]>;
   subcategory?: InputMaybe<SubcategoriesObjRelInsertInput>;
   subcategoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -2319,6 +2324,7 @@ export type ChestHistoryOrderBy = {
   chestId?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
+  opened?: InputMaybe<OrderBy>;
   subcategory?: InputMaybe<SubcategoriesOrderBy>;
   subcategoryId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
@@ -2344,6 +2350,8 @@ export enum ChestHistorySelectColumn {
   /** column name */
   Label = "label",
   /** column name */
+  Opened = "opened",
+  /** column name */
   SubcategoryId = "subcategoryId",
   /** column name */
   TeacherId = "teacherId",
@@ -2353,12 +2361,25 @@ export enum ChestHistorySelectColumn {
   UserId = "userId",
 }
 
+/** select "chestHistoryAggregateBoolExpBool_andArgumentsColumns" columns of table "chest_history" */
+export enum ChestHistorySelectColumnChestHistoryAggregateBoolExpBool_AndArgumentsColumns {
+  /** column name */
+  Opened = "opened",
+}
+
+/** select "chestHistoryAggregateBoolExpBool_orArgumentsColumns" columns of table "chest_history" */
+export enum ChestHistorySelectColumnChestHistoryAggregateBoolExpBool_OrArgumentsColumns {
+  /** column name */
+  Opened = "opened",
+}
+
 /** input type for updating data in table "chest_history" */
 export type ChestHistorySetInput = {
   chestHistoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   chestId?: InputMaybe<Scalars["bigint"]["input"]>;
   createdAt?: InputMaybe<Scalars["timestamp"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
+  opened?: InputMaybe<Scalars["Boolean"]["input"]>;
   subcategoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
   updatedAt?: InputMaybe<Scalars["timestamp"]["input"]>;
@@ -2436,6 +2457,7 @@ export type ChestHistoryStreamCursorValueInput = {
   chestId?: InputMaybe<Scalars["bigint"]["input"]>;
   createdAt?: InputMaybe<Scalars["timestamp"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
+  opened?: InputMaybe<Scalars["Boolean"]["input"]>;
   subcategoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
   updatedAt?: InputMaybe<Scalars["timestamp"]["input"]>;
@@ -2467,6 +2489,7 @@ export type ChestHistoryType = {
   chestHistoryId: Scalars["ID"]["output"];
   createdAt: Scalars["String"]["output"];
   label: Scalars["String"]["output"];
+  opened: Scalars["Boolean"]["output"];
   subcategory: SubcategoryType;
   teacher: UserType;
   updatedAt: Scalars["String"]["output"];
@@ -2483,6 +2506,8 @@ export enum ChestHistoryUpdateColumn {
   CreatedAt = "createdAt",
   /** column name */
   Label = "label",
+  /** column name */
+  Opened = "opened",
   /** column name */
   SubcategoryId = "subcategoryId",
   /** column name */
@@ -7964,6 +7989,20 @@ export type ChestAwardAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
+export type ChestHistoryAggregateBoolExpBool_And = {
+  arguments: ChestHistorySelectColumnChestHistoryAggregateBoolExpBool_AndArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<ChestHistoryBoolExp>;
+  predicate: BooleanComparisonExp;
+};
+
+export type ChestHistoryAggregateBoolExpBool_Or = {
+  arguments: ChestHistorySelectColumnChestHistoryAggregateBoolExpBool_OrArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<ChestHistoryBoolExp>;
+  predicate: BooleanComparisonExp;
+};
+
 export type ChestHistoryAggregateBoolExpCount = {
   arguments?: InputMaybe<Array<ChestHistorySelectColumn>>;
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -8076,6 +8115,7 @@ export type LevelsAggregateBoolExpVar_Samp = {
 export type Mutation_Root = {
   __typename?: "mutation_root";
   addBonusMutation?: Maybe<AddBonusReturnType>;
+  addLevel?: Maybe<LevelType>;
   addPointsMutation?: Maybe<PointType>;
   assignAvatarToUser?: Maybe<Scalars["Boolean"]["output"]>;
   assignPhotosToGroups?: Maybe<Scalars["Boolean"]["output"]>;
@@ -8325,6 +8365,15 @@ export type Mutation_Root = {
 export type Mutation_RootAddBonusMutationArgs = {
   awardId: Scalars["Int"]["input"];
   chestHistoryId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootAddLevelArgs = {
+  editionId: Scalars["Int"]["input"];
+  grade: Scalars["Float"]["input"];
+  imageFileId?: InputMaybe<Scalars["Int"]["input"]>;
+  maximumPoints: Scalars["Float"]["input"];
+  name: Scalars["String"]["input"];
 };
 
 /** mutation root */
