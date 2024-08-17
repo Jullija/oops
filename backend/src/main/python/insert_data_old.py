@@ -1,51 +1,6 @@
-import psycopg2
-from faker import Faker
-import random
 import os
 
-
-def create_connection():
-    return psycopg2.connect(
-        dbname="mydatabase",
-        user="postgres",
-        password="password",
-        host="localhost",
-        port="6543"
-    )
-
-
-def truncate_and_restart_sequences():
-    conn = create_connection()
-    cursor = conn.cursor()
-
-    # Disable foreign key constraints
-    cursor.execute("SET session_replication_role = 'replica';")
-
-    # Truncate tables
-    tables = [
-        "bonuses", "chest_history", "chest_award", "user_groups", "points",
-        "users", "subcategories", "levels", "groups", "chests", "categories",
-        "award", "edition", "award_edition", "files"
-    ]
-
-    for table in tables:
-        cursor.execute(f"TRUNCATE TABLE {table} RESTART IDENTITY CASCADE;")
-        print(f"Truncated table {table}")
-
-    # Enable foreign key constraints
-    cursor.execute("SET session_replication_role = 'origin';")
-
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-
-def insert_data(data_count_multiplier=1):
-    conn = create_connection()
-    cursor = conn.cursor()
-    fake = Faker()
-    Faker.seed(1234)
-    random.seed(1234)
+def insert_data_old(conn, cursor, fake, random):
 
     owlbear_filenames = ["owlbear1.png", "owlbear2.png", "owlbear3.png", "owlbear4.png",
                          "owlbear5.png", "owlbear6.png", "owlbear7.png"]
@@ -404,12 +359,12 @@ def insert_data(data_count_multiplier=1):
 
     # Example of modeling the chest-giving process
     for teacher_id in teacher_ids:
-        for _ in range(500):  # Adjust the number of times you want to model this process per teacher
+        for _ in range(250):  # Adjust the number of times you want to model this process per teacher
             give_chest_and_apply_award(teacher_id)
             add_points_for_laboratory_or_test(teacher_id)
 
     # Coordinator gives chests to random students
-    for _ in range(500):  # Adjust the number of times you want to model this process for the coordinator
+    for _ in range(250):  # Adjust the number of times you want to model this process for the coordinator
         give_chest_and_apply_award(coordinator_id)
         add_points_for_laboratory_or_test(coordinator_id)
 

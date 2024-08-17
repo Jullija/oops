@@ -1,4 +1,5 @@
-import requests, tqdm
+import requests
+from tqdm import tqdm
 
 def insert_points(hasura_url, headers, cursor, editions, teacher_ids, random, subcategories_percentage=0.5, chest_percentage=0.01, open_chest_percentage=0.9):
     def get_groups_for_teacher(teacher_id, edition_id):
@@ -156,9 +157,9 @@ def insert_points(hasura_url, headers, cursor, editions, teacher_ids, random, su
 
         if "errors" in response_add_points.json():
             print(f"Error adding points for student {student_id}: {response_add_points.json()['errors']}")
-        else:
-            subcategory_name = response_add_points.json()["data"]["addPointsMutation"]["subcategory"]["subcategoryName"]
-            print(f"Successfully added {points} points for student {student_id} in subcategory {subcategory_name}.")
+        # else:
+        #     subcategory_name = response_add_points.json()["data"]["addPointsMutation"]["subcategory"]["subcategoryName"]
+        #     print(f"Successfully added {points} points for student {student_id} in subcategory {subcategory_name}.")
 
     def apply_award_from_chest(chest_history_id, chest_id, student_id, teacher_id):
         # Step 1: The student chooses an award from the chest
@@ -224,22 +225,36 @@ def insert_points(hasura_url, headers, cursor, editions, teacher_ids, random, su
 
     # Example of modeling the chest-giving process
     chests_given = []
-    for edition_id in tqdm.tqdm(editions.values(), desc="Editions: "):
-        for teacher_id in tqdm.tqdm(teacher_ids, desc="Teachers: "):
+
+    total_steps = 0  # Calculate the total number of iterations (steps)
+    for edition_id in editions.values():
+        for teacher_id in teacher_ids:
             groups = get_groups_for_teacher(teacher_id, edition_id)
             for group in groups:
                 group_id = group["group"]["groupsId"]
                 students = get_students_for_group(group_id)
                 subcategories = get_subcategories_for_edition(edition_id, subcategories_percentage)
                 for subcategory in subcategories:
-                    subcategory_id = subcategory["subcategoryId"]
-                    max_points = subcategory["maxPoints"]
-                    for student in students:
-                        student_id = student["userId"]
-                        add_points_for_student(student_id, teacher_id, subcategory_id, max_points)
-                        chest_entry = give_chest_with_probability(student_id, teacher_id, subcategory_id, edition_id)
-                        if chest_entry:
-                            chests_given.append(chest_entry)
+                    total_steps += len(students)
+
+    with tqdm(total=total_steps, desc="Processing") as pbar:
+        for edition_id in editions.values():
+            for teacher_id in teacher_ids:
+                groups = get_groups_for_teacher(teacher_id, edition_id)
+                for group in groups:
+                    group_id = group["group"]["groupsId"]
+                    students = get_students_for_group(group_id)
+                    subcategories = get_subcategories_for_edition(edition_id, subcategories_percentage)
+                    for subcategory in subcategories:
+                        subcategory_id = subcategory["subcategoryId"]
+                        max_points = subcategory["maxPoints"]
+                        for student in students:
+                            student_id = student["userId"]
+                            add_points_for_student(student_id, teacher_id, subcategory_id, max_points)
+                            chest_entry = give_chest_with_probability(student_id, teacher_id, subcategory_id, edition_id)
+                            if chest_entry:
+                                chests_given.append(chest_entry)
+                            pbar.update(1)
 
     # Open 90% of the chests
     chests_to_open = random.sample(chests_given, int(len(chests_given) * open_chest_percentage))
