@@ -2,20 +2,20 @@ import psycopg2
 from faker import Faker
 import random
 import json
-from insert_data_old import insert_data_old
-from insert_files import insert_files
-from insert_categories import insert_categories
-from insert_editions import insert_editions
-from insert_chests import insert_chests
-from insert_awards import insert_awards
-from insert_award_editions import insert_award_editions
-from insert_groups import insert_groups
-from insert_users import insert_users
-from insert_user_groups import insert_user_groups
-from insert_levels import insert_levels
-from insert_subcategories import insert_subcategories
-from insert_chest_awards import insert_chest_awards
-from insert_points import insert_points
+from utils.insert_data_old import insert_data_old
+from utils.insert_files import insert_files
+from utils.insert_categories import insert_categories
+from utils.insert_editions import insert_editions
+from utils.insert_chests import insert_chests
+from utils.insert_awards import insert_awards
+from utils.insert_award_editions import insert_award_editions
+from utils.insert_groups import insert_groups
+from utils.insert_users import insert_users
+from utils.insert_user_groups import insert_user_groups
+from utils.insert_levels import insert_levels
+from utils.insert_subcategories import insert_subcategories
+from utils.insert_chest_awards import insert_chest_awards
+from utils.insert_points import insert_points
 
 # Load configuration from config.json
 with open('config.json') as config_file:
@@ -67,28 +67,72 @@ def truncate_and_restart_sequences():
 
 def insert_data():
     number_of_editions = data_insertion_config['number_of_editions']
+    number_of_teachers = data_insertion_config['number_of_teachers']
     number_of_groups_per_year_bounds = data_insertion_config['number_of_groups_per_year_bounds']
     students_per_group_bounds = data_insertion_config['students_per_group_bounds']
     subcategories_percentage = data_insertion_config['subcategories_percentage']
     chest_percentage = data_insertion_config['chest_percentage']
     open_chest_percentage = data_insertion_config['open_chest_percentage']
+    chests_data_struct = data_insertion_config['chests_data']
+    chests_data = [
+        (
+            chest['name'],
+            chest['content_type']
+        )
+        for chest in chests_data_struct
+    ]
+    category_data_struct = data_insertion_config['category_data']
+    category_data = [
+        (
+            category['name'],
+            category['number_of_subcategories'],
+            category['subcategory_prefix'],
+            category['max_points_per_subcategory']
+        )
+        for category in category_data_struct
+    ]
+    category_names_to_populate = data_insertion_config['category_names_to_populate']
+    awards_data_struct = data_insertion_config['awards_data']
+    awards_data = [
+        (
+            award['name'],
+            award['award_type'],
+            award['award_value'],
+            award['category_id'],
+            award['max_usages'],
+            award['label'],
+            award['editions']
+        )
+        for award in awards_data_struct
+    ]
+
+    max_points_in_level = data_insertion_config['max_points_in_level']
+
+    if max_points_in_level['is_computed']:
+        max_points = sum([category[1] * category[3] for category in category_data if category[3]])
+    else:
+        max_points = max_points_in_level['if_not_computed']
+
+
+
 
     insert_files(cursor)
     conn.commit()
-    categories = insert_categories(hasura_url, headers)
+    categories = insert_categories(hasura_url, headers, category_data)
     editions = insert_editions(hasura_url, headers, number_of_editions)
-    chest_ids = insert_chests(hasura_url, headers, editions)
-    award_ids, award_name_map = insert_awards(hasura_url, headers)
-    insert_award_editions(hasura_url, headers, award_ids, editions, award_name_map)
+    chest_ids = insert_chests(hasura_url, headers, editions, chests_data)
+    award_ids, award_editions_type_map = insert_awards(hasura_url, headers, awards_data)
+    insert_award_editions(hasura_url, headers, award_ids, editions, award_editions_type_map, random)
     year_group_counts, groups = insert_groups(hasura_url, headers, editions, random, number_of_groups_per_year_bounds)
     users, roles, students_in_group_count = insert_users(hasura_url, headers, year_group_counts, fake, random,
-                                                         students_per_group_bounds)
+                                                         students_per_group_bounds, number_of_teachers)
     coordinator_id, teacher_ids = insert_user_groups(hasura_url, headers, users, roles, groups, students_in_group_count,
                                                      random)
-    insert_levels(hasura_url, headers, editions, random)
-    subcategories, subcategory_to_category = insert_subcategories(hasura_url, headers, editions, categories)
-    insert_chest_awards(hasura_url, headers, chest_ids)
+    insert_levels(hasura_url, headers, editions, random, max_points)
+    subcategories, subcategory_to_category = insert_subcategories(hasura_url, headers, editions, categories, category_data, random)
+    insert_chest_awards(hasura_url, headers, chest_ids, chests_data, awards_data)
     insert_points(hasura_url, headers, cursor, editions, teacher_ids + [coordinator_id], random,
+                  category_names_to_populate,
                   subcategories_percentage,
                   chest_percentage, open_chest_percentage)
 

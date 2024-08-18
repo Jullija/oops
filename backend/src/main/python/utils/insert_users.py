@@ -1,8 +1,10 @@
 import requests
 
-def insert_users(hasura_url, headers, year_group_counts, fake, random, students_per_group_bounds):
+
+def insert_users(hasura_url, headers, year_group_counts, fake, random, students_per_group_bounds, number_of_teachers):
     total_groups = sum(year_group_counts.values())
-    students_in_group_count = [random.randint(students_per_group_bounds[0], students_per_group_bounds[1]) for _ in range(total_groups)]
+    students_in_group_count = [random.randint(students_per_group_bounds[0], students_per_group_bounds[1]) for _ in
+                               range(total_groups)]
     total_students = sum(students_in_group_count)
 
     def generate_unique_index_number(existing_index_numbers):
@@ -16,7 +18,7 @@ def insert_users(hasura_url, headers, year_group_counts, fake, random, students_
     users = []
     roles = ['student'] * total_students
     random.shuffle(roles)
-    roles = ['coordinator'] + ['teacher'] * 7 + roles
+    roles = ['coordinator'] + ['teacher'] * number_of_teachers + roles
 
     print("Preparing users for bulk insertion...")
 

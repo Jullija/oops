@@ -139,7 +139,7 @@ type SubcategoryType {
     category: CategoryType!
     label: String!
     edition: EditionType!
-    maxPoints: Int!
+    maxPoints: Float!
     ordinalNumber: Int!
 }
 

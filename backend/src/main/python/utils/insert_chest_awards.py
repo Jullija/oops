@@ -1,14 +1,12 @@
 import requests
 
-def insert_chest_awards(hasura_url, headers, chest_ids):
+
+def insert_chest_awards(hasura_url, headers, chest_ids, chests_data, awards_data):
     chest_awards = []
     chest_award_objects = []
 
-    # Define the chest award rules
     chest_awards_rules = {
-        "Gold Chest": ["Marchewka laboratoryjna", "Marchewka projektowa"],
-        "Silver Chest": ["Lekarstwo", "Weterynarz", "LekarstwoV2", "WeterynarzV2"],
-        "Bronze Chest": ["Lekarstwo", "Weterynarz", "Rabat na sianko"]
+        chest[0]: [award[0] for award in awards_data if award[1] in chest[1]] for chest in chests_data
     }
 
     print("Preparing chest awards for bulk insertion...")

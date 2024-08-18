@@ -134,14 +134,14 @@ class BonusDataFetcher {
 
         val lastSubcategory = pointsInAwardCategory.maxByOrNull { it.subcategory.ordinalNumber }?.subcategory
         val nextSubcategory = if (lastSubcategory != null) {
-            subcategoriesRepository.findFirstByCategoryAndOrdinalNumberAndEditionGreaterThanOrderByOrdinalNumberAsc(
-                lastSubcategory.category, lastSubcategory.ordinalNumber, edition
+            subcategoriesRepository.findFirstByCategoryAndEditionAndOrdinalNumberGreaterThanOrderByOrdinalNumberAsc(
+                lastSubcategory.category, edition, lastSubcategory.ordinalNumber
             ).orElseGet {
-                subcategoriesRepository.findFirstByCategoryOrderByOrdinalNumberAsc(lastSubcategory.category)
+                subcategoriesRepository.findFirstByCategoryAndEditionOrderByOrdinalNumberAsc(lastSubcategory.category, edition)
                     .orElseThrow { IllegalArgumentException("No subcategory found in the specified category.") }
             }
         } else {
-            subcategoriesRepository.findFirstByCategoryOrderByOrdinalNumberAsc(chestHistory.subcategory.category)
+            subcategoriesRepository.findFirstByCategoryAndEditionOrderByOrdinalNumberAsc(chestHistory.subcategory.category, edition)
                 .orElseThrow { IllegalArgumentException("No subcategory found in the specified category.") }
         }
 
@@ -152,7 +152,7 @@ class BonusDataFetcher {
         return Points(
             student = chestHistory.user,
             teacher = chestHistory.teacher,
-            value = award.awardValue,
+            value = min(award.awardValue, nextSubcategory.maxPoints),
             subcategory = nextSubcategory,
             label = "Points awarded for ${award.awardName}"
         )
