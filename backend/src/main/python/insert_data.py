@@ -123,12 +123,12 @@ def insert_data():
     chest_ids = insert_chests(hasura_url, headers, editions, chests_data)
     award_ids, award_editions_type_map = insert_awards(hasura_url, headers, awards_data)
     insert_award_editions(hasura_url, headers, award_ids, editions, award_editions_type_map, random)
+    insert_levels(hasura_url, headers, editions, random, max_points)
     year_group_counts, groups = insert_groups(hasura_url, headers, editions, random, number_of_groups_per_year_bounds)
     users, roles, students_in_group_count = insert_users(hasura_url, headers, year_group_counts, fake, random,
                                                          students_per_group_bounds, number_of_teachers)
     coordinator_id, teacher_ids = insert_user_groups(hasura_url, headers, users, roles, groups, students_in_group_count,
                                                      random)
-    insert_levels(hasura_url, headers, editions, random, max_points)
     subcategories, subcategory_to_category = insert_subcategories(hasura_url, headers, editions, categories, category_data, random)
     insert_chest_awards(hasura_url, headers, chest_ids, chests_data, awards_data)
     insert_points(hasura_url, headers, cursor, editions, teacher_ids + [coordinator_id], random,

@@ -6,6 +6,7 @@ import backend.categories.Categories
 import backend.categories.CategoriesRepository
 import backend.edition.EditionRepository
 import backend.files.FileEntityRepository
+import backend.levels.Levels
 import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
@@ -101,6 +102,7 @@ class UsersDataFetcher {
 
         return StudentPointsType(
             user = user,
+            level = user.getLevelByEdition(edition)?.level,
             subcategoryPoints = subcategoryPoints,
             sumOfPurePoints = sumOfPurePoints,
             sumOfBonuses = sumOfBonuses,
@@ -149,6 +151,7 @@ class UsersDataFetcher {
 
 data class StudentPointsType(
     val user: Users,
+    val level: Levels?,
     val subcategoryPoints: List<SubcategoryPointsType>,
     val sumOfPurePoints: Float,
     val sumOfBonuses: Float,
