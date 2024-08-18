@@ -1,6 +1,6 @@
 import requests
 
-def insert_levels(hasura_url, headers, editions, random):
+def insert_levels(hasura_url, headers, editions, random, max_points_in_level):
     def generate_levels():
         levels = [0]
         for i in range(1, 8):
@@ -9,10 +9,10 @@ def insert_levels(hasura_url, headers, editions, random):
             else:
                 levels.append(levels[-1] + random.randint(10, 20))
         for i in range(0, 8):
-            levels[i] = int(levels[i] / max(levels) * 100)
+            levels[i] = int(levels[i] / max(levels) * max_points_in_level)
         return levels
 
-    random_levels = [[0, 25, 50, 60, 70, 80, 90, 100]] + [generate_levels() for _ in range(len(editions.values()) - 1)]
+    random_levels = [[i*max_points_in_level/100 for i in [0, 25, 50, 60, 70, 80, 90, 100]]] + [generate_levels() for _ in range(len(editions.values()) - 1)]
 
     # Insert data into levels using the addLevel mutation
     for i, edition_id in enumerate(editions.values()):

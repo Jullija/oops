@@ -2,6 +2,7 @@ import requests
 
 def insert_groups(hasura_url, headers, editions, random, number_of_groups_per_year_bounds):
     weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday"]
+    timespans = [("08:00:00", "09:30:00"), ("10:00:00", "11:30:00"), ("12:00:00", "13:30:00"), ("14:00:00", "15:30:00"), ("16:00:00", "17:30:00")]
     groups = []
 
     year_group_counts = {year: random.randint(number_of_groups_per_year_bounds[0], number_of_groups_per_year_bounds[1]) for year in editions.keys()}
@@ -12,14 +13,15 @@ def insert_groups(hasura_url, headers, editions, random, number_of_groups_per_ye
     for year, count in year_group_counts.items():
         print(f"Processing {count} groups for edition year: {year} (Edition ID: {editions[year]})")
         for i in range(1, count + 1):
+            timespan = random.choice(timespans)
             group_name = f"gr_{i}"
             group_objects.append({
                 "groupName": group_name,
                 "editionId": editions[year],
                 "label": "",
                 "weekday": random.choice(weekdays),
-                "startTime": "16:00:00",
-                "endTime": "17:30:00"
+                "startTime": timespan[0],
+                "endTime": timespan[1]
             })
 
     # Perform bulk insert

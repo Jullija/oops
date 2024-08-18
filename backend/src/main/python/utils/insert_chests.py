@@ -1,11 +1,6 @@
 import requests
 
-def insert_chests(hasura_url, headers, editions):
-    chests = [
-        "Gold Chest",
-        "Silver Chest",
-        "Bronze Chest",
-    ]
+def insert_chests(hasura_url, headers, editions, chests_data):
     chest_ids = []
     chest_objects = []
 
@@ -14,7 +9,7 @@ def insert_chests(hasura_url, headers, editions):
     # Prepare bulk insertion data for all chests
     for year, edition_id in editions.items():
         print(f"Processing chests for edition year: {year} (Edition ID: {edition_id})")
-        for name in chests:
+        for name, _ in chests_data:
             chest_objects.append({
                 "type": name,
                 "label": "",

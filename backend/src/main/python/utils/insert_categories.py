@@ -1,10 +1,9 @@
 import requests
 
-def insert_categories(hasura_url, headers):
-    category_names = ["LABORATORY", "TEST", "PROJECT", "EVENT"]
+def insert_categories(hasura_url, headers, category_data):
     categories = {}
 
-    for category_name in category_names:
+    for category_name, _, _, _ in category_data:
         mutation = """
         mutation MyMutation($categoryName: String!) {
             insertCategories(objects: {categoryName: $categoryName, label: ""}) {

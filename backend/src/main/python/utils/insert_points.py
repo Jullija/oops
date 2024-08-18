@@ -1,7 +1,9 @@
 import requests
 from tqdm import tqdm
+import scipy
+import numpy as np
 
-def insert_points(hasura_url, headers, cursor, editions, teacher_ids, random, subcategories_percentage=0.5, chest_percentage=0.01, open_chest_percentage=0.9):
+def insert_points(hasura_url, headers, cursor, editions, teacher_ids, random, category_names_to_populate=["LABORATORY", "TEST"], subcategories_percentage=0.5, chest_percentage=0.01, open_chest_percentage=0.9):
     def get_groups_for_teacher(teacher_id, edition_id):
         query_groups = """
         query MyQuery($teacherId: bigint!, $editionId: bigint!) {
@@ -35,12 +37,12 @@ def insert_points(hasura_url, headers, cursor, editions, teacher_ids, random, su
         )
         return response_students.json()["data"]["users"]
 
-    def get_subcategories_for_edition(edition_id, subcategories_percentage):
+    def get_subcategories_for_edition(edition_id, subcategories_percentage, category_names_to_populate):
         query_subcategories = """
-        query MyQuery($editionId: bigint!) {
+        query MyQuery($editionId: bigint!, $categoryNames: [String!]!) {
             subcategories(where: {
                 editionId: {_eq: $editionId},
-                category: {categoryName: {_in: ["LABORATORY", "TEST"]}}
+                category: {categoryName: {_in: $categoryNames}}
             }) {
                 subcategoryId
                 subcategoryName
@@ -51,7 +53,8 @@ def insert_points(hasura_url, headers, cursor, editions, teacher_ids, random, su
         """
         response_subcategories = requests.post(
             hasura_url,
-            json={"query": query_subcategories, "variables": {"editionId": edition_id}},
+            json={"query": query_subcategories,
+                  "variables": {"editionId": edition_id, "categoryNames": category_names_to_populate}},
             headers=headers
         )
 
@@ -124,12 +127,22 @@ def insert_points(hasura_url, headers, cursor, editions, teacher_ids, random, su
                     return response_chest_history.json()["data"]["insertChestHistory"]["returning"][0]
         return None
 
+    def generate_single_point_from_skewed_distribution(max_points):
+        mean = max_points * 0.9  # Mean at 90% of max_points
+        std_dev = max_points / 5  # Further increased standard deviation to extend the left tail more
+        skewness = -6  # Reduced skewness to balance the left tail extension
+
+        skewed_distribution = scipy.stats.skewnorm(skewness, loc=mean, scale=std_dev)
+        point = skewed_distribution.rvs()  # Generate a single point
+
+        # Ensure the point is within the range [0, max_points]
+        point = np.clip(point, 0, max_points)
+
+        return point
+
     def add_points_for_student(student_id, teacher_id, subcategory_id, max_points):
         # Generating points from a normal distribution
-        mean = max_points / 2
-        std_dev = max_points / 6
-        points = round(random.gauss(mean, std_dev), 1)
-        points = max(0, min(points, max_points))
+        points = generate_single_point_from_skewed_distribution(max_points)
 
         mutation_add_points = """
         mutation AddPoints($studentId: Int!, $teacherId: Int!, $value: Float!, $subcategoryId: Int!) {
@@ -220,8 +233,8 @@ def insert_points(hasura_url, headers, cursor, editions, teacher_ids, random, su
         points_value = result["points"]["value"]
 
         # Step 3: Output the result
-        print(
-            f"Teacher {teacher_id} gave chest {chest_id} to student {student_id}. Award {chosen_award_id} applied. Bonus ID: {bonus_id}, Points ID: {points_id}, Points Value: {points_value}.")
+        # print(
+        #     f"Teacher {teacher_id} gave chest {chest_id} to student {student_id}. Award {chosen_award_id} applied. Bonus ID: {bonus_id}, Points ID: {points_id}, Points Value: {points_value}.")
 
     # Example of modeling the chest-giving process
     chests_given = []
@@ -233,7 +246,7 @@ def insert_points(hasura_url, headers, cursor, editions, teacher_ids, random, su
             for group in groups:
                 group_id = group["group"]["groupsId"]
                 students = get_students_for_group(group_id)
-                subcategories = get_subcategories_for_edition(edition_id, subcategories_percentage)
+                subcategories = get_subcategories_for_edition(edition_id, subcategories_percentage, category_names_to_populate)
                 for subcategory in subcategories:
                     total_steps += len(students)
 
@@ -244,10 +257,10 @@ def insert_points(hasura_url, headers, cursor, editions, teacher_ids, random, su
                 for group in groups:
                     group_id = group["group"]["groupsId"]
                     students = get_students_for_group(group_id)
-                    subcategories = get_subcategories_for_edition(edition_id, subcategories_percentage)
+                    subcategories = get_subcategories_for_edition(edition_id, subcategories_percentage, category_names_to_populate)
                     for subcategory in subcategories:
                         subcategory_id = subcategory["subcategoryId"]
-                        max_points = subcategory["maxPoints"]
+                        max_points = float(subcategory["maxPoints"])
                         for student in students:
                             student_id = student["userId"]
                             add_points_for_student(student_id, teacher_id, subcategory_id, max_points)
@@ -258,7 +271,7 @@ def insert_points(hasura_url, headers, cursor, editions, teacher_ids, random, su
 
     # Open 90% of the chests
     chests_to_open = random.sample(chests_given, int(len(chests_given) * open_chest_percentage))
-    for chest in chests_to_open:
+    for chest in tqdm(chests_to_open):
         apply_award_from_chest(chest["chestHistoryId"], chest["chestId"], chest["userId"], chest["teacherId"])
 
     print("Points and chests have been processed.")

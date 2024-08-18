@@ -1,22 +1,23 @@
 import requests
 
-def insert_award_editions(hasura_url, headers, award_ids, editions, award_name_map):
+
+def insert_award_editions(hasura_url, headers, award_ids, editions, award_editions_type_map, random):
     # Map of awards to their respective editions
-    award_editions = {
-        "Lekarstwo": [year for year in editions.keys()],
-        "Weterynarz": [year for year in editions.keys()],
-        "Rabat na sianko": [year for year in editions.keys()],
-        "Marchewka laboratoryjna": [year for year in editions.keys()],
-        "Marchewka projektowa": [year for year in editions.keys()],
-        "LekarstwoV2": [[year for year in editions.keys()][-1]],
-        "WeterynarzV2": [[year for year in editions.keys()][0]],
+    editions_type_id_map = {
+        "all": [year for year in editions.keys()],
+        "odd": [year for year in editions.keys() if year % 2 != 0],
+        "even": [year for year in editions.keys() if year % 2 == 0],
+        "first": [min(editions.keys())],
+        "last": [max(editions.keys())],
+        "random": random.sample(list(editions.keys()), len(editions.keys()))
     }
 
     # Prepare bulk insertion data
     award_edition_objects = []
-    for award_id, name in zip(award_ids, award_name_map.values()):
-        print(f"Processing award '{name}' with ID {award_id}")
-        for year in award_editions[name]:
+    for award_id, editions_type_and_name in award_editions_type_map.items():
+        print(f"Processing award '{editions_type_and_name[1]}' with ID {award_id}")
+        print(editions_type_id_map[editions_type_and_name[0]])
+        for year in editions_type_id_map[editions_type_and_name[0]]:
             if year in editions:
                 edition_id = editions[year]
                 print(f"  Preparing edition for year {year} (Edition ID: {edition_id})")
@@ -52,6 +53,7 @@ def insert_award_editions(hasura_url, headers, award_ids, editions, award_name_m
         else:
             inserted_award_editions = data["data"]["insertAwardEdition"]["returning"]
             for inserted in inserted_award_editions:
-                print(f"Successfully inserted award_edition for award ID {inserted['awardId']} in edition ID {inserted['editionId']}")
+                print(
+                    f"Successfully inserted award_edition for award ID {inserted['awardId']} in edition ID {inserted['editionId']}")
 
     print("All award editions processed.")

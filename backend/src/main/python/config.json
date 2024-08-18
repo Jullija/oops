@@ -19,6 +19,11 @@
     },
     "data_insertion": {
         "number_of_editions": 2,
+        "number_of_teachers": 7,
+        "max_points_in_level": {
+            "is_computed": true,
+            "if_not_computed": 100
+        },
         "number_of_groups_per_year_bounds": [
             12,
             14
@@ -26,6 +31,124 @@
         "students_per_group_bounds": [
             15,
             20
+        ],
+        "category_data": [
+            {
+                "name": "LABORATORY",
+                "number_of_subcategories": 14,
+                "subcategory_prefix": "lab_",
+                "max_points_per_subcategory": 10
+            },
+            {
+                "name": "TEST",
+                "number_of_subcategories": 14,
+                "subcategory_prefix": "test_",
+                "max_points_per_subcategory": 5
+            },
+            {
+                "name": "PROJECT",
+                "number_of_subcategories": 3,
+                "subcategory_prefix": "proj_",
+                "max_points_per_subcategory": 40
+            },
+            {
+                "name": "EVENT",
+                "number_of_subcategories": 5,
+                "subcategory_prefix": null,
+                "max_points_per_subcategory": null
+            }
+        ],
+        "category_names_to_populate": [
+            "LABORATORY",
+            "TEST",
+            "PROJECT"
+        ],
+        "chests_data": [
+            {
+                "name": "Gold Chest",
+                "content_type": [
+                    "multiplicative",
+                    "additive"
+                ]
+            },
+            {
+                "name": "Silver Chest",
+                "content_type": [
+                    "additive_next",
+                    "additive_prev"
+                ]
+            },
+            {
+                "name": "Bronze Chest",
+                "content_type": [
+                    "additive_prev"
+                ]
+            }
+        ],
+        "awards_data": [
+            {
+                "name": "Lekarstwo",
+                "award_type": "additive_next",
+                "award_value": 10,
+                "category_id": 1,
+                "max_usages": 6,
+                "label": "",
+                "editions": "all"
+            },
+            {
+                "name": "Weterynarz",
+                "award_type": "additive_prev",
+                "award_value": 20,
+                "category_id": 2,
+                "max_usages": 2,
+                "label": "",
+                "editions": "all"
+            },
+            {
+                "name": "Rabat na sianko",
+                "award_type": "additive",
+                "award_value": 12,
+                "category_id": 1,
+                "max_usages": 2,
+                "label": "",
+                "editions": "all"
+            },
+            {
+                "name": "Marchewka laboratoryjna",
+                "award_type": "multiplicative",
+                "award_value": 0.3,
+                "category_id": 1,
+                "max_usages": 2,
+                "label": "",
+                "editions": "all"
+            },
+            {
+                "name": "Marchewka projektowa",
+                "award_type": "multiplicative",
+                "award_value": 0.6,
+                "category_id": 3,
+                "max_usages": 2,
+                "label": "",
+                "editions": "random"
+            },
+            {
+                "name": "LekarstwoV2",
+                "award_type": "additive_next",
+                "award_value": 14,
+                "category_id": 1,
+                "max_usages": 2,
+                "label": "",
+                "editions": "first"
+            },
+            {
+                "name": "WeterynarzV2",
+                "award_type": "additive_prev",
+                "award_value": 16,
+                "category_id": 2,
+                "max_usages": -1,
+                "label": "",
+                "editions": "last"
+            }
         ],
         "subcategories_percentage": 0.8,
         "chest_percentage": 0.1,
