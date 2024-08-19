@@ -12,6 +12,7 @@ def insert_levels(hasura_url, headers, editions, random, max_points_in_level, le
             level_steps[i] = int(level_steps[i] / level_steps[-1] * max_points_in_level)
         return level_steps
 
+
     random_levels = [[i*max_points_in_level/100 for i in [0, 25, 50, 60, 70, 80, 90, 100]]] + [generate_levels() for _ in range(len(editions.values()) - 1)]
 
     # Insert data into levels using the addLevel mutation

@@ -20,6 +20,7 @@ type Query {
     getSumOfPointsForStudentByCategory(studentId: Int!, editionId: Int!): [CategoryPointsSumType!]!
     getPossibleGroupsWeekdays(editionId: Int!): [String!]!
     getPossibleGroupsTimeSpans(editionId: Int!): [TimeSpansType!]!
+    getPossibleGroupDates(editionId: Int!): [GroupDateType!]!
 }
 
 type AwardType {
@@ -103,6 +104,7 @@ type GroupType {
     groupsId: ID!
     groupName: String!
     label: String
+    teacher: UserType
     weekday: String!
     startTime: String!
     endTime: String!
@@ -200,6 +202,7 @@ type CategoryPointsSumType{
 
 type StudentPointsType{
     user: UserType!
+    level: LevelType
     subcategoryPoints: [SubcategoryPointsType]!
     sumOfPurePoints: Float!
     sumOfBonuses: Float!
@@ -245,6 +248,12 @@ type PartialBonusType {
 }
 
 type TimeSpansType {
+    startTime: String
+    endTime: String
+}
+
+type GroupDateType {
+    weekday: String
     startTime: String
     endTime: String
 }

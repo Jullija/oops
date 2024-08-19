@@ -171,9 +171,11 @@ def insert_data():
                                                          students_per_group_bounds, number_of_teachers)
     coordinator_id, teacher_ids = insert_user_groups(hasura_url, headers, users, roles, groups, students_in_group_count,
                                                      random)
+
     insert_levels(hasura_url, headers, editions, random, max_points, levels_data)
     subcategories, subcategory_to_category = insert_subcategories(hasura_url, headers, editions, categories,
                                                                   category_data, random)
+
     insert_chest_awards(hasura_url, headers, chest_ids, chests_data, awards_data)
     insert_points(hasura_url, headers, cursor, editions, teacher_ids + [coordinator_id], random,
                   category_names_to_populate,
