@@ -54,25 +54,12 @@ class AwardsDataFetcher {
     @Autowired
     lateinit var awardRepository: AwardRepository
 
+    @Autowired
+    lateinit var photoAssigner: PhotoAssigner
+
     @DgsMutation
     @Transactional
     fun assignPhotoToAward(@InputArgument awardId: Long, @InputArgument fileId: Long?): Boolean {
-        val award = awardRepository.findById(awardId).orElseThrow { IllegalArgumentException("Invalid award ID") }
-        val photo = if (fileId == null){
-            fileEntityRepository.findAllByFileType("image/award/sample").firstOrNull()
-        } else {
-            fileEntityRepository.findById(fileId).orElseThrow { IllegalArgumentException("Invalid file ID") }
-        }
-
-        if (photo != null) {
-            if (photo.fileType != "image/award") {
-                throw IllegalArgumentException("File with ID $fileId is not an award. " +
-                        "Please upload a file with fileType = image/award and try again.")
-            }
-        }
-        award.imageFile = photo
-        awardRepository.save(award)
-
-        return true
+        return photoAssigner.assignPhotoToAssignee(awardRepository, "image/award", awardId, fileId)
     }
 }

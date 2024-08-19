@@ -22,6 +22,9 @@ class LevelsDataFetcher {
     @Autowired
     lateinit var fileEntityRepository: FileEntityRepository
 
+    @Autowired
+    lateinit var photoAssigner: PhotoAssigner
+
     @DgsMutation
     @Transactional
     fun addLevel(@InputArgument editionId: Long, @InputArgument name: String, @InputArgument maximumPoints: Double,
@@ -87,22 +90,6 @@ class LevelsDataFetcher {
     @DgsMutation
     @Transactional
     fun assignPhotoToLevel(@InputArgument levelId: Long, @InputArgument fileId: Long?): Boolean {
-        val level = levelsRepository.findById(levelId).orElseThrow { IllegalArgumentException("Invalid level ID") }
-        val photo = if (fileId == null){
-            fileEntityRepository.findAllByFileType("image/level/sample").firstOrNull()
-        } else {
-            fileEntityRepository.findById(fileId).orElseThrow { IllegalArgumentException("Invalid file ID") }
-        }
-
-        if (photo != null) {
-            if (photo.fileType != "image/level") {
-                throw IllegalArgumentException("File with ID $fileId is not a level. " +
-                        "Please upload a file with fileType = image/level and try again.")
-            }
-        }
-        level.imageFile = photo
-        levelsRepository.save(level)
-
-        return true
+        return photoAssigner.assignPhotoToAssignee(levelsRepository, "image/level", levelId, fileId)
     }
 }

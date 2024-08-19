@@ -55,25 +55,12 @@ class ChestsDataFetcher {
     @Autowired
     lateinit var chestsRepository: ChestsRepository
 
+    @Autowired
+    lateinit var photoAssigner: PhotoAssigner
+
     @DgsMutation
     @Transactional
     fun assignPhotoToChest(@InputArgument chestId: Long, @InputArgument fileId: Long?): Boolean {
-        val chest = chestsRepository.findById(chestId).orElseThrow { IllegalArgumentException("Invalid chest ID") }
-        val photo = if (fileId == null){
-            fileEntityRepository.findAllByFileType("image/chest/sample").firstOrNull()
-        } else {
-            fileEntityRepository.findById(fileId).orElseThrow { IllegalArgumentException("Invalid file ID") }
-        }
-
-        if (photo != null) {
-            if (photo.fileType != "image/chest") {
-                throw IllegalArgumentException("File with ID $fileId is not a chest. " +
-                        "Please upload a file with fileType = image/chest and try again.")
-            }
-        }
-        chest.imageFile = photo
-        chestsRepository.save(chest)
-
-        return true
+        return photoAssigner.assignPhotoToAssignee(chestsRepository, "image/chest", chestId, fileId)
     }
 }

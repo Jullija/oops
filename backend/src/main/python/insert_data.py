@@ -1,4 +1,7 @@
+import subprocess
+
 import psycopg2
+import requests
 from faker import Faker
 import random
 import json
@@ -23,6 +26,7 @@ with open('config.json', encoding="UTF-8") as config_file:
 
 # Extract values from the configuration
 db_config = config['database']
+base_url = config['base_url']
 hasura_url = config['hasura']['url']
 headers = config['hasura']['headers']
 data_insertion_config = config['data_insertion']
@@ -38,6 +42,32 @@ def create_connection():
         port=db_config['port']
     )
 
+def delete_files():
+    query_file_id = """
+                                        query MyQuery {
+                                            files {
+                                                fileId
+                                            }
+                                        }
+                                        """
+    response_file = requests.post(
+        hasura_url,
+        json={"query": query_file_id},
+        headers=headers
+    )
+
+    file_data = response_file.json()
+    if "errors" in file_data or not file_data["data"]["files"]:
+        print(f"Error fetching all files: {file_data.get('errors', 'File not found')}")
+
+    file_ids = [file_data["data"]["files"][i]["fileId"] for i in range(len(file_data["data"]["files"]))]
+    for file_id in file_ids:
+        command = [
+            "curl", "-X", "DELETE", base_url + f"/files/{file_id}"
+        ]
+        result = subprocess.run(command, capture_output=True, text=True)
+        if result.returncode != 0:
+            print(f"Error deleting file {file_id}: {result.stderr}")
 
 def truncate_and_restart_sequences():
     conn = create_connection()
@@ -50,12 +80,18 @@ def truncate_and_restart_sequences():
     tables = [
         "bonuses", "chest_history", "chest_award", "user_groups", "points",
         "users", "subcategories", "levels", "groups", "chests", "categories",
-        "award", "edition", "award_edition", "files", "user_level",
+        "award", "edition", "award_edition", "user_level",
     ]
+
 
     for table in tables:
         cursor.execute(f"TRUNCATE TABLE {table} RESTART IDENTITY CASCADE;")
         print(f"Truncated table {table}")
+    conn.commit()
+    delete_files()
+    table = "files"
+    cursor.execute(f"TRUNCATE TABLE {table} RESTART IDENTITY CASCADE;")
+    print(f"Truncated table {table}")
 
     # Enable foreign key constraints
     cursor.execute("SET session_replication_role = 'origin';")
@@ -124,10 +160,7 @@ def insert_data():
     else:
         max_points = max_points_in_level['if_not_computed']
 
-
-
-    insert_files(cursor)
-    conn.commit()
+    insert_files(base_url + "/files/upload")
     categories = insert_categories(hasura_url, headers, category_data)
     editions = insert_editions(hasura_url, headers, number_of_editions)
     chest_ids = insert_chests(hasura_url, headers, editions, chests_data)
@@ -139,7 +172,8 @@ def insert_data():
     coordinator_id, teacher_ids = insert_user_groups(hasura_url, headers, users, roles, groups, students_in_group_count,
                                                      random)
     insert_levels(hasura_url, headers, editions, random, max_points, levels_data)
-    subcategories, subcategory_to_category = insert_subcategories(hasura_url, headers, editions, categories, category_data, random)
+    subcategories, subcategory_to_category = insert_subcategories(hasura_url, headers, editions, categories,
+                                                                  category_data, random)
     insert_chest_awards(hasura_url, headers, chest_ids, chests_data, awards_data)
     insert_points(hasura_url, headers, cursor, editions, teacher_ids + [coordinator_id], random,
                   category_names_to_populate,

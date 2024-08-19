@@ -14,6 +14,7 @@
             "x-hasura-admin-secret": "admin_secret"
         }
     },
+    "base_url": "http://localhost:9090",
     "style": {
         "old_style": false
     },

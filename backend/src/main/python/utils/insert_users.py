@@ -73,7 +73,7 @@ def insert_users(hasura_url, headers, year_group_counts, fake, random, students_
             # Fetch file ID based on the filename
             query_file_id = """
                             query MyQuery {
-                                files(where: {fileType: {_eq: "image/avatar"}}) {
+                                files(where: {fileType: {_eq: "image/user"}}) {
                                     fileId
                                 }
                             }
@@ -86,7 +86,7 @@ def insert_users(hasura_url, headers, year_group_counts, fake, random, students_
 
             file_data = response_file.json()
             if "errors" in file_data or not file_data["data"]["files"]:
-                print(f"Error fetching files for type 'image/avatar': {file_data.get('errors', 'File not found')}")
+                print(f"Error fetching files for type 'image/user': {file_data.get('errors', 'File not found')}")
                 continue
 
             file_ids = [file_data["data"]["files"][i]["fileId"] for i in range(len(file_data["data"]["files"]))]
