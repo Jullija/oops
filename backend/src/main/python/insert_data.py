@@ -163,6 +163,7 @@ def insert_data():
     insert_files(base_url + "/files/upload")
     categories = insert_categories(hasura_url, headers, category_data)
     editions = insert_editions(hasura_url, headers, number_of_editions)
+    insert_levels(hasura_url, headers, editions, random, max_points, levels_data)
     chest_ids = insert_chests(hasura_url, headers, editions, chests_data)
     award_ids, award_editions_type_map = insert_awards(hasura_url, headers, awards_data)
     insert_award_editions(hasura_url, headers, award_ids, editions, award_editions_type_map, random)
@@ -172,7 +173,6 @@ def insert_data():
     coordinator_id, teacher_ids = insert_user_groups(hasura_url, headers, users, roles, groups, students_in_group_count,
                                                      random)
 
-    insert_levels(hasura_url, headers, editions, random, max_points, levels_data)
     subcategories, subcategory_to_category = insert_subcategories(hasura_url, headers, editions, categories,
                                                                   category_data, random)
 
