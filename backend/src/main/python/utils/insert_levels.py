@@ -9,7 +9,7 @@ def insert_levels(hasura_url, headers, editions, random, max_points_in_level):
             else:
                 levels.append(levels[-1] + random.randint(10, 20))
         for i in range(0, 8):
-            levels[i] = int(levels[i] / max(levels) * max_points_in_level)
+            levels[i] = int(levels[i] / levels[-1] * max_points_in_level)
         return levels
 
     random_levels = [[i*max_points_in_level/100 for i in [0, 25, 50, 60, 70, 80, 90, 100]]] + [generate_levels() for _ in range(len(editions.values()) - 1)]

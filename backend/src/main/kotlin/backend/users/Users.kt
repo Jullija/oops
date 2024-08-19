@@ -65,6 +65,10 @@ class Users(
         return bonusRepository.countByAwardAndPoints_Student(award, this)
     }
 
+    fun getLevelByEdition(edition: Edition): UserLevel? {
+        return userLevels.find { it.edition == edition }
+    }
+
     fun getPointsByEditionAndCategory(
         edition: Edition,
         category: Categories,

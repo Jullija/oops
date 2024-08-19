@@ -101,6 +101,7 @@ type GroupType {
     groupsId: ID!
     groupName: String!
     label: String
+    teacher: UserType
     weekday: String!
     startTime: String!
     endTime: String!
@@ -198,6 +199,7 @@ type CategoryPointsSumType{
 
 type StudentPointsType{
     user: UserType!
+    level: LevelType
     subcategoryPoints: [SubcategoryPointsType]!
     sumOfPurePoints: Float!
     sumOfBonuses: Float!
