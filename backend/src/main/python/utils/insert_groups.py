@@ -54,6 +54,27 @@ def insert_groups(hasura_url, headers, editions, random, number_of_groups_per_ye
                 group_id = int(group["groupsId"])
                 groups.append(group_id)
                 print(f"Successfully inserted group '{group['groupName']}' with ID {group_id} for edition ID {group['editionId']}")
+            for edition_id in editions.values():
+
+                mutation_assign_photo = """
+                                        mutation assignPhotosToGroups($editionId: Int!) {
+                                            assignPhotosToGroups(editionId: $editionId)
+                                        }
+                                        """
+                variables_assign_photo = {
+                    "editionId": edition_id,
+                }
+                response_assign_photo = requests.post(
+                    hasura_url,
+                    json={"query": mutation_assign_photo, "variables": variables_assign_photo},
+                    headers=headers
+                )
+
+                if "errors" in response_assign_photo.json():
+                    print(
+                        f"Error assigning photos to groups in edition ID {edition_id}: {response_assign_photo.json()['errors']}")
+                else:
+                    print(f"Successfully assigned photos to groups in edition ID {edition_id}.")
 
     print("All groups have been processed.")
     return year_group_counts, groups

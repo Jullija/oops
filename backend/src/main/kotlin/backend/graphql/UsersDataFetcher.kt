@@ -41,24 +41,27 @@ class UsersDataFetcher {
     lateinit var categoriesRepository: CategoriesRepository
 
     @Autowired
-    lateinit var fileRepository: FileEntityRepository
+    lateinit var fileEntityRepository: FileEntityRepository
 
     @DgsMutation
     @Transactional
-    fun assignAvatarToUser(@InputArgument userId: Long, @InputArgument fileId: Long): Boolean {
+    fun assignPhotoToUser(@InputArgument userId: Long, @InputArgument fileId: Long?): Boolean {
+
         val user = usersRepository.findById(userId).orElseThrow { IllegalArgumentException("Invalid user ID") }
-
-        val avatar = fileRepository.findByFileId(fileId)
-            ?: throw IllegalArgumentException("File with ID $fileId not found.")
-
-
-        if (avatar.fileType != "image/avatar") {
-            throw IllegalArgumentException("File with ID $fileId is not an avatar. " +
-                    "Please upload an avatar with fileType = image/avatar and try again.")
+        val photo = if (fileId == null){
+            fileEntityRepository.findAllByFileType("image/level/sample").firstOrNull()
+        } else {
+            fileEntityRepository.findById(fileId).orElseThrow { IllegalArgumentException("Invalid file ID") }
         }
 
-        user.imageFile = avatar
+        if (photo != null) {
+            if (photo.fileType != "image/avatar") {
+                throw IllegalArgumentException("File with ID $fileId is not an avatar. " +
+                        "Please upload a file with fileType = image/avatar and try again.")
+            }
+        }
 
+        user.imageFile = photo
         usersRepository.save(user)
 
         return true

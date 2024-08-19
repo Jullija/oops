@@ -7,7 +7,10 @@ type Mutation {
         value: Float!,
         subcategoryId: Int!): PointType
     assignPhotosToGroups(editionId: Int!): Boolean
-    assignAvatarToUser(userId: Int!, fileId: Int!): Boolean
+    assignPhotoToUser(userId: Int!, fileId: Int): Boolean
+    assignPhotoToLevel(levelId: Int!, fileId: Int): Boolean
+    assignPhotoToAward(awardId: Int!, fileId: Int): Boolean
+    assignPhotoToChest(chestId: Int!, fileId: Int): Boolean
     addLevel(editionId: Int!, name: String!, maximumPoints: Float!, grade: Float!, imageFileId: Int): LevelType
 }
 

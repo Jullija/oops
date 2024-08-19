@@ -18,7 +18,7 @@ from utils.insert_chest_awards import insert_chest_awards
 from utils.insert_points import insert_points
 
 # Load configuration from config.json
-with open('config.json') as config_file:
+with open('config.json', encoding="UTF-8") as config_file:
     config = json.load(config_file)
 
 # Extract values from the configuration
@@ -73,10 +73,20 @@ def insert_data():
     subcategories_percentage = data_insertion_config['subcategories_percentage']
     chest_percentage = data_insertion_config['chest_percentage']
     open_chest_percentage = data_insertion_config['open_chest_percentage']
+    levels_data_struct = data_insertion_config['levels_data']
+    levels_data = [
+        (
+            level['name'],
+            level['filename'],
+            level['grade']
+        )
+        for level in levels_data_struct
+    ]
     chests_data_struct = data_insertion_config['chests_data']
     chests_data = [
         (
             chest['name'],
+            chest['filename'],
             chest['content_type']
         )
         for chest in chests_data_struct
@@ -96,6 +106,7 @@ def insert_data():
     awards_data = [
         (
             award['name'],
+            award['filename'],
             award['award_type'],
             award['award_value'],
             award['category_id'],
@@ -115,7 +126,6 @@ def insert_data():
 
 
 
-
     insert_files(cursor)
     conn.commit()
     categories = insert_categories(hasura_url, headers, category_data)
@@ -128,7 +138,7 @@ def insert_data():
                                                          students_per_group_bounds, number_of_teachers)
     coordinator_id, teacher_ids = insert_user_groups(hasura_url, headers, users, roles, groups, students_in_group_count,
                                                      random)
-    insert_levels(hasura_url, headers, editions, random, max_points)
+    insert_levels(hasura_url, headers, editions, random, max_points, levels_data)
     subcategories, subcategory_to_category = insert_subcategories(hasura_url, headers, editions, categories, category_data, random)
     insert_chest_awards(hasura_url, headers, chest_ids, chests_data, awards_data)
     insert_points(hasura_url, headers, cursor, editions, teacher_ids + [coordinator_id], random,
