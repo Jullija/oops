@@ -49,6 +49,11 @@ class PointsDataFetcher {
         if (student.role != UsersRoles.STUDENT) {
             throw IllegalArgumentException("Points can be added only to student")
         }
+
+        if (teacher.role == UsersRoles.TEACHER && student.userGroups.none { it.group.teacher == teacher }) {
+            throw IllegalArgumentException("Teacher is not a teacher of student's group")
+        }
+
         val studentEditions = student.userGroups.map { it.group.edition }.distinct()
         if (!studentEditions.contains(subcategory.edition)) {
             throw IllegalArgumentException("Student is not participating in subcategory edition")
