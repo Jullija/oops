@@ -26,6 +26,7 @@ insert_permissions:
         - edition_id
         - end_time
         - group_name
+        - image_file_id
         - label
         - start_time
         - weekday
@@ -38,6 +39,7 @@ select_permissions:
         - end_time
         - group_name
         - groups_id
+        - image_file_id
         - label
         - start_time
         - weekday
@@ -51,6 +53,7 @@ select_permissions:
         - end_time
         - group_name
         - groups_id
+        - image_file_id
         - label
         - start_time
         - weekday
@@ -68,6 +71,7 @@ select_permissions:
         - end_time
         - group_name
         - groups_id
+        - image_file_id
         - label
         - start_time
         - weekday
@@ -84,6 +88,7 @@ update_permissions:
       columns:
         - end_time
         - group_name
+        - image_file_id
         - label
         - start_time
         - weekday

@@ -6,7 +6,7 @@ def insert_chest_awards(hasura_url, headers, chest_ids, chests_data, awards_data
     chest_award_objects = []
 
     chest_awards_rules = {
-        chest[0]: [award[0] for award in awards_data if award[1] in chest[1]] for chest in chests_data
+        chest[0]: [award[0] for award in awards_data if award[2] in chest[2]] for chest in chests_data
     }
 
     print("Preparing chest awards for bulk insertion...")

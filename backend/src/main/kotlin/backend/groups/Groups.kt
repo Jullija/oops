@@ -5,6 +5,7 @@ import backend.files.FileEntity
 import backend.userGroups.UserGroups
 import backend.users.Users
 import backend.users.WeekdayEnum
+import backend.utils.HasImageFile
 import jakarta.persistence.*
 import java.sql.Time
 
@@ -45,8 +46,8 @@ class Groups(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_file_id")
-    var imageFile: FileEntity? = null
-) {
+    override var imageFile: FileEntity? = null
+) : HasImageFile {
     constructor() : this(
         groupName = "",
         label = "",

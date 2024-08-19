@@ -22,6 +22,9 @@ class LevelsDataFetcher {
     @Autowired
     lateinit var fileEntityRepository: FileEntityRepository
 
+    @Autowired
+    lateinit var photoAssigner: PhotoAssigner
+
     @DgsMutation
     @Transactional
     fun addLevel(@InputArgument editionId: Long, @InputArgument name: String, @InputArgument maximumPoints: Double,
@@ -82,5 +85,11 @@ class LevelsDataFetcher {
         level.imageFile = levelImage
         levelsRepository.save(level)
         return level
+    }
+
+    @DgsMutation
+    @Transactional
+    fun assignPhotoToLevel(@InputArgument levelId: Long, @InputArgument fileId: Long?): Boolean {
+        return photoAssigner.assignPhotoToAssignee(levelsRepository, "image/level", levelId, fileId)
     }
 }

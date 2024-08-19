@@ -11,6 +11,7 @@ import backend.points.Points
 import backend.points.PointsRepository
 import backend.userGroups.UserGroups
 import backend.userLevel.UserLevel
+import backend.utils.HasImageFile
 import jakarta.persistence.*
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
@@ -47,12 +48,12 @@ class Users(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_file_id")
-    var imageFile: FileEntity? = null,
+    override var imageFile: FileEntity? = null,
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     val userLevels: Set<UserLevel> = HashSet(),
 
-) {
+    ) : HasImageFile {
     constructor() : this(
         indexNumber = 0,
         nick = "",

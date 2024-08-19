@@ -14,6 +14,7 @@
             "x-hasura-admin-secret": "admin_secret"
         }
     },
+    "base_url": "http://localhost:9090",
     "style": {
         "old_style": false
     },
@@ -31,6 +32,43 @@
         "students_per_group_bounds": [
             15,
             20
+        ],
+        "levels_data": [
+            {
+                "name": "Jajo",
+                "filename": "owlbear1.png",
+                "grade": 2.0
+            },
+            {
+                "name": "Pisklak",
+                "filename": "owlbear2.png",
+                "grade": 2.0
+            },
+            {
+                "name": "Podlot",
+                "filename": "owlbear3.png",
+                "grade": 3.0
+            },
+            {
+                "name": "Żółtodziób",
+                "filename": "owlbear4.png",
+                "grade": 3.5
+            },
+            {
+                "name": "Nieopierzony odkrywca",
+                "filename": "owlbear5.png",
+                "grade": 4.0
+            },
+            {
+                "name": "Samodzielny Zwierzak",
+                "filename": "owlbear6.png",
+                "grade": 4.5
+            },
+            {
+                "name": "Majestatyczna Bestia",
+                "filename": "owlbear7.png",
+                "grade": 5.0
+            }
         ],
         "category_data": [
             {
@@ -66,6 +104,7 @@
         "chests_data": [
             {
                 "name": "Gold Chest",
+                "filename": "ZlotaSkrzynia.png",
                 "content_type": [
                     "multiplicative",
                     "additive"
@@ -73,6 +112,7 @@
             },
             {
                 "name": "Silver Chest",
+                "filename": "SrebrnaSkrzynia.png",
                 "content_type": [
                     "additive_next",
                     "additive_prev"
@@ -80,6 +120,7 @@
             },
             {
                 "name": "Bronze Chest",
+                "filename": "BrazowaSkrzynia.png",
                 "content_type": [
                     "additive_prev"
                 ]
@@ -88,6 +129,7 @@
         "awards_data": [
             {
                 "name": "Lekarstwo",
+                "filename": "Lekarstwo.png",
                 "award_type": "additive_next",
                 "award_value": 10,
                 "category_id": 1,
@@ -97,6 +139,7 @@
             },
             {
                 "name": "Weterynarz",
+                "filename": "Weterynarz.png",
                 "award_type": "additive_prev",
                 "award_value": 20,
                 "category_id": 2,
@@ -106,6 +149,7 @@
             },
             {
                 "name": "Rabat na sianko",
+                "filename": "RabatNaSianko.png",
                 "award_type": "additive",
                 "award_value": 12,
                 "category_id": 1,
@@ -115,6 +159,7 @@
             },
             {
                 "name": "Marchewka laboratoryjna",
+                "filename": "MarchewkaLaboratoryjna.png",
                 "award_type": "multiplicative",
                 "award_value": 0.3,
                 "category_id": 1,
@@ -124,6 +169,7 @@
             },
             {
                 "name": "Marchewka projektowa",
+                "filename": "MarchewkaProjektowa.png",
                 "award_type": "multiplicative",
                 "award_value": 0.6,
                 "category_id": 3,
@@ -133,6 +179,7 @@
             },
             {
                 "name": "LekarstwoV2",
+                "filename": "LekarstwoV2.png",
                 "award_type": "additive_next",
                 "award_value": 14,
                 "category_id": 1,
@@ -142,6 +189,7 @@
             },
             {
                 "name": "WeterynarzV2",
+                "filename": "WeterynarzV2.png",
                 "award_type": "additive_prev",
                 "award_value": 16,
                 "category_id": 2,
