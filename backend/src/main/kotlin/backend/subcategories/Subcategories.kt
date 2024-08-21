@@ -16,7 +16,7 @@ class Subcategories(
     var subcategoryName: String,
 
     @Column(name = "max_points", nullable = false)
-    var maxPoints: Int = 0,
+    var maxPoints: Float = 0f,
 
     @Column(name = "ordinal_number", nullable = false)
     var ordinalNumber: Int = 1,
@@ -34,7 +34,7 @@ class Subcategories(
 ) {
     constructor() : this(
         subcategoryName = "",
-        maxPoints = 0,
+        maxPoints = 0f,
         ordinalNumber = 1,
         category = Categories(),
         edition = Edition(),

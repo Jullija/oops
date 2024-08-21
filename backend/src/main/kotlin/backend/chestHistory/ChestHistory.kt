@@ -23,7 +23,6 @@ class ChestHistory(
     @JoinColumn(name = "teacher_id", referencedColumnName = "user_id")
     var teacher: Users,
 
-
     @ManyToOne
     @JoinColumn(name = "chest_id", referencedColumnName = "chest_id")
     var chest: Chests,
@@ -32,9 +31,12 @@ class ChestHistory(
     @JoinColumn(name = "subcategory_id", referencedColumnName = "subcategory_id")
     var subcategory: Subcategories,
 
-
     @Column(name = "label", nullable = false, length = 256)
     var label: String,
+
+    @Column(name = "opened", nullable = false)
+    var opened: Boolean = false,
+
 ): TimestampModel() {
     constructor() : this(
         user = Users(),

@@ -4,6 +4,7 @@ import backend.edition.Edition
 import backend.files.FileEntity
 import backend.userGroups.UserGroups
 import backend.userLevel.UserLevel
+import backend.utils.HasImageFile
 import jakarta.persistence.*
 
 @Entity
@@ -27,11 +28,11 @@ class Levels(
     var grade: Double,
 
     @Column(name = "ordinal_number", nullable = false)
-    var ordinalNumber: Int = 1,
+    var ordinalNumber: Int = 0,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_file_id")
-    var imageFile: FileEntity? = null,
+    override var imageFile: FileEntity? = null,
 
     @Column(name = "highest", nullable = false)
     var highest: Boolean = false,
@@ -45,7 +46,7 @@ class Levels(
 
     @OneToMany(mappedBy = "level", fetch = FetchType.LAZY)
     val userLevels: Set<UserLevel> = HashSet(),
-) {
+) : HasImageFile {
     constructor() : this(
         levelName = "",
         minimumPoints = 0.0,

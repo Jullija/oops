@@ -55,10 +55,14 @@ class BonusDataFetcher {
             throw IllegalArgumentException("Bonus already exists for the given chest history.")
         }
 
+        if (chestHistory.opened) {
+            throw IllegalArgumentException("Chest is already opened.")
+        }
+
         val award = awardRepository.findById(awardId)
             .orElseThrow { IllegalArgumentException("Invalid award ID") }
 
-        if (chestHistory.user.getAwardUsageCount(award, bonusRepository) >= award.maxUsages) {
+        if (award.maxUsages != -1 && chestHistory.user.getAwardUsageCount(award, bonusRepository) >= award.maxUsages) {
             throw IllegalArgumentException("Cannot apply more than ${award.maxUsages} bonuses for this award.")
         }
 
@@ -92,6 +96,9 @@ class BonusDataFetcher {
             label = ""
         )
         val savedBonus = bonusRepository.save(bonus)
+
+        chestHistory.opened = true
+        chestHistoryRepository.save(chestHistory)
 
         return AddBonusReturnType(savedBonus, savedPoints)
     }
@@ -127,14 +134,14 @@ class BonusDataFetcher {
 
         val lastSubcategory = pointsInAwardCategory.maxByOrNull { it.subcategory.ordinalNumber }?.subcategory
         val nextSubcategory = if (lastSubcategory != null) {
-            subcategoriesRepository.findFirstByCategoryAndOrdinalNumberGreaterThanOrderByOrdinalNumberAsc(
-                lastSubcategory.category, lastSubcategory.ordinalNumber
+            subcategoriesRepository.findFirstByCategoryAndEditionAndOrdinalNumberGreaterThanOrderByOrdinalNumberAsc(
+                lastSubcategory.category, edition, lastSubcategory.ordinalNumber
             ).orElseGet {
-                subcategoriesRepository.findFirstByCategoryOrderByOrdinalNumberAsc(lastSubcategory.category)
+                subcategoriesRepository.findFirstByCategoryAndEditionOrderByOrdinalNumberAsc(lastSubcategory.category, edition)
                     .orElseThrow { IllegalArgumentException("No subcategory found in the specified category.") }
             }
         } else {
-            subcategoriesRepository.findFirstByCategoryOrderByOrdinalNumberAsc(chestHistory.subcategory.category)
+            subcategoriesRepository.findFirstByCategoryAndEditionOrderByOrdinalNumberAsc(chestHistory.subcategory.category, edition)
                 .orElseThrow { IllegalArgumentException("No subcategory found in the specified category.") }
         }
 
@@ -145,7 +152,7 @@ class BonusDataFetcher {
         return Points(
             student = chestHistory.user,
             teacher = chestHistory.teacher,
-            value = award.awardValue,
+            value = min(award.awardValue, nextSubcategory.maxPoints),
             subcategory = nextSubcategory,
             label = "Points awarded for ${award.awardName}"
         )
@@ -157,10 +164,7 @@ class BonusDataFetcher {
                 point -> bonusRepository.findByPoints(point).isEmpty()  // discard points connected to bonuses
         }
         val lastPoints = pointsInAwardCategory.maxByOrNull { it.subcategory.ordinalNumber }
-
-        if (lastPoints == null) {
-            throw IllegalArgumentException("No previous points found in the specified category.")
-        }
+            ?: throw IllegalArgumentException("No previous points found in the specified category.")
 
         return Points(
             student = chestHistory.user,

@@ -1,7 +1,6 @@
-import { useUserPointsImage } from "../../../hooks/useUserPointsImage";
-import { UserPoints } from "../../../utils/types";
+import { FILES_URL } from "../../../utils/constants";
 import { Styles } from "../../../utils/Styles";
-import ImageCache from "../../imageCache";
+import { UserPoints } from "../../../utils/types";
 
 type UserCardProps = {
   fullName?: string;
@@ -21,7 +20,7 @@ const styles: Styles = {
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     width: "250px",
   },
-  userImageContainer: {
+  imgPlaceholder: {
     width: "200px",
     height: "200px",
     backgroundColor: "#fff",
@@ -51,26 +50,44 @@ const styles: Styles = {
   },
 };
 
-export function UserCard({ fullName, index, points }: UserCardProps) {
+export function StudentCard({ fullName, index, points }: UserCardProps) {
   const totalPoints = points.reduce((acc, point) => acc + +point.value, 0);
-  const { imageId, loading, error } = useUserPointsImage(totalPoints);
+  const loading = false;
+  const error: Error | undefined = undefined;
+  const imageId = "1";
+
+  // TODO correct in PR with student card
+  const getImageContent = () => {
+    if (loading || error) {
+      return loading ? (
+        <div>Loading image...</div>
+      ) : (
+        <div>Error loading image</div>
+      );
+    }
+    if (imageId) {
+      return (
+        <img
+          src={`${FILES_URL}${imageId}`}
+          alt={`Image id ${imageId}`}
+          style={styles.userImage}
+        />
+      );
+    }
+    return <div style={styles.userImageContainer} />;
+  };
 
   return (
     <div style={styles.userCard}>
-      <div style={styles.userImageContainer}>
-        {loading && <div>Loading image...</div>}
-        {error && <div>Error loading image</div>}
-        {imageId && !loading && !error && (
-          <ImageCache
-            imageId={imageId}
-            style={styles.userImageContainer}
-            imgStyle={styles.userImage}
-          />
-        )}
+      <div style={styles.userImageContainer}>{getImageContent()}</div>
+      <div>
+        <div>{fullName}</div>
+        <div>Indeks Studenta: {index}</div>
+        <div>Punkty całkowite: {totalPoints}</div>
+        <div style={styles.progressBar}>
+          <div style={{ ...styles.progress, width: `${totalPoints}%` }}></div>
+        </div>
       </div>
-      <div>{fullName}</div>
-      <div>Indeks Studenta: {index}</div>
-      <div>Punkty całkowite: {totalPoints}</div>
     </div>
   );
 }

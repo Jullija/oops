@@ -5,6 +5,7 @@ import backend.files.FileEntity
 import backend.userGroups.UserGroups
 import backend.users.Users
 import backend.users.WeekdayEnum
+import backend.utils.HasImageFile
 import jakarta.persistence.*
 import java.sql.Time
 
@@ -21,6 +22,10 @@ class Groups(
 
     @Column(name = "label", nullable = true)
     var label: String = "",
+
+    @ManyToOne
+    @JoinColumn(name = "teacher_id", referencedColumnName = "user_id", nullable = true)
+    var teacher: Users,
 
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
     val userGroups: Set<UserGroups> = HashSet(),
@@ -41,11 +46,12 @@ class Groups(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_file_id")
-    var imageFile: FileEntity? = null
-) {
+    override var imageFile: FileEntity? = null
+) : HasImageFile {
     constructor() : this(
         groupName = "",
         label = "",
+        teacher = Users(),
         weekday = WeekdayEnum.MONDAY,
         startTime = Time(0),
         endTime = Time(0),

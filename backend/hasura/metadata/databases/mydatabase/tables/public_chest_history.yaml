@@ -74,12 +74,13 @@ select_permissions:
       columns:
         - chest_history_id
         - chest_id
+        - created_at
+        - label
+        - opened
         - subcategory_id
         - teacher_id
-        - user_id
-        - label
-        - created_at
         - updated_at
+        - user_id
       filter: {}
       allow_aggregations: true
     comment: ""
@@ -90,6 +91,7 @@ select_permissions:
         - chest_id
         - created_at
         - label
+        - opened
         - subcategory_id
         - teacher_id
         - updated_at
@@ -105,6 +107,7 @@ select_permissions:
         - chest_id
         - created_at
         - label
+        - opened
         - subcategory_id
         - teacher_id
         - updated_at
@@ -119,6 +122,7 @@ update_permissions:
       columns:
         - chest_id
         - label
+        - opened
         - subcategory_id
         - teacher_id
         - user_id
@@ -132,6 +136,7 @@ update_permissions:
       columns:
         - chest_id
         - label
+        - opened
         - subcategory_id
         - user_id
       filter:
