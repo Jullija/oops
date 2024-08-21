@@ -5988,8 +5988,8 @@ export type PointsVarianceOrderBy = {
 
 export type PurePointsType = {
   __typename?: "PurePointsType";
-  partialBonusType: Array<Maybe<PartialBonusType>>;
-  purePoints?: Maybe<PointType>;
+  partialBonusType: Array<PartialBonusType>;
+  purePoints: PointType;
 };
 
 /** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */

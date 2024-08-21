@@ -230,8 +230,8 @@ type SubcategoryPointsType {
 }
 
 type PurePointsType {
-  purePoints: PointType
-  partialBonusType: [PartialBonusType]!
+  purePoints: PointType!
+  partialBonusType: [PartialBonusType!]!
 }
 
 type PartialBonusType {

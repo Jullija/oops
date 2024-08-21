@@ -8498,8 +8498,8 @@ input PointsVarianceOrderBy {
 }
 
 type PurePointsType {
-  partialBonusType: [PartialBonusType]!
-  purePoints: PointType
+  partialBonusType: [PartialBonusType!]!
+  purePoints: PointType!
 }
 
 """
