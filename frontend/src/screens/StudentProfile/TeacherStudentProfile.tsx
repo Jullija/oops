@@ -34,7 +34,6 @@ export function TeacherStudentProfile() {
   const [createPoints, { error: createPointsError }] =
     useCreatePointsMutation();
 
-  // TODO: add components for loading state and error message
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
   if (!student) return <p>Student is undefined</p>;

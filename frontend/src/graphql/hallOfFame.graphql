@@ -10,5 +10,7 @@ query hallOfFame($editionId: bigint) {
     nick
     sumOfPoints
     userId
+    groupsId
+    groupName
   }
 }

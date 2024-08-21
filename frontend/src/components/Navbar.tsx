@@ -5,23 +5,20 @@ import { useEditionSelection } from "../hooks/common/useEditionSelection";
 import { useUser } from "../hooks/common/useUser";
 import { hasRole } from "../utils/utils";
 
+export const NAV_BAR_HEIGHT = 100;
+
 const styles: Styles = {
   container: {
     width: "100%",
     display: "flex",
     alignItems: "center",
-    marginBottom: 12,
     borderBottom: "1px solid black",
+    height: NAV_BAR_HEIGHT,
   },
   navbarItem: {
     border: "1px solid black",
     padding: 12,
     cursor: "pointer",
-  },
-  select: {
-    marginLeft: "auto",
-    padding: 12,
-    border: "1px solid black",
   },
   editionName: {
     marginLeft: "auto",
@@ -31,11 +28,10 @@ const styles: Styles = {
 
 export const Navbar = () => {
   const navigate = useNavigate();
-  const { editions, selectedEdition, handleEditionChange } =
-    useEditionSelection();
+  const { editions } = useEditionSelection();
   const { user } = useUser();
 
-  const showEditionSelection = editions.length > 1;
+  const showCurrentEdition = editions.length > 1;
 
   return (
     <div style={styles.container}>
@@ -50,21 +46,8 @@ export const Navbar = () => {
             {item.title}
           </div>
         ))}
-      {!showEditionSelection && (
+      {!showCurrentEdition && (
         <div style={styles.editionName}>{editions[0]?.name}</div>
-      )}
-      {showEditionSelection && (
-        <select
-          style={styles.select}
-          onChange={handleEditionChange}
-          value={selectedEdition?.editionId || ""}
-        >
-          {editions.map((edition) => (
-            <option key={edition.editionId} value={edition.editionId}>
-              {edition.name}
-            </option>
-          ))}
-        </select>
       )}
     </div>
   );
