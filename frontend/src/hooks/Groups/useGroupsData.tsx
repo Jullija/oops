@@ -6,7 +6,6 @@ export type Group = {
   id: string;
   weekday: string;
   time: { start: string; end: string };
-  // TODO full name shouldn't be undefined
   teacher: { fullName: string; id: string };
 };
 
@@ -28,7 +27,8 @@ export const useGroupsData = () => {
         weekday: group.weekday,
         time: { start: group.startTime, end: group.endTime },
         teacher: {
-          fullName: group.userGroups[0].user.fullName ?? "TBA",
+          // firstName and secondName is not nullable - hasura computes it so practically it will never be null
+          fullName: group.userGroups[0].user.fullName as string,
           id: group.userGroups[0].user.userId,
         },
       };
