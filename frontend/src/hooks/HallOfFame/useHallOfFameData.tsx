@@ -14,16 +14,17 @@ export const useHallOfFameData = () => {
   });
 
   // TODO backend - missing avatarId and animalId (photos)
-  // TODO backend - nulls fix
+  // it is a view so there is no way to avoid nulls
+  // TODO maybe it shouldn't be view
   const students: HallOfFameStudentData[] =
     data?.hallOfFame.map((student, index) => {
       return {
         position: index + 1,
-        id: student.userId ?? "-",
-        nick: student.nick ?? "-",
-        levelName: student.levelName ?? "-",
+        id: student.userId ?? "",
+        nick: student.nick ?? "",
+        levelName: student.levelName ?? "",
         totalPoints: student?.sumOfPoints ?? -1,
-        groupId: student.groupsId ?? "1",
+        groupId: student.groupsId ?? "",
       };
     }) ?? [];
 
