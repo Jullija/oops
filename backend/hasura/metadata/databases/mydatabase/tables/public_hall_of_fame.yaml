@@ -5,8 +5,10 @@ select_permissions:
   - role: coordinator
     permission:
       columns:
-        - image_file_id
         - edition_id
+        - group_name
+        - groups_id
+        - image_file_id
         - level_id
         - level_name
         - nick
@@ -18,8 +20,10 @@ select_permissions:
   - role: student
     permission:
       columns:
-        - image_file_id
         - edition_id
+        - group_name
+        - groups_id
+        - image_file_id
         - level_id
         - level_name
         - nick
@@ -31,8 +35,10 @@ select_permissions:
   - role: teacher
     permission:
       columns:
-        - image_file_id
         - edition_id
+        - group_name
+        - groups_id
+        - image_file_id
         - level_id
         - level_name
         - nick

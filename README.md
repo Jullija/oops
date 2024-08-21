@@ -30,11 +30,12 @@ This is a step-by-step guide on how to run Oops application locally.
 10. Apply hasura metadata by `cd hasura`, `hasura metadata apply`
 11. If there are any updates to backend do git pull, rebuild a project and apply hasura metadata again
 12. To access hasura console go to `localhost:9191`. The password is `admin_secret`
-13. To populate the database run `python backend/src/main/python/insert_data.py`. This script purges the existing data from the database and repopulates the database with random (set seed) data.
+13. To populate the database run `cd backend/src/main/python/` and `python insert_data.py`. This script purges the existing data from the database and repopulates the database with random (set seed) data.
 
 ### Frontend
 
 1. Cd frontent directory `cd ../frontend`
 2. Make sure yarn is installed `npm install --global yarn`
 3. Run `yarn`
-4. Run `yarn dev`
+4. Run `yarn codegen`
+5. Run `yarn dev`

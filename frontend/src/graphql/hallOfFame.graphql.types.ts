@@ -18,6 +18,8 @@ export type HallOfFameQuery = {
     nick?: string | null;
     sumOfPoints?: string | null;
     userId?: string | null;
+    groupsId?: string | null;
+    groupName?: string | null;
   }>;
 };
 
@@ -34,6 +36,8 @@ export const HallOfFameDocument = gql`
       nick
       sumOfPoints
       userId
+      groupsId
+      groupName
     }
   }
 `;

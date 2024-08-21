@@ -8,6 +8,7 @@ type TextInputProps = {
   touched?: boolean;
   name: string;
   label?: string;
+  placeholder?: string;
 };
 
 export const TextInput = ({
@@ -18,6 +19,7 @@ export const TextInput = ({
   touched,
   name,
   label,
+  placeholder,
 }: TextInputProps) => {
   return (
     <div>
@@ -28,6 +30,7 @@ export const TextInput = ({
         onChange={handleChange}
         onBlur={handleBlur}
         value={value}
+        placeholder={placeholder}
       />
       {error && touched ? <div style={styles.error}>{error}</div> : null}
     </div>

@@ -3,6 +3,7 @@ package backend.award
 import backend.awardEdition.AwardEdition
 import backend.categories.Categories
 import backend.files.FileEntity
+import backend.utils.HasImageFile
 import jakarta.persistence.*
 
 @Entity
@@ -38,8 +39,8 @@ class Award (
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "image_file_id")
-        var imageFile: FileEntity? = null,
-) {
+        override var imageFile: FileEntity? = null,
+) : HasImageFile {
         constructor() : this(
                 awardName = "",
                 awardType = AwardType.ADDITIVE,
