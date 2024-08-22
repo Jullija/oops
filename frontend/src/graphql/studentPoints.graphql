@@ -25,6 +25,10 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
           groupName
           startTime
           weekday
+          teacher {
+            firstName
+            secondName
+          }
         }
       }
     }

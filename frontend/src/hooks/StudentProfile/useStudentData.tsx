@@ -57,6 +57,7 @@ export const useStudentData = (props: {
         level: data?.getStudentPoints.level?.levelName ?? "-",
         group: {
           // TODO why still nulls - it was meant to be corrected
+          // TODO there should be no useGroups returned, but group which is never null
           name: user.userGroups[0]?.group.groupName ?? "-",
           id: user.userGroups[0]?.group.groupsId ?? "-1",
           weekday: user.userGroups[0]?.group.weekday ?? "-",
@@ -64,8 +65,8 @@ export const useStudentData = (props: {
             start: user.userGroups[0]?.group.startTime ?? "-",
             end: user.userGroups[0]?.group.endTime ?? "-",
           },
-          // TODO: add group teacher to be added to backend
-          teacherDisplayName: "-",
+          // TODO: why no display name
+          teacherDisplayName: `${user.userGroups[0]?.group.teacher?.firstName ?? "-"} ${user.userGroups[0]?.group.teacher?.secondName ?? "-"}`,
         },
         totalPoints: data.getStudentPoints.sumOfAll,
       }
