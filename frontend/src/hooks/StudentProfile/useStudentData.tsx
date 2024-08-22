@@ -13,7 +13,7 @@ export type StudentCardData = {
   id: string;
   displayName: string;
   index: number;
-  level: number;
+  level: string;
   group: {
     name: string;
     id: string;
@@ -54,10 +54,9 @@ export const useStudentData = (props: {
         id: user.userId.toString(),
         displayName: `${user.firstName} ${user.secondName}`,
         index: user.indexNumber,
-        // TODO add level to backend
-        level: -1,
+        level: data?.getStudentPoints.level?.levelName ?? "-",
         group: {
-          // TODO these nulls are to be corrected
+          // TODO why still nulls - it was meant to be corrected
           name: user.userGroups[0]?.group.groupName ?? "-",
           id: user.userGroups[0]?.group.groupsId ?? "-1",
           weekday: user.userGroups[0]?.group.weekday ?? "-",
