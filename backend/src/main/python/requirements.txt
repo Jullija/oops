@@ -1,2 +1,7 @@
 psycopg2==2.9.6
 faker==18.9.0
+tqdm
+requests
+scipy
+numpy
+subprocess

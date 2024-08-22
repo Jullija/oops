@@ -35,7 +35,7 @@ export const StudentSearcher = ({ students }: SearchStudentProps) => {
       students.filter(
         (student) =>
           student.fullName &&
-          isPartOfAString(searchInputValue, student.fullName),
+          isPartOfAString(searchInputValue, [student.fullName]),
       ) ?? []
     );
   }, [students, searchInputValue]);

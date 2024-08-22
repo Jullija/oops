@@ -1,91 +1,96 @@
-import { useRef, useEffect, useCallback } from "react";
-import { useUser } from "../../hooks/common/useUser";
-import { useHallOfFameQuery } from "../../graphql/hallOfFame.graphql.types";
-import { useEditionSelection } from "../../hooks/common/useEditionSelection";
 import { Styles } from "../../utils/Styles";
-import { Roles } from "../../utils/types";
-import HallOfFameRow from "../../components/hallOfFame/hallOfFameRow";
-import HallOfFameHeader from "../../components/hallOfFame/hallOfFameHeader";
+import { HallOfFameMenu } from "../../components/hallOfFame/HallOfFameMenu";
+import { useHallOfFameData } from "../../hooks/HallOfFame/useHallOfFameData";
+import { NAV_BAR_HEIGHT } from "../../components/Navbar";
+import { Podium } from "../../components/hallOfFame/Podium/Podium";
+import { StatisticsBox } from "../../components/hallOfFame/StatisticsBox";
+import { useCallback, useEffect, useState } from "react";
+import { StudentCardsList } from "../../components/hallOfFame/StudentCardsList";
+import { isPartOfAString } from "../../utils/strings";
+import { HALL_OF_FAME_STUDENT_CARD_ID_PREFIX } from "../../components/hallOfFame/StudentCard";
 
 const styles: Styles = {
   container: {
     position: "relative",
     display: "flex",
-    flexDirection: "column",
-    gap: 12,
-    margin: 12,
-    minHeight: "100vh",
-    alignItems: "center",
+    // TODO: I have no idea how to get rig of outer page scroll
+    height: `calc(100vh - ${NAV_BAR_HEIGHT + 1}px)`,
   },
-  scrollButton: {
-    position: "fixed",
-    bottom: 12,
-    right: 12,
-    width: 100,
-    zIndex: 10,
-  },
-  itemsContainer: {
+  leftSide: {
+    flex: 1,
+    height: "100%",
     display: "flex",
     flexDirection: "column",
-    gap: 12,
-    marginBottom: 60,
-    width: "90vw",
-    maxWidth: "90vw",
+  },
+  sideBarContainer: {
+    display: "flex",
+    flexDirection: "column",
+    backgroundColor: "lightblue",
   },
 };
 
 export default function HallOfFame() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
-
-  const { user } = useUser();
-  const { selectedEdition } = useEditionSelection();
-
-  const { loading, error, data } = useHallOfFameQuery({
-    variables: { editionId: selectedEdition?.editionId },
-    skip: !selectedEdition,
-  });
+  const { isUserRoleStudent, students, highlightedStudent, loading, error } =
+    useHallOfFameData();
+  const [showStudentsFromAllGroups, setShowStudentsFromAllGroups] =
+    useState(true);
+  const [searchInput, setSearchInput] = useState("");
 
   const scrollToStudent = useCallback(() => {
-    const studentElement = document.getElementById(`student-${user?.userId}`);
+    const studentElement = document.getElementById(
+      HALL_OF_FAME_STUDENT_CARD_ID_PREFIX + highlightedStudent?.id,
+    );
     if (studentElement) {
       studentElement.scrollIntoView({ behavior: "smooth", block: "center" });
     }
-  }, [user?.userId]);
+  }, [highlightedStudent?.id]);
 
   useEffect(() => {
-    if (!loading && user?.userId) {
+    if (highlightedStudent?.id) {
       scrollToStudent();
     }
-  }, [loading, scrollToStudent, user?.userId]);
+  }, [scrollToStudent, highlightedStudent?.id, showStudentsFromAllGroups]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  const students = data?.hallOfFame || [];
+  const displayStudents = showStudentsFromAllGroups
+    ? students
+    : students
+        .filter((student) => student.groupId === highlightedStudent?.groupId)
+        .map((student, index) => {
+          return { ...student, position: index + 1 };
+        }) ?? [];
 
   return (
-    <div style={styles.container} ref={containerRef}>
-      <div style={styles.itemsContainer}>
-        <HallOfFameHeader />
-        {students.map((s, index) => (
-          <HallOfFameRow
-            key={s.userId}
-            student={s}
-            index={index}
-            isCurrentUser={s.userId === user?.userId}
-          />
-        ))}
+    <div style={styles.container}>
+      <div style={styles.leftSide}>
+        <Podium students={displayStudents} />
+        <StatisticsBox />
       </div>
-      {user.role === Roles.STUDENT && (
-        <button
-          style={styles.scrollButton}
-          ref={buttonRef}
-          onClick={scrollToStudent}
-        >
-          Moja pozycja
-        </button>
-      )}
+
+      <div style={styles.sideBarContainer}>
+        <HallOfFameMenu
+          students={displayStudents}
+          onShowStudentsFromAllGroupsChange={(
+            showAllGroupsStudents: boolean,
+          ) => {
+            setShowStudentsFromAllGroups(showAllGroupsStudents);
+          }}
+          showStudentsFromAllGroups={showStudentsFromAllGroups}
+          onSearchChange={(input: string) => {
+            setSearchInput(input);
+          }}
+          scrollToStudent={scrollToStudent}
+          isUserRoleStudent={isUserRoleStudent}
+        />
+        <StudentCardsList
+          students={displayStudents.filter((s) =>
+            isPartOfAString(searchInput, [s.nick]),
+          )}
+          highlightedStudent={highlightedStudent}
+        />
+      </div>
     </div>
   );
 }

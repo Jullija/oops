@@ -8,7 +8,17 @@ type Mutation {
     subcategoryId: Int!
   ): PointType
   assignPhotosToGroups(editionId: Int!): Boolean
-  assignAvatarToUser(userId: Int!, fileId: Int!): Boolean
+  assignPhotoToUser(userId: Int!, fileId: Int): Boolean
+  assignPhotoToLevel(levelId: Int!, fileId: Int): Boolean
+  assignPhotoToAward(awardId: Int!, fileId: Int): Boolean
+  assignPhotoToChest(chestId: Int!, fileId: Int): Boolean
+  addLevel(
+    editionId: Int!
+    name: String!
+    maximumPoints: Float!
+    grade: Float!
+    imageFileId: Int
+  ): LevelType
 }
 
 type Query {
@@ -20,6 +30,7 @@ type Query {
   ): [CategoryPointsSumType!]!
   getPossibleGroupsWeekdays(editionId: Int!): [String!]!
   getPossibleGroupsTimeSpans(editionId: Int!): [TimeSpansType!]!
+  getPossibleGroupDates(editionId: Int!): [GroupDateType!]!
 }
 
 type AwardType {
@@ -73,6 +84,7 @@ type ChestHistoryType {
   createdAt: String!
   updatedAt: String!
   teacher: UserType!
+  opened: Boolean!
 }
 
 type ChestType {
@@ -102,6 +114,7 @@ type GroupType {
   groupsId: ID!
   groupName: String!
   label: String
+  teacher: UserType
   weekday: String!
   startTime: String!
   endTime: String!
@@ -141,7 +154,7 @@ type SubcategoryType {
   category: CategoryType!
   label: String!
   edition: EditionType!
-  maxPoints: Int!
+  maxPoints: Float!
   ordinalNumber: Int!
 }
 
@@ -195,6 +208,7 @@ type CategoryPointsSumType {
 
 type StudentPointsType {
   user: UserType!
+  level: LevelType
   subcategoryPoints: [SubcategoryPointsType!]!
   sumOfPurePoints: Float!
   sumOfBonuses: Float!
@@ -240,6 +254,12 @@ type PartialBonusType {
 }
 
 type TimeSpansType {
+  startTime: String
+  endTime: String
+}
+
+type GroupDateType {
+  weekday: String
   startTime: String
   endTime: String
 }

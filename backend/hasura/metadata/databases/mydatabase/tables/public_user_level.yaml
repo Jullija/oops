@@ -11,3 +11,40 @@ object_relationships:
   - name: user
     using:
       foreign_key_constraint_on: user_id
+select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - edition_id
+        - label
+        - level_id
+        - user_id
+        - user_level_id
+      filter: {}
+    comment: ""
+  - role: student
+    permission:
+      columns:
+        - edition_id
+        - level_id
+        - user_id
+        - user_level_id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+    comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - edition_id
+        - label
+        - level_id
+        - user_id
+        - user_level_id
+      filter:
+        edition:
+          groups:
+            userGroups:
+              user_id:
+                _eq: X-Hasura-User-Id
+    comment: ""

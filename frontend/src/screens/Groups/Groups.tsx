@@ -1,11 +1,25 @@
+import { useState } from "react";
+import { GroupSearchField } from "../../components/Groups/GroupsList/GroupSearcher";
 import { GroupsList } from "../../components/Groups/GroupsList/GroupsList";
-import { useGroupsData } from "../../hooks/Groups/useGroupsData";
+import { Group, useGroupsData } from "../../hooks/Groups/useGroupsData";
 
 export const Groups = () => {
-  const { loading, error, groups } = useGroupsData();
+  const { groups, loading, error } = useGroupsData();
+  const [filteredGroups, setFilteredGroups] = useState<Group[] | undefined>(
+    undefined,
+  );
 
   if (loading) return <div>loading...</div>;
   if (error) return <div>ERROR: {error?.message}</div>;
 
-  return <div>{groups && <GroupsList groups={groups} />}</div>;
+  const onInputChange = (filteredGroups: Group[]) => {
+    setFilteredGroups(filteredGroups);
+  };
+
+  return (
+    <div>
+      <GroupSearchField onInputChange={onInputChange} groups={groups} />
+      <GroupsList groups={filteredGroups ?? groups} />
+    </div>
+  );
 };
