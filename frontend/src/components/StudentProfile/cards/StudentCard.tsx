@@ -95,13 +95,12 @@ export function StudentCard({
       <div style={styles.userImageContainer}>{getImageContent()}</div>
       <div>{displayName}</div>
       <div>level: {level}</div>
-      <div>index: {index}</div>
-      <div>group: {group.name}</div>
+      <div>indeks: {index}</div>
       <div>
-        {group.weekday} {group.time.start}-{group.time.end}
+        grupa: {group.name}, {group.weekday} {group.time.start}-{group.time.end}
       </div>
       <div>prowadzący: {group.teacherDisplayName}</div>
-      <div>total points: {totalPoints}</div>
+      <div>punkty: {totalPoints}</div>
     </div>
   );
 }
