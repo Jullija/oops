@@ -38,6 +38,8 @@ dependencies {
 	implementation("org.hibernate.orm:hibernate-core")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	implementation("com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter")
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+
 
 }
 
