@@ -44,6 +44,7 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
             secondName
           }
           createdAt
+          updatedAt
         }
         partialBonusType {
           partialValue

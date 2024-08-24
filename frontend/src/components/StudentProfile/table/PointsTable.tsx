@@ -3,7 +3,7 @@ import { Points } from "../../../hooks/StudentProfile/useStudentData";
 
 const styles: Styles = {
   table: {
-    width: 600,
+    width: 1000,
     border: "1px solid blue",
   },
   row: {
@@ -23,6 +23,15 @@ type PointsTableProps = {
   points: Points[];
 };
 
+const dateOptions: Intl.DateTimeFormatOptions = {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+};
+
 export default function PointsTable({ points }: PointsTableProps) {
   const headerTitles = [
     "nazwa",
@@ -33,17 +42,24 @@ export default function PointsTable({ points }: PointsTableProps) {
     "prowadzący",
   ];
 
-  // TODO should be done on backed
-  // backend:
-  // - separate request for student aggregate data
-  // - should not return chest categories only - event
+  // TODO should not return chest categories only - do not return event, it cannot give points only chests
   const getPointsString = (points: Points) => {
     const pure = points.points.purePoints?.value ?? 0;
     let totalBonus = 0;
     points.points.partialBonusType.forEach(
       (bonus) => (totalBonus += bonus?.partialValue ?? 0),
     );
-    return `${pure.toFixed(2)} + ${totalBonus.toFixed(2)} = ${(pure + totalBonus).toFixed(2)}`;
+    return `${pure} + ${totalBonus} = ${pure + totalBonus}`;
+  };
+
+  const getDisplayDate = (
+    createdAt: string | undefined,
+    updatedAt: string | undefined,
+  ): Date | undefined => {
+    if (updatedAt) {
+      return new Date(updatedAt);
+    }
+    return createdAt ? new Date(createdAt) : undefined;
   };
 
   return (
@@ -63,10 +79,13 @@ export default function PointsTable({ points }: PointsTableProps) {
           </div>
           <div style={styles.cell}>{getPointsString(item)}</div>
           <div style={styles.cell}>{item.subcategory.maxPoints}</div>
-          {/* TODO I need to have one date to show - I don't know where to find it */}
-          {/* createAt is only temporary */}
           {/* TODO add fullName to backend */}
-          <div style={styles.cell}>{item.points.purePoints?.createdAt}</div>
+          <div style={styles.cell}>
+            {getDisplayDate(
+              item.points.purePoints?.createdAt,
+              item.points.purePoints?.updatedAt,
+            )?.toLocaleDateString("pl-PL", dateOptions)}
+          </div>
           <div style={styles.cell}>
             {item.points.purePoints?.teacher.firstName}{" "}
             {item.points.purePoints?.teacher.secondName}
