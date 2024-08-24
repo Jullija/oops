@@ -47,7 +47,6 @@ class Award (
                 awardValue = 1.0f,
                 category = Categories(),
                 maxUsages = 1,
-                awardEditions = HashSet(),
                 label = ""
         )
 }
