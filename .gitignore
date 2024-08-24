@@ -8,7 +8,7 @@
 !.yarn/sdks
 !.yarn/versions
 .eslintcache
-# TODO frontend/src/__generated__ shouldn't be included as well
+
 frontend/**/*.graphql.types.ts
 
 # do not delete
