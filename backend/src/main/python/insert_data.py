@@ -1,3 +1,5 @@
+import os
+import shutil
 import subprocess
 
 import psycopg2
@@ -31,6 +33,7 @@ hasura_url = config['hasura']['url']
 headers = config['hasura']['headers']
 data_insertion_config = config['data_insertion']
 old_style = config['style']["old_style"]
+backend_resources_path = data_insertion_config['backend_resources_path']
 
 
 def create_connection():
@@ -58,7 +61,13 @@ def delete_files():
 
     file_data = response_file.json()
     if "errors" in file_data or not file_data["data"]["files"]:
-        print(f"Error fetching all files: {file_data.get('errors', 'File not found')}")
+        print(f"Error fetching all files: {file_data.get('errors', 'Files not found')}")
+        print("Deleting files manually")
+        if os.path.exists(backend_resources_path):
+            shutil.rmtree(backend_resources_path)
+            os.makedirs(backend_resources_path)
+        else:
+            print(f"The path {backend_resources_path} does not exist.")
 
     file_ids = [file_data["data"]["files"][i]["fileId"] for i in range(len(file_data["data"]["files"]))]
     for file_id in file_ids:
