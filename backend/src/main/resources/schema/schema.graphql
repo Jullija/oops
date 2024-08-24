@@ -1,33 +1,25 @@
 type Mutation {
-  addBonusMutation(chestHistoryId: Int!, awardId: Int!): AddBonusReturnType
+  addBonusMutation(chestHistoryId: Int!,
+    awardId: Int!): AddBonusReturnType
 
-  addPointsMutation(
-    studentId: Int!
-    teacherId: Int!
-    value: Float!
-    subcategoryId: Int!
-  ): PointType
+  addPointsMutation (studentId: Int!,
+    teacherId: Int!,
+    value: Float!,
+    subcategoryId: Int!): PointType
   assignPhotosToGroups(editionId: Int!): Boolean
   assignPhotoToUser(userId: Int!, fileId: Int): Boolean
   assignPhotoToLevel(levelId: Int!, fileId: Int): Boolean
   assignPhotoToAward(awardId: Int!, fileId: Int): Boolean
   assignPhotoToChest(chestId: Int!, fileId: Int): Boolean
-  addLevel(
-    editionId: Int!
-    name: String!
-    maximumPoints: Float!
-    grade: Float!
-    imageFileId: Int
-  ): LevelType
+  addLevel(editionId: Int!, name: String!, maximumPoints: Float!, grade: Float!, imageFileId: Int): LevelType
+  addAward( awardName: String!, awardType: String!, awardValue: Float!,
+    categoryId: Int!, maxUsages: Int = -1, label: String = ""): AwardType
 }
 
 type Query {
   getUsersInGroupWithPoints(groupId: Int!): [UserPointsType]!
   getStudentPoints(studentId: Int!, editionId: Int!): StudentPointsType!
-  getSumOfPointsForStudentByCategory(
-    studentId: Int!
-    editionId: Int!
-  ): [CategoryPointsSumType!]!
+  getSumOfPointsForStudentByCategory(studentId: Int!, editionId: Int!): [CategoryPointsSumType!]!
   getPossibleGroupsWeekdays(editionId: Int!): [String!]!
   getPossibleGroupsTimeSpans(editionId: Int!): [TimeSpansType!]!
   getPossibleGroupDates(editionId: Int!): [GroupDateType!]!
@@ -198,7 +190,7 @@ enum AwardTypeType {
   MULTIPLICATIVE
 }
 
-type CategoryPointsSumType {
+type CategoryPointsSumType{
   category: CategoryType!
   sumOfPurePoints: Float!
   sumOfBonuses: Float!
@@ -206,7 +198,7 @@ type CategoryPointsSumType {
   maxPoints: Float!
 }
 
-type StudentPointsType {
+type StudentPointsType{
   user: UserType!
   level: LevelType
   subcategoryPoints: [SubcategoryPointsType!]!
@@ -244,8 +236,8 @@ type SubcategoryPointsType {
 }
 
 type PurePointsType {
-  purePoints: PointType!
-  partialBonusType: [PartialBonusType!]!
+  purePoints: PointType
+  partialBonusType: [PartialBonusType]!
 }
 
 type PartialBonusType {
