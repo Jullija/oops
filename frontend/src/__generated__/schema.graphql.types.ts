@@ -6052,8 +6052,8 @@ export type PointsVarianceOrderBy = {
 
 export type PurePointsType = {
   __typename?: "PurePointsType";
-  partialBonusType: Array<PartialBonusType>;
-  purePoints: PointType;
+  partialBonusType: Array<Maybe<PartialBonusType>>;
+  purePoints?: Maybe<PointType>;
 };
 
 /** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
@@ -8210,6 +8210,7 @@ export type LevelsAggregateBoolExpVar_Samp = {
 /** mutation root */
 export type Mutation_Root = {
   __typename?: "mutation_root";
+  addAward?: Maybe<AwardType>;
   addBonusMutation?: Maybe<AddBonusReturnType>;
   addLevel?: Maybe<LevelType>;
   addPointsMutation?: Maybe<PointType>;
@@ -8458,6 +8459,16 @@ export type Mutation_Root = {
   updateUsersByPk?: Maybe<Users>;
   /** update multiples rows of table: "users" */
   updateUsersMany?: Maybe<Array<Maybe<UsersMutationResponse>>>;
+};
+
+/** mutation root */
+export type Mutation_RootAddAwardArgs = {
+  awardName: Scalars["String"]["input"];
+  awardType: Scalars["String"]["input"];
+  awardValue: Scalars["Float"]["input"];
+  categoryId: Scalars["Int"]["input"];
+  label?: InputMaybe<Scalars["String"]["input"]>;
+  maxUsages?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 /** mutation root */
