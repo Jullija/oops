@@ -19,6 +19,7 @@
         "old_style": false
     },
     "data_insertion": {
+        "backend_resources_path": "../../../resources/",
         "number_of_editions": 2,
         "number_of_teachers": 7,
         "max_points_in_level": {
