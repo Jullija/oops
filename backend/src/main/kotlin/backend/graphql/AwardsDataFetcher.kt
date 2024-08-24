@@ -1,5 +1,6 @@
 package backend.graphql
 
+import backend.award.Award
 import backend.award.AwardRepository
 import backend.award.AwardType
 import backend.bonuses.Bonuses
@@ -10,6 +11,7 @@ import backend.edition.EditionRepository
 import backend.files.FileEntity
 import backend.files.FileEntityRepository
 import backend.groups.GroupsRepository
+import backend.levels.Levels
 import backend.points.Points
 import backend.points.PointsRepository
 import backend.subcategories.Subcategories
@@ -61,5 +63,39 @@ class AwardsDataFetcher {
     @Transactional
     fun assignPhotoToAward(@InputArgument awardId: Long, @InputArgument fileId: Long?): Boolean {
         return photoAssigner.assignPhotoToAssignee(awardRepository, "image/award", awardId, fileId)
+    }
+
+    @DgsMutation
+    @Transactional
+    fun addAward(@InputArgument awardName: String, @InputArgument awardType: String, @InputArgument awardValue: Float,
+                 @InputArgument categoryId: Long, @InputArgument maxUsages: Int = -1,
+                 @InputArgument label: String = ""): Award {
+
+        val awardTypeType = try {
+             AwardType.valueOf(awardType)
+        } catch (e: IllegalArgumentException) {
+            throw IllegalArgumentException("Invalid award type")
+        }
+        if (awardTypeType == AwardType.ADDITIVE && awardValue < 0) {
+            throw IllegalArgumentException("Additive award value must be positive")
+        }
+        if (awardTypeType == AwardType.MULTIPLICATIVE && awardValue <= 0) {
+            throw IllegalArgumentException("Multiplicative award value must be positive")
+        }
+        if (awardTypeType == AwardType.MULTIPLICATIVE && awardValue > 1) {
+            throw IllegalArgumentException("Multiplicative award value must be less than or equal to 1")
+        }
+        val category = categoriesRepository.findById(categoryId).orElseThrow { IllegalArgumentException("Invalid category ID") }
+
+        val award = Award(
+            awardName = awardName,
+            awardType = awardTypeType,
+            awardValue = awardValue,
+            category = category,
+            maxUsages = maxUsages,
+            label = ""
+        )
+        awardRepository.save(award)
+        return award
     }
 }

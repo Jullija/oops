@@ -137,6 +137,7 @@ def insert_points(hasura_url, headers, cursor, editions, teacher_ids, random, ca
 
         # Ensure the point is within the range [0, max_points]
         point = np.clip(point, 0, max_points)
+        point = round(point, 1)
 
         return point
 
