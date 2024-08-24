@@ -2,6 +2,9 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
   getStudentPoints(editionId: $editionId, studentId: $studentId) {
     level {
       levelName
+      imageFile {
+        fileId
+      }
     }
     user {
       firstName
@@ -12,10 +15,6 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
       secondName
       imageFile {
         fileId
-        fileName
-        fileType
-        label
-        pathToFile
       }
       userId
       userGroups {

@@ -9,12 +9,11 @@ export type Points = NonNullable<
 >["subcategoryPoints"][number];
 
 export type StudentCardData = {
-  // TODO add student avatar
   id: string;
   displayName: string;
   index: number;
   level: string;
-  group: {
+  group?: {
     name: string;
     id: string;
     weekday: string;
@@ -25,6 +24,10 @@ export type StudentCardData = {
     teacherDisplayName: string;
   };
   totalPoints: number;
+  imageIds: {
+    avatar?: string;
+    level?: string;
+  };
 };
 
 export const useStudentData = (props: {
@@ -55,20 +58,24 @@ export const useStudentData = (props: {
         displayName: `${user.firstName} ${user.secondName}`,
         index: user.indexNumber,
         level: data?.getStudentPoints.level?.levelName ?? "-",
-        group: {
-          // TODO why still nulls - it was meant to be corrected
-          // TODO there should be no useGroups returned, but group which is never null
-          name: user.userGroups[0]?.group.groupName ?? "-",
-          id: user.userGroups[0]?.group.groupsId ?? "-1",
-          weekday: user.userGroups[0]?.group.weekday ?? "-",
-          time: {
-            start: user.userGroups[0]?.group.startTime ?? "-",
-            end: user.userGroups[0]?.group.endTime ?? "-",
-          },
-          // TODO: why no display name
-          teacherDisplayName: `${user.userGroups[0]?.group.teacher?.firstName ?? "-"} ${user.userGroups[0]?.group.teacher?.secondName ?? "-"}`,
-        },
+        group: user.userGroups[0]
+          ? {
+              name: user.userGroups[0].group.groupName,
+              id: user.userGroups[0].group.groupsId,
+              weekday: user.userGroups[0].group.weekday,
+              time: {
+                start: user.userGroups[0].group.startTime,
+                end: user.userGroups[0].group.endTime,
+              },
+              // TODO: why no display name
+              teacherDisplayName: `${user.userGroups[0].group.teacher?.firstName ?? "-"} ${user.userGroups[0].group.teacher?.secondName ?? "-"}`,
+            }
+          : undefined,
         totalPoints: data.getStudentPoints.sumOfAll,
+        imageIds: {
+          avatar: user.imageFile?.fileId,
+          level: data.getStudentPoints.level?.imageFile?.fileId,
+        },
       }
     : undefined;
 

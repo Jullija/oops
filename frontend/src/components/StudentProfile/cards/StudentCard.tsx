@@ -11,11 +11,6 @@ const styles: Styles = {
     padding: 24,
     width: 240,
   },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
   userCard: {
     display: "flex",
     flexDirection: "column",
@@ -27,20 +22,20 @@ const styles: Styles = {
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     width: "250px",
   },
-  imgPlaceholder: {
-    width: "200px",
-    height: "200px",
-    backgroundColor: "#fff",
-    marginBottom: "10px",
+  studentName: {
+    fontWeight: "bold",
+  },
+  imgContainer: {
     display: "flex",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    gap: 10,
     overflow: "hidden",
     borderRadius: "8px",
   },
-  userImage: {
+  img: {
     width: "100%",
-    height: "100%",
     objectFit: "cover",
     borderRadius: "8px",
   },
@@ -63,43 +58,36 @@ export function StudentCard({
   level,
   group,
   totalPoints,
+  imageIds,
 }: StudentCardData) {
-  // TODO it should be already fetched
-  const loading = false;
-  const error: Error | undefined = undefined;
-  const imageId = "1";
-
-  const getImageContent = () => {
-    if (loading || error) {
-      return loading ? (
-        <div>Loading image...</div>
-      ) : (
-        <div>Error loading image</div>
-      );
-    }
-    if (imageId) {
-      return (
+  const getImg = (id?: string) => {
+    return (
+      <div style={{ position: "relative", flex: 1 }}>
         <img
-          src={`${FILES_URL}${imageId}`}
-          alt={`Image id ${imageId}`}
-          style={styles.userImage}
+          src={`${FILES_URL}${id}`}
+          alt={`img id ${id}`}
+          style={styles.img}
         />
-      );
-    }
-    return <div style={styles.userImageContainer} />;
+      </div>
+    );
   };
 
   return (
     <div style={styles.container}>
-      <div style={styles.title}>Student</div>
-      <div style={styles.userImageContainer}>{getImageContent()}</div>
-      <div>{displayName}</div>
+      <div style={styles.imgContainer}>
+        {getImg(imageIds.avatar)}
+        {getImg(imageIds.level)}
+      </div>
+      <div style={styles.studentName}>{displayName}</div>
       <div>level: {level}</div>
       <div>indeks: {index}</div>
       <div>
-        grupa: {group.name}, {group.weekday} {group.time.start}-{group.time.end}
+        grupa:{" "}
+        {group
+          ? `${group.name}, ${group.weekday} ${group.time.start}-${group.time.end}`
+          : "brak"}
       </div>
-      <div>prowadzący: {group.teacherDisplayName}</div>
+      <div>prowadzący: {group ? group.teacherDisplayName : "brak"}</div>
       <div>punkty: {totalPoints}</div>
     </div>
   );
