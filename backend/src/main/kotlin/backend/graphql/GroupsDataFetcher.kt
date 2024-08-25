@@ -154,7 +154,7 @@ class GroupsDataFetcher {
         }
     }
     private fun getUserCategoriesWithDefaults(categories: List<Categories>, userPoints: List<CategoryPointsType>, subcategories: List<Subcategories>): List<CategoryPointsType> {
-        return categories.map { category ->
+        return categories.filter{it.canAddPoints}.map { category ->
             userPoints.find { it.category == category } ?: CategoryPointsType(
                 category = category,
                 subcategoryPoints = subcategories.filter { it.category == category }.map { subcat ->
