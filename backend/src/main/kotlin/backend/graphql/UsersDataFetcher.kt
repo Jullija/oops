@@ -11,6 +11,7 @@ import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
 import backend.users.Users
+import backend.users.UsersRoles
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.DgsQuery
@@ -48,6 +49,33 @@ class UsersDataFetcher {
     @Transactional
     fun assignPhotoToUser(@InputArgument userId: Long, @InputArgument fileId: Long?): Boolean {
         return photoAssigner.assignPhotoToAssignee(usersRepository, "image/user", userId, fileId)
+    }
+
+    @DgsMutation
+    @Transactional
+    fun addUser(@InputArgument indexNumber: Int, @InputArgument nick: String,
+                @InputArgument firstName: String, @InputArgument secondName: String,
+                @InputArgument role: String, @InputArgument label: String = ""): Users {
+        if (usersRepository.existsByIndexNumber(indexNumber)) {
+            throw IllegalArgumentException("User with index number $indexNumber already exists")
+        }
+        if (usersRepository.findByNick(nick) != null) {
+            throw IllegalArgumentException("User with nick $nick already exists")
+        }
+        val userRole1 = try {
+            UsersRoles.valueOf(role)
+        } catch (e: IllegalArgumentException) {
+            throw IllegalArgumentException("Invalid role")
+        }
+        val user = Users(
+            indexNumber = indexNumber,
+            nick = nick,
+            firstName = firstName,
+            secondName = secondName,
+            role = UsersRoles.valueOf(role),
+            label = label
+        )
+        return usersRepository.save(user)
     }
 
     @DgsQuery

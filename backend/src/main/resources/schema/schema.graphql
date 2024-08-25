@@ -19,10 +19,12 @@ type Mutation {
     addEdition(editionName: String!, editionYear: Int!, label: String = ""): EditionType
     addGroup(editionId: Int!, groupName: String!, weekday: WeekdayType!, startTime: String!,
         endTime: String!, teacherId: Int!, label: String = ""): GroupType
-    generateSubcategories(editionId: Int!, categoryId: Int!, subcategoryPrefix: String!,
-        subcategoryCount: Int!, maxPoints: Float!): [SubcategoryType]
     addSubcategory(subcategoryName: String!, maxPoints: Float!, ordinalNumber: Int!,
         categoryId: Int!, editionId: Int!, label: String = ""): SubcategoryType
+    addUser(indexNumber: Int!, nick: String!, firstName: String!,
+        secondName: String!, role: String!, label: String = ""): UserType
+    generateSubcategories(editionId: Int!, categoryId: Int!, subcategoryPrefix: String!,
+        subcategoryCount: Int!, maxPoints: Float!): [SubcategoryType]
 }
 
 type Query {
