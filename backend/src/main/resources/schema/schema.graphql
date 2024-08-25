@@ -16,6 +16,9 @@ type Mutation {
         categoryId: Int!, maxUsages: Int = -1, label: String = ""): AwardType
     addChestToUser(userId: Int, chestId: Int, teacherId: Int, subcategoryId: Int): ChestHistoryType
     addChest(chestType: String!, editionId: Int!, label: String = ""): ChestType
+    addEdition(editionName: String!, editionYear: Int!, label: String = ""): EditionType
+    addGroup(editionId: Int!, groupName: String!, weekday: WeekdayType!, startTime: String!,
+        endTime: String!, teacherId: Int!, label: String = ""): GroupType
 }
 
 type Query {
@@ -190,6 +193,16 @@ enum AwardTypeType {
     ADDITIVE_PREV
     ADDITIVE
     MULTIPLICATIVE
+}
+
+enum WeekdayType {
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+    SUNDAY
 }
 
 
