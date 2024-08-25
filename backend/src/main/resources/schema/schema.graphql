@@ -57,6 +57,7 @@ type BonusType {
 type CategoryType {
     categoryId: ID!
     categoryName: String!
+    canAddPoints: Boolean!
     label: String!
 }
 
