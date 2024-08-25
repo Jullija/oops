@@ -14,6 +14,7 @@ type Mutation {
     addLevel(editionId: Int!, name: String!, maximumPoints: Float!, grade: Float!, imageFileId: Int): LevelType
     addAward( awardName: String!, awardType: String!, awardValue: Float!,
         categoryId: Int!, maxUsages: Int = -1, label: String = ""): AwardType
+    addChestToUser(userId: Int, chestId: Int, teacherId: Int, subcategoryId: Int): ChestHistoryType
 }
 
 type Query {
