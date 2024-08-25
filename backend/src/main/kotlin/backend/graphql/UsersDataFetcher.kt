@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.util.*
 
 @DgsComponent
 class UsersDataFetcher {
@@ -63,7 +64,7 @@ class UsersDataFetcher {
             throw IllegalArgumentException("User with nick $nick already exists")
         }
         val userRole1 = try {
-            UsersRoles.valueOf(role)
+            UsersRoles.valueOf(role.uppercase())
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Invalid role")
         }
@@ -72,7 +73,7 @@ class UsersDataFetcher {
             nick = nick,
             firstName = firstName,
             secondName = secondName,
-            role = UsersRoles.valueOf(role),
+            role = userRole1,
             label = label
         )
         return usersRepository.save(user)

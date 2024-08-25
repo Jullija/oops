@@ -83,7 +83,7 @@ class GroupsDataFetcher {
     @DgsMutation
     @Transactional
     fun addGroup(@InputArgument editionId: Long, @InputArgument groupName: String,
-                 @InputArgument weekday: WeekdayEnum, @InputArgument startTime: Time,
+                 @InputArgument weekday: String, @InputArgument startTime: Time,
                  @InputArgument endTime: Time, @InputArgument teacherId: Long, @InputArgument label: String = ""): Groups {
         val edition = editionRepository.findById(editionId).orElseThrow() { IllegalArgumentException("Invalid edition ID") }
         if (groupsRepository.existsByGroupNameAndEdition(groupName, edition)) {
@@ -95,28 +95,37 @@ class GroupsDataFetcher {
         if (startTime == endTime) {
             throw IllegalArgumentException("Start time must be different from end time")
         }
+        if (groupName.isBlank()) {
+            throw IllegalArgumentException("Group name must not be blank")
+        }
+        val weekday1 = try {
+            WeekdayEnum.valueOf(weekday.uppercase())
+        } catch (e: IllegalArgumentException) {
+            throw IllegalArgumentException("Invalid weekday")
+        }
         val teacher = usersRepository.findById(teacherId).orElseThrow { IllegalArgumentException("Invalid teacher ID") }
         if (teacher.role != UsersRoles.TEACHER && teacher.role != UsersRoles.COORDINATOR) {
             throw IllegalArgumentException("User with ID $teacherId is not a teacher nor a coordinator")
         }
-        if (groupsRepository.existsByTeacherAndWeekdayAndStartTimeAndEndTimeAndEdition(teacher, weekday, startTime, endTime, edition)) {
+        if (groupsRepository.existsByTeacherAndWeekdayAndStartTimeAndEndTimeAndEdition(teacher, weekday1, startTime, endTime, edition)) {
             throw IllegalArgumentException("Teacher is already teaching a group at this time")
         }
         val group = Groups(
             groupName = groupName,
             label = label,
             teacher = teacher,
-            weekday = weekday,
+            weekday = weekday1,
             startTime = startTime,
             endTime = endTime,
             edition = edition
         )
+        groupsRepository.save(group)
         val userGroups = UserGroups(
             user = teacher,
             group = group
         )
         userGroupsRepository.save(userGroups)
-        return groupsRepository.save(group)
+        return group
     }
 
     @DgsQuery

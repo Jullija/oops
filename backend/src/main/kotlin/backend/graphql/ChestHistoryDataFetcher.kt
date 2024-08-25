@@ -17,6 +17,7 @@ import backend.subcategories.Subcategories
 import backend.subcategories.SubcategoriesRepository
 import backend.users.Users
 import backend.users.UsersRepository
+import backend.users.UsersRoles
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -68,6 +69,12 @@ class ChestHistoryDataFetcher {
                        @InputArgument subcategoryId: Long): ChestHistory {
         val user = usersRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("Invalid user ID") }
+        if (user.userGroups.isEmpty()) {
+            throw IllegalArgumentException("User has no groups")
+        }
+        if (user.role != UsersRoles.STUDENT) {
+            throw IllegalArgumentException("User must be a student")
+        }
         val chest = chestsRepository.findById(chestId)
             .orElseThrow { IllegalArgumentException("Invalid chest ID") }
         val userEditions = user.userGroups.map { it.group.edition }
@@ -79,6 +86,9 @@ class ChestHistoryDataFetcher {
         }
         val teacher = usersRepository.findById(teacherId)
             .orElseThrow() { IllegalArgumentException("Invalid teacher ID") }
+        if (teacher.role != UsersRoles.TEACHER && teacher.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("Teacher must be a teacher or coordinator")
+        }
         if (teacher.userGroups.isEmpty()) {
             throw IllegalArgumentException("Teacher has no groups")
         }

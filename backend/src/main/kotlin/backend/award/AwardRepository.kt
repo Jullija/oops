@@ -5,4 +5,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface AwardRepository : JpaRepository<Award, Long> {
+    fun findAllByAwardName(awardName: String): List<Award>
 }

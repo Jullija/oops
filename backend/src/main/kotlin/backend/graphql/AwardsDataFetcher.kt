@@ -72,7 +72,7 @@ class AwardsDataFetcher {
                  @InputArgument label: String = ""): Award {
 
         val awardTypeType = try {
-             AwardType.valueOf(awardType)
+             AwardType.valueOf(awardType.uppercase())
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Invalid award type")
         }
@@ -86,6 +86,14 @@ class AwardsDataFetcher {
             throw IllegalArgumentException("Multiplicative award value must be less than or equal to 1")
         }
         val category = categoriesRepository.findById(categoryId).orElseThrow { IllegalArgumentException("Invalid category ID") }
+
+        val awardsWithSameName = awardRepository.findAllByAwardName(awardName)
+        if (awardsWithSameName.any { it.awardType != awardTypeType }) {
+            throw IllegalArgumentException("Award with this name cannot be added with this type (already exists with different type)")
+        }
+        if (awardsWithSameName.any { it.awardValue == awardValue  }) {
+            throw IllegalArgumentException("Award with this name and value already exists")
+        }
 
         val award = Award(
             awardName = awardName,

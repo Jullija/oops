@@ -89,9 +89,9 @@ class SubcategoriesDataFetcher {
             throw IllegalArgumentException("First subcategory must have ordinal number 0")
         }
         if (ordinalNumbers.isNotEmpty() && ordinalNumbers.max() != ordinalNumber - 1) {
-            throw IllegalArgumentException("Ordinal number must be greater by 1 than the previous subcategory")
+            throw IllegalArgumentException("Ordinal number must be greater by 1 than the previous subcategory-(${ordinalNumbers.max()})")
         }
-        return Subcategories(
+        val subcategories = Subcategories(
             subcategoryName = subcategoryName,
             maxPoints = maxPoints,
             ordinalNumber = ordinalNumber,
@@ -99,5 +99,6 @@ class SubcategoriesDataFetcher {
             edition = edition,
             label = label
         )
+        return subcategoriesRepository.save(subcategories)
     }
 }

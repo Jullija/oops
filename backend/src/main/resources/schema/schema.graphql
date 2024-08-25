@@ -14,10 +14,10 @@ type Mutation {
     addLevel(editionId: Int!, name: String!, maximumPoints: Float!, grade: Float!, imageFileId: Int): LevelType
     addAward( awardName: String!, awardType: String!, awardValue: Float!,
         categoryId: Int!, maxUsages: Int = -1, label: String = ""): AwardType
-    addChestToUser(userId: Int, chestId: Int, teacherId: Int, subcategoryId: Int): ChestHistoryType
+    addChestToUser(userId: Int!, chestId: Int!, teacherId: Int!, subcategoryId: Int!): ChestHistoryType
     addChest(chestType: String!, editionId: Int!, label: String = ""): ChestType
     addEdition(editionName: String!, editionYear: Int!, label: String = ""): EditionType
-    addGroup(editionId: Int!, groupName: String!, weekday: WeekdayType!, startTime: String!,
+    addGroup(editionId: Int!, groupName: String!, weekday: String!, startTime: String!,
         endTime: String!, teacherId: Int!, label: String = ""): GroupType
     addSubcategory(subcategoryName: String!, maxPoints: Float!, ordinalNumber: Int!,
         categoryId: Int!, editionId: Int!, label: String = ""): SubcategoryType
