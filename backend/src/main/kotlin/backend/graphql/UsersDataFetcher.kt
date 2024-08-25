@@ -104,7 +104,7 @@ class UsersDataFetcher {
         val bonuses = bonusesRepository.findByChestHistory_User_UserId(studentId)
         val categories = categoriesRepository.findAll()
 
-        return categories.map { category ->
+        return categories.filter{it.canAddPoints}.map { category ->
             val categoryPoints = points.filter { it.subcategory.category == category }
             val purePoints = categoryPoints.filter { bonusesRepository.findByPoints(it).isEmpty() }
             val purePointsSum = purePoints.sumOf { it.value.toDouble() }.toFloat()
