@@ -15,6 +15,7 @@ type Mutation {
     addAward( awardName: String!, awardType: String!, awardValue: Float!,
         categoryId: Int!, maxUsages: Int = -1, label: String = ""): AwardType
     addChestToUser(userId: Int, chestId: Int, teacherId: Int, subcategoryId: Int): ChestHistoryType
+    addChest(chestType: String!, editionId: Int!, label: String = ""): ChestType
 }
 
 type Query {

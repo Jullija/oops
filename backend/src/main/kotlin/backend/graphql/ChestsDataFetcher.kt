@@ -6,6 +6,7 @@ import backend.bonuses.Bonuses
 import backend.bonuses.BonusesRepository
 import backend.categories.Categories
 import backend.categories.CategoriesRepository
+import backend.chests.Chests
 import backend.chests.ChestsRepository
 import backend.edition.EditionRepository
 import backend.files.FileEntity
@@ -62,5 +63,20 @@ class ChestsDataFetcher {
     @Transactional
     fun assignPhotoToChest(@InputArgument chestId: Long, @InputArgument fileId: Long?): Boolean {
         return photoAssigner.assignPhotoToAssignee(chestsRepository, "image/chest", chestId, fileId)
+    }
+
+    @DgsMutation
+    @Transactional
+    fun addChest(@InputArgument chestType: String, @InputArgument editionId: Long, @InputArgument label: String = ""): Chests {
+        val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
+        if (chestsRepository.existsByChestTypeAndEdition(chestType, edition)) {
+            throw IllegalArgumentException("Chest with type $chestType already exists for edition ${edition.editionId}")
+        }
+        val chest = Chests(
+            chestType = chestType,
+            label = label,
+            edition = edition
+        )
+        return chestsRepository.save(chest)
     }
 }
