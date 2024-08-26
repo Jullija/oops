@@ -23,6 +23,7 @@ type Mutation {
         categoryId: Int!, editionId: Int!, label: String = ""): SubcategoryType
     addUser(indexNumber: Int!, nick: String!, firstName: String!,
         secondName: String!, role: String!, label: String = ""): UserType
+    addAwardToEdition(awardId: Int!, editionId: Int!): AwardEditionType
     generateSubcategories(editionId: Int!, categoryId: Int!, subcategoryPrefix: String!,
         subcategoryCount: Int!, maxPoints: Float!): [SubcategoryType]
 }
