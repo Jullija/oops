@@ -23,6 +23,7 @@ type Query {
     getPossibleGroupsWeekdays(editionId: Int!): [String!]!
     getPossibleGroupsTimeSpans(editionId: Int!): [TimeSpansType!]!
     getPossibleGroupDates(editionId: Int!): [GroupDateType!]!
+    getNeighbouringLevels(studentId: Int!, editionId: Int!): NeighbouringLevelsType!
 }
 
 type AwardType {
@@ -258,4 +259,10 @@ type GroupDateType {
     weekday: String
     startTime: String
     endTime: String
+}
+
+type NeighbouringLevelsType{
+    previousLevel: LevelType
+    currentLevel: LevelType!
+    nextLevel: LevelType
 }
