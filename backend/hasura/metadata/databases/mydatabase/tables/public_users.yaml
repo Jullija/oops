@@ -20,6 +20,13 @@ array_relationships:
         table:
           name: chest_history
           schema: public
+  - name: groups
+    using:
+      foreign_key_constraint_on:
+        column: teacher_id
+        table:
+          name: groups
+          schema: public
   - name: points
     using:
       foreign_key_constraint_on:
