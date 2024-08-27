@@ -25,7 +25,7 @@ class Groups(
 
     @ManyToOne
     @JoinColumn(name = "teacher_id", referencedColumnName = "user_id", nullable = true)
-    var teacher: Users,
+    var teacher: Users? = null,
 
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
     val userGroups: Set<UserGroups> = HashSet(),
@@ -51,7 +51,6 @@ class Groups(
     constructor() : this(
         groupName = "",
         label = "",
-        teacher = Users(),
         weekday = WeekdayEnum.MONDAY,
         startTime = Time(0),
         endTime = Time(0),

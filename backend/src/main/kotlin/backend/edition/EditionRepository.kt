@@ -7,4 +7,6 @@ import java.util.*
 @Repository
 interface EditionRepository : JpaRepository<Edition, Long> {
     fun findByEditionYear(year: Int): Edition
+    fun existsByEditionYear(year: Int): Boolean
+    fun existsByEditionName(name: String): Boolean
 }

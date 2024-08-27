@@ -8,13 +8,17 @@ import backend.categories.CategoriesRepository
 import backend.edition.EditionRepository
 import backend.files.FileEntity
 import backend.files.FileEntityRepository
+import backend.groups.Groups
 import backend.groups.GroupsRepository
 import backend.points.Points
 import backend.points.PointsRepository
 import backend.subcategories.Subcategories
 import backend.subcategories.SubcategoriesRepository
+import backend.userGroups.UserGroups
+import backend.userGroups.UserGroupsRepository
 import backend.users.UsersRepository
 import backend.users.Users
+import backend.users.UsersRoles
 import backend.users.WeekdayEnum
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
@@ -51,6 +55,9 @@ class GroupsDataFetcher {
     @Autowired
     lateinit var fileRepository: FileEntityRepository
 
+    @Autowired
+    lateinit var userGroupsRepository: UserGroupsRepository
+
     @DgsMutation
     @Transactional
     fun assignPhotosToGroups(@InputArgument editionId: Long): Boolean {
@@ -71,6 +78,54 @@ class GroupsDataFetcher {
         }
 
         return true
+    }
+
+    @DgsMutation
+    @Transactional
+    fun addGroup(@InputArgument editionId: Long, @InputArgument groupName: String,
+                 @InputArgument weekday: String, @InputArgument startTime: Time,
+                 @InputArgument endTime: Time, @InputArgument teacherId: Long, @InputArgument label: String = ""): Groups {
+        val edition = editionRepository.findById(editionId).orElseThrow() { IllegalArgumentException("Invalid edition ID") }
+        if (groupsRepository.existsByGroupNameAndEdition(groupName, edition)) {
+            throw IllegalArgumentException("Group with name $groupName already exists for edition ${edition.editionId}")
+        }
+        if (startTime.after(endTime)) {
+            throw IllegalArgumentException("Start time must be before end time")
+        }
+        if (startTime == endTime) {
+            throw IllegalArgumentException("Start time must be different from end time")
+        }
+        if (groupName.isBlank()) {
+            throw IllegalArgumentException("Group name must not be blank")
+        }
+        val weekday1 = try {
+            WeekdayEnum.valueOf(weekday.uppercase())
+        } catch (e: IllegalArgumentException) {
+            throw IllegalArgumentException("Invalid weekday")
+        }
+        val teacher = usersRepository.findById(teacherId).orElseThrow { IllegalArgumentException("Invalid teacher ID") }
+        if (teacher.role != UsersRoles.TEACHER && teacher.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("User with ID $teacherId is not a teacher nor a coordinator")
+        }
+        if (groupsRepository.existsByTeacherAndWeekdayAndStartTimeAndEndTimeAndEdition(teacher, weekday1, startTime, endTime, edition)) {
+            throw IllegalArgumentException("Teacher is already teaching a group at this time")
+        }
+        val group = Groups(
+            groupName = groupName,
+            label = label,
+            teacher = teacher,
+            weekday = weekday1,
+            startTime = startTime,
+            endTime = endTime,
+            edition = edition
+        )
+        groupsRepository.save(group)
+        val userGroups = UserGroups(
+            user = teacher,
+            group = group
+        )
+        userGroupsRepository.save(userGroups)
+        return group
     }
 
     @DgsQuery

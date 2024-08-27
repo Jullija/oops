@@ -2,9 +2,7 @@ package backend
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import org.springframework.context.annotation.Import
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 @SpringBootApplication(scanBasePackages = [
 	"backend.bonuses",
@@ -19,6 +17,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 	"backend.levels",
 	"backend.points",
 	"backend.subcategories",
+	"backend.userGroups",
+	"backend.userLevel",
 	"backend.users",
 	"backend.groups",
 	"backend.graphql"

@@ -62,24 +62,28 @@ class AwardsDataFetcher {
                  @InputArgument categoryId: Long, @InputArgument maxUsages: Int = -1,
                  @InputArgument label: String = ""): Award {
 
+
         val awardType1 = try {
-             AwardType.valueOf(awardType)
+             AwardType.valueOf(awardType.uppercase())
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Invalid award type")
         }
         if ((awardType1 == AwardType.ADDITIVE ||
                     awardType1 == AwardType.ADDITIVE_NEXT ||
                     awardType1 == AwardType.ADDITIVE_PREV) && awardValue < 0) {
-            throw IllegalArgumentException("Additive award value must be positive")
+            throw IllegalArgumentException("Additive award value must be greater than or equal to 0")
         }
-        if (awardType1 == AwardType.MULTIPLICATIVE && awardValue <= 0) {
-            throw IllegalArgumentException("Multiplicative award value must be positive")
-        }
-        if (awardType1 == AwardType.MULTIPLICATIVE && awardValue > 1) {
-            throw IllegalArgumentException("Multiplicative award value must be less than or equal to 1")
+        if (awardType1 == AwardType.MULTIPLICATIVE && (awardValue <= 0 || awardValue > 1)) {
+            throw IllegalArgumentException("Multiplicative award value must be greater than 0 and less than or equal to 1")
         }
         val category = categoriesRepository.findById(categoryId).orElseThrow { IllegalArgumentException("Invalid category ID") }
-
+        val awardsWithSameName = awardRepository.findAllByAwardName(awardName)
+        if (awardsWithSameName.any { it.awardType != awardType1 }) {
+            throw IllegalArgumentException("Award with this name cannot be added with this type (already exists with different type)")
+        }
+        if (awardsWithSameName.any { it.awardValue == awardValue  }) {
+            throw IllegalArgumentException("Award with this name and value already exists")
+        }
         if (!category.canAddPoints) {
             throw IllegalArgumentException("This category does not allow adding points from awards")
         }

@@ -8,6 +8,9 @@ object_relationships:
   - name: file
     using:
       foreign_key_constraint_on: image_file_id
+  - name: user
+    using:
+      foreign_key_constraint_on: teacher_id
 array_relationships:
   - name: userGroups
     using:
