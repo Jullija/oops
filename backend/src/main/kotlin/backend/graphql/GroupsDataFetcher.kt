@@ -91,7 +91,9 @@ class GroupsDataFetcher {
             .findById(editionId)
             .orElseThrow { IllegalArgumentException("Invalid edition ID") }
         val groups = groupsRepository.findByEdition(edition)
-        return groups.map { TimeSpansType(it.startTime, it.endTime) }.distinct()
+        return groups.map { TimeSpansType(it.startTime, it.endTime) }
+            .distinct()
+            .sortedWith(compareBy({ it.startTime }, { it.endTime }))
     }
 
     @DgsQuery
