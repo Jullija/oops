@@ -35,7 +35,7 @@ export type HallOfFameStudentData = {
   groupId: string;
 };
 
-export const StudentCard = ({
+export const HallOfFameStudentCard = ({
   student,
   isHighlighted,
 }: HallOfFameStudentCardProps) => {

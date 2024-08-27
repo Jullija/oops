@@ -6091,7 +6091,7 @@ export type StringComparisonExp = {
 
 export type StudentPointsType = {
   __typename?: "StudentPointsType";
-  level?: Maybe<LevelType>;
+  level: LevelType;
   subcategoryPoints: Array<SubcategoryPointsType>;
   sumOfAll: Scalars["Float"]["output"];
   sumOfBonuses: Scalars["Float"]["output"];

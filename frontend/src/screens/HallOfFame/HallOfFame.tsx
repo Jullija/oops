@@ -7,7 +7,7 @@ import { StatisticsBox } from "../../components/hallOfFame/StatisticsBox";
 import { useCallback, useEffect, useState } from "react";
 import { StudentCardsList } from "../../components/hallOfFame/StudentCardsList";
 import { isPartOfAString } from "../../utils/strings";
-import { HALL_OF_FAME_STUDENT_CARD_ID_PREFIX } from "../../components/hallOfFame/StudentCard";
+import { HALL_OF_FAME_STUDENT_CARD_ID_PREFIX } from "../../components/hallOfFame/HallOfFameStudentCard";
 
 const styles: Styles = {
   container: {

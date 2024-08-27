@@ -5,6 +5,8 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
       imageFile {
         fileId
       }
+      ordinalNumber
+      highest
     }
     user {
       firstName

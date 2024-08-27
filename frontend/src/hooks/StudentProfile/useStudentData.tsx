@@ -12,7 +12,12 @@ export type StudentCardData = {
   id: string;
   displayName: string;
   index: number;
-  level: string;
+  // TODO to delete
+  level: {
+    name: string;
+    ordinalNumber: number;
+    highest: boolean;
+  };
   group?: {
     name: string;
     id: string;
@@ -57,7 +62,11 @@ export const useStudentData = (props: {
         id: user.userId.toString(),
         displayName: `${user.firstName} ${user.secondName}`,
         index: user.indexNumber,
-        level: data?.getStudentPoints.level?.levelName ?? "-",
+        level: {
+          name: data?.getStudentPoints.level?.levelName ?? "-",
+          ordinalNumber: data?.getStudentPoints.level?.ordinalNumber,
+          highest: data?.getStudentPoints.level?.highest,
+        },
         group: user.userGroups[0]
           ? {
               name: user.userGroups[0].group.groupName,

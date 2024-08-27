@@ -14,8 +14,17 @@ const styles: Styles = {
 
 export function StudentProfile() {
   const { user } = useUser();
-  const { categories, studentData, points, filterHeaderNames, loading, error } =
-    useStudentProfileData(user.userId);
+  const {
+    categories,
+    studentData,
+    points,
+    prevLevel,
+    currLevel,
+    nextLevel,
+    filterHeaderNames,
+    loading,
+    error,
+  } = useStudentProfileData(user.userId);
 
   // TODO: add components for loading state and error message
   if (loading) return <p>Loading...</p>;
@@ -24,7 +33,13 @@ export function StudentProfile() {
 
   return (
     <div style={styles.container}>
-      <SideBar student={studentData} categoriesBarProps={categories} />
+      <SideBar
+        student={studentData}
+        categoriesBarProps={categories}
+        prevLevel={prevLevel}
+        currLevel={currLevel}
+        nextLevel={nextLevel}
+      />
       <PointsTableWithFilter
         points={points}
         filterHeaderNames={filterHeaderNames}

@@ -9,18 +9,6 @@ const styles: Styles = {
     border: "1px solid blue",
     gap: 12,
     padding: 24,
-    width: 240,
-  },
-  userCard: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: "10px",
-    border: "1px solid #ddd",
-    borderRadius: "8px",
-    marginBottom: "12px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    width: "250px",
   },
   studentName: {
     fontWeight: "bold",
@@ -79,7 +67,7 @@ export function StudentCard({
         {getImg(imageIds.level)}
       </div>
       <div style={styles.studentName}>{displayName}</div>
-      <div>level: {level}</div>
+      <div>level: {level.name}</div>
       <div>indeks: {index}</div>
       <div>
         grupa:{" "}

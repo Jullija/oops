@@ -1,4 +1,4 @@
-import { HallOfFameStudentData } from "../../components/hallOfFame/StudentCard";
+import { HallOfFameStudentData } from "../../components/hallOfFame/HallOfFameStudentCard";
 import { useHallOfFameQuery } from "../../graphql/hallOfFame.graphql.types";
 import { Roles } from "../../router/paths";
 import { useEditionSelection } from "../common/useEditionSelection";

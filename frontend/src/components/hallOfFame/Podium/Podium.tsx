@@ -1,5 +1,5 @@
 import { Styles } from "../../../utils/Styles";
-import { HallOfFameStudentData } from "../StudentCard";
+import { HallOfFameStudentData } from "../HallOfFameStudentCard";
 import { PodiumItem } from "./PodiumItem";
 
 const styles: Styles = {

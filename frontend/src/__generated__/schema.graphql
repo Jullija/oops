@@ -8651,7 +8651,7 @@ input StringComparisonExp {
 }
 
 type StudentPointsType {
-  level: LevelType
+  level: LevelType!
   subcategoryPoints: [SubcategoryPointsType!]!
   sumOfAll: Float!
   sumOfBonuses: Float!

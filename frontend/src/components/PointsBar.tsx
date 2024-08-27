@@ -46,6 +46,10 @@ export const PointsBar = ({
     );
   }
 
+  console.log("MIN: ", bounds.lower);
+  console.log("MAX: ", bounds.upper);
+  console.log("POINTS: ", points);
+
   const diff = bounds.lower ?? 0;
   const filledPercent = Math.min(
     Math.round(((points - diff) / (bounds.upper - diff)) * 100),
