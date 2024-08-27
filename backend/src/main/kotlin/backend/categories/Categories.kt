@@ -13,6 +13,9 @@ class Categories(
     @Column(name = "category_name", nullable = false, length = 256)
     var categoryName: String,
 
+    @Column(name = "can_add_points", nullable = false)
+    var canAddPoints: Boolean = true,
+
     @Column(name = "label", nullable = false, length = 256)
     var label: String
 ) {
