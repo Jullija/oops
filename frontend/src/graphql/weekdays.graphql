@@ -1,0 +1,3 @@
+query weekdays($editionId: Int!) {
+  getPossibleGroupsWeekdays(editionId: $editionId)
+}

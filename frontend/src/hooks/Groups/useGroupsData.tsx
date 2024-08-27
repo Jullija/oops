@@ -24,7 +24,8 @@ export const useGroupsData = () => {
       return {
         name: group.groupName,
         id: group.groupsId,
-        weekday: group.weekday,
+        // TODO fix
+        weekday: group.weekday.toUpperCase(),
         time: { start: group.startTime, end: group.endTime },
         teacher: {
           // firstName and secondName is not nullable - hasura computes it so practically it will never be null

@@ -1,25 +1,61 @@
 import { useState } from "react";
 import { GroupSearchField } from "../../components/Groups/GroupsList/GroupSearcher";
 import { GroupsList } from "../../components/Groups/GroupsList/GroupsList";
-import { Group, useGroupsData } from "../../hooks/Groups/useGroupsData";
+import { useGroupsData } from "../../hooks/Groups/useGroupsData";
+import { SideFilterBar } from "../../components/Groups/FilterBar/SideFilterBar";
+import { Styles } from "../../utils/Styles";
+import { isPartOfAString } from "../../utils/strings";
+import { useFilterBarData } from "../../hooks/Groups/FilterBar/useFilterBarData";
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    gap: 20,
+    margin: 12,
+  },
+  rightSide: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+  },
+};
 
 export const Groups = () => {
   const { groups, loading, error } = useGroupsData();
-  const [filteredGroups, setFilteredGroups] = useState<Group[] | undefined>(
-    undefined,
-  );
+  const {
+    weekdays,
+    loading: daysLoading,
+    error: weekdaysError,
+  } = useFilterBarData();
 
-  if (loading) return <div>loading...</div>;
+  const [input, setInput] = useState("");
+  const [daysIds, setDaysIds] = useState<string[]>([]);
+
+  if (loading || daysLoading) return <div>loading...</div>;
   if (error) return <div>ERROR: {error?.message}</div>;
+  if (weekdaysError) return <div>ERROR: {weekdaysError?.message}</div>;
 
-  const onInputChange = (filteredGroups: Group[]) => {
-    setFilteredGroups(filteredGroups);
-  };
+  const showAllGroups = !input && daysIds.length === 0;
+
+  const filteredGroups = groups
+    .filter((group) => daysIds.length === 0 || daysIds.includes(group.weekday))
+    .filter(
+      (group) =>
+        !input || isPartOfAString(input, [group.name, group.teacher.fullName]),
+    );
+
+  console.log("GROUPS: ", filteredGroups);
 
   return (
-    <div>
-      <GroupSearchField onInputChange={onInputChange} groups={groups} />
-      <GroupsList groups={filteredGroups ?? groups} />
+    <div style={styles.container}>
+      <SideFilterBar
+        weekdays={weekdays}
+        onDaysFilterChange={(selectedIds) => setDaysIds(selectedIds)}
+      />
+      <div style={styles.rightSide}>
+        <GroupSearchField onInputChange={(input: string) => setInput(input)} />
+        <GroupsList groups={showAllGroups ? groups : filteredGroups} />
+      </div>
     </div>
   );
 };

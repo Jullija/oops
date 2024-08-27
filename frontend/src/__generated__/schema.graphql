@@ -11595,6 +11595,14 @@ input levelsAggregateBoolExpVar_samp {
 mutation root
 """
 type mutation_root {
+  addAward(
+    awardName: String!
+    awardType: String!
+    awardValue: Float!
+    categoryId: Int!
+    label: String = ""
+    maxUsages: Int = -1
+  ): AwardType
   addBonusMutation(awardId: Int!, chestHistoryId: Int!): AddBonusReturnType
   addLevel(
     editionId: Int!
