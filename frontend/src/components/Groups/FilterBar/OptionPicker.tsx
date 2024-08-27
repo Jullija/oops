@@ -11,7 +11,6 @@ const styles: Styles = {
   },
   optionContainer: {
     padding: 4,
-    backgroundColor: "pink",
     gap: 4,
     display: "flex",
     flexDirection: "row",

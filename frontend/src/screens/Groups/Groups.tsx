@@ -24,21 +24,29 @@ export const Groups = () => {
   const { groups, loading, error } = useGroupsData();
   const {
     weekdays,
-    loading: daysLoading,
-    error: weekdaysError,
+    teachers,
+    loading: filterOptionsLoading,
+    error: filterOptionsError,
   } = useFilterBarData();
 
   const [input, setInput] = useState("");
   const [daysIds, setDaysIds] = useState<string[]>([]);
+  const [teachersIds, setTeachersIds] = useState<string[]>([]);
 
-  if (loading || daysLoading) return <div>loading...</div>;
+  if (loading || filterOptionsLoading) return <div>loading...</div>;
   if (error) return <div>ERROR: {error?.message}</div>;
-  if (weekdaysError) return <div>ERROR: {weekdaysError?.message}</div>;
+  if (filterOptionsError)
+    return <div>ERROR: {filterOptionsError?.message}</div>;
 
-  const showAllGroups = !input && daysIds.length === 0;
+  const showAllGroups =
+    !input && daysIds.length === 0 && teachersIds.length === 0;
 
   const filteredGroups = groups
     .filter((group) => daysIds.length === 0 || daysIds.includes(group.weekday))
+    .filter(
+      (group) =>
+        teachersIds.length === 0 || teachersIds.includes(group.teacher.id),
+    )
     .filter(
       (group) =>
         !input || isPartOfAString(input, [group.name, group.teacher.fullName]),
@@ -50,7 +58,9 @@ export const Groups = () => {
     <div style={styles.container}>
       <SideFilterBar
         weekdays={weekdays}
+        teachers={teachers}
         onDaysFilterChange={(selectedIds) => setDaysIds(selectedIds)}
+        onTeacherChange={(selectedIds) => setTeachersIds(selectedIds)}
       />
       <div style={styles.rightSide}>
         <GroupSearchField onInputChange={(input: string) => setInput(input)} />

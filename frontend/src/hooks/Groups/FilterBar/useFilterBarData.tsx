@@ -1,7 +1,22 @@
-import { useWeekdayData } from "./useFilterData";
+import { useTeachersData } from "./useTeacherData";
+import { useWeekdayData } from "./useWeekdaysData";
 
 export const useFilterBarData = () => {
-  const { weekdays, loading: daysLoading, error: daysError } = useWeekdayData();
+  const {
+    weekdays,
+    loading: weekdaysLoading,
+    error: weekdaysError,
+  } = useWeekdayData();
+  const {
+    teachers,
+    loading: teachersLoading,
+    error: teachersError,
+  } = useTeachersData();
 
-  return { weekdays, loading: daysLoading, error: daysError };
+  return {
+    weekdays,
+    teachers,
+    loading: weekdaysLoading || teachersLoading,
+    error: weekdaysError || teachersError,
+  };
 };

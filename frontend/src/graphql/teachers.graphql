@@ -1,0 +1,13 @@
+query teachers($editionId: bigint!) {
+  users(
+    where: {
+      _and: {
+        role: { _in: ["teacher", "coordinator"] }
+        userGroups: { group: { editionId: { _eq: $editionId } } }
+      }
+    }
+  ) {
+    userId
+    fullName
+  }
+}
