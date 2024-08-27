@@ -11,8 +11,8 @@ export type GroupTimesQuery = {
   __typename?: "query_root";
   getPossibleGroupsTimeSpans: Array<{
     __typename?: "TimeSpansType";
-    endTime?: string | null;
-    startTime?: string | null;
+    endTime: string;
+    startTime: string;
   }>;
 };
 

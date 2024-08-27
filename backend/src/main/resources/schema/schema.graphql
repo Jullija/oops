@@ -214,10 +214,6 @@ enum WeekdayType {
     SUNDAY
 }
 
-
-
-
-
 type CategoryPointsSumType{
     category: CategoryType!
     sumOfPurePoints: Float!

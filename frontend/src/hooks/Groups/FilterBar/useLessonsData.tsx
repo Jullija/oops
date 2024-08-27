@@ -21,10 +21,9 @@ export const useLessonsData = () => {
 
   const lessons: Lesson[] =
     data?.getPossibleGroupsTimeSpans.map((timestamp) => {
-      // TODO change in backend schema
       const timestampName = getTimestampUniqueName({
-        start: timestamp.startTime ?? "",
-        end: timestamp.endTime ?? "",
+        start: timestamp.startTime,
+        end: timestamp.endTime,
       });
       return {
         name: timestampName,

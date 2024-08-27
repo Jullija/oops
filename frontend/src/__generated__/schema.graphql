@@ -2018,6 +2018,7 @@ type Categories {
     """
     where: AwardBoolExp
   ): AwardAggregate!
+  canAddPoints: Boolean!
   categoryId: bigint!
   categoryName: String!
   label: String!
@@ -2124,6 +2125,7 @@ input CategoriesBoolExp {
   _or: [CategoriesBoolExp!]
   awards: AwardBoolExp
   awardsAggregate: AwardAggregateBoolExp
+  canAddPoints: BooleanComparisonExp
   categoryId: BigintComparisonExp
   categoryName: StringComparisonExp
   label: StringComparisonExp
@@ -2153,6 +2155,7 @@ input type for inserting data into table "categories"
 """
 input CategoriesInsertInput {
   awards: AwardArrRelInsertInput
+  canAddPoints: Boolean
   categoryId: bigint
   categoryName: String
   label: String
@@ -2218,6 +2221,7 @@ Ordering options when selecting data from "categories".
 """
 input CategoriesOrderBy {
   awardsAggregate: AwardAggregateOrderBy
+  canAddPoints: OrderBy
   categoryId: OrderBy
   categoryName: OrderBy
   label: OrderBy
@@ -2238,6 +2242,11 @@ enum CategoriesSelectColumn {
   """
   column name
   """
+  canAddPoints
+
+  """
+  column name
+  """
   categoryId
 
   """
@@ -2255,6 +2264,7 @@ enum CategoriesSelectColumn {
 input type for updating data in table "categories"
 """
 input CategoriesSetInput {
+  canAddPoints: Boolean
   categoryId: bigint
   categoryName: String
   label: String
@@ -2300,6 +2310,7 @@ input CategoriesStreamCursorInput {
 Initial value of the column from where the streaming should start
 """
 input CategoriesStreamCursorValueInput {
+  canAddPoints: Boolean
   categoryId: bigint
   categoryName: String
   label: String
@@ -2316,6 +2327,11 @@ type CategoriesSumFields {
 update columns of table "categories"
 """
 enum CategoriesUpdateColumn {
+  """
+  column name
+  """
+  canAddPoints
+
   """
   column name
   """
@@ -2392,6 +2408,7 @@ type CategoryPointsType {
 }
 
 type CategoryType {
+  canAddPoints: Boolean!
   categoryId: ID!
   categoryName: String!
   label: String!
@@ -5926,9 +5943,9 @@ type FlywaySchemaHistoryVarianceFields {
 }
 
 type GroupDateType {
-  endTime: String
-  startTime: String
-  weekday: String
+  endTime: String!
+  startTime: String!
+  weekday: String!
 }
 
 type GroupType {
@@ -5965,6 +5982,11 @@ type Groups {
   label: String
   startTime: time!
   teacherId: bigint
+
+  """
+  An object relationship
+  """
+  user: Users
 
   """
   An array relationship
@@ -6123,6 +6145,7 @@ input GroupsBoolExp {
   label: StringComparisonExp
   startTime: TimeComparisonExp
   teacherId: BigintComparisonExp
+  user: UsersBoolExp
   userGroups: UserGroupsBoolExp
   userGroupsAggregate: UserGroupsAggregateBoolExp
   weekday: StringComparisonExp
@@ -6162,6 +6185,7 @@ input GroupsInsertInput {
   label: String
   startTime: time
   teacherId: bigint
+  user: UsersObjRelInsertInput
   userGroups: UserGroupsArrRelInsertInput
   weekday: String
 }
@@ -6268,6 +6292,7 @@ input GroupsOrderBy {
   label: OrderBy
   startTime: OrderBy
   teacherId: OrderBy
+  user: UsersOrderBy
   userGroupsAggregate: UserGroupsAggregateOrderBy
   weekday: OrderBy
 }
@@ -7789,6 +7814,12 @@ input LevelsVarianceOrderBy {
   maximumPoints: OrderBy
   minimumPoints: OrderBy
   ordinalNumber: OrderBy
+}
+
+type NeighbouringLevelsType {
+  currentLevel: LevelType!
+  nextLevel: LevelType
+  previousLevel: LevelType
 }
 
 """
@@ -9464,8 +9495,8 @@ input TimeComparisonExp {
 }
 
 type TimeSpansType {
-  endTime: String
-  startTime: String
+  endTime: String!
+  startTime: String!
 }
 
 """
@@ -10010,12 +10041,12 @@ unique or primary key constraints on table "user_level"
 """
 enum UserLevelConstraint {
   """
-  unique or primary key constraint on columns "edition_id", "user_id"
+  unique or primary key constraint on columns "user_id", "edition_id"
   """
   unique_user_edition
 
   """
-  unique or primary key constraint on columns "level_id", "user_id"
+  unique or primary key constraint on columns "user_id", "level_id"
   """
   user_level_pkey
 }
@@ -10548,6 +10579,66 @@ type Users {
   A computed field, executes function "users_fullname"
   """
   fullName: String
+
+  """
+  An array relationship
+  """
+  groups(
+    """
+    distinct select on columns
+    """
+    distinctOn: [GroupsSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [GroupsOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: GroupsBoolExp
+  ): [Groups!]!
+
+  """
+  An aggregate relationship
+  """
+  groupsAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [GroupsSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [GroupsOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: GroupsBoolExp
+  ): GroupsAggregate!
   imageFileId: bigint
   indexNumber: Int!
   label: String!
@@ -10887,6 +10978,8 @@ input UsersBoolExp {
   file: FilesBoolExp
   firstName: StringComparisonExp
   fullName: StringComparisonExp
+  groups: GroupsBoolExp
+  groupsAggregate: GroupsAggregateBoolExp
   imageFileId: BigintComparisonExp
   indexNumber: IntComparisonExp
   label: StringComparisonExp
@@ -10941,6 +11034,7 @@ input UsersInsertInput {
   chestHistoriesByTeacherId: ChestHistoryArrRelInsertInput
   file: FilesObjRelInsertInput
   firstName: String
+  groups: GroupsArrRelInsertInput
   imageFileId: bigint
   indexNumber: Int
   label: String
@@ -11065,6 +11159,7 @@ input UsersOrderBy {
   file: FilesOrderBy
   firstName: OrderBy
   fullName: OrderBy
+  groupsAggregate: GroupsAggregateOrderBy
   imageFileId: OrderBy
   indexNumber: OrderBy
   label: OrderBy
@@ -11603,7 +11698,29 @@ type mutation_root {
     label: String = ""
     maxUsages: Int = -1
   ): AwardType
+  addAwardToEdition(awardId: Int!, editionId: Int!): AwardEditionType
   addBonusMutation(awardId: Int!, chestHistoryId: Int!): AddBonusReturnType
+  addChest(chestType: String!, editionId: Int!, label: String = ""): ChestType
+  addChestToUser(
+    chestId: Int!
+    subcategoryId: Int!
+    teacherId: Int!
+    userId: Int!
+  ): ChestHistoryType
+  addEdition(
+    editionName: String!
+    editionYear: Int!
+    label: String = ""
+  ): EditionType
+  addGroup(
+    editionId: Int!
+    endTime: String!
+    groupName: String!
+    label: String = ""
+    startTime: String!
+    teacherId: Int!
+    weekday: String!
+  ): GroupType
   addLevel(
     editionId: Int!
     grade: Float!
@@ -11617,6 +11734,22 @@ type mutation_root {
     teacherId: Int!
     value: Float!
   ): PointType
+  addSubcategory(
+    categoryId: Int!
+    editionId: Int!
+    label: String = ""
+    maxPoints: Float!
+    ordinalNumber: Int!
+    subcategoryName: String!
+  ): SubcategoryType
+  addUser(
+    firstName: String!
+    indexNumber: Int!
+    label: String = ""
+    nick: String!
+    role: String!
+    secondName: String!
+  ): UserType
   assignPhotoToAward(awardId: Int!, fileId: Int): Boolean
   assignPhotoToChest(chestId: Int!, fileId: Int): Boolean
   assignPhotoToLevel(fileId: Int, levelId: Int!): Boolean
@@ -11877,6 +12010,13 @@ type mutation_root {
   delete single row from the table: "users"
   """
   deleteUsersByPk(userId: bigint!): Users
+  generateSubcategories(
+    categoryId: Int!
+    editionId: Int!
+    maxPoints: Float!
+    subcategoryCount: Int!
+    subcategoryPrefix: String!
+  ): [SubcategoryType]
 
   """
   insert data into the table: "award"
@@ -13896,6 +14036,10 @@ type query_root {
   fetch data from the table: "flyway_schema_history" using primary key columns
   """
   flywaySchemaHistoryByPk(installedRank: Int!): FlywaySchemaHistory
+  getNeighbouringLevels(
+    editionId: Int!
+    studentId: Int!
+  ): NeighbouringLevelsType!
   getPossibleGroupDates(editionId: Int!): [GroupDateType!]!
   getPossibleGroupsTimeSpans(editionId: Int!): [TimeSpansType!]!
   getPossibleGroupsWeekdays(editionId: Int!): [String!]!
