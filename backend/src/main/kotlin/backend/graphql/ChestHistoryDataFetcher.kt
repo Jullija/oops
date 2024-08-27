@@ -75,17 +75,17 @@ class ChestHistoryDataFetcher {
         if (user.role != UsersRoles.STUDENT) {
             throw IllegalArgumentException("User must be a student")
         }
-        val chest = chestsRepository.findById(chestId)
-            .orElseThrow { IllegalArgumentException("Invalid chest ID") }
         val userEditions = user.userGroups.map { it.group.edition }
         if (userEditions.isEmpty()) {
             throw IllegalArgumentException("User has no editions")
         }
+        val chest = chestsRepository.findById(chestId)
+            .orElseThrow { IllegalArgumentException("Invalid chest ID") }
         if (!userEditions.contains(chest.edition)) {
-            throw IllegalArgumentException("User and chest must have the same edition")
+            throw IllegalArgumentException("Chest and user must have the same edition")
         }
         val teacher = usersRepository.findById(teacherId)
-            .orElseThrow() { IllegalArgumentException("Invalid teacher ID") }
+            .orElseThrow { IllegalArgumentException("Invalid teacher ID") }
         if (teacher.role != UsersRoles.TEACHER && teacher.role != UsersRoles.COORDINATOR) {
             throw IllegalArgumentException("Teacher must be a teacher or coordinator")
         }
@@ -97,6 +97,9 @@ class ChestHistoryDataFetcher {
         }
         if (teacherId == userId) {
             throw IllegalArgumentException("Teacher and user cannot be the same")
+        }
+        if (teacher.role == UsersRoles.TEACHER && user.userGroups.none { it.group.teacher == teacher }) {
+            throw IllegalArgumentException("Teacher is not a teacher of user's group")
         }
         val subcategory = subcategoriesRepository.findById(subcategoryId)
             .orElseThrow { IllegalArgumentException("Invalid subcategory ID") }

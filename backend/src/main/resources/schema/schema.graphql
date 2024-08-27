@@ -274,14 +274,14 @@ type PartialBonusType {
 }
 
 type TimeSpansType {
-    startTime: String
-    endTime: String
+    startTime: String!
+    endTime: String!
 }
 
 type GroupDateType {
-    weekday: String
-    startTime: String
-    endTime: String
+    weekday: String!
+    startTime: String!
+    endTime: String!
 }
 
 type NeighbouringLevelsType{

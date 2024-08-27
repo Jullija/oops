@@ -71,13 +71,10 @@ class AwardsDataFetcher {
         if ((awardType1 == AwardType.ADDITIVE ||
                     awardType1 == AwardType.ADDITIVE_NEXT ||
                     awardType1 == AwardType.ADDITIVE_PREV) && awardValue < 0) {
-            throw IllegalArgumentException("Additive award value must be positive")
+            throw IllegalArgumentException("Additive award value must be greater than or equal to 0")
         }
-        if (awardType1 == AwardType.MULTIPLICATIVE && awardValue <= 0) {
-            throw IllegalArgumentException("Multiplicative award value must be positive")
-        }
-        if (awardType1 == AwardType.MULTIPLICATIVE && awardValue > 1) {
-            throw IllegalArgumentException("Multiplicative award value must be less than or equal to 1")
+        if (awardType1 == AwardType.MULTIPLICATIVE && (awardValue <= 0 || awardValue > 1)) {
+            throw IllegalArgumentException("Multiplicative award value must be greater than 0 and less than or equal to 1")
         }
         val category = categoriesRepository.findById(categoryId).orElseThrow { IllegalArgumentException("Invalid category ID") }
         val awardsWithSameName = awardRepository.findAllByAwardName(awardName)
