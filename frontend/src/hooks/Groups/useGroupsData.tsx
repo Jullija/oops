@@ -5,8 +5,13 @@ export type Group = {
   name: string;
   id: string;
   weekday: string;
-  time: { start: string; end: string };
+  time: Timestamp;
   teacher: { fullName: string; id: string };
+};
+
+export type Timestamp = {
+  start: string;
+  end: string;
 };
 
 export const useGroupsData = () => {
