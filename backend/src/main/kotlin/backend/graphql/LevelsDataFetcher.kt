@@ -4,8 +4,10 @@ import backend.edition.EditionRepository
 import backend.files.FileEntityRepository
 import backend.levels.Levels
 import backend.levels.LevelsRepository
+import backend.users.UsersRepository
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
+import com.netflix.graphql.dgs.DgsQuery
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
@@ -24,6 +26,9 @@ class LevelsDataFetcher {
 
     @Autowired
     lateinit var photoAssigner: PhotoAssigner
+
+    @Autowired
+    lateinit var usersRepository: UsersRepository
 
     @DgsMutation
     @Transactional
@@ -92,4 +97,36 @@ class LevelsDataFetcher {
     fun assignPhotoToLevel(@InputArgument levelId: Long, @InputArgument fileId: Long?): Boolean {
         return photoAssigner.assignPhotoToAssignee(levelsRepository, "image/level", levelId, fileId)
     }
+
+    @DgsQuery
+    @Transactional
+    fun getNeighbouringLevels(@InputArgument studentId: Long, @InputArgument editionId: Long): NeighbouringLevelsType {
+        val edition = editionRepository.findById(editionId)
+            .orElseThrow { IllegalArgumentException("Invalid edition ID") }
+        val student = usersRepository.findById(studentId)
+            .orElseThrow { IllegalArgumentException("Invalid student ID") }
+        if (student.userGroups.none { it.group.edition == edition }){
+            throw IllegalArgumentException("Student is not in any group in the edition")
+        }
+        val userLevel = student.userLevels.find { it.edition == edition }
+            ?: throw IllegalArgumentException("Student does not have a level in the edition")
+        val currentLevel = userLevel.level
+        val previousLevel =
+            levelsRepository.findByEdition(edition)
+                .firstOrNull { it.ordinalNumber == currentLevel.ordinalNumber - 1 }
+        val nextLevel =
+            levelsRepository.findByEdition(edition)
+                .firstOrNull { it.ordinalNumber == currentLevel.ordinalNumber + 1 }
+        return NeighbouringLevelsType(
+            previousLevel = previousLevel,
+            currentLevel = currentLevel,
+            nextLevel = nextLevel
+        )
+    }
 }
+
+data class NeighbouringLevelsType(
+    val previousLevel: Levels?,
+    val currentLevel: Levels,
+    val nextLevel: Levels?
+)
