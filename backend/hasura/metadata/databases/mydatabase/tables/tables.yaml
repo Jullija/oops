@@ -2,6 +2,7 @@
 - "!include public_award_edition.yaml"
 - "!include public_bonuses.yaml"
 - "!include public_categories.yaml"
+- "!include public_category_edition.yaml"
 - "!include public_chest_award.yaml"
 - "!include public_chest_history.yaml"
 - "!include public_chests.yaml"

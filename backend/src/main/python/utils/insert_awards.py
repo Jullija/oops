@@ -9,19 +9,19 @@ def insert_awards(hasura_url, headers, awards):
         print(
             f"Attempting to insert award: {name} (Type: {award_type}, Value: {award_value}, Category ID: {category_id}, Max Usages: {max_usages})")
 
+        # Perform addAward mutation
         mutation = """
-        mutation MyMutation($awardName: String!, $awardType: String!, $awardValue: float8!, $categoryId: bigint!, $maxUsages: Int!) {
-            insertAward(objects: {
+        mutation addAward($awardName: String!, $awardType: String!, $awardValue: Float!, $categoryId: Int!, $maxUsages: Int = -1, $label: String = "") {
+            addAward(
                 awardName: $awardName,
                 awardType: $awardType,
                 awardValue: $awardValue,
                 categoryId: $categoryId,
                 maxUsages: $maxUsages,
-                label: ""
-            }) {
-                returning {
-                    awardId
-                }
+                label: $label
+            ) {
+                awardId
+                awardName
             }
         }
         """
@@ -30,7 +30,8 @@ def insert_awards(hasura_url, headers, awards):
             "awardType": award_type,
             "awardValue": award_value,
             "categoryId": category_id,
-            "maxUsages": max_usages
+            "maxUsages": max_usages,
+            "label": ""
         }
 
         response = requests.post(
@@ -43,19 +44,20 @@ def insert_awards(hasura_url, headers, awards):
         if "errors" in data:
             print(f"Error inserting award '{name}': {data['errors']}")
         else:
-            returned_data = data["data"]["insertAward"]["returning"][0]
+            returned_data = data["data"]["addAward"]
             award_id = int(returned_data["awardId"])
             award_ids.append(award_id)
             award_editions_type_map[award_id] = [editions_type, name]
             print(f"Successfully inserted award '{name}' with ID {award_id}")
+
             # Fetch file ID based on the filename
             query_file_id = """
-                        query MyQuery($filename: String!) {
-                            files(where: {fileName: {_eq: $filename}}) {
-                                fileId
-                            }
-                        }
-                        """
+            query MyQuery($filename: String!) {
+                files(where: {fileName: {_eq: $filename}}) {
+                    fileId
+                }
+            }
+            """
             response_file = requests.post(
                 hasura_url,
                 json={"query": query_file_id, "variables": {"filename": filename}},
@@ -71,10 +73,10 @@ def insert_awards(hasura_url, headers, awards):
 
             # Assign the photo to the award
             mutation_assign_photo = """
-                        mutation AssignPhotoToAward($awardId: Int!, $fileId: Int) {
-                            assignPhotoToAward(awardId: $awardId, fileId: $fileId)
-                        }
-                        """
+            mutation AssignPhotoToAward($awardId: Int!, $fileId: Int) {
+                assignPhotoToAward(awardId: $awardId, fileId: $fileId)
+            }
+            """
             variables_assign_photo = {
                 "awardId": award_id,
                 "fileId": file_id
@@ -87,8 +89,7 @@ def insert_awards(hasura_url, headers, awards):
             )
 
             if "errors" in response_assign_photo.json():
-                print(
-                    f"Error assigning photo '{filename}' to award ID {award_id}: {response_assign_photo.json()['errors']}")
+                print(f"Error assigning photo '{filename}' to award ID {award_id}: {response_assign_photo.json()['errors']}")
             else:
                 print(f"Successfully assigned photo '{filename}' to award ID {award_id}.")
 

@@ -2,20 +2,23 @@ import requests
 
 def insert_categories(hasura_url, headers, category_data):
     categories = {}
+    category_editions_type_map = {}
 
-    for category_name, _, _, _ in category_data:
+    for category_name, _, _, _, can_add_points, editions_type in category_data:
         mutation = """
-        mutation MyMutation($categoryName: String!) {
-            insertCategories(objects: {categoryName: $categoryName, label: ""}) {
-                returning {
-                    categoryId
-                    categoryName
-                    label
-                }
+        mutation addCategory($categoryName: String!, $canAddPoints: Boolean!, $label: String = "") {
+            addCategory(
+                categoryName: $categoryName, 
+                canAddPoints: $canAddPoints, 
+                label: $label
+            ) {
+                categoryId
+                categoryName
+                label
             }
         }
         """
-        variables = {"categoryName": category_name}
+        variables = {"categoryName": category_name, "canAddPoints": can_add_points}
 
         print(f"Attempting to insert category: {category_name}")
         response = requests.post(
@@ -28,9 +31,10 @@ def insert_categories(hasura_url, headers, category_data):
         if "errors" in data:
             print(f"Error inserting category '{category_name}': {data['errors']}")
         else:
-            returned_data = data["data"]["insertCategories"]["returning"][0]
+            returned_data = data["data"]["addCategory"]
             categories[returned_data["categoryName"]] = returned_data["categoryId"]
+            category_editions_type_map[returned_data["categoryId"]] = [editions_type, returned_data["categoryName"]]
             print(f"Successfully inserted category '{category_name}' with ID {returned_data['categoryId']}")
 
     print("Final categories inserted with their IDs:", categories)
-    return categories
+    return categories, category_editions_type_map

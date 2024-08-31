@@ -9,6 +9,13 @@ array_relationships:
         table:
           name: award_edition
           schema: public
+  - name: categoryEditions
+    using:
+      foreign_key_constraint_on:
+        column: edition_id
+        table:
+          name: category_edition
+          schema: public
   - name: chests
     using:
       foreign_key_constraint_on:

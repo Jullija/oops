@@ -1,5 +1,7 @@
 package backend.categories
 
+import backend.categoryEdition.CategoryEdition
+import backend.userLevel.UserLevel
 import jakarta.persistence.*
 
 @Entity
@@ -17,7 +19,10 @@ class Categories(
     var canAddPoints: Boolean = true,
 
     @Column(name = "label", nullable = false, length = 256)
-    var label: String
+    var label: String,
+
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    val categoryEdition: Set<CategoryEdition> = HashSet(),
 ) {
     constructor() : this(
         categoryName = "LABORATORY",

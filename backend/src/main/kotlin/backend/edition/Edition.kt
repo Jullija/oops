@@ -1,5 +1,6 @@
 package backend.edition
 
+import backend.categoryEdition.CategoryEdition
 import backend.userLevel.UserLevel
 import jakarta.persistence.*
 
@@ -22,6 +23,9 @@ class Edition(
 
     @OneToMany(mappedBy = "edition", fetch = FetchType.LAZY)
     val userLevels: Set<UserLevel> = HashSet(),
+
+    @OneToMany(mappedBy = "edition", fetch = FetchType.LAZY)
+    val categoryEdition: Set<CategoryEdition> = HashSet(),
 ) {
     constructor() : this(
         editionName = "",

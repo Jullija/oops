@@ -2,7 +2,7 @@ import requests
 from tqdm import tqdm
 
 
-def insert_users(hasura_url, headers, year_group_counts, fake, random, students_per_group_bounds, number_of_teachers):
+def insert_students(hasura_url, headers, year_group_counts, fake, random, students_per_group_bounds):
     total_groups = sum(year_group_counts.values())
     students_in_group_count = [random.randint(students_per_group_bounds[0], students_per_group_bounds[1]) for _ in
                                range(total_groups)]
@@ -14,39 +14,110 @@ def insert_users(hasura_url, headers, year_group_counts, fake, random, students_
             if index_number not in existing_index_numbers:
                 return index_number
 
-    # Insert data into users
+    # Insert data into users (students)
     existing_index_numbers = set()
-    users = []
-    roles = ['student'] * total_students
-    random.shuffle(roles)
-    roles = ['coordinator'] + ['teacher'] * number_of_teachers + roles
+    student_objects = []
 
-    print("Preparing users for bulk insertion...")
+    print("Preparing students for insertion...")
 
-    user_objects = []
-    for role in roles:
+    for _ in range(total_students):
         nick = fake.user_name()
         first_name = fake.first_name()
         second_name = fake.last_name()
         index_number = generate_unique_index_number(existing_index_numbers)
         existing_index_numbers.add(index_number)
 
-        user_objects.append({
+        student_objects.append({
             "nick": nick,
-            "role": role,
+            "role": "student",
             "indexNumber": index_number,
             "firstName": first_name,
             "secondName": second_name,
             "label": ""
         })
 
-    print(f"Inserting {len(user_objects)} users in bulk...")
+    print(f"Inserting {len(student_objects)} students...")
 
     mutation = """
     mutation MyMutation($users: [UsersInsertInput!]!) {
         insertUsers(objects: $users) {
             returning {
                 userId
+            }
+        }
+    }
+    """
+    variables = {
+        "users": student_objects
+    }
+
+    response = requests.post(
+        hasura_url,
+        json={"query": mutation, "variables": variables},
+        headers=headers
+    )
+
+    data = response.json()
+    student_ids = []
+    if "errors" in data:
+        print(f"Error during student insertion: {data['errors']}")
+    else:
+        returned_data = data["data"]["insertUsers"]["returning"]
+        student_ids = [int(user["userId"]) for user in returned_data]
+        print(f"Successfully inserted {len(student_ids)} students.")
+
+    print("All students have been inserted.")
+    return student_ids, students_in_group_count
+
+
+def insert_teachers_and_coordinator(hasura_url, headers, fake, random, number_of_teachers):
+    # Insert data into users (teachers and coordinator)
+    existing_index_numbers = set()
+    user_objects = []
+
+    print("Preparing teachers and coordinator for insertion...")
+
+    # Insert coordinator
+    nick = fake.user_name()
+    first_name = fake.first_name()
+    second_name = fake.last_name()
+    index_number = 100000
+    existing_index_numbers.add(index_number)
+    user_objects.append({
+        "nick": nick,
+        "role": "coordinator",
+        "indexNumber": index_number,
+        "firstName": first_name,
+        "secondName": second_name,
+        "label": ""
+    })
+
+    # Insert teachers
+    i = 1
+    for _ in range(number_of_teachers):
+        nick = fake.user_name()
+        first_name = fake.first_name()
+        second_name = fake.last_name()
+        index_number = 100000 + i
+        i += 1
+        existing_index_numbers.add(index_number)
+        user_objects.append({
+            "nick": nick,
+            "role": "teacher",
+            "indexNumber": index_number,
+            "firstName": first_name,
+            "secondName": second_name,
+            "label": ""
+        })
+
+    print(f"Inserting {len(user_objects)} teachers and coordinator...")
+
+    mutation = """
+    mutation MyMutation($users: [UsersInsertInput!]!) {
+        insertUsers(objects: $users) {
+            returning {
+                userId
+                role
             }
         }
     }
@@ -62,56 +133,68 @@ def insert_users(hasura_url, headers, year_group_counts, fake, random, students_
     )
 
     data = response.json()
+    teacher_ids = []
     if "errors" in data:
-        print(f"Error during bulk insert: {data['errors']}")
+        print(f"Error during teachers and coordinator insertion: {data['errors']}")
     else:
         returned_data = data["data"]["insertUsers"]["returning"]
-        user_ids = [int(user["userId"]) for user in returned_data]
-        users.extend(user_ids)
-        print(f"Successfully inserted {len(user_ids)} users.")
-        for user_id in tqdm(user_ids, desc="Assigning photos to users"):
-            # Fetch file ID based on the filename
-            query_file_id = """
-                            query MyQuery {
-                                files(where: {fileType: {_eq: "image/user"}}) {
-                                    fileId
-                                }
-                            }
-                            """
-            response_file = requests.post(
-                hasura_url,
-                json={"query": query_file_id},
-                headers=headers
-            )
+        teacher_ids = [(int(user["userId"]), user["role"]) for user in returned_data]
+        print(f"Successfully inserted {len(teacher_ids)} teachers and coordinator.")
 
-            file_data = response_file.json()
-            if "errors" in file_data or not file_data["data"]["files"]:
-                print(f"Error fetching files for type 'image/user': {file_data.get('errors', 'File not found')}")
-                continue
+    print("All teachers and coordinator have been inserted.")
+    return teacher_ids
 
-            file_ids = [file_data["data"]["files"][i]["fileId"] for i in range(len(file_data["data"]["files"]))]
-            file_id = random.choice(file_ids)
 
-            # Assign the photo to the award
-            mutation_assign_photo = """
-                                    mutation assignPhotoToUser($userId: Int!, $fileId: Int) {
-                                        assignPhotoToUser(userId: $userId, fileId: $fileId)
-                                    }
-                                    """
-            variables_assign_photo = {
-                "userId": user_id,
-                "fileId": file_id
+def assign_photos_to_users(hasura_url, headers, user_ids, random):
+    print("Assigning photos to users...")
+    for user_id in tqdm(user_ids, desc="Assigning photos to users"):
+        # Fetch file ID based on the filename
+        query_file_id = """
+        query MyQuery {
+            files(where: {fileType: {_eq: "image/user"}}) {
+                fileId
             }
+        }
+        """
+        response_file = requests.post(
+            hasura_url,
+            json={"query": query_file_id},
+            headers=headers
+        )
 
-            response_assign_photo = requests.post(
-                hasura_url,
-                json={"query": mutation_assign_photo, "variables": variables_assign_photo},
-                headers=headers
-            )
+        file_data = response_file.json()
+        if "errors" in file_data or not file_data["data"]["files"]:
+            print(f"Error fetching files for type 'image/user': {file_data.get('errors', 'File not found')}")
+            continue
 
-            if "errors" in response_assign_photo.json():
-                print(
-                    f"Error assigning photo '{file_id}' to user ID {user_id}: {response_assign_photo.json()['errors']}")
+        file_ids = [file_data["data"]["files"][i]["fileId"] for i in range(len(file_data["data"]["files"]))]
+        file_id = random.choice(file_ids)
 
-    print("All users have been inserted.")
-    return users, roles, students_in_group_count
+        # Assign the photo to the user
+        mutation_assign_photo = """
+        mutation assignPhotoToUser($userId: Int!, $fileId: Int) {
+            assignPhotoToUser(userId: $userId, fileId: $fileId)
+        }
+        """
+        variables_assign_photo = {
+            "userId": user_id,
+            "fileId": file_id
+        }
+
+        response_assign_photo = requests.post(
+            hasura_url,
+            json={"query": mutation_assign_photo, "variables": variables_assign_photo},
+            headers=headers
+        )
+
+        if "errors" in response_assign_photo.json():
+            print(f"Error assigning photo '{file_id}' to user ID {user_id}: {response_assign_photo.json()['errors']}")
+
+    print("Photo assignment completed.")
+
+
+# Example usage:
+# students_ids, students_in_group_count = insert_students(hasura_url, headers, year_group_counts, fake, random, students_per_group_bounds)
+# teachers_ids = insert_teachers_and_coordinator(hasura_url, headers, fake, random, number_of_teachers)
+# all_user_ids = students_ids + teachers_ids
+# assign_photos_to_users(hasura_url, headers, all_user_ids, random)
