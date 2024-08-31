@@ -21,6 +21,10 @@ class Points(
     @JoinColumn(name = "teacher_id", referencedColumnName = "user_id")
     var teacher: Users,
 
+    @ManyToOne
+    @JoinColumn(name = "updated_by", referencedColumnName = "user_id")
+    var updatedBy: Users,
+
     @Column(name = "value", nullable = false)
     var value: Float,
 
@@ -28,13 +32,13 @@ class Points(
     @JoinColumn(name = "subcategory_id", referencedColumnName = "subcategory_id")
     var subcategory: Subcategories,
 
-
     @Column(name = "label", nullable = false, length = 256)
     var label: String
 ) : TimestampModel(){
     constructor() : this(
         student = Users(),
         teacher = Users(),
+        updatedBy = Users(),
         value = 0f,
         subcategory = Subcategories(),
         label = ""
