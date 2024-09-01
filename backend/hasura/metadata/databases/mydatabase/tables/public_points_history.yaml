@@ -1,0 +1,80 @@
+table:
+  name: points_history
+  schema: public
+object_relationships:
+  - name: points
+    using:
+      manual_configuration:
+        column_mapping:
+          points_id: points_id
+        insertion_order: null
+        remote_table:
+          name: points
+          schema: public
+  - name: subcategory
+    using:
+      foreign_key_constraint_on: subcategory_id
+  - name: user
+    using:
+      foreign_key_constraint_on: student_id
+  - name: userByTeacherId
+    using:
+      foreign_key_constraint_on: teacher_id
+select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - points_history_id
+        - points_id
+        - student_id
+        - subcategory_id
+        - teacher_id
+        - updated_by
+        - label
+        - value
+        - copied_at
+        - created_at
+        - updated_at
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: student
+    permission:
+      columns:
+        - points_history_id
+        - points_id
+        - student_id
+        - subcategory_id
+        - teacher_id
+        - updated_by
+        - label
+        - value
+        - copied_at
+        - created_at
+        - updated_at
+      filter:
+        student_id:
+          _eq: X-Hasura-User-Id
+      allow_aggregations: true
+    comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - points_history_id
+        - points_id
+        - student_id
+        - subcategory_id
+        - teacher_id
+        - updated_by
+        - label
+        - value
+        - copied_at
+        - created_at
+        - updated_at
+      filter:
+        user:
+          groups:
+            teacher_id:
+              _eq: X-Hasura-User-Id
+      allow_aggregations: true
+    comment: ""
