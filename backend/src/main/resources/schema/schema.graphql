@@ -1,11 +1,12 @@
 type Mutation {
     addBonusMutation(chestHistoryId: Int!,
-        awardId: Int!): AddBonusReturnType
+        awardId: Int!, checkDates: Boolean = true): AddBonusReturnType
 
     addPointsMutation (studentId: Int!,
         teacherId: Int!,
         value: Float!,
-        subcategoryId: Int!): PointType
+        subcategoryId: Int!,
+        checkDates: Boolean = true): PointType
     assignPhotosToGroups(editionId: Int!): Boolean
     assignPhotoToUser(userId: Int!, fileId: Int): Boolean
     assignPhotoToLevel(levelId: Int!, fileId: Int): Boolean

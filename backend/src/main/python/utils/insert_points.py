@@ -147,7 +147,7 @@ def insert_points(hasura_url, headers, cursor, editions, teacher_ids, random, ca
 
         mutation_add_points = """
         mutation AddPoints($studentId: Int!, $teacherId: Int!, $value: Float!, $subcategoryId: Int!) {
-            addPointsMutation(studentId: $studentId, teacherId: $teacherId, value: $value, subcategoryId: $subcategoryId) {
+            addPointsMutation(studentId: $studentId, teacherId: $teacherId, value: $value, subcategoryId: $subcategoryId, checkDates: false) {
                 pointsId
                 value
                 subcategory {
@@ -202,7 +202,7 @@ def insert_points(hasura_url, headers, cursor, editions, teacher_ids, random, ca
         # Step 2: Apply the chosen award using addBonusMutation
         mutation_add_bonus = """
         mutation AddBonus($chestHistoryId: Int!, $awardId: Int!) {
-            addBonusMutation(chestHistoryId: $chestHistoryId, awardId: $awardId) {
+            addBonusMutation(chestHistoryId: $chestHistoryId, awardId: $awardId, checkDates: false) {
                 bonus {
                     bonusId
                 }
