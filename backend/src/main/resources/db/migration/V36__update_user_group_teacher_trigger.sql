@@ -22,16 +22,23 @@ BEGIN
         WHERE ug.group_id = NEW.group_id AND u.role != 'student'
         LIMIT 1;
 
-        -- If there is an existing teacher, delete their entry from user_groups
-        IF existing_teacher_id IS NOT NULL THEN
-            DELETE FROM user_groups
-            WHERE group_id = NEW.group_id AND user_id = existing_teacher_id;
-        END IF;
-
         -- Update the teacher_id in the related group
         UPDATE groups
         SET teacher_id = NEW.user_id
         WHERE groups_id = NEW.group_id;
+
+        -- If there is an existing teacher, delete their entry from user_groups
+        IF existing_teacher_id IS NOT NULL AND existing_teacher_id != NEW.user_id THEN
+            DELETE FROM user_groups
+            WHERE group_id = NEW.group_id AND user_id = existing_teacher_id;
+        END IF;
+
+    END IF;
+
+    -- Check if the new user-group combination already exists
+    IF EXISTS (SELECT 1 FROM user_groups WHERE user_id = NEW.user_id AND group_id = NEW.group_id) THEN
+        -- Skip insertion to avoid uniqueness violation
+        RETURN NULL;
     END IF;
 
     RETURN NEW;
@@ -40,7 +47,7 @@ $$ LANGUAGE plpgsql;
 
 -- Create the trigger to call the function after each insert on user_groups
 CREATE TRIGGER trigger_update_group_teacher
-    AFTER INSERT ON user_groups
+    BEFORE INSERT ON user_groups
     FOR EACH ROW
 EXECUTE FUNCTION update_group_teacher();
 
