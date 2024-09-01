@@ -35,6 +35,9 @@ class LevelsDataFetcher {
     fun addLevel(@InputArgument editionId: Long, @InputArgument name: String, @InputArgument maximumPoints: Double,
                     @InputArgument grade: Double, @InputArgument imageFileId: Long? = null): Levels {
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
+        if (edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
         val levelsInEdition = levelsRepository.findByEdition(edition)
 
         val levelImage = if (imageFileId == null){

@@ -62,7 +62,15 @@ class GroupsDataFetcher {
     @Transactional
     fun assignPhotosToGroups(@InputArgument editionId: Long): Boolean {
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
+        if (edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
         val groups = groupsRepository.findByEdition(edition)
+
+        if (edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
+
         val photosForGroups = fileRepository.findAllByFileType("image/group")
 
         if (groups.size > photosForGroups.size) {
@@ -86,6 +94,9 @@ class GroupsDataFetcher {
                  @InputArgument weekday: String, @InputArgument startTime: Time,
                  @InputArgument endTime: Time, @InputArgument teacherId: Long, @InputArgument label: String = ""): Groups {
         val edition = editionRepository.findById(editionId).orElseThrow() { IllegalArgumentException("Invalid edition ID") }
+        if (edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
         if (groupsRepository.existsByGroupNameAndEdition(groupName, edition)) {
             throw IllegalArgumentException("Group with name $groupName already exists for edition ${edition.editionId}")
         }

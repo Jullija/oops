@@ -81,6 +81,10 @@ class BonusDataFetcher {
             commonEditions.first()
         }
 
+        if (edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
+
         val points = when (award.awardType) {
             AwardType.ADDITIVE -> createAdditivePoints(chestHistory, award)
             AwardType.ADDITIVE_NEXT -> createAdditiveNextPoints(chestHistory, award, edition)

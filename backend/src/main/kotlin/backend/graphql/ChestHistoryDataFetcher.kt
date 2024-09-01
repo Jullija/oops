@@ -81,6 +81,9 @@ class ChestHistoryDataFetcher {
         }
         val chest = chestsRepository.findById(chestId)
             .orElseThrow { IllegalArgumentException("Invalid chest ID") }
+        if (chest.edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Chest edition has already ended")
+        }
         if (!userEditions.contains(chest.edition)) {
             throw IllegalArgumentException("Chest and user must have the same edition")
         }

@@ -59,6 +59,7 @@ insert_permissions:
         label: '""'
       columns:
         - edition_year
+        - end_date
         - label
         - name
     comment: ""
@@ -67,9 +68,10 @@ select_permissions:
     permission:
       columns:
         - edition_id
+        - edition_year
+        - end_date
         - label
         - name
-        - edition_year
       filter: {}
       allow_aggregations: true
     comment: ""
@@ -78,6 +80,7 @@ select_permissions:
       columns:
         - edition_id
         - edition_year
+        - end_date
         - label
         - name
       filter:
@@ -91,6 +94,7 @@ select_permissions:
       columns:
         - edition_id
         - edition_year
+        - end_date
         - label
         - name
       filter:
@@ -104,6 +108,7 @@ update_permissions:
     permission:
       columns:
         - edition_year
+        - end_date
         - label
         - name
       filter: {}

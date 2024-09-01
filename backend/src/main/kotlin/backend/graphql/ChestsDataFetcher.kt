@@ -72,6 +72,9 @@ class ChestsDataFetcher {
         if (chestsRepository.existsByChestTypeAndEdition(chestType, edition)) {
             throw IllegalArgumentException("Chest with type $chestType already exists for edition ${edition.editionId}")
         }
+        if (edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
         val chest = Chests(
             chestType = chestType,
             label = label,

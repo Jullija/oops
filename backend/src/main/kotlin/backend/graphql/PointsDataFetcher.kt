@@ -43,6 +43,10 @@ class PointsDataFetcher {
         val subcategory = subcategoriesRepository.findById(subcategoryId)
             .orElseThrow { IllegalArgumentException("Invalid subcategory ID") }
 
+        if (subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Subcategory edition has already ended")
+        }
+
         if (!subcategory.category.canAddPoints) {
             throw IllegalArgumentException("This subcategory's category does not allow adding points")
         }
