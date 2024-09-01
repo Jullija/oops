@@ -82,6 +82,7 @@ class PointsDataFetcher {
         val points = Points(
             student = student,
             teacher = teacher,
+            updatedBy = teacher,
             value = value,
             subcategory = subcategory,
             label = ""

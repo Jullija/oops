@@ -41,6 +41,27 @@ array_relationships:
         table:
           name: points
           schema: public
+  - name: pointsByUpdatedBy
+    using:
+      foreign_key_constraint_on:
+        column: updated_by
+        table:
+          name: points
+          schema: public
+  - name: pointsHistories
+    using:
+      foreign_key_constraint_on:
+        column: student_id
+        table:
+          name: points_history
+          schema: public
+  - name: pointsHistoriesByTeacherId
+    using:
+      foreign_key_constraint_on:
+        column: teacher_id
+        table:
+          name: points_history
+          schema: public
   - name: userGroups
     using:
       foreign_key_constraint_on:

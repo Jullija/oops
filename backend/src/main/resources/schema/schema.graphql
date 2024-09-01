@@ -156,11 +156,26 @@ type PointType {
     pointsId: ID!
     student: UserType!
     teacher: UserType!
+    updatedBy: UserType!
     value: Float!
     subcategory: SubcategoryType!
     label: String!
     createdAt: String!
     updatedAt: String!
+}
+
+type PointsHistoryType {
+    pointsHistoryId: ID!
+    pointsId: ID!
+    student: UserType!
+    teacher: UserType!
+    updatedBy: UserType!
+    value: Float!
+    subcategory: SubcategoryType!
+    label: String!
+    createdAt: String!
+    updatedAt: String!
+    copiedAt: String!
 }
 
 type SubcategoryType {
