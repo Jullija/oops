@@ -73,6 +73,7 @@ type CategoryType {
     categoryId: ID!
     categoryName: String!
     canAddPoints: Boolean!
+    categoryEdition: [CategoryEditionType]!
     label: String!
 }
 

@@ -35,7 +35,8 @@ BEGIN
 
     END IF;
 
-    -- Check if the new user-group combination already exists
+    -- Check if the new user-group combination already exists / skips insertion because when a teacher is assigned
+    -- to a group, the update_on_group_teacher function will insert the teacher into user_groups
     IF EXISTS (SELECT 1 FROM user_groups WHERE user_id = NEW.user_id AND group_id = NEW.group_id) THEN
         -- Skip insertion to avoid uniqueness violation
         RETURN NULL;

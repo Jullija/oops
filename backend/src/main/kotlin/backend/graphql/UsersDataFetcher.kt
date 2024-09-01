@@ -84,7 +84,7 @@ class UsersDataFetcher {
     fun getStudentPoints(@InputArgument studentId: Long, @InputArgument editionId: Long): StudentPointsType {
         val user = usersRepository.findById(studentId).orElseThrow { IllegalArgumentException("Invalid student ID") }
         if (user.role != UsersRoles.STUDENT) {
-            throw IllegalArgumentException("Points can be viewed only by student")
+            throw IllegalArgumentException("User is not a student")
         }
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
         if (user.userGroups.none { it.group.edition == edition }) {
@@ -145,24 +145,26 @@ class UsersDataFetcher {
         val bonuses = bonusesRepository.findByChestHistory_User_UserId(studentId)
         val categories = categoriesRepository.findAll()
 
-        return categories.filter{it.canAddPoints}.map { category ->
-            val categoryPoints = points.filter { it.subcategory.category == category }
-            val purePoints = categoryPoints.filter { bonusesRepository.findByPoints(it).isEmpty() }
-            val purePointsSum = purePoints.sumOf { it.value.toDouble() }.toFloat()
-            val bonusesSum = bonuses.filter { it.points.subcategory.category == category && it.points.subcategory.edition == edition }
-                .sumOf { it.points.value.toDouble() }.toFloat()
-            val totalSum = purePointsSum + bonusesSum
-            val maxPoints = subcategoriesRepository.findByCategoryAndEdition(category, edition)
-                .sumOf { it.maxPoints.toDouble() }.toFloat()
+        return categories.filter{it.canAddPoints}
+                .filter { it.categoryEdition.any { editionEntry -> editionEntry.edition == edition } }
+                .map { category ->
+                    val categoryPoints = points.filter { it.subcategory.category == category }
+                    val purePoints = categoryPoints.filter { bonusesRepository.findByPoints(it).isEmpty() }
+                    val purePointsSum = purePoints.sumOf { it.value.toDouble() }.toFloat()
+                    val bonusesSum = bonuses.filter { it.points.subcategory.category == category && it.points.subcategory.edition == edition }
+                        .sumOf { it.points.value.toDouble() }.toFloat()
+                    val totalSum = purePointsSum + bonusesSum
+                    val maxPoints = subcategoriesRepository.findByCategoryAndEdition(category, edition)
+                        .sumOf { it.maxPoints.toDouble() }.toFloat()
 
-            CategoryPointsSumType(
-                category = category,
-                sumOfPurePoints = purePointsSum,
-                sumOfBonuses = bonusesSum,
-                sumOfAll = totalSum,
-                maxPoints = maxPoints
-            )
-        }
+                    CategoryPointsSumType(
+                        category = category,
+                        sumOfPurePoints = purePointsSum,
+                        sumOfBonuses = bonusesSum,
+                        sumOfAll = totalSum,
+                        maxPoints = maxPoints
+                    )
+                }
     }
 
     private fun subcategoryPointsComparator(subcategoryPointsType: SubcategoryPointsType): Long {
