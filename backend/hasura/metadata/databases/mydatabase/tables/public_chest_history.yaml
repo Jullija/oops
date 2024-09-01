@@ -21,53 +21,6 @@ object_relationships:
   - name: userByTeacherId
     using:
       foreign_key_constraint_on: teacher_id
-insert_permissions:
-  - role: coordinator
-    permission:
-      check: {}
-      set:
-        label: '""'
-      columns:
-        - chest_id
-        - label
-        - subcategory_id
-        - teacher_id
-        - user_id
-    comment: ""
-  - role: teacher
-    permission:
-      check:
-        _and:
-          - chest:
-              edition:
-                groups:
-                  userGroups:
-                    user_id:
-                      _eq: X-Hasura-User-Id
-          - user:
-              userGroups:
-                group:
-                  userGroups:
-                    user_id:
-                      _eq: X-Hasura-User-Id
-          - userByTeacherId:
-              user_id:
-                _eq: X-Hasura-User-Id
-          - subcategory:
-              edition:
-                groups:
-                  userGroups:
-                    user_id:
-                      _eq: X-Hasura-User-Id
-      set:
-        label: '""'
-      columns:
-        - chest_id
-        - label
-        - subcategory_id
-        - teacher_id
-        - user_id
-    comment: ""
 select_permissions:
   - role: coordinator
     permission:
@@ -122,12 +75,29 @@ update_permissions:
       columns:
         - chest_id
         - label
-        - opened
         - subcategory_id
-        - teacher_id
-        - user_id
-      filter: {}
-      check: {}
+      filter:
+        _and:
+          - _not:
+              subcategory:
+                edition:
+                  end_date:
+                    _lte: now()
+          - _not:
+              bonus:
+                bonus_id:
+                  _is_null: false
+      check:
+        _and:
+          - _not:
+              subcategory:
+                edition:
+                  end_date:
+                    _lte: now()
+          - _not:
+              bonus:
+                bonus_id:
+                  _is_null: false
       set:
         label: '""'
     comment: ""
@@ -138,7 +108,6 @@ update_permissions:
         - label
         - opened
         - subcategory_id
-        - user_id
       filter:
         _and:
           - chest:
@@ -162,6 +131,11 @@ update_permissions:
                   userGroups:
                     user_id:
                       _eq: X-Hasura-User-Id
+          - _not:
+              subcategory:
+                edition:
+                  end_date:
+                    _lte: now()
       check:
         _and:
           - chest:
@@ -185,6 +159,11 @@ update_permissions:
                   userGroups:
                     user_id:
                       _eq: X-Hasura-User-Id
+          - _not:
+              subcategory:
+                edition:
+                  end_date:
+                    _lte: now()
       set:
         label: '""'
     comment: ""
@@ -192,8 +171,14 @@ delete_permissions:
   - role: coordinator
     permission:
       filter:
-        _not:
-          bonus:
-            bonus_id:
-              _is_null: false
+        _and:
+          - _not:
+              bonus:
+                bonus_id:
+                  _is_null: false
+          - _not:
+              subcategory:
+                edition:
+                  end_date:
+                    _lte: now()
     comment: ""

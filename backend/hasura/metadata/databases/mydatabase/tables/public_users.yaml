@@ -82,21 +82,6 @@ computed_fields:
       function:
         name: users_fullname
         schema: public
-insert_permissions:
-  - role: coordinator
-    permission:
-      check: {}
-      set:
-        label: '""'
-      columns:
-        - first_name
-        - image_file_id
-        - index_number
-        - label
-        - nick
-        - role
-        - second_name
-    comment: ""
 select_permissions:
   - role: coordinator
     permission:
@@ -169,14 +154,25 @@ update_permissions:
     permission:
       columns:
         - first_name
-        - image_file_id
         - index_number
         - label
         - nick
         - role
         - second_name
-      filter: {}
-      check: {}
+      filter:
+        _not:
+          userGroups:
+            group:
+              edition:
+                start_date:
+                  _lte: now()
+      check:
+        _not:
+          userGroups:
+            group:
+              edition:
+                start_date:
+                  _lte: now()
       set:
         label: '""'
     comment: ""
@@ -185,20 +181,8 @@ delete_permissions:
     permission:
       filter:
         _not:
-          _or:
-            - chestHistories:
-                chest_history_id:
-                  _is_null: false
-            - chestHistoriesByTeacherId:
-                chest_history_id:
-                  _is_null: false
-            - points:
-                points_id:
-                  _is_null: false
-            - pointsByTeacherId:
-                points_id:
-                  _is_null: false
-            - userGroups:
-                user_id:
-                  _is_null: false
+          groups:
+            edition:
+              start_date:
+                _lte: now()
     comment: ""
