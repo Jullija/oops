@@ -18,6 +18,7 @@ class FileUploadService(private val fileEntityRepository: FileEntityRepository) 
         val originalFilename = file.originalFilename ?: throw IllegalArgumentException("File name is invalid")
         val fileExtension = getFileExtension(originalFilename)
         val filenameWithoutExtension = getFilenameWithoutExtension(originalFilename)
+        validateFileType(fileType)
 
         // Resolve the relative path to an absolute path
         val directoryPath = Paths.get(uploadDir).toAbsolutePath().resolve(fileType)
@@ -37,7 +38,7 @@ class FileUploadService(private val fileEntityRepository: FileEntityRepository) 
         try {
             Files.copy(file.inputStream, targetPath)
         } catch (e: IOException) {
-            throw RuntimeException("Failed to store file $originalFilename", e)
+            throw RuntimeException("Failed to store file $originalFilename due to IO error: ${e.message}", e)
         }
 
         // Create a new FileEntity and save it to the database
@@ -47,6 +48,13 @@ class FileUploadService(private val fileEntityRepository: FileEntityRepository) 
             fileType = fileType
         )
         return fileEntityRepository.save(fileEntity)
+    }
+
+    private fun validateFileType(fileType: String) {
+        val allowedPattern = Regex("^[a-zA-Z0-9/_-]+$")
+        if (!allowedPattern.matches(fileType)) {
+            throw IllegalArgumentException("Invalid fileType: '$fileType'. It should only contain alphanumeric characters, underscores, hyphens, and slashes.")
+        }
     }
 
     private fun getFileExtension(filename: String): String {
