@@ -80,7 +80,9 @@ class BonusDataFetcher {
         } else {
             commonEditions.first()
         }
-
+        if (edition.startDate.isAfter(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has not started yet")
+        }
         if (edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Edition has already ended")
         }

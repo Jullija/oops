@@ -62,6 +62,10 @@ class ChestsDataFetcher {
     @DgsMutation
     @Transactional
     fun assignPhotoToChest(@InputArgument chestId: Long, @InputArgument fileId: Long?): Boolean {
+        val chest = chestsRepository.findById(chestId).orElseThrow { IllegalArgumentException("Invalid chest ID") }
+        if (chest.edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
         return photoAssigner.assignPhotoToAssignee(chestsRepository, "image/chest", chestId, fileId)
     }
 

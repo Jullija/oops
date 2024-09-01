@@ -98,6 +98,10 @@ class LevelsDataFetcher {
     @DgsMutation
     @Transactional
     fun assignPhotoToLevel(@InputArgument levelId: Long, @InputArgument fileId: Long?): Boolean {
+        val level = levelsRepository.findById(levelId).orElseThrow { IllegalArgumentException("Invalid level ID") }
+        if (level.edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
         return photoAssigner.assignPhotoToAssignee(levelsRepository, "image/level", levelId, fileId)
     }
 

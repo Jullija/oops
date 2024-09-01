@@ -115,6 +115,8 @@ type EditionType {
     editionId: ID!
     editionName: String!
     editionYear: Int!
+    startDate: String!
+    endDate: String!
     label: String!
 }
 

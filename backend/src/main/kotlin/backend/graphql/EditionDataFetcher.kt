@@ -73,15 +73,17 @@ class EditionDataFetcher {
 
         val currentYear = LocalDate.now().year
 
-        if (editionYear < currentYear-1 || editionYear > currentYear + 10) {
-            throw IllegalArgumentException("Edition year must be between ${currentYear-1} and ${currentYear + 10}")
+        if (editionYear < currentYear || editionYear > currentYear + 10) {
+            throw IllegalArgumentException("Edition year must be between ${currentYear} and ${currentYear + 10}")
         }
 
-        val endDate = LocalDate.of(editionYear + 1, 7, 20)
+        val startDate = LocalDate.of(editionYear, 10, 1)
+        val endDate = LocalDate.of(editionYear + 1, 9, 30)
 
         val edition = Edition(
             editionName = editionName,
             editionYear = editionYear,
+            startDate = startDate,
             endDate = endDate,
             label = label)
         return editionRepository.save(edition)

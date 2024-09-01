@@ -51,18 +51,6 @@ array_relationships:
         table:
           name: user_level
           schema: public
-insert_permissions:
-  - role: coordinator
-    permission:
-      check: {}
-      set:
-        label: '""'
-      columns:
-        - edition_year
-        - end_date
-        - label
-        - name
-    comment: ""
 select_permissions:
   - role: coordinator
     permission:
@@ -72,6 +60,7 @@ select_permissions:
         - end_date
         - label
         - name
+        - start_date
       filter: {}
       allow_aggregations: true
     comment: ""
@@ -83,6 +72,7 @@ select_permissions:
         - end_date
         - label
         - name
+        - start_date
       filter:
         groups:
           userGroups:
@@ -97,6 +87,7 @@ select_permissions:
         - end_date
         - label
         - name
+        - start_date
       filter:
         groups:
           userGroups:
@@ -111,7 +102,10 @@ update_permissions:
         - end_date
         - label
         - name
-      filter: {}
+        - start_date
+      filter:
+        start_date:
+          _gt: now()
       check: {}
       set:
         label: '""'
@@ -120,8 +114,11 @@ delete_permissions:
   - role: coordinator
     permission:
       filter:
-        _not:
-          groups:
-            groups_id:
-              _is_null: false
+        _and:
+          - _not:
+              groups:
+                groups_id:
+                  _is_null: false
+          - start_date:
+              _gt: now()
     comment: ""

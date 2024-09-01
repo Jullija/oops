@@ -22,6 +22,9 @@ class Edition(
     @Column(name = "label", nullable = false, length = 256)
     var label: String,
 
+    @Column(name = "start_date", nullable = false)
+    var startDate: LocalDate,
+
     @Column(name = "end_date", nullable = false)
     var endDate: LocalDate,
 
@@ -34,6 +37,7 @@ class Edition(
     constructor() : this(
         editionName = "",
         editionYear = 0,
+        startDate = LocalDate.now(),
         endDate = LocalDate.now(),
         label = ""
     )
