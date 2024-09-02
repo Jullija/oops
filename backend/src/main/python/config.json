@@ -19,6 +19,7 @@
         "old_style": false
     },
     "data_insertion": {
+        "backend_resources_path": "../../../resources/",
         "number_of_editions": 2,
         "number_of_teachers": 7,
         "max_points_in_level": {
@@ -75,25 +76,41 @@
                 "name": "LABORATORY",
                 "number_of_subcategories": 14,
                 "subcategory_prefix": "lab_",
-                "max_points_per_subcategory": 10
+                "max_points_per_subcategory": 10,
+                "can_add_points": true,
+                "editions": "all"
             },
             {
                 "name": "TEST",
                 "number_of_subcategories": 14,
                 "subcategory_prefix": "test_",
-                "max_points_per_subcategory": 5
+                "max_points_per_subcategory": 5,
+                "can_add_points": true,
+                "editions": "all"
             },
             {
                 "name": "PROJECT",
                 "number_of_subcategories": 3,
                 "subcategory_prefix": "proj_",
-                "max_points_per_subcategory": 40
+                "max_points_per_subcategory": 40,
+                "can_add_points": true,
+                "editions": "all"
             },
             {
                 "name": "EVENT",
                 "number_of_subcategories": 5,
                 "subcategory_prefix": null,
-                "max_points_per_subcategory": null
+                "max_points_per_subcategory": null,
+                "can_add_points": false,
+                "editions": "first"
+            },
+            {
+                "name": "EVENT_WITH_POINTS",
+                "number_of_subcategories": 10,
+                "subcategory_prefix": null,
+                "max_points_per_subcategory": null,
+                "can_add_points": true,
+                "editions": "last"
             }
         ],
         "category_names_to_populate": [

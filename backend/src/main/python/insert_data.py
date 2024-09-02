@@ -1,3 +1,5 @@
+import os
+import shutil
 import subprocess
 
 import psycopg2
@@ -8,12 +10,13 @@ import json
 from utils.insert_data_old import insert_data_old
 from utils.insert_files import insert_files
 from utils.insert_categories import insert_categories
+from utils.insert_category_editions import insert_category_editions
 from utils.insert_editions import insert_editions
 from utils.insert_chests import insert_chests
 from utils.insert_awards import insert_awards
 from utils.insert_award_editions import insert_award_editions
 from utils.insert_groups import insert_groups
-from utils.insert_users import insert_users
+from utils.insert_users import insert_students, insert_teachers_and_coordinator, assign_photos_to_users
 from utils.insert_user_groups import insert_user_groups
 from utils.insert_levels import insert_levels
 from utils.insert_subcategories import insert_subcategories
@@ -31,6 +34,7 @@ hasura_url = config['hasura']['url']
 headers = config['hasura']['headers']
 data_insertion_config = config['data_insertion']
 old_style = config['style']["old_style"]
+backend_resources_path = data_insertion_config['backend_resources_path']
 
 
 def create_connection():
@@ -58,7 +62,13 @@ def delete_files():
 
     file_data = response_file.json()
     if "errors" in file_data or not file_data["data"]["files"]:
-        print(f"Error fetching all files: {file_data.get('errors', 'File not found')}")
+        print(f"Error fetching all files: {file_data.get('errors', 'Files not found')}")
+        print("Deleting files manually")
+        if os.path.exists(backend_resources_path):
+            shutil.rmtree(backend_resources_path)
+            os.makedirs(backend_resources_path)
+        else:
+            print(f"The path {backend_resources_path} does not exist.")
 
     file_ids = [file_data["data"]["files"][i]["fileId"] for i in range(len(file_data["data"]["files"]))]
     for file_id in file_ids:
@@ -133,7 +143,9 @@ def insert_data():
             category['name'],
             category['number_of_subcategories'],
             category['subcategory_prefix'],
-            category['max_points_per_subcategory']
+            category['max_points_per_subcategory'],
+            category["can_add_points"],
+            category["editions"]
         )
         for category in category_data_struct
     ]
@@ -161,23 +173,26 @@ def insert_data():
         max_points = max_points_in_level['if_not_computed']
 
     insert_files(base_url + "/files/upload")
-    categories = insert_categories(hasura_url, headers, category_data)
     editions = insert_editions(hasura_url, headers, number_of_editions)
+    categories, category_editions_type_map = insert_categories(hasura_url, headers, category_data)
+    insert_category_editions(hasura_url, headers, editions, category_editions_type_map, random)
     insert_levels(hasura_url, headers, editions, random, max_points, levels_data)
     chest_ids = insert_chests(hasura_url, headers, editions, chests_data)
     award_ids, award_editions_type_map = insert_awards(hasura_url, headers, awards_data)
-    insert_award_editions(hasura_url, headers, award_ids, editions, award_editions_type_map, random)
-    year_group_counts, groups = insert_groups(hasura_url, headers, editions, random, number_of_groups_per_year_bounds)
-    users, roles, students_in_group_count = insert_users(hasura_url, headers, year_group_counts, fake, random,
-                                                         students_per_group_bounds, number_of_teachers)
-    coordinator_id, teacher_ids = insert_user_groups(hasura_url, headers, users, roles, groups, students_in_group_count,
+    insert_award_editions(hasura_url, headers, editions, award_editions_type_map, random)
+    teachers_ids_and_roles = insert_teachers_and_coordinator(hasura_url, headers, fake, random, number_of_teachers)
+    year_group_counts, groups = insert_groups(hasura_url, headers, editions, random, number_of_groups_per_year_bounds, teachers_ids_and_roles)
+    students_ids, students_in_group_count = insert_students(hasura_url, headers, year_group_counts, fake, random, students_per_group_bounds)
+    all_user_ids = students_ids + [user_id for user_id, role in teachers_ids_and_roles]
+    assign_photos_to_users(hasura_url, headers, all_user_ids, random)
+    insert_user_groups(hasura_url, headers, students_ids, teachers_ids_and_roles, groups, students_in_group_count,
                                                      random)
 
     subcategories, subcategory_to_category = insert_subcategories(hasura_url, headers, editions, categories,
                                                                   category_data, random)
-
+    #
     insert_chest_awards(hasura_url, headers, chest_ids, chests_data, awards_data)
-    insert_points(hasura_url, headers, cursor, editions, teacher_ids + [coordinator_id], random,
+    insert_points(hasura_url, headers, cursor, editions, [user_id for user_id, role in teachers_ids_and_roles], random,
                   category_names_to_populate,
                   subcategories_percentage,
                   chest_percentage, open_chest_percentage)

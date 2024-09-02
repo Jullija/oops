@@ -1,0 +1,2 @@
+ALTER TABLE categories
+    ADD COLUMN can_add_points BOOLEAN NOT NULL DEFAULT TRUE;

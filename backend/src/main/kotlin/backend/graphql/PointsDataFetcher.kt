@@ -43,6 +43,10 @@ class PointsDataFetcher {
         val subcategory = subcategoriesRepository.findById(subcategoryId)
             .orElseThrow { IllegalArgumentException("Invalid subcategory ID") }
 
+        if (!subcategory.category.canAddPoints) {
+            throw IllegalArgumentException("This subcategory's category does not allow adding points")
+        }
+
         if (teacher.role != UsersRoles.TEACHER && teacher.role != UsersRoles.COORDINATOR) {
             throw IllegalArgumentException("Points can be added only by teacher or coordinator")
         }
@@ -78,6 +82,7 @@ class PointsDataFetcher {
         val points = Points(
             student = student,
             teacher = teacher,
+            updatedBy = teacher,
             value = value,
             subcategory = subcategory,
             label = ""

@@ -27,6 +27,57 @@ type Mutation {
     maxUsages: Int = -1
     label: String = ""
   ): AwardType
+  addAwardToEdition(awardId: Int!, editionId: Int!): AwardEditionType
+  addChestToUser(
+    userId: Int!
+    chestId: Int!
+    teacherId: Int!
+    subcategoryId: Int!
+  ): ChestHistoryType
+  addChest(chestType: String!, editionId: Int!, label: String = ""): ChestType
+  addCategory(
+    categoryName: String!
+    canAddPoints: Boolean!
+    label: String = ""
+  ): CategoryType
+  addCategoryToEdition(categoryId: Int!, editionId: Int!): CategoryEditionType
+  addEdition(
+    editionName: String!
+    editionYear: Int!
+    label: String = ""
+  ): EditionType
+  addGroup(
+    editionId: Int!
+    groupName: String!
+    weekday: String!
+    startTime: String!
+    endTime: String!
+    teacherId: Int!
+    label: String = ""
+  ): GroupType
+  addSubcategory(
+    subcategoryName: String!
+    maxPoints: Float!
+    ordinalNumber: Int!
+    categoryId: Int!
+    editionId: Int!
+    label: String = ""
+  ): SubcategoryType
+  addUser(
+    indexNumber: Int!
+    nick: String!
+    firstName: String!
+    secondName: String!
+    role: String!
+    label: String = ""
+  ): UserType
+  generateSubcategories(
+    editionId: Int!
+    categoryId: Int!
+    subcategoryPrefix: String!
+    subcategoryCount: Int!
+    maxPoints: Float!
+  ): [SubcategoryType]
 }
 
 type Query {
@@ -39,6 +90,10 @@ type Query {
   getPossibleGroupsWeekdays(editionId: Int!): [String!]!
   getPossibleGroupsTimeSpans(editionId: Int!): [TimeSpansType!]!
   getPossibleGroupDates(editionId: Int!): [GroupDateType!]!
+  getNeighbouringLevels(
+    studentId: Int!
+    editionId: Int!
+  ): NeighbouringLevelsType!
 }
 
 type AwardType {
@@ -54,9 +109,9 @@ type AwardType {
 }
 
 type AwardEditionType {
+  awardEditionId: ID!
   award: AwardType!
   edition: EditionType!
-  awardEditionId: ID!
   label: String!
 }
 
@@ -73,6 +128,15 @@ type BonusType {
 type CategoryType {
   categoryId: ID!
   categoryName: String!
+  canAddPoints: Boolean!
+  categoryEdition: [CategoryEditionType]!
+  label: String!
+}
+
+type CategoryEditionType {
+  categoryEditionId: ID!
+  category: CategoryType!
+  edition: EditionType!
   label: String!
 }
 
@@ -149,11 +213,26 @@ type PointType {
   pointsId: ID!
   student: UserType!
   teacher: UserType!
+  updatedBy: UserType!
   value: Float!
   subcategory: SubcategoryType!
   label: String!
   createdAt: String!
   updatedAt: String!
+}
+
+type PointsHistoryType {
+  pointsHistoryId: ID!
+  pointsId: ID!
+  student: UserType!
+  teacher: UserType!
+  updatedBy: UserType!
+  value: Float!
+  subcategory: SubcategoryType!
+  label: String!
+  createdAt: String!
+  updatedAt: String!
+  copiedAt: String!
 }
 
 type SubcategoryType {
@@ -204,6 +283,16 @@ enum AwardTypeType {
   ADDITIVE_PREV
   ADDITIVE
   MULTIPLICATIVE
+}
+
+enum WeekdayType {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
 }
 
 type CategoryPointsSumType {
@@ -262,12 +351,18 @@ type PartialBonusType {
 }
 
 type TimeSpansType {
-  startTime: String
-  endTime: String
+  startTime: String!
+  endTime: String!
 }
 
 type GroupDateType {
-  weekday: String
-  startTime: String
-  endTime: String
+  weekday: String!
+  startTime: String!
+  endTime: String!
+}
+
+type NeighbouringLevelsType {
+  previousLevel: LevelType
+  currentLevel: LevelType!
+  nextLevel: LevelType
 }

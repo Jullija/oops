@@ -11,6 +11,9 @@ object_relationships:
   - name: userByTeacherId
     using:
       foreign_key_constraint_on: teacher_id
+  - name: userByUpdatedBy
+    using:
+      foreign_key_constraint_on: updated_by
 array_relationships:
   - name: bonuses
     using:
@@ -30,20 +33,22 @@ insert_permissions:
         - student_id
         - subcategory_id
         - teacher_id
+        - updated_by
         - value
     comment: ""
 select_permissions:
   - role: coordinator
     permission:
       columns:
+        - created_at
+        - label
         - points_id
         - student_id
         - subcategory_id
         - teacher_id
-        - value
-        - label
-        - created_at
         - updated_at
+        - updated_by
+        - value
       filter: {}
       allow_aggregations: true
     comment: ""
@@ -57,6 +62,7 @@ select_permissions:
         - subcategory_id
         - teacher_id
         - updated_at
+        - updated_by
         - value
       filter:
         user:
@@ -74,6 +80,7 @@ select_permissions:
         - subcategory_id
         - teacher_id
         - updated_at
+        - updated_by
         - value
       filter:
         _or:
@@ -95,9 +102,26 @@ update_permissions:
         - label
         - student_id
         - subcategory_id
-        - teacher_id
+        - updated_by
         - value
       filter: {}
+      check: {}
+      set:
+        label: '""'
+    comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - label
+        - student_id
+        - subcategory_id
+        - updated_by
+        - value
+      filter:
+        user:
+          groups:
+            teacher_id:
+              _eq: X-Hasura-User-Id
       check: {}
       set:
         label: '""'

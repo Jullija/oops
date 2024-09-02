@@ -120,6 +120,7 @@ class BonusDataFetcher {
         return Points(
             student = chestHistory.user,
             teacher = chestHistory.teacher,
+            updatedBy = chestHistory.teacher,
             value = award.awardValue,
             subcategory = chestHistory.subcategory,
             label = "Points awarded for ${award.awardName}"
@@ -152,6 +153,7 @@ class BonusDataFetcher {
         return Points(
             student = chestHistory.user,
             teacher = chestHistory.teacher,
+            updatedBy = chestHistory.teacher,
             value = min(award.awardValue, nextSubcategory.maxPoints),
             subcategory = nextSubcategory,
             label = "Points awarded for ${award.awardName}"
@@ -169,6 +171,7 @@ class BonusDataFetcher {
         return Points(
             student = chestHistory.user,
             teacher = chestHistory.teacher,
+            updatedBy = chestHistory.teacher,
             value = min(lastPoints.subcategory.maxPoints - lastPoints.value, award.awardValue),
             subcategory = lastPoints.subcategory,
             label = "Points awarded for ${award.awardName}"
@@ -185,6 +188,7 @@ class BonusDataFetcher {
         return Points(
             student = chestHistory.user,
             teacher = chestHistory.teacher,
+            updatedBy = chestHistory.teacher,
             value = totalPointsValue * award.awardValue,
             subcategory = chestHistory.subcategory,
             label = "Points awarded for ${award.awardName}"

@@ -1,17 +1,18 @@
 package backend.graphql
 
+import backend.award.Award
 import backend.award.AwardRepository
 import backend.award.AwardType
 import backend.bonuses.Bonuses
 import backend.bonuses.BonusesRepository
 import backend.categories.Categories
 import backend.categories.CategoriesRepository
-import backend.chests.Chests
-import backend.chests.ChestsRepository
+import backend.edition.Edition
 import backend.edition.EditionRepository
 import backend.files.FileEntity
 import backend.files.FileEntityRepository
 import backend.groups.GroupsRepository
+import backend.levels.Levels
 import backend.points.Points
 import backend.points.PointsRepository
 import backend.subcategories.Subcategories
@@ -27,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.sql.Time
 
 @DgsComponent
-class ChestsDataFetcher {
+class EditionDataFetcher {
 
     @Autowired
     private lateinit var bonusesRepository: BonusesRepository
@@ -54,29 +55,24 @@ class ChestsDataFetcher {
     lateinit var fileEntityRepository: FileEntityRepository
 
     @Autowired
-    lateinit var chestsRepository: ChestsRepository
+    lateinit var awardRepository: AwardRepository
 
     @Autowired
     lateinit var photoAssigner: PhotoAssigner
 
     @DgsMutation
     @Transactional
-    fun assignPhotoToChest(@InputArgument chestId: Long, @InputArgument fileId: Long?): Boolean {
-        return photoAssigner.assignPhotoToAssignee(chestsRepository, "image/chest", chestId, fileId)
-    }
-
-    @DgsMutation
-    @Transactional
-    fun addChest(@InputArgument chestType: String, @InputArgument editionId: Long, @InputArgument label: String = ""): Chests {
-        val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
-        if (chestsRepository.existsByChestTypeAndEdition(chestType, edition)) {
-            throw IllegalArgumentException("Chest with type $chestType already exists for edition ${edition.editionId}")
+    fun addEdition(@InputArgument editionName: String, @InputArgument editionYear: Int, @InputArgument label: String = ""): Edition {
+        if (editionRepository.existsByEditionName(editionName)) {
+            throw IllegalArgumentException("Edition with name $editionName already exists")
         }
-        val chest = Chests(
-            chestType = chestType,
-            label = label,
-            edition = edition
-        )
-        return chestsRepository.save(chest)
+        if (editionRepository.existsByEditionYear(editionYear)) {
+            throw IllegalArgumentException("Edition with year $editionYear already exists")
+        }
+        val edition = Edition(
+            editionName = editionName,
+            editionYear = editionYear,
+            label = label)
+        return editionRepository.save(edition)
     }
 }

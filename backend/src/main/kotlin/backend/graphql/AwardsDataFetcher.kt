@@ -3,28 +3,19 @@ package backend.graphql
 import backend.award.Award
 import backend.award.AwardRepository
 import backend.award.AwardType
-import backend.bonuses.Bonuses
 import backend.bonuses.BonusesRepository
-import backend.categories.Categories
 import backend.categories.CategoriesRepository
 import backend.edition.EditionRepository
-import backend.files.FileEntity
 import backend.files.FileEntityRepository
 import backend.groups.GroupsRepository
-import backend.levels.Levels
-import backend.points.Points
 import backend.points.PointsRepository
-import backend.subcategories.Subcategories
 import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
-import backend.users.Users
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
-import com.netflix.graphql.dgs.DgsQuery
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
-import java.sql.Time
 
 @DgsComponent
 class AwardsDataFetcher {
@@ -71,25 +62,35 @@ class AwardsDataFetcher {
                  @InputArgument categoryId: Long, @InputArgument maxUsages: Int = -1,
                  @InputArgument label: String = ""): Award {
 
-        val awardTypeType = try {
-             AwardType.valueOf(awardType)
+
+        val awardType1 = try {
+             AwardType.valueOf(awardType.uppercase())
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Invalid award type")
         }
-        if (awardTypeType == AwardType.ADDITIVE && awardValue < 0) {
-            throw IllegalArgumentException("Additive award value must be positive")
+        if ((awardType1 == AwardType.ADDITIVE ||
+                    awardType1 == AwardType.ADDITIVE_NEXT ||
+                    awardType1 == AwardType.ADDITIVE_PREV) && awardValue < 0) {
+            throw IllegalArgumentException("Additive award value must be greater than or equal to 0")
         }
-        if (awardTypeType == AwardType.MULTIPLICATIVE && awardValue <= 0) {
-            throw IllegalArgumentException("Multiplicative award value must be positive")
-        }
-        if (awardTypeType == AwardType.MULTIPLICATIVE && awardValue > 1) {
-            throw IllegalArgumentException("Multiplicative award value must be less than or equal to 1")
+        if (awardType1 == AwardType.MULTIPLICATIVE && (awardValue <= 0 || awardValue > 1)) {
+            throw IllegalArgumentException("Multiplicative award value must be greater than 0 and less than or equal to 1")
         }
         val category = categoriesRepository.findById(categoryId).orElseThrow { IllegalArgumentException("Invalid category ID") }
+        val awardsWithSameName = awardRepository.findAllByAwardName(awardName)
+        if (awardsWithSameName.any { it.awardType != awardType1 }) {
+            throw IllegalArgumentException("Award with this name cannot be added with this type (already exists with different type)")
+        }
+        if (awardsWithSameName.any { it.awardValue == awardValue  }) {
+            throw IllegalArgumentException("Award with this name and value already exists")
+        }
+        if (!category.canAddPoints) {
+            throw IllegalArgumentException("This category does not allow adding points from awards")
+        }
 
         val award = Award(
             awardName = awardName,
-            awardType = awardTypeType,
+            awardType = awardType1,
             awardValue = awardValue,
             category = category,
             maxUsages = maxUsages,
