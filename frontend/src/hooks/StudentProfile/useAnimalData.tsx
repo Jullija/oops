@@ -1,3 +1,4 @@
+import { ApolloError } from "@apollo/client";
 import { LevelType } from "../../__generated__/schema.graphql.types";
 import { useNeighboringLevelsQuery } from "../../graphql/neighbouringLevels.graphql.types";
 
@@ -22,7 +23,19 @@ const mapToLevel = (level: LevelType | null | undefined): Level | undefined => {
   };
 };
 
-export const useAnimalData = (editionId?: string, studentId?: string) => {
+export type AnimalDataResult = {
+  prevLevel: Level | undefined;
+  currLevel: Level | undefined;
+  nextLevel: Level | undefined;
+  animalDataLoading: boolean;
+  animalDataError: ApolloError | Error | undefined;
+  animalDataRefetch: () => void;
+};
+
+export const useAnimalData = (
+  editionId?: string,
+  studentId?: string,
+): AnimalDataResult => {
   const { data, loading, error, refetch } = useNeighboringLevelsQuery({
     skip: !editionId || !studentId,
     variables: {
@@ -40,9 +53,9 @@ export const useAnimalData = (editionId?: string, studentId?: string) => {
       prevLevel: undefined,
       currLevel: undefined,
       nextLevel: undefined,
-      loading,
-      error: error ?? new Error("Animal card levels are missing."),
-      refetch,
+      animalDataLoading: loading,
+      animalDataError: error ?? new Error("Animal card levels are missing."),
+      animalDataRefetch: refetch,
     };
   }
 
@@ -50,8 +63,8 @@ export const useAnimalData = (editionId?: string, studentId?: string) => {
     prevLevel: previousLevel,
     currLevel,
     nextLevel,
-    loading,
-    error,
-    refetch,
+    animalDataLoading: loading,
+    animalDataError: error,
+    animalDataRefetch: refetch,
   };
 };

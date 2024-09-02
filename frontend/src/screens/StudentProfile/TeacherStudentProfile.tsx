@@ -39,7 +39,7 @@ export function TeacherStudentProfile() {
     loading,
     error,
     refetch,
-  } = useStudentProfileData(studentId ?? "-1");
+  } = useStudentProfileData(studentId);
 
   const [createPoints, { error: createPointsError }] =
     useCreatePointsMutation();

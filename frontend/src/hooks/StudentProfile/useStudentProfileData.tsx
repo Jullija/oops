@@ -3,7 +3,7 @@ import { useAnimalData } from "./useAnimalData";
 import { useCategoriesCardData } from "./useCategoriesCardData";
 import { useStudentData } from "./useStudentData";
 
-export const useStudentProfileData = (studentId: string) => {
+export const useStudentProfileData = (studentId?: string) => {
   const { selectedEdition } = useEditionSelection();
   const editionId = selectedEdition?.editionId;
 
@@ -26,9 +26,9 @@ export const useStudentProfileData = (studentId: string) => {
     prevLevel,
     currLevel,
     nextLevel,
-    loading: animalLoading,
-    error: animalError,
-    refetch: animalRefetch,
+    animalDataLoading: animalLoading,
+    animalDataError: animalError,
+    animalDataRefetch: animalRefetch,
   } = useAnimalData(editionId, studentId);
 
   const refetch = () => {

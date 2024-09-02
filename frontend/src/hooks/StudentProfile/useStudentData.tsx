@@ -41,12 +41,7 @@ export const useStudentData = (props: {
 }) => {
   const { editionId, studentId } = props;
 
-  const {
-    data,
-    loading: studentPointsLoading,
-    error: studentPointsError,
-    refetch: studentPointsRefetch,
-  } = useStudentPointsQuery({
+  const { data, loading, error, refetch } = useStudentPointsQuery({
     variables: {
       editionId: parseInt(editionId ?? "-1"),
       studentId: parseInt(studentId ?? "-1"),
@@ -111,8 +106,8 @@ export const useStudentData = (props: {
     studentData,
     points,
     filterHeaderNames,
-    studentPointsLoading,
-    studentPointsError,
-    studentPointsRefetch,
+    studentPointsLoading: loading,
+    studentPointsError: error,
+    studentPointsRefetch: refetch,
   };
 };
