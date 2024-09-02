@@ -9,6 +9,13 @@ array_relationships:
         table:
           name: award
           schema: public
+  - name: categoryEditions
+    using:
+      foreign_key_constraint_on:
+        column: category_id
+        table:
+          name: category_edition
+          schema: public
   - name: subcategories
     using:
       foreign_key_constraint_on:
@@ -23,6 +30,7 @@ insert_permissions:
       set:
         label: '""'
       columns:
+        - can_add_points
         - category_name
         - label
     comment: ""
@@ -30,6 +38,7 @@ select_permissions:
   - role: coordinator
     permission:
       columns:
+        - can_add_points
         - category_id
         - category_name
         - label
@@ -39,6 +48,7 @@ select_permissions:
   - role: student
     permission:
       columns:
+        - can_add_points
         - category_id
         - category_name
         - label
@@ -47,6 +57,7 @@ select_permissions:
   - role: teacher
     permission:
       columns:
+        - can_add_points
         - category_id
         - category_name
         - label
@@ -56,6 +67,7 @@ update_permissions:
   - role: coordinator
     permission:
       columns:
+        - can_add_points
         - category_name
         - label
       filter: {}

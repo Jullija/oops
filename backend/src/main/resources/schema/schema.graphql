@@ -14,8 +14,11 @@ type Mutation {
     addLevel(editionId: Int!, name: String!, maximumPoints: Float!, grade: Float!, imageFileId: Int): LevelType
     addAward( awardName: String!, awardType: String!, awardValue: Float!,
         categoryId: Int!, maxUsages: Int = -1, label: String = ""): AwardType
+    addAwardToEdition(awardId: Int!, editionId: Int!): AwardEditionType
     addChestToUser(userId: Int!, chestId: Int!, teacherId: Int!, subcategoryId: Int!): ChestHistoryType
     addChest(chestType: String!, editionId: Int!, label: String = ""): ChestType
+    addCategory(categoryName: String!, canAddPoints: Boolean!, label: String = ""): CategoryType
+    addCategoryToEdition(categoryId: Int!, editionId: Int!): CategoryEditionType
     addEdition(editionName: String!, editionYear: Int!, label: String = ""): EditionType
     addGroup(editionId: Int!, groupName: String!, weekday: String!, startTime: String!,
         endTime: String!, teacherId: Int!, label: String = ""): GroupType
@@ -23,7 +26,6 @@ type Mutation {
         categoryId: Int!, editionId: Int!, label: String = ""): SubcategoryType
     addUser(indexNumber: Int!, nick: String!, firstName: String!,
         secondName: String!, role: String!, label: String = ""): UserType
-    addAwardToEdition(awardId: Int!, editionId: Int!): AwardEditionType
     generateSubcategories(editionId: Int!, categoryId: Int!, subcategoryPrefix: String!,
         subcategoryCount: Int!, maxPoints: Float!): [SubcategoryType]
 }
@@ -51,9 +53,9 @@ type AwardType {
 }
 
 type AwardEditionType {
+    awardEditionId: ID!
     award: AwardType!
     edition: EditionType!
-    awardEditionId: ID!
     label: String!
 }
 
@@ -71,6 +73,14 @@ type CategoryType {
     categoryId: ID!
     categoryName: String!
     canAddPoints: Boolean!
+    categoryEdition: [CategoryEditionType]!
+    label: String!
+}
+
+type CategoryEditionType {
+    categoryEditionId: ID!
+    category: CategoryType!
+    edition: EditionType!
     label: String!
 }
 
@@ -147,11 +157,26 @@ type PointType {
     pointsId: ID!
     student: UserType!
     teacher: UserType!
+    updatedBy: UserType!
     value: Float!
     subcategory: SubcategoryType!
     label: String!
     createdAt: String!
     updatedAt: String!
+}
+
+type PointsHistoryType {
+    pointsHistoryId: ID!
+    pointsId: ID!
+    student: UserType!
+    teacher: UserType!
+    updatedBy: UserType!
+    value: Float!
+    subcategory: SubcategoryType!
+    label: String!
+    createdAt: String!
+    updatedAt: String!
+    copiedAt: String!
 }
 
 type SubcategoryType {

@@ -1,5 +1,5 @@
 table:
-  name: subcategories
+  name: category_edition
   schema: public
 object_relationships:
   - name: category
@@ -8,28 +8,6 @@ object_relationships:
   - name: edition
     using:
       foreign_key_constraint_on: edition_id
-array_relationships:
-  - name: chestHistories
-    using:
-      foreign_key_constraint_on:
-        column: subcategory_id
-        table:
-          name: chest_history
-          schema: public
-  - name: points
-    using:
-      foreign_key_constraint_on:
-        column: subcategory_id
-        table:
-          name: points
-          schema: public
-  - name: pointsHistories
-    using:
-      foreign_key_constraint_on:
-        column: subcategory_id
-        table:
-          name: points_history
-          schema: public
 insert_permissions:
   - role: coordinator
     permission:
@@ -37,72 +15,65 @@ insert_permissions:
       set:
         label: '""'
       columns:
+        - category_edition_id
         - category_id
         - edition_id
         - label
-        - max_points
-        - ordinal_number
-        - subcategory_name
     comment: ""
 select_permissions:
   - role: coordinator
     permission:
       columns:
+        - category_edition_id
         - category_id
         - edition_id
         - label
-        - max_points
-        - ordinal_number
-        - subcategory_id
-        - subcategory_name
       filter: {}
       allow_aggregations: true
     comment: ""
   - role: student
     permission:
       columns:
+        - category_edition_id
         - category_id
         - edition_id
         - label
-        - max_points
-        - ordinal_number
-        - subcategory_id
-        - subcategory_name
       filter:
         edition:
           groups:
-            userGroups:
+            user:
               user_id:
                 _eq: X-Hasura-User-Id
     comment: ""
   - role: teacher
     permission:
       columns:
+        - category_edition_id
         - category_id
         - edition_id
         - label
-        - max_points
-        - ordinal_number
-        - subcategory_id
-        - subcategory_name
       filter:
         edition:
           groups:
-            userGroups:
-              user_id:
-                _eq: X-Hasura-User-Id
+            teacher_id:
+              _eq: X-Hasura-User-Id
+      allow_aggregations: true
     comment: ""
 update_permissions:
   - role: coordinator
     permission:
       columns:
+        - category_edition_id
         - category_id
+        - edition_id
         - label
-        - max_points
-        - ordinal_number
-        - subcategory_name
-      filter: {}
-      check: {}
+      filter:
+        _not:
+          category:
+            subcategories:
+              category_id:
+                _is_null: false
+      check: null
       set:
         label: '""'
     comment: ""
@@ -111,7 +82,8 @@ delete_permissions:
     permission:
       filter:
         _not:
-          points:
-            points_id:
-              _is_null: false
+          category:
+            subcategories:
+              category_id:
+                _is_null: false
     comment: ""
