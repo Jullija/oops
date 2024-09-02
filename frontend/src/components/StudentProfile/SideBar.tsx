@@ -3,7 +3,7 @@ import { StudentCard } from "./cards/StudentCard";
 import { CategoriesCard } from "./cards/CategoriesCard";
 import { Styles } from "../../utils/Styles";
 import { StudentCardData } from "../../hooks/StudentProfile/useStudentData";
-import { AnimalCard } from "./cards/AnimalCard";
+import { AnimalCard } from "./cards/AnimalCard/AnimalCard";
 import { Level } from "../../hooks/StudentProfile/useAnimalData";
 
 const styles: Styles = {

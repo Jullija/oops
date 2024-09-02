@@ -1,7 +1,8 @@
-import { Level } from "../../../hooks/StudentProfile/useAnimalData";
-import { Styles } from "../../../utils/Styles";
-import { PointsBar } from "../../PointsBar";
-import { Avatar } from "../../Avatar";
+import { Level } from "../../../../hooks/StudentProfile/useAnimalData";
+import { Styles } from "../../../../utils/Styles";
+import { PointsBar } from "../../../PointsBar";
+import { Avatar } from "../../../Avatar";
+import { LevelMiniature } from "./LevelMiniature";
 
 const styles: Styles = {
   card: {
@@ -58,27 +59,13 @@ export const AnimalCard = ({
         }}
         showPoints
       />
+
       <div style={styles.neighborLevelsContainer}>
         <div style={styles.levelContainer}>
-          {prevLevel && (
-            <div>
-              <div style={styles.opacity}>
-                <Avatar id={prevLevel.imageId} size="sm" />
-              </div>
-
-              <div>lvl. {prevLevel.ordinalNumber}</div>
-              <div>{prevLevel.name}</div>
-            </div>
-          )}
+          {prevLevel && <LevelMiniature level={prevLevel} />}
         </div>
         <div style={styles.levelContainer}>
-          {nextLevel && (
-            <div>
-              <Avatar id={nextLevel.imageId} size="sm" />
-              <div>lvl. {nextLevel.ordinalNumber}</div>
-              <div>{nextLevel.name}</div>
-            </div>
-          )}
+          {nextLevel && <LevelMiniature level={nextLevel} />}
         </div>
       </div>
     </div>
