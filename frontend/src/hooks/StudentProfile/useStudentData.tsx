@@ -4,9 +4,8 @@ import {
   useStudentPointsQuery,
 } from "../../graphql/studentPoints.graphql.types";
 
-export type Points = NonNullable<
-  StudentPointsQuery["getStudentPoints"]
->["subcategoryPoints"][number];
+export type Points =
+  StudentPointsQuery["getStudentPoints"]["subcategoryPoints"][number];
 
 export type StudentCardData = {
   id: string;

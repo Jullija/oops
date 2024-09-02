@@ -36,7 +36,6 @@ export default function PointsTable({ points }: PointsTableProps) {
     "prowadzący",
   ];
 
-  // TODO should not return chest categories only - do not return event, it cannot give points only chests
   const getPointsString = (points: Points) => {
     const pure = points.points.purePoints?.value ?? 0;
     let totalBonus = 0;
