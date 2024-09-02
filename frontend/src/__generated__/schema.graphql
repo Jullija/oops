@@ -2019,6 +2019,66 @@ type Categories {
     where: AwardBoolExp
   ): AwardAggregate!
   canAddPoints: Boolean!
+
+  """
+  An array relationship
+  """
+  categoryEditions(
+    """
+    distinct select on columns
+    """
+    distinctOn: [CategoryEditionSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [CategoryEditionOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: CategoryEditionBoolExp
+  ): [CategoryEdition!]!
+
+  """
+  An aggregate relationship
+  """
+  categoryEditionsAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [CategoryEditionSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [CategoryEditionOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: CategoryEditionBoolExp
+  ): CategoryEditionAggregate!
   categoryId: bigint!
   categoryName: String!
   label: String!
@@ -2126,6 +2186,8 @@ input CategoriesBoolExp {
   awards: AwardBoolExp
   awardsAggregate: AwardAggregateBoolExp
   canAddPoints: BooleanComparisonExp
+  categoryEditions: CategoryEditionBoolExp
+  categoryEditionsAggregate: CategoryEditionAggregateBoolExp
   categoryId: BigintComparisonExp
   categoryName: StringComparisonExp
   label: StringComparisonExp
@@ -2156,6 +2218,7 @@ input type for inserting data into table "categories"
 input CategoriesInsertInput {
   awards: AwardArrRelInsertInput
   canAddPoints: Boolean
+  categoryEditions: CategoryEditionArrRelInsertInput
   categoryId: bigint
   categoryName: String
   label: String
@@ -2222,6 +2285,7 @@ Ordering options when selecting data from "categories".
 input CategoriesOrderBy {
   awardsAggregate: AwardAggregateOrderBy
   canAddPoints: OrderBy
+  categoryEditionsAggregate: CategoryEditionAggregateOrderBy
   categoryId: OrderBy
   categoryName: OrderBy
   label: OrderBy
@@ -2393,6 +2457,471 @@ type CategoryAggregate {
   sumOfPurePoints: Float!
 }
 
+"""
+columns and relationships of "category_edition"
+"""
+type CategoryEdition {
+  """
+  An object relationship
+  """
+  category: Categories!
+  categoryEditionId: bigint!
+  categoryId: bigint!
+
+  """
+  An object relationship
+  """
+  edition: Edition!
+  editionId: bigint!
+  label: String!
+}
+
+"""
+aggregated selection of "category_edition"
+"""
+type CategoryEditionAggregate {
+  aggregate: CategoryEditionAggregateFields
+  nodes: [CategoryEdition!]!
+}
+
+input CategoryEditionAggregateBoolExp {
+  count: categoryEditionAggregateBoolExpCount
+}
+
+"""
+aggregate fields of "category_edition"
+"""
+type CategoryEditionAggregateFields {
+  avg: CategoryEditionAvgFields
+  count(columns: [CategoryEditionSelectColumn!], distinct: Boolean): Int!
+  max: CategoryEditionMaxFields
+  min: CategoryEditionMinFields
+  stddev: CategoryEditionStddevFields
+  stddevPop: CategoryEditionStddevPopFields
+  stddevSamp: CategoryEditionStddevSampFields
+  sum: CategoryEditionSumFields
+  varPop: CategoryEditionVarPopFields
+  varSamp: CategoryEditionVarSampFields
+  variance: CategoryEditionVarianceFields
+}
+
+"""
+order by aggregate values of table "category_edition"
+"""
+input CategoryEditionAggregateOrderBy {
+  avg: CategoryEditionAvgOrderBy
+  count: OrderBy
+  max: CategoryEditionMaxOrderBy
+  min: CategoryEditionMinOrderBy
+  stddev: CategoryEditionStddevOrderBy
+  stddevPop: CategoryEditionStddevPopOrderBy
+  stddevSamp: CategoryEditionStddevSampOrderBy
+  sum: CategoryEditionSumOrderBy
+  varPop: CategoryEditionVarPopOrderBy
+  varSamp: CategoryEditionVarSampOrderBy
+  variance: CategoryEditionVarianceOrderBy
+}
+
+"""
+input type for inserting array relation for remote table "category_edition"
+"""
+input CategoryEditionArrRelInsertInput {
+  data: [CategoryEditionInsertInput!]!
+
+  """
+  upsert condition
+  """
+  onConflict: CategoryEditionOnConflict
+}
+
+"""
+aggregate avg on columns
+"""
+type CategoryEditionAvgFields {
+  categoryEditionId: Float
+  categoryId: Float
+  editionId: Float
+}
+
+"""
+order by avg() on columns of table "category_edition"
+"""
+input CategoryEditionAvgOrderBy {
+  categoryEditionId: OrderBy
+  categoryId: OrderBy
+  editionId: OrderBy
+}
+
+"""
+Boolean expression to filter rows from the table "category_edition". All fields are combined with a logical 'AND'.
+"""
+input CategoryEditionBoolExp {
+  _and: [CategoryEditionBoolExp!]
+  _not: CategoryEditionBoolExp
+  _or: [CategoryEditionBoolExp!]
+  category: CategoriesBoolExp
+  categoryEditionId: BigintComparisonExp
+  categoryId: BigintComparisonExp
+  edition: EditionBoolExp
+  editionId: BigintComparisonExp
+  label: StringComparisonExp
+}
+
+"""
+unique or primary key constraints on table "category_edition"
+"""
+enum CategoryEditionConstraint {
+  """
+  unique or primary key constraint on columns "edition_id", "category_id"
+  """
+  category_edition_pkey
+
+  """
+  unique or primary key constraint on columns "edition_id", "category_id"
+  """
+  unique_category_edition
+}
+
+"""
+input type for incrementing numeric columns in table "category_edition"
+"""
+input CategoryEditionIncInput {
+  categoryEditionId: bigint
+  categoryId: bigint
+  editionId: bigint
+}
+
+"""
+input type for inserting data into table "category_edition"
+"""
+input CategoryEditionInsertInput {
+  category: CategoriesObjRelInsertInput
+  categoryEditionId: bigint
+  categoryId: bigint
+  edition: EditionObjRelInsertInput
+  editionId: bigint
+  label: String
+}
+
+"""
+aggregate max on columns
+"""
+type CategoryEditionMaxFields {
+  categoryEditionId: bigint
+  categoryId: bigint
+  editionId: bigint
+  label: String
+}
+
+"""
+order by max() on columns of table "category_edition"
+"""
+input CategoryEditionMaxOrderBy {
+  categoryEditionId: OrderBy
+  categoryId: OrderBy
+  editionId: OrderBy
+  label: OrderBy
+}
+
+"""
+aggregate min on columns
+"""
+type CategoryEditionMinFields {
+  categoryEditionId: bigint
+  categoryId: bigint
+  editionId: bigint
+  label: String
+}
+
+"""
+order by min() on columns of table "category_edition"
+"""
+input CategoryEditionMinOrderBy {
+  categoryEditionId: OrderBy
+  categoryId: OrderBy
+  editionId: OrderBy
+  label: OrderBy
+}
+
+"""
+response of any mutation on the table "category_edition"
+"""
+type CategoryEditionMutationResponse {
+  """
+  number of rows affected by the mutation
+  """
+  affectedRows: Int!
+
+  """
+  data from the rows affected by the mutation
+  """
+  returning: [CategoryEdition!]!
+}
+
+"""
+on_conflict condition type for table "category_edition"
+"""
+input CategoryEditionOnConflict {
+  constraint: CategoryEditionConstraint!
+  updateColumns: [CategoryEditionUpdateColumn!]! = []
+  where: CategoryEditionBoolExp
+}
+
+"""
+Ordering options when selecting data from "category_edition".
+"""
+input CategoryEditionOrderBy {
+  category: CategoriesOrderBy
+  categoryEditionId: OrderBy
+  categoryId: OrderBy
+  edition: EditionOrderBy
+  editionId: OrderBy
+  label: OrderBy
+}
+
+"""
+primary key columns input for table: category_edition
+"""
+input CategoryEditionPkColumnsInput {
+  categoryId: bigint!
+  editionId: bigint!
+}
+
+"""
+select columns of table "category_edition"
+"""
+enum CategoryEditionSelectColumn {
+  """
+  column name
+  """
+  categoryEditionId
+
+  """
+  column name
+  """
+  categoryId
+
+  """
+  column name
+  """
+  editionId
+
+  """
+  column name
+  """
+  label
+}
+
+"""
+input type for updating data in table "category_edition"
+"""
+input CategoryEditionSetInput {
+  categoryEditionId: bigint
+  categoryId: bigint
+  editionId: bigint
+  label: String
+}
+
+"""
+aggregate stddev on columns
+"""
+type CategoryEditionStddevFields {
+  categoryEditionId: Float
+  categoryId: Float
+  editionId: Float
+}
+
+"""
+order by stddev() on columns of table "category_edition"
+"""
+input CategoryEditionStddevOrderBy {
+  categoryEditionId: OrderBy
+  categoryId: OrderBy
+  editionId: OrderBy
+}
+
+"""
+aggregate stddevPop on columns
+"""
+type CategoryEditionStddevPopFields {
+  categoryEditionId: Float
+  categoryId: Float
+  editionId: Float
+}
+
+"""
+order by stddevPop() on columns of table "category_edition"
+"""
+input CategoryEditionStddevPopOrderBy {
+  categoryEditionId: OrderBy
+  categoryId: OrderBy
+  editionId: OrderBy
+}
+
+"""
+aggregate stddevSamp on columns
+"""
+type CategoryEditionStddevSampFields {
+  categoryEditionId: Float
+  categoryId: Float
+  editionId: Float
+}
+
+"""
+order by stddevSamp() on columns of table "category_edition"
+"""
+input CategoryEditionStddevSampOrderBy {
+  categoryEditionId: OrderBy
+  categoryId: OrderBy
+  editionId: OrderBy
+}
+
+"""
+Streaming cursor of the table "category_edition"
+"""
+input CategoryEditionStreamCursorInput {
+  """
+  Stream column input with initial value
+  """
+  initialValue: CategoryEditionStreamCursorValueInput!
+
+  """
+  cursor ordering
+  """
+  ordering: CursorOrdering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input CategoryEditionStreamCursorValueInput {
+  categoryEditionId: bigint
+  categoryId: bigint
+  editionId: bigint
+  label: String
+}
+
+"""
+aggregate sum on columns
+"""
+type CategoryEditionSumFields {
+  categoryEditionId: bigint
+  categoryId: bigint
+  editionId: bigint
+}
+
+"""
+order by sum() on columns of table "category_edition"
+"""
+input CategoryEditionSumOrderBy {
+  categoryEditionId: OrderBy
+  categoryId: OrderBy
+  editionId: OrderBy
+}
+
+type CategoryEditionType {
+  category: CategoryType!
+  categoryEditionId: ID!
+  edition: EditionType!
+  label: String!
+}
+
+"""
+update columns of table "category_edition"
+"""
+enum CategoryEditionUpdateColumn {
+  """
+  column name
+  """
+  categoryEditionId
+
+  """
+  column name
+  """
+  categoryId
+
+  """
+  column name
+  """
+  editionId
+
+  """
+  column name
+  """
+  label
+}
+
+input CategoryEditionUpdates {
+  """
+  increments the numeric columns with given value of the filtered values
+  """
+  _inc: CategoryEditionIncInput
+
+  """
+  sets the columns of the filtered rows to the given values
+  """
+  _set: CategoryEditionSetInput
+
+  """
+  filter the rows which have to be updated
+  """
+  where: CategoryEditionBoolExp!
+}
+
+"""
+aggregate varPop on columns
+"""
+type CategoryEditionVarPopFields {
+  categoryEditionId: Float
+  categoryId: Float
+  editionId: Float
+}
+
+"""
+order by varPop() on columns of table "category_edition"
+"""
+input CategoryEditionVarPopOrderBy {
+  categoryEditionId: OrderBy
+  categoryId: OrderBy
+  editionId: OrderBy
+}
+
+"""
+aggregate varSamp on columns
+"""
+type CategoryEditionVarSampFields {
+  categoryEditionId: Float
+  categoryId: Float
+  editionId: Float
+}
+
+"""
+order by varSamp() on columns of table "category_edition"
+"""
+input CategoryEditionVarSampOrderBy {
+  categoryEditionId: OrderBy
+  categoryId: OrderBy
+  editionId: OrderBy
+}
+
+"""
+aggregate variance on columns
+"""
+type CategoryEditionVarianceFields {
+  categoryEditionId: Float
+  categoryId: Float
+  editionId: Float
+}
+
+"""
+order by variance() on columns of table "category_edition"
+"""
+input CategoryEditionVarianceOrderBy {
+  categoryEditionId: OrderBy
+  categoryId: OrderBy
+  editionId: OrderBy
+}
+
 type CategoryPointsSumType {
   category: CategoryType!
   maxPoints: Float!
@@ -2409,6 +2938,7 @@ type CategoryPointsType {
 
 type CategoryType {
   canAddPoints: Boolean!
+  categoryEdition: [CategoryEditionType]!
   categoryId: ID!
   categoryName: String!
   label: String!
@@ -4220,6 +4750,66 @@ type Edition {
   """
   An array relationship
   """
+  categoryEditions(
+    """
+    distinct select on columns
+    """
+    distinctOn: [CategoryEditionSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [CategoryEditionOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: CategoryEditionBoolExp
+  ): [CategoryEdition!]!
+
+  """
+  An aggregate relationship
+  """
+  categoryEditionsAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [CategoryEditionSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [CategoryEditionOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: CategoryEditionBoolExp
+  ): CategoryEditionAggregate!
+
+  """
+  An array relationship
+  """
   chests(
     """
     distinct select on columns
@@ -4564,6 +5154,8 @@ input EditionBoolExp {
   _or: [EditionBoolExp!]
   awardEditions: AwardEditionBoolExp
   awardEditionsAggregate: AwardEditionAggregateBoolExp
+  categoryEditions: CategoryEditionBoolExp
+  categoryEditionsAggregate: CategoryEditionAggregateBoolExp
   chests: ChestsBoolExp
   chestsAggregate: ChestsAggregateBoolExp
   editionId: BigintComparisonExp
@@ -4603,6 +5195,7 @@ input type for inserting data into table "edition"
 """
 input EditionInsertInput {
   awardEditions: AwardEditionArrRelInsertInput
+  categoryEditions: CategoryEditionArrRelInsertInput
   chests: ChestsArrRelInsertInput
   editionId: bigint
   editionYear: Int
@@ -4675,6 +5268,7 @@ Ordering options when selecting data from "edition".
 """
 input EditionOrderBy {
   awardEditionsAggregate: AwardEditionAggregateOrderBy
+  categoryEditionsAggregate: CategoryEditionAggregateOrderBy
   chestsAggregate: ChestsAggregateOrderBy
   editionId: OrderBy
   editionYear: OrderBy
@@ -7870,6 +8464,7 @@ type PointType {
   subcategory: SubcategoryType!
   teacher: UserType!
   updatedAt: String!
+  updatedBy: UserType!
   value: Float!
 }
 
@@ -7948,6 +8543,7 @@ type Points {
   subcategoryId: bigint!
   teacherId: bigint!
   updatedAt: timestamp!
+  updatedBy: bigint!
 
   """
   An object relationship
@@ -7958,6 +8554,11 @@ type Points {
   An object relationship
   """
   userByTeacherId: Users!
+
+  """
+  An object relationship
+  """
+  userByUpdatedBy: Users!
   value: float8!
 }
 
@@ -8035,6 +8636,7 @@ type PointsAvgFields {
   studentId: Float
   subcategoryId: Float
   teacherId: Float
+  updatedBy: Float
   value: Float
 }
 
@@ -8046,6 +8648,7 @@ input PointsAvgOrderBy {
   studentId: OrderBy
   subcategoryId: OrderBy
   teacherId: OrderBy
+  updatedBy: OrderBy
   value: OrderBy
 }
 
@@ -8066,8 +8669,10 @@ input PointsBoolExp {
   subcategoryId: BigintComparisonExp
   teacherId: BigintComparisonExp
   updatedAt: TimestampComparisonExp
+  updatedBy: BigintComparisonExp
   user: UsersBoolExp
   userByTeacherId: UsersBoolExp
+  userByUpdatedBy: UsersBoolExp
   value: Float8ComparisonExp
 }
 
@@ -8082,6 +8687,771 @@ enum PointsConstraint {
 }
 
 """
+columns and relationships of "points_history"
+"""
+type PointsHistory {
+  copiedAt: timestamp!
+  createdAt: timestamp!
+  label: String!
+
+  """
+  An object relationship
+  """
+  points: Points
+  pointsHistoryId: bigint!
+  pointsId: bigint!
+  studentId: bigint!
+
+  """
+  An object relationship
+  """
+  subcategory: Subcategories!
+  subcategoryId: bigint!
+  teacherId: bigint!
+  updatedAt: timestamp!
+  updatedBy: bigint!
+
+  """
+  An object relationship
+  """
+  user: Users!
+
+  """
+  An object relationship
+  """
+  userByTeacherId: Users!
+  value: float8!
+}
+
+"""
+aggregated selection of "points_history"
+"""
+type PointsHistoryAggregate {
+  aggregate: PointsHistoryAggregateFields
+  nodes: [PointsHistory!]!
+}
+
+input PointsHistoryAggregateBoolExp {
+  avg: pointsHistoryAggregateBoolExpAvg
+  corr: pointsHistoryAggregateBoolExpCorr
+  count: pointsHistoryAggregateBoolExpCount
+  covar_samp: pointsHistoryAggregateBoolExpCovar_samp
+  max: pointsHistoryAggregateBoolExpMax
+  min: pointsHistoryAggregateBoolExpMin
+  stddev_samp: pointsHistoryAggregateBoolExpStddev_samp
+  sum: pointsHistoryAggregateBoolExpSum
+  var_samp: pointsHistoryAggregateBoolExpVar_samp
+}
+
+"""
+aggregate fields of "points_history"
+"""
+type PointsHistoryAggregateFields {
+  avg: PointsHistoryAvgFields
+  count(columns: [PointsHistorySelectColumn!], distinct: Boolean): Int!
+  max: PointsHistoryMaxFields
+  min: PointsHistoryMinFields
+  stddev: PointsHistoryStddevFields
+  stddevPop: PointsHistoryStddevPopFields
+  stddevSamp: PointsHistoryStddevSampFields
+  sum: PointsHistorySumFields
+  varPop: PointsHistoryVarPopFields
+  varSamp: PointsHistoryVarSampFields
+  variance: PointsHistoryVarianceFields
+}
+
+"""
+order by aggregate values of table "points_history"
+"""
+input PointsHistoryAggregateOrderBy {
+  avg: PointsHistoryAvgOrderBy
+  count: OrderBy
+  max: PointsHistoryMaxOrderBy
+  min: PointsHistoryMinOrderBy
+  stddev: PointsHistoryStddevOrderBy
+  stddevPop: PointsHistoryStddevPopOrderBy
+  stddevSamp: PointsHistoryStddevSampOrderBy
+  sum: PointsHistorySumOrderBy
+  varPop: PointsHistoryVarPopOrderBy
+  varSamp: PointsHistoryVarSampOrderBy
+  variance: PointsHistoryVarianceOrderBy
+}
+
+"""
+input type for inserting array relation for remote table "points_history"
+"""
+input PointsHistoryArrRelInsertInput {
+  data: [PointsHistoryInsertInput!]!
+
+  """
+  upsert condition
+  """
+  onConflict: PointsHistoryOnConflict
+}
+
+"""
+aggregate avg on columns
+"""
+type PointsHistoryAvgFields {
+  pointsHistoryId: Float
+  pointsId: Float
+  studentId: Float
+  subcategoryId: Float
+  teacherId: Float
+  updatedBy: Float
+  value: Float
+}
+
+"""
+order by avg() on columns of table "points_history"
+"""
+input PointsHistoryAvgOrderBy {
+  pointsHistoryId: OrderBy
+  pointsId: OrderBy
+  studentId: OrderBy
+  subcategoryId: OrderBy
+  teacherId: OrderBy
+  updatedBy: OrderBy
+  value: OrderBy
+}
+
+"""
+Boolean expression to filter rows from the table "points_history". All fields are combined with a logical 'AND'.
+"""
+input PointsHistoryBoolExp {
+  _and: [PointsHistoryBoolExp!]
+  _not: PointsHistoryBoolExp
+  _or: [PointsHistoryBoolExp!]
+  copiedAt: TimestampComparisonExp
+  createdAt: TimestampComparisonExp
+  label: StringComparisonExp
+  points: PointsBoolExp
+  pointsHistoryId: BigintComparisonExp
+  pointsId: BigintComparisonExp
+  studentId: BigintComparisonExp
+  subcategory: SubcategoriesBoolExp
+  subcategoryId: BigintComparisonExp
+  teacherId: BigintComparisonExp
+  updatedAt: TimestampComparisonExp
+  updatedBy: BigintComparisonExp
+  user: UsersBoolExp
+  userByTeacherId: UsersBoolExp
+  value: Float8ComparisonExp
+}
+
+"""
+unique or primary key constraints on table "points_history"
+"""
+enum PointsHistoryConstraint {
+  """
+  unique or primary key constraint on columns "points_history_id"
+  """
+  points_history_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "points_history"
+"""
+input PointsHistoryIncInput {
+  pointsHistoryId: bigint
+  pointsId: bigint
+  studentId: bigint
+  subcategoryId: bigint
+  teacherId: bigint
+  updatedBy: bigint
+  value: float8
+}
+
+"""
+input type for inserting data into table "points_history"
+"""
+input PointsHistoryInsertInput {
+  copiedAt: timestamp
+  createdAt: timestamp
+  label: String
+  points: PointsObjRelInsertInput
+  pointsHistoryId: bigint
+  pointsId: bigint
+  studentId: bigint
+  subcategory: SubcategoriesObjRelInsertInput
+  subcategoryId: bigint
+  teacherId: bigint
+  updatedAt: timestamp
+  updatedBy: bigint
+  user: UsersObjRelInsertInput
+  userByTeacherId: UsersObjRelInsertInput
+  value: float8
+}
+
+"""
+aggregate max on columns
+"""
+type PointsHistoryMaxFields {
+  copiedAt: timestamp
+  createdAt: timestamp
+  label: String
+  pointsHistoryId: bigint
+  pointsId: bigint
+  studentId: bigint
+  subcategoryId: bigint
+  teacherId: bigint
+  updatedAt: timestamp
+  updatedBy: bigint
+  value: float8
+}
+
+"""
+order by max() on columns of table "points_history"
+"""
+input PointsHistoryMaxOrderBy {
+  copiedAt: OrderBy
+  createdAt: OrderBy
+  label: OrderBy
+  pointsHistoryId: OrderBy
+  pointsId: OrderBy
+  studentId: OrderBy
+  subcategoryId: OrderBy
+  teacherId: OrderBy
+  updatedAt: OrderBy
+  updatedBy: OrderBy
+  value: OrderBy
+}
+
+"""
+aggregate min on columns
+"""
+type PointsHistoryMinFields {
+  copiedAt: timestamp
+  createdAt: timestamp
+  label: String
+  pointsHistoryId: bigint
+  pointsId: bigint
+  studentId: bigint
+  subcategoryId: bigint
+  teacherId: bigint
+  updatedAt: timestamp
+  updatedBy: bigint
+  value: float8
+}
+
+"""
+order by min() on columns of table "points_history"
+"""
+input PointsHistoryMinOrderBy {
+  copiedAt: OrderBy
+  createdAt: OrderBy
+  label: OrderBy
+  pointsHistoryId: OrderBy
+  pointsId: OrderBy
+  studentId: OrderBy
+  subcategoryId: OrderBy
+  teacherId: OrderBy
+  updatedAt: OrderBy
+  updatedBy: OrderBy
+  value: OrderBy
+}
+
+"""
+response of any mutation on the table "points_history"
+"""
+type PointsHistoryMutationResponse {
+  """
+  number of rows affected by the mutation
+  """
+  affectedRows: Int!
+
+  """
+  data from the rows affected by the mutation
+  """
+  returning: [PointsHistory!]!
+}
+
+"""
+on_conflict condition type for table "points_history"
+"""
+input PointsHistoryOnConflict {
+  constraint: PointsHistoryConstraint!
+  updateColumns: [PointsHistoryUpdateColumn!]! = []
+  where: PointsHistoryBoolExp
+}
+
+"""
+Ordering options when selecting data from "points_history".
+"""
+input PointsHistoryOrderBy {
+  copiedAt: OrderBy
+  createdAt: OrderBy
+  label: OrderBy
+  points: PointsOrderBy
+  pointsHistoryId: OrderBy
+  pointsId: OrderBy
+  studentId: OrderBy
+  subcategory: SubcategoriesOrderBy
+  subcategoryId: OrderBy
+  teacherId: OrderBy
+  updatedAt: OrderBy
+  updatedBy: OrderBy
+  user: UsersOrderBy
+  userByTeacherId: UsersOrderBy
+  value: OrderBy
+}
+
+"""
+primary key columns input for table: points_history
+"""
+input PointsHistoryPkColumnsInput {
+  pointsHistoryId: bigint!
+}
+
+"""
+select columns of table "points_history"
+"""
+enum PointsHistorySelectColumn {
+  """
+  column name
+  """
+  copiedAt
+
+  """
+  column name
+  """
+  createdAt
+
+  """
+  column name
+  """
+  label
+
+  """
+  column name
+  """
+  pointsHistoryId
+
+  """
+  column name
+  """
+  pointsId
+
+  """
+  column name
+  """
+  studentId
+
+  """
+  column name
+  """
+  subcategoryId
+
+  """
+  column name
+  """
+  teacherId
+
+  """
+  column name
+  """
+  updatedAt
+
+  """
+  column name
+  """
+  updatedBy
+
+  """
+  column name
+  """
+  value
+}
+
+"""
+select "pointsHistoryAggregateBoolExpAvgArgumentsColumns" columns of table "points_history"
+"""
+enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpAvgArgumentsColumns {
+  """
+  column name
+  """
+  value
+}
+
+"""
+select "pointsHistoryAggregateBoolExpCorrArgumentsColumns" columns of table "points_history"
+"""
+enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpCorrArgumentsColumns {
+  """
+  column name
+  """
+  value
+}
+
+"""
+select "pointsHistoryAggregateBoolExpCovar_sampArgumentsColumns" columns of table "points_history"
+"""
+enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpCovar_sampArgumentsColumns {
+  """
+  column name
+  """
+  value
+}
+
+"""
+select "pointsHistoryAggregateBoolExpMaxArgumentsColumns" columns of table "points_history"
+"""
+enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpMaxArgumentsColumns {
+  """
+  column name
+  """
+  value
+}
+
+"""
+select "pointsHistoryAggregateBoolExpMinArgumentsColumns" columns of table "points_history"
+"""
+enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpMinArgumentsColumns {
+  """
+  column name
+  """
+  value
+}
+
+"""
+select "pointsHistoryAggregateBoolExpStddev_sampArgumentsColumns" columns of table "points_history"
+"""
+enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpStddev_sampArgumentsColumns {
+  """
+  column name
+  """
+  value
+}
+
+"""
+select "pointsHistoryAggregateBoolExpSumArgumentsColumns" columns of table "points_history"
+"""
+enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpSumArgumentsColumns {
+  """
+  column name
+  """
+  value
+}
+
+"""
+select "pointsHistoryAggregateBoolExpVar_sampArgumentsColumns" columns of table "points_history"
+"""
+enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpVar_sampArgumentsColumns {
+  """
+  column name
+  """
+  value
+}
+
+"""
+input type for updating data in table "points_history"
+"""
+input PointsHistorySetInput {
+  copiedAt: timestamp
+  createdAt: timestamp
+  label: String
+  pointsHistoryId: bigint
+  pointsId: bigint
+  studentId: bigint
+  subcategoryId: bigint
+  teacherId: bigint
+  updatedAt: timestamp
+  updatedBy: bigint
+  value: float8
+}
+
+"""
+aggregate stddev on columns
+"""
+type PointsHistoryStddevFields {
+  pointsHistoryId: Float
+  pointsId: Float
+  studentId: Float
+  subcategoryId: Float
+  teacherId: Float
+  updatedBy: Float
+  value: Float
+}
+
+"""
+order by stddev() on columns of table "points_history"
+"""
+input PointsHistoryStddevOrderBy {
+  pointsHistoryId: OrderBy
+  pointsId: OrderBy
+  studentId: OrderBy
+  subcategoryId: OrderBy
+  teacherId: OrderBy
+  updatedBy: OrderBy
+  value: OrderBy
+}
+
+"""
+aggregate stddevPop on columns
+"""
+type PointsHistoryStddevPopFields {
+  pointsHistoryId: Float
+  pointsId: Float
+  studentId: Float
+  subcategoryId: Float
+  teacherId: Float
+  updatedBy: Float
+  value: Float
+}
+
+"""
+order by stddevPop() on columns of table "points_history"
+"""
+input PointsHistoryStddevPopOrderBy {
+  pointsHistoryId: OrderBy
+  pointsId: OrderBy
+  studentId: OrderBy
+  subcategoryId: OrderBy
+  teacherId: OrderBy
+  updatedBy: OrderBy
+  value: OrderBy
+}
+
+"""
+aggregate stddevSamp on columns
+"""
+type PointsHistoryStddevSampFields {
+  pointsHistoryId: Float
+  pointsId: Float
+  studentId: Float
+  subcategoryId: Float
+  teacherId: Float
+  updatedBy: Float
+  value: Float
+}
+
+"""
+order by stddevSamp() on columns of table "points_history"
+"""
+input PointsHistoryStddevSampOrderBy {
+  pointsHistoryId: OrderBy
+  pointsId: OrderBy
+  studentId: OrderBy
+  subcategoryId: OrderBy
+  teacherId: OrderBy
+  updatedBy: OrderBy
+  value: OrderBy
+}
+
+"""
+Streaming cursor of the table "points_history"
+"""
+input PointsHistoryStreamCursorInput {
+  """
+  Stream column input with initial value
+  """
+  initialValue: PointsHistoryStreamCursorValueInput!
+
+  """
+  cursor ordering
+  """
+  ordering: CursorOrdering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input PointsHistoryStreamCursorValueInput {
+  copiedAt: timestamp
+  createdAt: timestamp
+  label: String
+  pointsHistoryId: bigint
+  pointsId: bigint
+  studentId: bigint
+  subcategoryId: bigint
+  teacherId: bigint
+  updatedAt: timestamp
+  updatedBy: bigint
+  value: float8
+}
+
+"""
+aggregate sum on columns
+"""
+type PointsHistorySumFields {
+  pointsHistoryId: bigint
+  pointsId: bigint
+  studentId: bigint
+  subcategoryId: bigint
+  teacherId: bigint
+  updatedBy: bigint
+  value: float8
+}
+
+"""
+order by sum() on columns of table "points_history"
+"""
+input PointsHistorySumOrderBy {
+  pointsHistoryId: OrderBy
+  pointsId: OrderBy
+  studentId: OrderBy
+  subcategoryId: OrderBy
+  teacherId: OrderBy
+  updatedBy: OrderBy
+  value: OrderBy
+}
+
+"""
+update columns of table "points_history"
+"""
+enum PointsHistoryUpdateColumn {
+  """
+  column name
+  """
+  copiedAt
+
+  """
+  column name
+  """
+  createdAt
+
+  """
+  column name
+  """
+  label
+
+  """
+  column name
+  """
+  pointsHistoryId
+
+  """
+  column name
+  """
+  pointsId
+
+  """
+  column name
+  """
+  studentId
+
+  """
+  column name
+  """
+  subcategoryId
+
+  """
+  column name
+  """
+  teacherId
+
+  """
+  column name
+  """
+  updatedAt
+
+  """
+  column name
+  """
+  updatedBy
+
+  """
+  column name
+  """
+  value
+}
+
+input PointsHistoryUpdates {
+  """
+  increments the numeric columns with given value of the filtered values
+  """
+  _inc: PointsHistoryIncInput
+
+  """
+  sets the columns of the filtered rows to the given values
+  """
+  _set: PointsHistorySetInput
+
+  """
+  filter the rows which have to be updated
+  """
+  where: PointsHistoryBoolExp!
+}
+
+"""
+aggregate varPop on columns
+"""
+type PointsHistoryVarPopFields {
+  pointsHistoryId: Float
+  pointsId: Float
+  studentId: Float
+  subcategoryId: Float
+  teacherId: Float
+  updatedBy: Float
+  value: Float
+}
+
+"""
+order by varPop() on columns of table "points_history"
+"""
+input PointsHistoryVarPopOrderBy {
+  pointsHistoryId: OrderBy
+  pointsId: OrderBy
+  studentId: OrderBy
+  subcategoryId: OrderBy
+  teacherId: OrderBy
+  updatedBy: OrderBy
+  value: OrderBy
+}
+
+"""
+aggregate varSamp on columns
+"""
+type PointsHistoryVarSampFields {
+  pointsHistoryId: Float
+  pointsId: Float
+  studentId: Float
+  subcategoryId: Float
+  teacherId: Float
+  updatedBy: Float
+  value: Float
+}
+
+"""
+order by varSamp() on columns of table "points_history"
+"""
+input PointsHistoryVarSampOrderBy {
+  pointsHistoryId: OrderBy
+  pointsId: OrderBy
+  studentId: OrderBy
+  subcategoryId: OrderBy
+  teacherId: OrderBy
+  updatedBy: OrderBy
+  value: OrderBy
+}
+
+"""
+aggregate variance on columns
+"""
+type PointsHistoryVarianceFields {
+  pointsHistoryId: Float
+  pointsId: Float
+  studentId: Float
+  subcategoryId: Float
+  teacherId: Float
+  updatedBy: Float
+  value: Float
+}
+
+"""
+order by variance() on columns of table "points_history"
+"""
+input PointsHistoryVarianceOrderBy {
+  pointsHistoryId: OrderBy
+  pointsId: OrderBy
+  studentId: OrderBy
+  subcategoryId: OrderBy
+  teacherId: OrderBy
+  updatedBy: OrderBy
+  value: OrderBy
+}
+
+"""
 input type for incrementing numeric columns in table "points"
 """
 input PointsIncInput {
@@ -8089,6 +9459,7 @@ input PointsIncInput {
   studentId: bigint
   subcategoryId: bigint
   teacherId: bigint
+  updatedBy: bigint
   value: float8
 }
 
@@ -8105,8 +9476,10 @@ input PointsInsertInput {
   subcategoryId: bigint
   teacherId: bigint
   updatedAt: timestamp
+  updatedBy: bigint
   user: UsersObjRelInsertInput
   userByTeacherId: UsersObjRelInsertInput
+  userByUpdatedBy: UsersObjRelInsertInput
   value: float8
 }
 
@@ -8121,6 +9494,7 @@ type PointsMaxFields {
   subcategoryId: bigint
   teacherId: bigint
   updatedAt: timestamp
+  updatedBy: bigint
   value: float8
 }
 
@@ -8135,6 +9509,7 @@ input PointsMaxOrderBy {
   subcategoryId: OrderBy
   teacherId: OrderBy
   updatedAt: OrderBy
+  updatedBy: OrderBy
   value: OrderBy
 }
 
@@ -8149,6 +9524,7 @@ type PointsMinFields {
   subcategoryId: bigint
   teacherId: bigint
   updatedAt: timestamp
+  updatedBy: bigint
   value: float8
 }
 
@@ -8163,6 +9539,7 @@ input PointsMinOrderBy {
   subcategoryId: OrderBy
   teacherId: OrderBy
   updatedAt: OrderBy
+  updatedBy: OrderBy
   value: OrderBy
 }
 
@@ -8215,8 +9592,10 @@ input PointsOrderBy {
   subcategoryId: OrderBy
   teacherId: OrderBy
   updatedAt: OrderBy
+  updatedBy: OrderBy
   user: UsersOrderBy
   userByTeacherId: UsersOrderBy
+  userByUpdatedBy: UsersOrderBy
   value: OrderBy
 }
 
@@ -8265,6 +9644,11 @@ enum PointsSelectColumn {
   column name
   """
   updatedAt
+
+  """
+  column name
+  """
+  updatedBy
 
   """
   column name
@@ -8363,6 +9747,7 @@ input PointsSetInput {
   subcategoryId: bigint
   teacherId: bigint
   updatedAt: timestamp
+  updatedBy: bigint
   value: float8
 }
 
@@ -8374,6 +9759,7 @@ type PointsStddevFields {
   studentId: Float
   subcategoryId: Float
   teacherId: Float
+  updatedBy: Float
   value: Float
 }
 
@@ -8385,6 +9771,7 @@ input PointsStddevOrderBy {
   studentId: OrderBy
   subcategoryId: OrderBy
   teacherId: OrderBy
+  updatedBy: OrderBy
   value: OrderBy
 }
 
@@ -8396,6 +9783,7 @@ type PointsStddevPopFields {
   studentId: Float
   subcategoryId: Float
   teacherId: Float
+  updatedBy: Float
   value: Float
 }
 
@@ -8407,6 +9795,7 @@ input PointsStddevPopOrderBy {
   studentId: OrderBy
   subcategoryId: OrderBy
   teacherId: OrderBy
+  updatedBy: OrderBy
   value: OrderBy
 }
 
@@ -8418,6 +9807,7 @@ type PointsStddevSampFields {
   studentId: Float
   subcategoryId: Float
   teacherId: Float
+  updatedBy: Float
   value: Float
 }
 
@@ -8429,6 +9819,7 @@ input PointsStddevSampOrderBy {
   studentId: OrderBy
   subcategoryId: OrderBy
   teacherId: OrderBy
+  updatedBy: OrderBy
   value: OrderBy
 }
 
@@ -8458,6 +9849,7 @@ input PointsStreamCursorValueInput {
   subcategoryId: bigint
   teacherId: bigint
   updatedAt: timestamp
+  updatedBy: bigint
   value: float8
 }
 
@@ -8469,6 +9861,7 @@ type PointsSumFields {
   studentId: bigint
   subcategoryId: bigint
   teacherId: bigint
+  updatedBy: bigint
   value: float8
 }
 
@@ -8480,6 +9873,7 @@ input PointsSumOrderBy {
   studentId: OrderBy
   subcategoryId: OrderBy
   teacherId: OrderBy
+  updatedBy: OrderBy
   value: OrderBy
 }
 
@@ -8525,6 +9919,11 @@ enum PointsUpdateColumn {
   """
   column name
   """
+  updatedBy
+
+  """
+  column name
+  """
   value
 }
 
@@ -8553,6 +9952,7 @@ type PointsVarPopFields {
   studentId: Float
   subcategoryId: Float
   teacherId: Float
+  updatedBy: Float
   value: Float
 }
 
@@ -8564,6 +9964,7 @@ input PointsVarPopOrderBy {
   studentId: OrderBy
   subcategoryId: OrderBy
   teacherId: OrderBy
+  updatedBy: OrderBy
   value: OrderBy
 }
 
@@ -8575,6 +9976,7 @@ type PointsVarSampFields {
   studentId: Float
   subcategoryId: Float
   teacherId: Float
+  updatedBy: Float
   value: Float
 }
 
@@ -8586,6 +9988,7 @@ input PointsVarSampOrderBy {
   studentId: OrderBy
   subcategoryId: OrderBy
   teacherId: OrderBy
+  updatedBy: OrderBy
   value: OrderBy
 }
 
@@ -8597,6 +10000,7 @@ type PointsVarianceFields {
   studentId: Float
   subcategoryId: Float
   teacherId: Float
+  updatedBy: Float
   value: Float
 }
 
@@ -8608,6 +10012,7 @@ input PointsVarianceOrderBy {
   studentId: OrderBy
   subcategoryId: OrderBy
   teacherId: OrderBy
+  updatedBy: OrderBy
   value: OrderBy
 }
 
@@ -8828,6 +10233,66 @@ type Subcategories {
     """
     where: PointsBoolExp
   ): PointsAggregate!
+
+  """
+  An array relationship
+  """
+  pointsHistories(
+    """
+    distinct select on columns
+    """
+    distinctOn: [PointsHistorySelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [PointsHistoryOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: PointsHistoryBoolExp
+  ): [PointsHistory!]!
+
+  """
+  An aggregate relationship
+  """
+  pointsHistoriesAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [PointsHistorySelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [PointsHistoryOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: PointsHistoryBoolExp
+  ): PointsHistoryAggregate!
   subcategoryId: bigint!
   subcategoryName: String!
 }
@@ -8938,6 +10403,8 @@ input SubcategoriesBoolExp {
   ordinalNumber: IntComparisonExp
   points: PointsBoolExp
   pointsAggregate: PointsAggregateBoolExp
+  pointsHistories: PointsHistoryBoolExp
+  pointsHistoriesAggregate: PointsHistoryAggregateBoolExp
   subcategoryId: BigintComparisonExp
   subcategoryName: StringComparisonExp
 }
@@ -8976,6 +10443,7 @@ input SubcategoriesInsertInput {
   maxPoints: float8
   ordinalNumber: Int
   points: PointsArrRelInsertInput
+  pointsHistories: PointsHistoryArrRelInsertInput
   subcategoryId: bigint
   subcategoryName: String
 }
@@ -9081,6 +10549,7 @@ input SubcategoriesOrderBy {
   maxPoints: OrderBy
   ordinalNumber: OrderBy
   pointsAggregate: PointsAggregateOrderBy
+  pointsHistoriesAggregate: PointsHistoryAggregateOrderBy
   subcategoryId: OrderBy
   subcategoryName: OrderBy
 }
@@ -10763,6 +12232,186 @@ type Users {
     """
     where: PointsBoolExp
   ): PointsAggregate!
+
+  """
+  An array relationship
+  """
+  pointsByUpdatedBy(
+    """
+    distinct select on columns
+    """
+    distinctOn: [PointsSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [PointsOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: PointsBoolExp
+  ): [Points!]!
+
+  """
+  An aggregate relationship
+  """
+  pointsByUpdatedByAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [PointsSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [PointsOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: PointsBoolExp
+  ): PointsAggregate!
+
+  """
+  An array relationship
+  """
+  pointsHistories(
+    """
+    distinct select on columns
+    """
+    distinctOn: [PointsHistorySelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [PointsHistoryOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: PointsHistoryBoolExp
+  ): [PointsHistory!]!
+
+  """
+  An aggregate relationship
+  """
+  pointsHistoriesAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [PointsHistorySelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [PointsHistoryOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: PointsHistoryBoolExp
+  ): PointsHistoryAggregate!
+
+  """
+  An array relationship
+  """
+  pointsHistoriesByTeacherId(
+    """
+    distinct select on columns
+    """
+    distinctOn: [PointsHistorySelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [PointsHistoryOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: PointsHistoryBoolExp
+  ): [PointsHistory!]!
+
+  """
+  An aggregate relationship
+  """
+  pointsHistoriesByTeacherIdAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [PointsHistorySelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [PointsHistoryOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: PointsHistoryBoolExp
+  ): PointsHistoryAggregate!
   role: String!
   secondName: String!
 
@@ -10988,6 +12637,12 @@ input UsersBoolExp {
   pointsAggregate: PointsAggregateBoolExp
   pointsByTeacherId: PointsBoolExp
   pointsByTeacherIdAggregate: PointsAggregateBoolExp
+  pointsByUpdatedBy: PointsBoolExp
+  pointsByUpdatedByAggregate: PointsAggregateBoolExp
+  pointsHistories: PointsHistoryBoolExp
+  pointsHistoriesAggregate: PointsHistoryAggregateBoolExp
+  pointsHistoriesByTeacherId: PointsHistoryBoolExp
+  pointsHistoriesByTeacherIdAggregate: PointsHistoryAggregateBoolExp
   role: StringComparisonExp
   secondName: StringComparisonExp
   userGroups: UserGroupsBoolExp
@@ -11041,6 +12696,9 @@ input UsersInsertInput {
   nick: String
   points: PointsArrRelInsertInput
   pointsByTeacherId: PointsArrRelInsertInput
+  pointsByUpdatedBy: PointsArrRelInsertInput
+  pointsHistories: PointsHistoryArrRelInsertInput
+  pointsHistoriesByTeacherId: PointsHistoryArrRelInsertInput
   role: String
   secondName: String
   userGroups: UserGroupsArrRelInsertInput
@@ -11166,6 +12824,9 @@ input UsersOrderBy {
   nick: OrderBy
   pointsAggregate: PointsAggregateOrderBy
   pointsByTeacherIdAggregate: PointsAggregateOrderBy
+  pointsByUpdatedByAggregate: PointsAggregateOrderBy
+  pointsHistoriesAggregate: PointsHistoryAggregateOrderBy
+  pointsHistoriesByTeacherIdAggregate: PointsHistoryAggregateOrderBy
   role: OrderBy
   secondName: OrderBy
   userGroupsAggregate: UserGroupsAggregateOrderBy
@@ -11555,6 +13216,13 @@ input bonusesAggregateBoolExpCount {
   predicate: IntComparisonExp!
 }
 
+input categoryEditionAggregateBoolExpCount {
+  arguments: [CategoryEditionSelectColumn!]
+  distinct: Boolean
+  filter: CategoryEditionBoolExp
+  predicate: IntComparisonExp!
+}
+
 input chestAwardAggregateBoolExpCount {
   arguments: [ChestAwardSelectColumn!]
   distinct: Boolean
@@ -11700,6 +13368,12 @@ type mutation_root {
   ): AwardType
   addAwardToEdition(awardId: Int!, editionId: Int!): AwardEditionType
   addBonusMutation(awardId: Int!, chestHistoryId: Int!): AddBonusReturnType
+  addCategory(
+    canAddPoints: Boolean!
+    categoryName: String!
+    label: String = ""
+  ): CategoryType
+  addCategoryToEdition(categoryId: Int!, editionId: Int!): CategoryEditionType
   addChest(chestType: String!, editionId: Int!, label: String = ""): ChestType
   addChestToUser(
     chestId: Int!
@@ -11815,6 +13489,24 @@ type mutation_root {
   delete single row from the table: "categories"
   """
   deleteCategoriesByPk(categoryId: bigint!): Categories
+
+  """
+  delete data from the table: "category_edition"
+  """
+  deleteCategoryEdition(
+    """
+    filter the rows which have to be deleted
+    """
+    where: CategoryEditionBoolExp!
+  ): CategoryEditionMutationResponse
+
+  """
+  delete single row from the table: "category_edition"
+  """
+  deleteCategoryEditionByPk(
+    categoryId: bigint!
+    editionId: bigint!
+  ): CategoryEdition
 
   """
   delete data from the table: "chest_award"
@@ -11950,6 +13642,21 @@ type mutation_root {
   delete single row from the table: "points"
   """
   deletePointsByPk(pointsId: bigint!): Points
+
+  """
+  delete data from the table: "points_history"
+  """
+  deletePointsHistory(
+    """
+    filter the rows which have to be deleted
+    """
+    where: PointsHistoryBoolExp!
+  ): PointsHistoryMutationResponse
+
+  """
+  delete single row from the table: "points_history"
+  """
+  deletePointsHistoryByPk(pointsHistoryId: bigint!): PointsHistory
 
   """
   delete data from the table: "subcategories"
@@ -12137,6 +13844,36 @@ type mutation_root {
     """
     onConflict: CategoriesOnConflict
   ): Categories
+
+  """
+  insert data into the table: "category_edition"
+  """
+  insertCategoryEdition(
+    """
+    the rows to be inserted
+    """
+    objects: [CategoryEditionInsertInput!]!
+
+    """
+    upsert condition
+    """
+    onConflict: CategoryEditionOnConflict
+  ): CategoryEditionMutationResponse
+
+  """
+  insert a single row into the table: "category_edition"
+  """
+  insertCategoryEditionOne(
+    """
+    the row to be inserted
+    """
+    object: CategoryEditionInsertInput!
+
+    """
+    upsert condition
+    """
+    onConflict: CategoryEditionOnConflict
+  ): CategoryEdition
 
   """
   insert data into the table: "chest_award"
@@ -12392,6 +14129,36 @@ type mutation_root {
     """
     onConflict: PointsOnConflict
   ): PointsMutationResponse
+
+  """
+  insert data into the table: "points_history"
+  """
+  insertPointsHistory(
+    """
+    the rows to be inserted
+    """
+    objects: [PointsHistoryInsertInput!]!
+
+    """
+    upsert condition
+    """
+    onConflict: PointsHistoryOnConflict
+  ): PointsHistoryMutationResponse
+
+  """
+  insert a single row into the table: "points_history"
+  """
+  insertPointsHistoryOne(
+    """
+    the row to be inserted
+    """
+    object: PointsHistoryInsertInput!
+
+    """
+    upsert condition
+    """
+    onConflict: PointsHistoryOnConflict
+  ): PointsHistory
 
   """
   insert a single row into the table: "points"
@@ -12711,6 +14478,52 @@ type mutation_root {
     """
     updates: [CategoriesUpdates!]!
   ): [CategoriesMutationResponse]
+
+  """
+  update data of the table: "category_edition"
+  """
+  updateCategoryEdition(
+    """
+    increments the numeric columns with given value of the filtered values
+    """
+    _inc: CategoryEditionIncInput
+
+    """
+    sets the columns of the filtered rows to the given values
+    """
+    _set: CategoryEditionSetInput
+
+    """
+    filter the rows which have to be updated
+    """
+    where: CategoryEditionBoolExp!
+  ): CategoryEditionMutationResponse
+
+  """
+  update single row of the table: "category_edition"
+  """
+  updateCategoryEditionByPk(
+    """
+    increments the numeric columns with given value of the filtered values
+    """
+    _inc: CategoryEditionIncInput
+
+    """
+    sets the columns of the filtered rows to the given values
+    """
+    _set: CategoryEditionSetInput
+    pkColumns: CategoryEditionPkColumnsInput!
+  ): CategoryEdition
+
+  """
+  update multiples rows of table: "category_edition"
+  """
+  updateCategoryEditionMany(
+    """
+    updates to execute, in order
+    """
+    updates: [CategoryEditionUpdates!]!
+  ): [CategoryEditionMutationResponse]
 
   """
   update data of the table: "chest_award"
@@ -13117,6 +14930,52 @@ type mutation_root {
   ): Points
 
   """
+  update data of the table: "points_history"
+  """
+  updatePointsHistory(
+    """
+    increments the numeric columns with given value of the filtered values
+    """
+    _inc: PointsHistoryIncInput
+
+    """
+    sets the columns of the filtered rows to the given values
+    """
+    _set: PointsHistorySetInput
+
+    """
+    filter the rows which have to be updated
+    """
+    where: PointsHistoryBoolExp!
+  ): PointsHistoryMutationResponse
+
+  """
+  update single row of the table: "points_history"
+  """
+  updatePointsHistoryByPk(
+    """
+    increments the numeric columns with given value of the filtered values
+    """
+    _inc: PointsHistoryIncInput
+
+    """
+    sets the columns of the filtered rows to the given values
+    """
+    _set: PointsHistorySetInput
+    pkColumns: PointsHistoryPkColumnsInput!
+  ): PointsHistory
+
+  """
+  update multiples rows of table: "points_history"
+  """
+  updatePointsHistoryMany(
+    """
+    updates to execute, in order
+    """
+    updates: [PointsHistoryUpdates!]!
+  ): [PointsHistoryMutationResponse]
+
+  """
   update multiples rows of table: "points"
   """
   updatePointsMany(
@@ -13384,6 +15243,79 @@ input pointsAggregateBoolExpVar_samp {
   predicate: Float8ComparisonExp!
 }
 
+input pointsHistoryAggregateBoolExpAvg {
+  arguments: PointsHistorySelectColumnPointsHistoryAggregateBoolExpAvgArgumentsColumns!
+  distinct: Boolean
+  filter: PointsHistoryBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input pointsHistoryAggregateBoolExpCorr {
+  arguments: pointsHistoryAggregateBoolExpCorrArguments!
+  distinct: Boolean
+  filter: PointsHistoryBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input pointsHistoryAggregateBoolExpCorrArguments {
+  X: PointsHistorySelectColumnPointsHistoryAggregateBoolExpCorrArgumentsColumns!
+  Y: PointsHistorySelectColumnPointsHistoryAggregateBoolExpCorrArgumentsColumns!
+}
+
+input pointsHistoryAggregateBoolExpCount {
+  arguments: [PointsHistorySelectColumn!]
+  distinct: Boolean
+  filter: PointsHistoryBoolExp
+  predicate: IntComparisonExp!
+}
+
+input pointsHistoryAggregateBoolExpCovar_samp {
+  arguments: pointsHistoryAggregateBoolExpCovar_sampArguments!
+  distinct: Boolean
+  filter: PointsHistoryBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input pointsHistoryAggregateBoolExpCovar_sampArguments {
+  X: PointsHistorySelectColumnPointsHistoryAggregateBoolExpCovar_sampArgumentsColumns!
+  Y: PointsHistorySelectColumnPointsHistoryAggregateBoolExpCovar_sampArgumentsColumns!
+}
+
+input pointsHistoryAggregateBoolExpMax {
+  arguments: PointsHistorySelectColumnPointsHistoryAggregateBoolExpMaxArgumentsColumns!
+  distinct: Boolean
+  filter: PointsHistoryBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input pointsHistoryAggregateBoolExpMin {
+  arguments: PointsHistorySelectColumnPointsHistoryAggregateBoolExpMinArgumentsColumns!
+  distinct: Boolean
+  filter: PointsHistoryBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input pointsHistoryAggregateBoolExpStddev_samp {
+  arguments: PointsHistorySelectColumnPointsHistoryAggregateBoolExpStddev_sampArgumentsColumns!
+  distinct: Boolean
+  filter: PointsHistoryBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input pointsHistoryAggregateBoolExpSum {
+  arguments: PointsHistorySelectColumnPointsHistoryAggregateBoolExpSumArgumentsColumns!
+  distinct: Boolean
+  filter: PointsHistoryBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input pointsHistoryAggregateBoolExpVar_samp {
+  arguments: PointsHistorySelectColumnPointsHistoryAggregateBoolExpVar_sampArgumentsColumns!
+  distinct: Boolean
+  filter: PointsHistoryBoolExp
+  predicate: Float8ComparisonExp!
+}
+
 type query_root {
   _service: _Service!
 
@@ -13646,6 +15578,71 @@ type query_root {
   fetch data from the table: "categories" using primary key columns
   """
   categoriesByPk(categoryId: bigint!): Categories
+
+  """
+  fetch data from the table: "category_edition"
+  """
+  categoryEdition(
+    """
+    distinct select on columns
+    """
+    distinctOn: [CategoryEditionSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [CategoryEditionOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: CategoryEditionBoolExp
+  ): [CategoryEdition!]!
+
+  """
+  fetch aggregated fields from the table: "category_edition"
+  """
+  categoryEditionAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [CategoryEditionSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [CategoryEditionOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: CategoryEditionBoolExp
+  ): CategoryEditionAggregate!
+
+  """
+  fetch data from the table: "category_edition" using primary key columns
+  """
+  categoryEditionByPk(categoryId: bigint!, editionId: bigint!): CategoryEdition
 
   """
   fetch data from the table: "chest_award"
@@ -14304,6 +16301,71 @@ type query_root {
   fetch data from the table: "points" using primary key columns
   """
   pointsByPk(pointsId: bigint!): Points
+
+  """
+  fetch data from the table: "points_history"
+  """
+  pointsHistory(
+    """
+    distinct select on columns
+    """
+    distinctOn: [PointsHistorySelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [PointsHistoryOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: PointsHistoryBoolExp
+  ): [PointsHistory!]!
+
+  """
+  fetch aggregated fields from the table: "points_history"
+  """
+  pointsHistoryAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [PointsHistorySelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [PointsHistoryOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: PointsHistoryBoolExp
+  ): PointsHistoryAggregate!
+
+  """
+  fetch data from the table: "points_history" using primary key columns
+  """
+  pointsHistoryByPk(pointsHistoryId: bigint!): PointsHistory
 
   """
   An array relationship
@@ -14979,6 +17041,91 @@ type subscription_root {
     """
     where: CategoriesBoolExp
   ): [Categories!]!
+
+  """
+  fetch data from the table: "category_edition"
+  """
+  categoryEdition(
+    """
+    distinct select on columns
+    """
+    distinctOn: [CategoryEditionSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [CategoryEditionOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: CategoryEditionBoolExp
+  ): [CategoryEdition!]!
+
+  """
+  fetch aggregated fields from the table: "category_edition"
+  """
+  categoryEditionAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [CategoryEditionSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [CategoryEditionOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: CategoryEditionBoolExp
+  ): CategoryEditionAggregate!
+
+  """
+  fetch data from the table: "category_edition" using primary key columns
+  """
+  categoryEditionByPk(categoryId: bigint!, editionId: bigint!): CategoryEdition
+
+  """
+  fetch data from the table in a streaming manner: "category_edition"
+  """
+  categoryEditionStream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batchSize: Int!
+
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [CategoryEditionStreamCursorInput]!
+
+    """
+    filter the rows returned
+    """
+    where: CategoryEditionBoolExp
+  ): [CategoryEdition!]!
 
   """
   fetch data from the table: "chest_award"
@@ -15804,6 +17951,91 @@ type subscription_root {
   fetch data from the table: "points" using primary key columns
   """
   pointsByPk(pointsId: bigint!): Points
+
+  """
+  fetch data from the table: "points_history"
+  """
+  pointsHistory(
+    """
+    distinct select on columns
+    """
+    distinctOn: [PointsHistorySelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [PointsHistoryOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: PointsHistoryBoolExp
+  ): [PointsHistory!]!
+
+  """
+  fetch aggregated fields from the table: "points_history"
+  """
+  pointsHistoryAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [PointsHistorySelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [PointsHistoryOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: PointsHistoryBoolExp
+  ): PointsHistoryAggregate!
+
+  """
+  fetch data from the table: "points_history" using primary key columns
+  """
+  pointsHistoryByPk(pointsHistoryId: bigint!): PointsHistory
+
+  """
+  fetch data from the table in a streaming manner: "points_history"
+  """
+  pointsHistoryStream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batchSize: Int!
+
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [PointsHistoryStreamCursorInput]!
+
+    """
+    filter the rows returned
+    """
+    where: PointsHistoryBoolExp
+  ): [PointsHistory!]!
 
   """
   fetch data from the table in a streaming manner: "points"
