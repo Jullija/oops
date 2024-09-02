@@ -20,7 +20,7 @@ type Mutation {
     addCategory(categoryName: String!, canAddPoints: Boolean!, label: String = ""): CategoryType
     addCategoryToEdition(categoryId: Int!, editionId: Int!): CategoryEditionType
     addEdition(editionName: String!, editionYear: Int!, label: String = ""): EditionType
-    addGroup(editionId: Int!, groupName: String!, weekday: String!, startTime: String!,
+    addGroup(editionId: Int!, groupName: String!, weekdayId: Int!, startTime: String!,
         endTime: String!, teacherId: Int!, label: String = ""): GroupType
     addSubcategory(subcategoryName: String!, maxPoints: Float!, ordinalNumber: Int!,
         categoryId: Int!, editionId: Int!, label: String = ""): SubcategoryType
@@ -34,7 +34,7 @@ type Query {
     getUsersInGroupWithPoints(groupId: Int!): [UserPointsType]!
     getStudentPoints(studentId: Int!, editionId: Int!): StudentPointsType!
     getSumOfPointsForStudentByCategory(studentId: Int!, editionId: Int!): [CategoryPointsSumType!]!
-    getPossibleGroupsWeekdays(editionId: Int!): [String!]!
+    getPossibleGroupsWeekdays(editionId: Int!): [WeekdayType!]!
     getPossibleGroupsTimeSpans(editionId: Int!): [TimeSpansType!]!
     getPossibleGroupDates(editionId: Int!): [GroupDateType!]!
     getNeighbouringLevels(studentId: Int!, editionId: Int!): NeighbouringLevelsType!
@@ -131,7 +131,7 @@ type GroupType {
     groupName: String!
     label: String
     teacher: UserType
-    weekday: String!
+    weekday: WeekdayType!
     startTime: String!
     endTime: String!
     imageFile: FileType
@@ -216,6 +216,14 @@ type UserType {
     userLevels: [UserLevelType]!
 }
 
+type WeekdayType {
+    weekdayId: ID!
+    weekdayName: String!
+    weekdayAbbr: String!
+    ordinalNumber: Int!
+    label: String!
+}
+
 enum UsersRolesType {
     STUDENT
     TEACHER
@@ -227,16 +235,6 @@ enum AwardTypeType {
     ADDITIVE_PREV
     ADDITIVE
     MULTIPLICATIVE
-}
-
-enum WeekdayType {
-    MONDAY
-    TUESDAY
-    WEDNESDAY
-    THURSDAY
-    FRIDAY
-    SATURDAY
-    SUNDAY
 }
 
 
@@ -304,7 +302,7 @@ type TimeSpansType {
 }
 
 type GroupDateType {
-    weekday: String!
+    weekday: WeekdayType!
     startTime: String!
     endTime: String!
 }

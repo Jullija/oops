@@ -5,7 +5,7 @@ CREATE TABLE files (
                        path_to_file VARCHAR(1024) NOT NULL,
                        file_name VARCHAR(255) NOT NULL,
                        file_type VARCHAR(50) NOT NULL,
-                       label VARCHAR(256) NOT NULL
+                       label VARCHAR(256) NOT NULL DEFAULT ''
 );
 
 ALTER TABLE levels

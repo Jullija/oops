@@ -2,7 +2,7 @@ package backend.groups
 
 import backend.edition.Edition
 import backend.users.Users
-import backend.users.WeekdayEnum
+import backend.weekdays.Weekdays
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.sql.Time
@@ -13,5 +13,5 @@ interface GroupsRepository : JpaRepository<Groups, Long> {
     fun findByEdition(edition: Edition): List<Groups>
     fun findByUserGroups_User_UserId(userId: Long): List<Groups>
     fun existsByGroupNameAndEdition(groupName: String, edition: Edition): Boolean
-    fun existsByTeacherAndWeekdayAndStartTimeAndEndTimeAndEdition(teacher: Users, weekday: WeekdayEnum, startTime: Time, endTime: Time, edition: Edition): Boolean
+    fun existsByTeacherAndWeekdayAndStartTimeAndEndTimeAndEdition(teacher: Users, weekday: Weekdays, startTime: Time, endTime: Time, edition: Edition): Boolean
 }

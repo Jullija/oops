@@ -6,15 +6,12 @@ import backend.bonuses.BonusesRepository
 import backend.categories.Categories
 import backend.edition.Edition
 import backend.files.FileEntity
-import backend.groups.Groups
 import backend.points.Points
 import backend.points.PointsRepository
 import backend.userGroups.UserGroups
 import backend.userLevel.UserLevel
 import backend.utils.HasImageFile
 import jakarta.persistence.*
-import org.hibernate.annotations.JdbcTypeCode
-import org.hibernate.type.SqlTypes
 
 @Entity
 @Table(name = "users", uniqueConstraints = [UniqueConstraint(columnNames = ["index_number"])])

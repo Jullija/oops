@@ -3,7 +3,7 @@ CREATE TABLE user_level (
                             user_id INT NOT NULL,
                             level_id INT NOT NULL,
                             edition_id INT NOT NULL,
-                            label VARCHAR(256) NOT NULL,
+                            label VARCHAR(256) NOT NULL DEFAULT '',
                             PRIMARY KEY (user_id, level_id),
                             CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id),
                             CONSTRAINT fk_level FOREIGN KEY (level_id) REFERENCES levels(level_id)

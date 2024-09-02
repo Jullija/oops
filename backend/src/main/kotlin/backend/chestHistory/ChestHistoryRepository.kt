@@ -1,7 +1,5 @@
 package backend.chestHistory
 
-import backend.chestAward.ChestAward
-import backend.chestHistory.ChestHistory
 import backend.chests.Chests
 import backend.users.Users
 import org.springframework.data.jpa.repository.JpaRepository

@@ -1,7 +1,7 @@
 import requests
 
 def insert_groups(hasura_url, headers, editions, random, number_of_groups_per_year_bounds, teacher_ids_and_roles):
-    weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday"]
+    weekdays = [i for i in range(1, 6)]
     timespans = [("08:00:00", "09:30:00"), ("10:00:00", "11:30:00"), ("12:00:00", "13:30:00"), ("14:00:00", "15:30:00"), ("16:00:00", "17:30:00")]
     groups = []
 
@@ -19,15 +19,15 @@ def insert_groups(hasura_url, headers, editions, random, number_of_groups_per_ye
             teacher_id = teacher_ids.pop()
             timespan = random.choice(timespans)
             group_name = f"gr_{i}"
-            weekday = random.choice(weekdays)
+            weekdayId = random.choice(weekdays)
 
             # Perform addGroup mutation
             mutation = """
-            mutation addGroup($editionId: Int!, $groupName: String!, $weekday: String!, $startTime: String!, $endTime: String!, $teacherId: Int!, $label: String = "") {
+            mutation addGroup($editionId: Int!, $groupName: String!, $weekdayId: Int!, $startTime: String!, $endTime: String!, $teacherId: Int!, $label: String = "") {
                 addGroup(
                     editionId: $editionId,
                     groupName: $groupName,
-                    weekday: $weekday,
+                    weekdayId: $weekdayId,
                     startTime: $startTime,
                     endTime: $endTime,
                     teacherId: $teacherId,
@@ -44,7 +44,7 @@ def insert_groups(hasura_url, headers, editions, random, number_of_groups_per_ye
             variables = {
                 "editionId": editions[year],
                 "groupName": group_name,
-                "weekday": weekday,
+                "weekdayId": weekdayId,
                 "startTime": timespan[0],
                 "endTime": timespan[1],
                 "teacherId": teacher_id,
