@@ -1,6 +1,6 @@
 import { Styles } from "../../../utils/Styles";
 import { StudentCardData } from "../../../hooks/StudentProfile/useStudentData";
-import { FILES_URL } from "../../../utils/constants";
+import { Avatar } from "../../Avatar";
 
 const styles: Styles = {
   container: {
@@ -12,20 +12,6 @@ const styles: Styles = {
   },
   studentName: {
     fontWeight: "bold",
-  },
-  imgContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 10,
-    overflow: "hidden",
-    borderRadius: "8px",
-  },
-  img: {
-    width: "100%",
-    objectFit: "cover",
-    borderRadius: "8px",
   },
   progressBar: {
     width: "100%",
@@ -48,24 +34,9 @@ export function StudentCard({
   totalPoints,
   imageIds,
 }: StudentCardData) {
-  const getImg = (id?: string) => {
-    return (
-      <div style={{ position: "relative", flex: 1 }}>
-        <img
-          src={`${FILES_URL}${id}`}
-          alt={`img id ${id}`}
-          style={styles.img}
-        />
-      </div>
-    );
-  };
-
   return (
     <div style={styles.container}>
-      <div style={styles.imgContainer}>
-        {getImg(imageIds.avatar)}
-        {getImg(imageIds.level)}
-      </div>
+      <Avatar id={imageIds.avatar} size="lg" />
       <div style={styles.studentName}>{displayName}</div>
       <div>level: {level.name}</div>
       <div>indeks: {index}</div>

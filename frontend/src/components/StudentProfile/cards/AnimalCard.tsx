@@ -1,6 +1,7 @@
 import { Level } from "../../../hooks/StudentProfile/useAnimalData";
 import { Styles } from "../../../utils/Styles";
 import { PointsBar } from "../../PointsBar";
+import { Avatar } from "../../Avatar";
 
 const styles: Styles = {
   card: {
@@ -37,8 +38,9 @@ export const AnimalCard = ({
 }: AnimalCardProps) => {
   return (
     <div style={styles.card}>
+      <Avatar id={currLevel.imageId} size="lg" />
       <div style={styles.title}>
-        {currLevel.name} - lvl. {currLevel.ordinalNumber}
+        obecny level: {currLevel.name} - lvl. {currLevel.ordinalNumber}
       </div>
       {/* // TODO we have a problem with backend data inconsistency */}
       <PointsBar
@@ -57,6 +59,7 @@ export const AnimalCard = ({
         <div style={styles.levelContainer}>
           {prevLevel && (
             <div>
+              <Avatar id={prevLevel.imageId} size="sm" />
               <div>lvl. {prevLevel.ordinalNumber}</div>
               <div>{prevLevel.name}</div>
             </div>
@@ -65,6 +68,7 @@ export const AnimalCard = ({
         <div style={styles.levelContainer}>
           {nextLevel && (
             <div>
+              <Avatar id={nextLevel.imageId} size="sm" />
               <div>lvl. {nextLevel.ordinalNumber}</div>
               <div>{nextLevel.name}</div>
             </div>

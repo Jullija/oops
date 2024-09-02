@@ -6,6 +6,7 @@ export type Level = {
   minimalPoints: number;
   maximumPoints: number;
   ordinalNumber: number;
+  imageId: string | undefined;
 };
 
 const mapToLevel = (level: LevelType | null | undefined): Level | undefined => {
@@ -17,6 +18,7 @@ const mapToLevel = (level: LevelType | null | undefined): Level | undefined => {
     minimalPoints: level.minimumPoints,
     maximumPoints: level.maximumPoints,
     ordinalNumber: level.ordinalNumber,
+    imageId: level.imageFile?.fileId,
   };
 };
 

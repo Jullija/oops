@@ -15,6 +15,13 @@ query neighboringLevels($editionId: Int!, $studentId: Int!) {
         editionYear
         label
       }
+      imageFile {
+        fileId
+        fileName
+        fileType
+        label
+        pathToFile
+      }
     }
     nextLevel {
       highest
@@ -31,6 +38,13 @@ query neighboringLevels($editionId: Int!, $studentId: Int!) {
         editionYear
         label
       }
+      imageFile {
+        fileId
+        fileName
+        fileType
+        label
+        pathToFile
+      }
     }
     previousLevel {
       highest
@@ -46,6 +60,13 @@ query neighboringLevels($editionId: Int!, $studentId: Int!) {
         editionName
         editionYear
         label
+      }
+      imageFile {
+        fileId
+        fileName
+        fileType
+        label
+        pathToFile
       }
     }
   }
