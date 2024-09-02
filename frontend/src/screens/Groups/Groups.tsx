@@ -111,12 +111,23 @@ export const Groups = () => {
   return (
     <div style={styles.container}>
       <SideFilterBar
-        weekdays={weekdays}
-        teachers={teachers}
-        timestamps={timestamps}
-        onWeekdayChange={(selectedIds) => setWeekdayIds(selectedIds)}
-        onTeacherChange={(selectedIds) => setTeacherIds(selectedIds)}
-        onTimestampChange={(selectedIds) => setTimestampIds(selectedIds)}
+        sections={[
+          {
+            pickerTitle: "dzień tygodnia",
+            options: weekdays,
+            onFiltersChange: (selectedIds) => setWeekdayIds(selectedIds),
+          },
+          {
+            pickerTitle: "godzina",
+            options: timestamps,
+            onFiltersChange: (selectedIds) => setTimestampIds(selectedIds),
+          },
+          {
+            pickerTitle: "prowadzący",
+            options: teachers,
+            onFiltersChange: (selectedIds) => setTeacherIds(selectedIds),
+          },
+        ]}
       />
       <div style={styles.rightSide}>
         <div style={styles.topBar}>

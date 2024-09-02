@@ -29,7 +29,7 @@ const styles: Styles = {
   },
 };
 
-type OptionPickerProps = {
+export type OptionPickerProps = {
   pickerTitle: string;
   options: FilterItem[];
   onFiltersChange: (selectedIds: string[]) => void;
