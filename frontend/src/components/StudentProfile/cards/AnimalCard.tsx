@@ -1,4 +1,4 @@
-import { LevelType } from "../../../__generated__/schema.graphql.types";
+import { Level } from "../../../hooks/StudentProfile/useAnimalData";
 import { Styles } from "../../../utils/Styles";
 import { PointsBar } from "../../PointsBar";
 
@@ -23,9 +23,9 @@ const styles: Styles = {
 };
 
 type AnimalCardProps = {
-  prevLevel?: LevelType;
-  currLevel: LevelType;
-  nextLevel?: LevelType;
+  prevLevel?: Level;
+  currLevel: Level;
+  nextLevel?: Level;
   totalPoints: number;
 };
 
@@ -35,22 +35,20 @@ export const AnimalCard = ({
   nextLevel,
   totalPoints,
 }: AnimalCardProps) => {
-  console.log("CURR: ", currLevel);
-
   return (
     <div style={styles.card}>
       <div style={styles.title}>
-        {currLevel.levelName} - lvl. {currLevel.ordinalNumber}
+        {currLevel.name} - lvl. {currLevel.ordinalNumber}
       </div>
       {/* // TODO we have a problem with backend data inconsistency */}
       <PointsBar
         points={
-          totalPoints > currLevel.minimumPoints
+          totalPoints > currLevel.minimalPoints
             ? totalPoints
-            : currLevel.minimumPoints + 2
+            : currLevel.minimalPoints + 2
         }
         bounds={{
-          lower: currLevel.minimumPoints,
+          lower: currLevel.minimalPoints,
           upper: currLevel.maximumPoints,
         }}
         showPoints
@@ -60,7 +58,7 @@ export const AnimalCard = ({
           {prevLevel && (
             <div>
               <div>lvl. {prevLevel.ordinalNumber}</div>
-              <div>{prevLevel.levelName}</div>
+              <div>{prevLevel.name}</div>
             </div>
           )}
         </div>
@@ -68,7 +66,7 @@ export const AnimalCard = ({
           {nextLevel && (
             <div>
               <div>lvl. {nextLevel.ordinalNumber}</div>
-              <div>{nextLevel.levelName}</div>
+              <div>{nextLevel.name}</div>
             </div>
           )}
         </div>

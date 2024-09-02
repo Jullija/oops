@@ -23,7 +23,7 @@ export const useStudentProfileData = (studentId: string) => {
   } = useStudentData({ editionId, studentId });
 
   const {
-    previousLevel,
+    prevLevel,
     currLevel,
     nextLevel,
     loading: animalLoading,
@@ -42,7 +42,7 @@ export const useStudentProfileData = (studentId: string) => {
     studentData,
     points,
     filterHeaderNames,
-    prevLevel: previousLevel,
+    prevLevel,
     currLevel,
     nextLevel,
     // TODO loading and error probably should be separated to sidebar and table

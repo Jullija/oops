@@ -1,4 +1,24 @@
+import { LevelType } from "../../__generated__/schema.graphql.types";
 import { useNeighboringLevelsQuery } from "../../graphql/neighbouringLevels.graphql.types";
+
+export type Level = {
+  name: string;
+  minimalPoints: number;
+  maximumPoints: number;
+  ordinalNumber: number;
+};
+
+const mapToLevel = (level: LevelType | null | undefined): Level | undefined => {
+  if (!level) {
+    return undefined;
+  }
+  return {
+    name: level.levelName,
+    minimalPoints: level.minimumPoints,
+    maximumPoints: level.maximumPoints,
+    ordinalNumber: level.ordinalNumber,
+  };
+};
 
 export const useAnimalData = (editionId?: string, studentId?: string) => {
   const { data, loading, error, refetch } = useNeighboringLevelsQuery({
@@ -9,14 +29,11 @@ export const useAnimalData = (editionId?: string, studentId?: string) => {
     },
   });
 
-  const previousLevel = data?.getNeighbouringLevels.previousLevel;
-  const currLevel = data?.getNeighbouringLevels.currentLevel;
-  const nextLevel = data?.getNeighbouringLevels.nextLevel;
+  const previousLevel = mapToLevel(data?.getNeighbouringLevels.previousLevel);
+  const currLevel = mapToLevel(data?.getNeighbouringLevels.currentLevel);
+  const nextLevel = mapToLevel(data?.getNeighbouringLevels.nextLevel);
 
-  console.log("DATA: ", data);
-  console.log("PREV: ", previousLevel);
-
-  if (!loading && !currLevel) {
+  if (!currLevel) {
     return {
       prevLevel: undefined,
       currLevel: undefined,

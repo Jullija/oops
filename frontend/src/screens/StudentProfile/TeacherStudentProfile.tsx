@@ -32,6 +32,9 @@ export function TeacherStudentProfile() {
     categories,
     studentData,
     points,
+    prevLevel,
+    currLevel,
+    nextLevel,
     filterHeaderNames,
     loading,
     error,
@@ -44,6 +47,7 @@ export function TeacherStudentProfile() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
   if (!studentData) return <p>Student is undefined</p>;
+  if (!currLevel) return <p>Curr level is undefined</p>;
 
   const handleAdd = (formPoints: FormPoints) => {
     createPoints({
@@ -60,7 +64,13 @@ export function TeacherStudentProfile() {
 
   return (
     <div style={styles.container}>
-      <SideBar student={studentData} categoriesBarProps={categories} />
+      <SideBar
+        student={studentData}
+        categoriesBarProps={categories}
+        currLevel={currLevel}
+        prevLevel={prevLevel}
+        nextLevel={nextLevel}
+      />
       <div style={styles.rightContainer}>
         <PointsTableWithFilter
           points={points}

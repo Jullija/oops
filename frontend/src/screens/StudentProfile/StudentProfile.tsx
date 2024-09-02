@@ -30,6 +30,7 @@ export function StudentProfile() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
   if (!studentData) return <p>Student is undefined</p>;
+  if (!currLevel) return <p>Curr level is undefined</p>;
 
   return (
     <div style={styles.container}>
