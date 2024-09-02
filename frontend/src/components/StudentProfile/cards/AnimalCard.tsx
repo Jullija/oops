@@ -21,6 +21,9 @@ const styles: Styles = {
   levelContainer: {
     flex: 1,
   },
+  opacity: {
+    opacity: 0.5,
+  },
 };
 
 type AnimalCardProps = {
@@ -59,7 +62,10 @@ export const AnimalCard = ({
         <div style={styles.levelContainer}>
           {prevLevel && (
             <div>
-              <Avatar id={prevLevel.imageId} size="sm" />
+              <div style={styles.opacity}>
+                <Avatar id={prevLevel.imageId} size="sm" />
+              </div>
+
               <div>lvl. {prevLevel.ordinalNumber}</div>
               <div>{prevLevel.name}</div>
             </div>
