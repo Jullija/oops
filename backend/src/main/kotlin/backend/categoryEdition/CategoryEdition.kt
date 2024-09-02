@@ -2,8 +2,6 @@ package backend.categoryEdition
 
 import backend.categories.Categories
 import backend.edition.Edition
-import backend.levels.Levels
-import backend.users.Users
 import jakarta.persistence.*
 
 @Entity

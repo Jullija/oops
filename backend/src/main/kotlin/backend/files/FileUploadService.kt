@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.io.IOException
 
 @Service
 class FileUploadService(private val fileEntityRepository: FileEntityRepository) {
@@ -14,19 +15,53 @@ class FileUploadService(private val fileEntityRepository: FileEntityRepository) 
     private lateinit var uploadDir: String
 
     fun saveFile(file: MultipartFile, fileType: String): FileEntity {
-        val fileName = file.originalFilename ?: throw IllegalArgumentException("File name is invalid")
+        val originalFilename = file.originalFilename ?: throw IllegalArgumentException("File name is invalid")
+        val fileExtension = getFileExtension(originalFilename)
+        val filenameWithoutExtension = getFilenameWithoutExtension(originalFilename)
+        validateFileType(fileType)
 
         // Resolve the relative path to an absolute path
-        val directoryPath = Paths.get(uploadDir).toAbsolutePath()
-        val filePath = directoryPath.resolve(fileName)
+        val directoryPath = Paths.get(uploadDir).toAbsolutePath().resolve(fileType)
+        Files.createDirectories(directoryPath) // Ensure the directory exists
 
-        // Ensure the directory exists
-        if (Files.notExists(directoryPath)) {
-            Files.createDirectories(directoryPath)
+        var targetPath = directoryPath.resolve(originalFilename)
+        var counter = 1
+
+        // Check if the file exists and generate a new filename with a suffix
+        while (Files.exists(targetPath)) {
+            val newFilename = "${filenameWithoutExtension}_$counter.$fileExtension"
+            targetPath = directoryPath.resolve(newFilename)
+            counter++
         }
 
-        Files.copy(file.inputStream, filePath)
-        val fileEntity = FileEntity(pathToFile = filePath.toString(), fileName = fileName, fileType = fileType)
+        // Save the file with the unique name
+        try {
+            Files.copy(file.inputStream, targetPath)
+        } catch (e: IOException) {
+            throw RuntimeException("Failed to store file $originalFilename due to IO error: ${e.message}", e)
+        }
+
+        // Create a new FileEntity and save it to the database
+        val fileEntity = FileEntity(
+            pathToFile = targetPath.toString(),
+            fileName = targetPath.fileName.toString(),
+            fileType = fileType
+        )
         return fileEntityRepository.save(fileEntity)
+    }
+
+    private fun validateFileType(fileType: String) {
+        val allowedPattern = Regex("^[a-zA-Z0-9/_-]+$")
+        if (!allowedPattern.matches(fileType)) {
+            throw IllegalArgumentException("Invalid fileType: '$fileType'. It should only contain alphanumeric characters, underscores, hyphens, and slashes.")
+        }
+    }
+
+    private fun getFileExtension(filename: String): String {
+        return filename.substringAfterLast('.', "")
+    }
+
+    private fun getFilenameWithoutExtension(filename: String): String {
+        return filename.substringBeforeLast('.', "")
     }
 }

@@ -1,27 +1,21 @@
 package backend.graphql
 
-import backend.award.Award
 import backend.award.AwardRepository
-import backend.award.AwardType
 import backend.bonuses.BonusesRepository
 import backend.categories.CategoriesRepository
 import backend.chestHistory.ChestHistory
 import backend.chestHistory.ChestHistoryRepository
-import backend.chests.Chests
 import backend.chests.ChestsRepository
 import backend.edition.EditionRepository
 import backend.files.FileEntityRepository
 import backend.groups.GroupsRepository
 import backend.points.PointsRepository
-import backend.subcategories.Subcategories
 import backend.subcategories.SubcategoriesRepository
-import backend.users.Users
 import backend.users.UsersRepository
 import backend.users.UsersRoles
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
-import jakarta.persistence.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 

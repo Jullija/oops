@@ -11,6 +11,9 @@ object_relationships:
   - name: user
     using:
       foreign_key_constraint_on: teacher_id
+  - name: weekday
+    using:
+      foreign_key_constraint_on: weekday_id
 array_relationships:
   - name: userGroups
     using:
@@ -30,7 +33,8 @@ select_permissions:
         - image_file_id
         - label
         - start_time
-        - weekday
+        - teacher_id
+        - weekday_id
       filter: {}
       allow_aggregations: true
     comment: ""
@@ -44,7 +48,8 @@ select_permissions:
         - image_file_id
         - label
         - start_time
-        - weekday
+        - teacher_id
+        - weekday_id
       filter:
         edition:
           groups:
@@ -62,7 +67,8 @@ select_permissions:
         - image_file_id
         - label
         - start_time
-        - weekday
+        - teacher_id
+        - weekday_id
       filter:
         edition:
           groups:
@@ -79,7 +85,7 @@ update_permissions:
         - label
         - start_time
         - teacher_id
-        - weekday
+        - weekday_id
       filter:
         _not:
           edition:

@@ -3,9 +3,7 @@ package backend.graphql
 import backend.points.Points
 import backend.points.PointsRepository
 import backend.bonuses.BonusesRepository
-import backend.subcategories.Subcategories
 import backend.subcategories.SubcategoriesRepository
-import backend.users.Users
 import backend.users.UsersRepository
 import backend.award.AwardType
 import backend.users.UsersRoles

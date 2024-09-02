@@ -18,3 +18,4 @@
 - "!include public_user_groups.yaml"
 - "!include public_user_level.yaml"
 - "!include public_users.yaml"
+- "!include public_weekdays.yaml"

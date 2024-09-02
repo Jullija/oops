@@ -37,7 +37,7 @@ class ChestHistory(
     @Column(name = "opened", nullable = false)
     var opened: Boolean = false,
 
-): TimestampModel() {
+    ): TimestampModel() {
     constructor() : this(
         user = Users(),
         teacher = Users(),
