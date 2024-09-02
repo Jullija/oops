@@ -19,7 +19,7 @@ export const GroupSearchField = ({ onInputChange }: SearchStudentProps) => {
       handleChange={handleSearchInputChange}
       value={searchInputValue}
       name={"searchGroup"}
-      label="search group"
+      placeholder="search group"
     />
   );
 };
