@@ -100,7 +100,7 @@ class LevelsDataFetcher {
 
     @DgsQuery
     @Transactional
-    fun getNeighbouringLevels(@InputArgument studentId: Long, @InputArgument editionId: Long): NeighbouringLevelsType {
+    fun getNeighboringLevels(@InputArgument studentId: Long, @InputArgument editionId: Long): NeighboringLevelsType {
         val edition = editionRepository.findById(editionId)
             .orElseThrow { IllegalArgumentException("Invalid edition ID") }
         val student = usersRepository.findById(studentId)
@@ -117,16 +117,16 @@ class LevelsDataFetcher {
         val nextLevel =
             levelsRepository.findByEdition(edition)
                 .firstOrNull { it.ordinalNumber == currentLevel.ordinalNumber + 1 }
-        return NeighbouringLevelsType(
-            previousLevel = previousLevel,
-            currentLevel = currentLevel,
+        return NeighboringLevelsType(
+            prevLevel = previousLevel,
+            currLevel = currentLevel,
             nextLevel = nextLevel
         )
     }
 }
 
-data class NeighbouringLevelsType(
-    val previousLevel: Levels?,
-    val currentLevel: Levels,
+data class NeighboringLevelsType(
+    val prevLevel: Levels?,
+    val currLevel: Levels,
     val nextLevel: Levels?
 )

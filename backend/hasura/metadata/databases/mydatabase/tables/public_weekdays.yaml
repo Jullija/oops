@@ -1,0 +1,56 @@
+table:
+  name: weekdays
+  schema: public
+array_relationships:
+  - name: groups
+    using:
+      foreign_key_constraint_on:
+        column: weekday_id
+        table:
+          name: groups
+          schema: public
+select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - weekday_id
+        - label
+        - weekday_abbr
+        - weekday_name
+        - ordinal_number
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: student
+    permission:
+      columns:
+        - weekday_id
+        - label
+        - weekday_abbr
+        - weekday_name
+        - ordinal_number
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - weekday_id
+        - label
+        - weekday_abbr
+        - weekday_name
+        - ordinal_number
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: unauthenticated_user
+    permission:
+      columns:
+        - weekday_id
+        - label
+        - weekday_abbr
+        - weekday_name
+        - ordinal_number
+      filter: {}
+      allow_aggregations: true
+    comment: ""

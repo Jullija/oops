@@ -6,7 +6,6 @@ import backend.bonuses.BonusesRepository
 import backend.categories.Categories
 import backend.categories.CategoriesRepository
 import backend.edition.EditionRepository
-import backend.files.FileEntity
 import backend.files.FileEntityRepository
 import backend.groups.Groups
 import backend.groups.GroupsRepository
@@ -19,7 +18,8 @@ import backend.userGroups.UserGroupsRepository
 import backend.users.UsersRepository
 import backend.users.Users
 import backend.users.UsersRoles
-import backend.users.WeekdayEnum
+import backend.weekdays.Weekdays
+import backend.weekdays.WeekdaysRepository
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.DgsQuery
@@ -58,6 +58,9 @@ class GroupsDataFetcher {
     @Autowired
     lateinit var userGroupsRepository: UserGroupsRepository
 
+    @Autowired
+    lateinit var weekdaysRepository: WeekdaysRepository
+
     @DgsMutation
     @Transactional
     fun assignPhotosToGroups(@InputArgument editionId: Long): Boolean {
@@ -83,7 +86,7 @@ class GroupsDataFetcher {
     @DgsMutation
     @Transactional
     fun addGroup(@InputArgument editionId: Long, @InputArgument groupName: String,
-                 @InputArgument weekday: String, @InputArgument startTime: Time,
+                 @InputArgument weekdayId: Long, @InputArgument startTime: Time,
                  @InputArgument endTime: Time, @InputArgument teacherId: Long, @InputArgument label: String = ""): Groups {
         val edition = editionRepository.findById(editionId).orElseThrow() { IllegalArgumentException("Invalid edition ID") }
         if (groupsRepository.existsByGroupNameAndEdition(groupName, edition)) {
@@ -98,23 +101,19 @@ class GroupsDataFetcher {
         if (groupName.isBlank()) {
             throw IllegalArgumentException("Group name must not be blank")
         }
-        val weekday1 = try {
-            WeekdayEnum.valueOf(weekday.uppercase())
-        } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException("Invalid weekday")
-        }
+        val weekday = weekdaysRepository.findById(weekdayId).orElseThrow { IllegalArgumentException("Invalid weekday ID") }
         val teacher = usersRepository.findById(teacherId).orElseThrow { IllegalArgumentException("Invalid teacher ID") }
         if (teacher.role != UsersRoles.TEACHER && teacher.role != UsersRoles.COORDINATOR) {
             throw IllegalArgumentException("User with ID $teacherId is not a teacher nor a coordinator")
         }
-        if (groupsRepository.existsByTeacherAndWeekdayAndStartTimeAndEndTimeAndEdition(teacher, weekday1, startTime, endTime, edition)) {
+        if (groupsRepository.existsByTeacherAndWeekdayAndStartTimeAndEndTimeAndEdition(teacher, weekday, startTime, endTime, edition)) {
             throw IllegalArgumentException("Teacher is already teaching a group at this time")
         }
         val group = Groups(
             groupName = groupName,
             label = label,
             teacher = teacher,
-            weekday = weekday1,
+            weekday = weekday,
             startTime = startTime,
             endTime = endTime,
             edition = edition
@@ -130,12 +129,12 @@ class GroupsDataFetcher {
 
     @DgsQuery
     @Transactional
-    fun getPossibleGroupsWeekdays(@InputArgument editionId: Long): List<String> {
+    fun getPossibleGroupsWeekdays(@InputArgument editionId: Long): List<Weekdays> {
         val edition = editionRepository
             .findById(editionId)
             .orElseThrow { IllegalArgumentException("Invalid edition ID") }
         val groups = groupsRepository.findByEdition(edition)
-        val weekdays = groups.map { it.weekday.name }.distinct()
+        val weekdays = groups.map { it.weekday }.distinct().sortedBy { it.ordinalNumber }
         return weekdays
     }
 
@@ -307,7 +306,7 @@ data class TimeSpansType(
 )
 
 data class GroupDateType(
-    val weekday: WeekdayEnum,
+    val weekday: Weekdays,
     val startTime: Time,
     val endTime: Time
 )

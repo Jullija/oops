@@ -2,7 +2,7 @@ CREATE TABLE edition (
      edition_id SERIAL PRIMARY KEY,
      name VARCHAR(256) NOT NULL,
      edition_year INT NOT NULL,
-     label VARCHAR(256) NOT NULL
+     label VARCHAR(256) NOT NULL DEFAULT ''
 );
 
 ALTER TABLE chests

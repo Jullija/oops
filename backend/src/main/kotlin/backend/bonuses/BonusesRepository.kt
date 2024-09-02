@@ -2,7 +2,6 @@ package backend.bonuses
 
 import backend.award.Award
 import backend.award.AwardType
-import backend.bonuses.Bonuses
 import backend.chestHistory.ChestHistory
 import backend.points.Points
 import backend.users.Users
