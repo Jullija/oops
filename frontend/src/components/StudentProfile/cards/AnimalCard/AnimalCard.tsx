@@ -1,8 +1,8 @@
-import { Level } from "../../../../hooks/StudentProfile/useAnimalData";
 import { Styles } from "../../../../utils/Styles";
 import { PointsBar } from "../../../PointsBar";
 import { Avatar } from "../../../Avatar";
 import { LevelMiniature } from "./LevelMiniature";
+import { LevelType } from "../../../../__generated__/schema.graphql.types";
 
 const styles: Styles = {
   card: {
@@ -25,9 +25,9 @@ const styles: Styles = {
 };
 
 type AnimalCardProps = {
-  prevLevel?: Level;
-  currLevel: Level;
-  nextLevel?: Level;
+  prevLevel?: LevelType;
+  currLevel: LevelType;
+  nextLevel?: LevelType;
   totalPoints: number;
 };
 
@@ -39,9 +39,9 @@ export const AnimalCard = ({
 }: AnimalCardProps) => {
   return (
     <div style={styles.card}>
-      <Avatar id={currLevel.imageId} size="lg" />
+      <Avatar id={currLevel.imageFile?.fileId} size="lg" />
       <div style={styles.title}>
-        obecny level: {currLevel.name} - lvl. {currLevel.ordinalNumber}
+        obecny level: {currLevel.levelName} - lvl. {currLevel.ordinalNumber}
       </div>
       {/* // TODO we have a problem with backend data inconsistency */}
       <PointsBar

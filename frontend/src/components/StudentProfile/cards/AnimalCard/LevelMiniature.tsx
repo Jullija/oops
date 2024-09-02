@@ -1,4 +1,4 @@
-import { Level } from "../../../../hooks/StudentProfile/useAnimalData";
+import { LevelType } from "../../../../__generated__/schema.graphql.types";
 import { Styles } from "../../../../utils/Styles";
 import { Avatar } from "../../../Avatar";
 
@@ -9,7 +9,7 @@ const styles: Styles = {
 };
 
 type LevelMiniatureProps = {
-  level: Level;
+  level: LevelType;
   withOpacity?: boolean;
 };
 
@@ -20,10 +20,10 @@ export const LevelMiniature = ({
   return (
     <div>
       <div style={withOpacity ? styles.opacity : undefined}>
-        <Avatar id={level.imageId} size="sm" />
+        <Avatar id={level.imageFile?.fileId} size="sm" />
       </div>
       <div>lvl. {level.ordinalNumber}</div>
-      <div>{level.name}</div>
+      <div>{level.levelName}</div>
     </div>
   );
 };
