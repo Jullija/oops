@@ -59,9 +59,7 @@ export default function PointsTable({ points }: PointsTableProps) {
     <div style={styles.table}>
       <div style={styles.row}>
         {headerTitles.map((header, index) => (
-          <div key={index} style={styles.cell}>
-            {header}
-          </div>
+          <Cell key={index}>{header}</Cell>
         ))}
       </div>
       {points.map((item, index) => (
