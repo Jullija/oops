@@ -67,10 +67,6 @@ class GroupsDataFetcher {
         }
         val groups = groupsRepository.findByEdition(edition)
 
-        if (edition.endDate.isBefore(java.time.LocalDate.now())){
-            throw IllegalArgumentException("Edition has already ended")
-        }
-
         val photosForGroups = fileRepository.findAllByFileType("image/group")
 
         if (groups.size > photosForGroups.size) {
