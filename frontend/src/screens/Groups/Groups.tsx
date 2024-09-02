@@ -5,7 +5,7 @@ import { useGroupsScreenData } from "../../hooks/Groups/useGroupsScreenData";
 import { SideFilterBar } from "../../components/Groups/FilterBar/SideFilterBar";
 import { Styles } from "../../utils/Styles";
 import { isPartOfAString } from "../../utils/strings";
-import { getTimestampUniqueName } from "../../hooks/Groups/FilterBar/useTimestampsData";
+import { getTimestampUniqueString } from "../../hooks/Groups/FilterBar/useTimestampsData";
 import {
   GroupRadioFilterItem,
   RadioFilterGroups,
@@ -74,7 +74,7 @@ export const Groups = () => {
 
       const doesTimestampMatch =
         timestampIds.length === 0 ||
-        timestampIds.includes(getTimestampUniqueName(group.time));
+        timestampIds.includes(getTimestampUniqueString(group.time));
 
       const doesTeacherMatch =
         teacherIds.length === 0 || teacherIds.includes(group.teacher.id);

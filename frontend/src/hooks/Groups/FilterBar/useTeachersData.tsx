@@ -1,6 +1,6 @@
+import { FilterItem } from "../../../components/Groups/FilterBar/FilterOptionsSection";
 import { useTeachersQuery } from "../../../graphql/teachers.graphql.types";
 import { useEditionSelection } from "../../common/useEditionSelection";
-import { FilterItem } from "./useTimestampsData";
 
 export const useTeachersData = () => {
   const { selectedEdition } = useEditionSelection();

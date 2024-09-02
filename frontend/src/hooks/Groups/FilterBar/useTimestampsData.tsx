@@ -1,13 +1,10 @@
+import { FilterItem } from "../../../components/Groups/FilterBar/FilterOptionsSection";
 import { useGroupTimestampsQuery } from "../../../graphql/groupTimestamps.graphql.types";
 import { useEditionSelection } from "../../common/useEditionSelection";
 import { Timestamp } from "../useGroupsData";
 
-export type FilterItem = {
-  id: string;
-  name: string;
-};
-
-export const getTimestampUniqueName = (timestamp: Timestamp) => {
+// assuming backend data is unique
+export const getTimestampUniqueString = (timestamp: Timestamp) => {
   return `${timestamp.start}-${timestamp.end}`;
 };
 
@@ -20,7 +17,7 @@ export const useTimestampsData = () => {
 
   const timestamps: FilterItem[] =
     data?.getPossibleGroupsTimeSpans.map((timestamp) => {
-      const timestampName = getTimestampUniqueName({
+      const timestampName = getTimestampUniqueString({
         start: timestamp.startTime,
         end: timestamp.endTime,
       });

@@ -1,5 +1,8 @@
 import { Styles } from "../../../utils/Styles";
-import { OptionPicker, OptionPickerProps } from "./OptionPicker";
+import {
+  FilterOptionsSection,
+  FilterOptionsSectionProps,
+} from "./FilterOptionsSection";
 
 const styles: Styles = {
   container: {
@@ -13,14 +16,14 @@ const styles: Styles = {
 };
 
 type SideFilterBarProps = {
-  sections: OptionPickerProps[];
+  sections: FilterOptionsSectionProps[];
 };
 
 export const SideFilterBar = ({ sections }: SideFilterBarProps) => {
   return (
     <div style={styles.container}>
       {sections.map((props) => (
-        <OptionPicker {...props} />
+        <FilterOptionsSection {...props} />
       ))}
     </div>
   );

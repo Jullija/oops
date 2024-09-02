@@ -1,6 +1,6 @@
+import { FilterItem } from "../../../components/Groups/FilterBar/FilterOptionsSection";
 import { useWeekdaysQuery } from "../../../graphql/weekdays.graphql.types";
 import { useEditionSelection } from "../../common/useEditionSelection";
-import { FilterItem } from "./useTimestampsData";
 
 export const useWeekdayData = () => {
   const { selectedEdition } = useEditionSelection();

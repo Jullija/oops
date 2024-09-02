@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Styles } from "../../../utils/Styles";
-import { FilterItem } from "../../../hooks/Groups/FilterBar/useTimestampsData";
 
 const styles: Styles = {
   card: {
@@ -29,17 +28,22 @@ const styles: Styles = {
   },
 };
 
-export type OptionPickerProps = {
+export type FilterItem = {
+  id: string;
+  name: string;
+};
+
+export type FilterOptionsSectionProps = {
   pickerTitle: string;
   options: FilterItem[];
   onFiltersChange: (selectedIds: string[]) => void;
 };
 
-export const OptionPicker = ({
+export const FilterOptionsSection = ({
   pickerTitle,
   options,
   onFiltersChange,
-}: OptionPickerProps) => {
+}: FilterOptionsSectionProps) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const handleOptionClick = (optionId: string) => {
