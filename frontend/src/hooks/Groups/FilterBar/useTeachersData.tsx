@@ -1,11 +1,6 @@
 import { useTeachersQuery } from "../../../graphql/teachers.graphql.types";
 import { useEditionSelection } from "../../common/useEditionSelection";
-
-// use FilterItem here
-export type Teacher = {
-  name: string;
-  id: string;
-};
+import { FilterItem } from "./useTimestampsData";
 
 export const useTeachersData = () => {
   const { selectedEdition } = useEditionSelection();
@@ -14,7 +9,7 @@ export const useTeachersData = () => {
     skip: !selectedEdition?.editionId,
   });
 
-  const teachers: Teacher[] =
+  const teachers: FilterItem[] =
     data?.users.map((user) => {
       return { name: user.fullName ?? "-", id: user.userId };
     }) ?? [];

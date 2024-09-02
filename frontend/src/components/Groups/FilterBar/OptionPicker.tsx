@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Styles } from "../../../utils/Styles";
+import { FilterItem } from "../../../hooks/Groups/FilterBar/useTimestampsData";
 
 const styles: Styles = {
   card: {
@@ -28,19 +29,14 @@ const styles: Styles = {
   },
 };
 
-type FilterItem = {
-  id: string;
-  name: string;
-};
-
 type OptionPickerProps = {
-  title: string;
+  pickerTitle: string;
   options: FilterItem[];
   onFiltersChange: (selectedIds: string[]) => void;
 };
 
 export const OptionPicker = ({
-  title,
+  pickerTitle,
   options,
   onFiltersChange,
 }: OptionPickerProps) => {
@@ -57,7 +53,7 @@ export const OptionPicker = ({
 
   return (
     <div style={styles.card}>
-      <div style={styles.title}>{title}</div>
+      <div style={styles.title}>{pickerTitle}</div>
       {options.map((option) => (
         <div key={option.id} style={styles.optionContainer}>
           <div

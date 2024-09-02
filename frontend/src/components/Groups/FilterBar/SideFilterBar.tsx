@@ -13,11 +13,12 @@ const styles: Styles = {
   },
 };
 
+// TODO could take a list of {data, () => void}
 type SideFilterBarProps = {
   weekdays: FilterItem[];
   teachers: FilterItem[];
   timestamps: FilterItem[];
-  onWeekdayFilterChange: (selectedIds: string[]) => void;
+  onWeekdayChange: (selectedIds: string[]) => void;
   onTeacherChange: (selectedIds: string[]) => void;
   onTimestampChange: (selectedIds: string[]) => void;
 };
@@ -26,28 +27,28 @@ export const SideFilterBar = ({
   weekdays,
   teachers,
   timestamps,
-  onWeekdayFilterChange: onDaysFilterChange,
+  onWeekdayChange,
   onTeacherChange,
-  onTimestampChange: onLessonChange,
+  onTimestampChange,
 }: SideFilterBarProps) => {
   return (
     <div style={styles.container}>
       <OptionPicker
-        title="dzień tygodnia"
+        pickerTitle="dzień tygodnia"
         options={weekdays.map((weekday) => {
           return { id: weekday.id, name: weekday.name };
         })}
-        onFiltersChange={onDaysFilterChange}
+        onFiltersChange={onWeekdayChange}
       />
       <OptionPicker
-        title="godzina"
+        pickerTitle="godzina"
         options={timestamps.map((lesson) => {
           return { id: lesson.id, name: lesson.name };
         })}
-        onFiltersChange={onLessonChange}
+        onFiltersChange={onTimestampChange}
       />
       <OptionPicker
-        title="prowadzący"
+        pickerTitle="prowadzący"
         options={teachers}
         onFiltersChange={onTeacherChange}
       />

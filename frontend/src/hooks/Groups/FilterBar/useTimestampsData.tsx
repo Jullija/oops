@@ -1,4 +1,4 @@
-import { useGroupTimesQuery } from "../../../graphql/groupTimes.graphql.types";
+import { useGroupTimestampsQuery } from "../../../graphql/groupTimestamps.graphql.types";
 import { useEditionSelection } from "../../common/useEditionSelection";
 import { Timestamp } from "../useGroupsData";
 
@@ -13,7 +13,7 @@ export const getTimestampUniqueName = (timestamp: Timestamp) => {
 
 export const useTimestampsData = () => {
   const { selectedEdition } = useEditionSelection();
-  const { data, loading, error } = useGroupTimesQuery({
+  const { data, loading, error } = useGroupTimestampsQuery({
     variables: { editionId: parseInt(selectedEdition?.editionId ?? "") },
     skip: !selectedEdition?.editionId,
   });

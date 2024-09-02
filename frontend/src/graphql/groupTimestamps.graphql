@@ -1,4 +1,4 @@
-query groupTimes($editionId: Int!) {
+query groupTimestamps($editionId: Int!) {
   getPossibleGroupsTimeSpans(editionId: $editionId) {
     endTime
     startTime

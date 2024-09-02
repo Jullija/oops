@@ -1,10 +1,7 @@
 import { useWeekdaysQuery } from "../../../graphql/weekdays.graphql.types";
 import { useEditionSelection } from "../../common/useEditionSelection";
+import { FilterItem } from "./useTimestampsData";
 
-export type Weekday = {
-  name: string;
-  id: string;
-};
 export const useWeekdayData = () => {
   const { selectedEdition } = useEditionSelection();
   const { data, loading, error } = useWeekdaysQuery({
@@ -12,7 +9,7 @@ export const useWeekdayData = () => {
     skip: !selectedEdition?.editionId,
   });
 
-  const weekdays: Weekday[] =
+  const weekdays: FilterItem[] =
     data?.getPossibleGroupsWeekdays.map((name) => {
       return {
         name,

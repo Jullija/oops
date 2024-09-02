@@ -55,21 +55,21 @@ export const Groups = () => {
 
   const doesGroupMatchRadioButtons = useCallback(
     (group: Group) => {
-      switch (selectedOption.name) {
-        case "wszystkie":
+      switch (selectedOption.id) {
+        case "all":
           return true;
-        case "twoje":
+        case "yours":
           return group.teacher.id === teacherId;
-        case "obce":
+        case "foreign":
           return group.teacher.id !== teacherId;
       }
     },
-    [selectedOption.name, teacherId],
+    [selectedOption.id, teacherId],
   );
 
   const doesGroupMatchFiltersAndInput = useCallback(
     (group: Group) => {
-      const doesDayMatch =
+      const doesWeekdayMatch =
         weekdayIds.length === 0 || weekdayIds.includes(group.weekday);
 
       const doesTimestampMatch =
@@ -83,12 +83,16 @@ export const Groups = () => {
         !!input || isPartOfAString(input, [group.name, group.teacher.fullName]);
 
       return (
-        doesDayMatch && doesTimestampMatch && doesTeacherMatch && doesInputMatch
+        doesWeekdayMatch &&
+        doesTimestampMatch &&
+        doesTeacherMatch &&
+        doesInputMatch
       );
     },
     [weekdayIds, input, timestampIds, teacherIds],
   );
 
+  // never will be empty because of radio
   const groupsWithFilterAndRadio = useMemo(
     () =>
       groups.filter(
@@ -110,7 +114,7 @@ export const Groups = () => {
         weekdays={weekdays}
         teachers={teachers}
         timestamps={timestamps}
-        onWeekdayFilterChange={(selectedIds) => setWeekdayIds(selectedIds)}
+        onWeekdayChange={(selectedIds) => setWeekdayIds(selectedIds)}
         onTeacherChange={(selectedIds) => setTeacherIds(selectedIds)}
         onTimestampChange={(selectedIds) => setTimestampIds(selectedIds)}
       />
