@@ -1,6 +1,4 @@
-import { Lesson } from "../../../hooks/Groups/FilterBar/useLessonsData";
-import { Teacher } from "../../../hooks/Groups/FilterBar/useTeacherData";
-import { Weekday } from "../../../hooks/Groups/FilterBar/useWeekdaysData";
+import { FilterItem } from "../../../hooks/Groups/FilterBar/useTimestampsData";
 import { Styles } from "../../../utils/Styles";
 import { OptionPicker } from "./OptionPicker";
 
@@ -16,21 +14,21 @@ const styles: Styles = {
 };
 
 type SideFilterBarProps = {
-  weekdays: Weekday[];
-  teachers: Teacher[];
-  lessons: Lesson[];
-  onDaysFilterChange: (selectedIds: string[]) => void;
+  weekdays: FilterItem[];
+  teachers: FilterItem[];
+  timestamps: FilterItem[];
+  onWeekdayFilterChange: (selectedIds: string[]) => void;
   onTeacherChange: (selectedIds: string[]) => void;
-  onLessonChange: (selectedIds: string[]) => void;
+  onTimestampChange: (selectedIds: string[]) => void;
 };
 
 export const SideFilterBar = ({
   weekdays,
   teachers,
-  lessons,
-  onDaysFilterChange,
+  timestamps,
+  onWeekdayFilterChange: onDaysFilterChange,
   onTeacherChange,
-  onLessonChange,
+  onTimestampChange: onLessonChange,
 }: SideFilterBarProps) => {
   return (
     <div style={styles.container}>
@@ -43,7 +41,7 @@ export const SideFilterBar = ({
       />
       <OptionPicker
         title="godzina"
-        options={lessons.map((lesson) => {
+        options={timestamps.map((lesson) => {
           return { id: lesson.id, name: lesson.name };
         })}
         onFiltersChange={onLessonChange}

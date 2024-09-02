@@ -2,24 +2,23 @@ import { useGroupTimesQuery } from "../../../graphql/groupTimes.graphql.types";
 import { useEditionSelection } from "../../common/useEditionSelection";
 import { Timestamp } from "../useGroupsData";
 
-// use FilterItem here
-export type Lesson = {
-  name: string;
+export type FilterItem = {
   id: string;
+  name: string;
 };
 
 export const getTimestampUniqueName = (timestamp: Timestamp) => {
   return `${timestamp.start}-${timestamp.end}`;
 };
 
-export const useLessonsData = () => {
+export const useTimestampsData = () => {
   const { selectedEdition } = useEditionSelection();
   const { data, loading, error } = useGroupTimesQuery({
     variables: { editionId: parseInt(selectedEdition?.editionId ?? "") },
     skip: !selectedEdition?.editionId,
   });
 
-  const lessons: Lesson[] =
+  const timestamps: FilterItem[] =
     data?.getPossibleGroupsTimeSpans.map((timestamp) => {
       const timestampName = getTimestampUniqueName({
         start: timestamp.startTime,
@@ -31,5 +30,5 @@ export const useLessonsData = () => {
       };
     }) ?? [];
 
-  return { lessons, loading, error };
+  return { timestamps, loading, error };
 };

@@ -1,4 +1,4 @@
-import { useLessonsData } from "./useLessonsData";
+import { useTimestampsData } from "./useTimestampsData";
 import { useTeachersData } from "./useTeacherData";
 import { useWeekdayData } from "./useWeekdaysData";
 
@@ -16,16 +16,16 @@ export const useFilterBarData = () => {
   } = useTeachersData();
 
   const {
-    lessons,
-    loading: lessonsLoading,
-    error: lessonsError,
-  } = useLessonsData();
+    timestamps,
+    loading: timestampsLoaging,
+    error: timestampsLoading,
+  } = useTimestampsData();
 
   return {
     weekdays,
     teachers,
-    lessons,
-    loading: weekdaysLoading || teachersLoading || lessonsLoading,
-    error: weekdaysError || teachersError || lessonsError,
+    timestamps,
+    loading: weekdaysLoading || teachersLoading || timestampsLoaging,
+    error: weekdaysError || teachersError || timestampsLoading,
   };
 };

@@ -6,7 +6,7 @@ import { SideFilterBar } from "../../components/Groups/FilterBar/SideFilterBar";
 import { Styles } from "../../utils/Styles";
 import { isPartOfAString } from "../../utils/strings";
 import { useFilterBarData } from "../../hooks/Groups/FilterBar/useFilterBarData";
-import { getTimestampUniqueName } from "../../hooks/Groups/FilterBar/useLessonsData";
+import { getTimestampUniqueName } from "../../hooks/Groups/FilterBar/useTimestampsData";
 import {
   GroupRadioFilterItem,
   RadioFilterGroups,
@@ -40,50 +40,55 @@ const radioButtonOptions: GroupRadioFilterItem[] = [
 export const Groups = () => {
   const { user } = useUser();
   const teacherId = user.userId;
-  const { groups, loading, error } = useGroupsData();
+  const {
+    groups,
+    loading: groupsLoading,
+    error: groupsError,
+  } = useGroupsData();
   const {
     weekdays,
     teachers,
-    lessons,
+    timestamps,
     loading: filterOptionsLoading,
     error: filterOptionsError,
   } = useFilterBarData();
 
+  // TODO maybe one hook?
+
   const [input, setInput] = useState("");
-  const [daysIds, setDaysIds] = useState<string[]>([]);
-  const [teachersIds, setTeachersIds] = useState<string[]>([]);
-  const [lessonsIds, setLessonsIds] = useState<string[]>([]);
+  const [weekdayIds, setWeekdayIds] = useState<string[]>([]);
+  const [teacherIds, setTeacherIds] = useState<string[]>([]);
+  const [timestampIds, setTimestampIds] = useState<string[]>([]);
   const [selectedOption, setSelectedOption] = useState<GroupRadioFilterItem>({
     id: "all",
     name: "wszystkie",
   });
 
-  const groupsWithRadio = useMemo(
-    () =>
-      groups.filter((group) => {
-        switch (selectedOption.name) {
-          case "wszystkie":
-            return true;
-          case "twoje":
-            return group.teacher.id === teacherId;
-          case "obce":
-            return group.teacher.id !== teacherId;
-        }
-      }),
-    [groups, selectedOption.name, teacherId],
+  const doesGroupMatchRadioButtons = useCallback(
+    (group: Group) => {
+      switch (selectedOption.name) {
+        case "wszystkie":
+          return true;
+        case "twoje":
+          return group.teacher.id === teacherId;
+        case "obce":
+          return group.teacher.id !== teacherId;
+      }
+    },
+    [selectedOption.name, teacherId],
   );
 
   const doesGroupMatchFiltersAndInput = useCallback(
     (group: Group) => {
       const doesDayMatch =
-        daysIds.length === 0 || daysIds.includes(group.weekday);
+        weekdayIds.length === 0 || weekdayIds.includes(group.weekday);
 
       const doesTimestampMatch =
-        lessonsIds.length === 0 ||
-        lessonsIds.includes(getTimestampUniqueName(group.time));
+        timestampIds.length === 0 ||
+        timestampIds.includes(getTimestampUniqueName(group.time));
 
       const doesTeacherMatch =
-        teachersIds.length === 0 || teachersIds.includes(group.teacher.id);
+        teacherIds.length === 0 || teacherIds.includes(group.teacher.id);
 
       const doesInputMatch =
         !!input || isPartOfAString(input, [group.name, group.teacher.fullName]);
@@ -92,26 +97,23 @@ export const Groups = () => {
         doesDayMatch && doesTimestampMatch && doesTeacherMatch && doesInputMatch
       );
     },
-    [daysIds, input, lessonsIds, teachersIds],
+    [weekdayIds, input, timestampIds, teacherIds],
   );
 
   const groupsWithFilterAndRadio = useMemo(
     () =>
-      groupsWithRadio.filter((group) => doesGroupMatchFiltersAndInput(group)),
-    [doesGroupMatchFiltersAndInput, groupsWithRadio],
+      groups.filter(
+        (group) =>
+          doesGroupMatchFiltersAndInput(group) &&
+          doesGroupMatchRadioButtons(group),
+      ),
+    [doesGroupMatchFiltersAndInput, doesGroupMatchRadioButtons, groups],
   );
 
-  const applyFilters = useMemo(
-    () =>
-      !!input ||
-      daysIds.length !== 0 ||
-      teachersIds.length !== 0 ||
-      lessonsIds.length !== 0,
-    [daysIds.length, input, lessonsIds.length, teachersIds.length],
-  );
+  // TODO is it possible to reduce number of rerenders?
 
-  if (loading || filterOptionsLoading) return <div>loading...</div>;
-  if (error) return <div>ERROR: {error?.message}</div>;
+  if (groupsLoading || filterOptionsLoading) return <div>loading...</div>;
+  if (groupsError) return <div>ERROR: {groupsError?.message}</div>;
   if (filterOptionsError)
     return <div>ERROR: {filterOptionsError?.message}</div>;
 
@@ -120,10 +122,10 @@ export const Groups = () => {
       <SideFilterBar
         weekdays={weekdays}
         teachers={teachers}
-        lessons={lessons}
-        onDaysFilterChange={(selectedIds) => setDaysIds(selectedIds)}
-        onTeacherChange={(selectedIds) => setTeachersIds(selectedIds)}
-        onLessonChange={(selectedIds) => setLessonsIds(selectedIds)}
+        timestamps={timestamps}
+        onWeekdayFilterChange={(selectedIds) => setWeekdayIds(selectedIds)}
+        onTeacherChange={(selectedIds) => setTeacherIds(selectedIds)}
+        onTimestampChange={(selectedIds) => setTimestampIds(selectedIds)}
       />
       <div style={styles.rightSide}>
         <div style={styles.topBar}>
@@ -136,9 +138,7 @@ export const Groups = () => {
             selectedOption={selectedOption}
           />
         </div>
-        <GroupsList
-          groups={applyFilters ? groupsWithFilterAndRadio : groupsWithRadio}
-        />
+        <GroupsList groups={groupsWithFilterAndRadio} />
       </div>
     </div>
   );
