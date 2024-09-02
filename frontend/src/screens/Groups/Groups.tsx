@@ -80,7 +80,9 @@ export const Groups = () => {
         teacherIds.length === 0 || teacherIds.includes(group.teacher.id);
 
       const doesInputMatch =
-        !!input || isPartOfAString(input, [group.name, group.teacher.fullName]);
+        input === "undefined" ||
+        input === "" ||
+        isPartOfAString(input, [group.name, group.teacher.fullName]);
 
       return (
         doesWeekdayMatch &&
