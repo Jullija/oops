@@ -36,8 +36,8 @@ export type StudentCardData = {
 };
 
 export const useStudentData = (props: {
-  editionId: string;
-  studentId: string;
+  editionId?: string;
+  studentId?: string;
 }) => {
   const { editionId, studentId } = props;
 
@@ -48,9 +48,10 @@ export const useStudentData = (props: {
     refetch: studentPointsRefetch,
   } = useStudentPointsQuery({
     variables: {
-      editionId: parseInt(editionId),
-      studentId: parseInt(studentId),
+      editionId: parseInt(editionId ?? "-1"),
+      studentId: parseInt(studentId ?? "-1"),
     },
+    skip: !editionId || !studentId,
   });
 
   const points: Points[] = data?.getStudentPoints.subcategoryPoints ?? [];

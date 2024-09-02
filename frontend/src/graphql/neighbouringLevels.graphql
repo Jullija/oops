@@ -1,0 +1,28 @@
+query neighboringLevels($editionId: Int!, $studentId: Int!) {
+  getNeighbouringLevels(editionId: $editionId, studentId: $studentId) {
+    currentLevel {
+      highest
+      levelId
+      levelName
+      maximumPoints
+      minimumPoints
+      ordinalNumber
+    }
+    nextLevel {
+      highest
+      levelId
+      levelName
+      maximumPoints
+      minimumPoints
+      ordinalNumber
+    }
+    previousLevel {
+      highest
+      levelId
+      levelName
+      maximumPoints
+      minimumPoints
+      ordinalNumber
+    }
+  }
+}

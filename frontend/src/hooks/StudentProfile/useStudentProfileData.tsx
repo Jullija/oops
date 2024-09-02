@@ -5,7 +5,7 @@ import { useStudentData } from "./useStudentData";
 
 export const useStudentProfileData = (studentId: string) => {
   const { selectedEdition } = useEditionSelection();
-  const editionId = selectedEdition?.editionId ?? "-1";
+  const editionId = selectedEdition?.editionId;
 
   const { categories, categoriesLoading, categoriesError, categoriesRefetch } =
     useCategoriesCardData({
@@ -23,17 +23,13 @@ export const useStudentProfileData = (studentId: string) => {
   } = useStudentData({ editionId, studentId });
 
   const {
-    prevLevel,
+    previousLevel,
     currLevel,
     nextLevel,
     loading: animalLoading,
     error: animalError,
     refetch: animalRefetch,
-  } = useAnimalData(
-    editionId,
-    studentData?.level.ordinalNumber,
-    studentData?.level.highest,
-  );
+  } = useAnimalData(editionId, studentId);
 
   const refetch = () => {
     categoriesRefetch();
@@ -46,7 +42,7 @@ export const useStudentProfileData = (studentId: string) => {
     studentData,
     points,
     filterHeaderNames,
-    prevLevel,
+    prevLevel: previousLevel,
     currLevel,
     nextLevel,
     // TODO loading and error probably should be separated to sidebar and table

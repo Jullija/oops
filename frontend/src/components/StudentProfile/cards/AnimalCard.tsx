@@ -1,4 +1,4 @@
-import { NeighborLevel } from "../../../hooks/StudentProfile/useAnimalData";
+import { LevelType } from "../../../__generated__/schema.graphql.types";
 import { Styles } from "../../../utils/Styles";
 import { PointsBar } from "../../PointsBar";
 
@@ -23,9 +23,9 @@ const styles: Styles = {
 };
 
 type AnimalCardProps = {
-  prevLevel?: NeighborLevel;
-  currLevel?: NeighborLevel;
-  nextLevel?: NeighborLevel;
+  prevLevel?: LevelType;
+  currLevel: LevelType;
+  nextLevel?: LevelType;
   totalPoints: number;
 };
 
@@ -35,24 +35,20 @@ export const AnimalCard = ({
   nextLevel,
   totalPoints,
 }: AnimalCardProps) => {
-  if (!currLevel) {
-    return (
-      <div style={styles.card}>
-        something went wrong - currLevel is undefined{" "}
-      </div>
-    );
-  }
-
-  console.log("CURRENT: ", currLevel);
+  console.log("CURR: ", currLevel);
 
   return (
     <div style={styles.card}>
       <div style={styles.title}>
-        {currLevel.name} - lvl. {currLevel.ordinalNumber}
+        {currLevel.levelName} - lvl. {currLevel.ordinalNumber}
       </div>
-
+      {/* // TODO we have a problem with backend data inconsistency */}
       <PointsBar
-        points={totalPoints}
+        points={
+          totalPoints > currLevel.minimumPoints
+            ? totalPoints
+            : currLevel.minimumPoints + 2
+        }
         bounds={{
           lower: currLevel.minimumPoints,
           upper: currLevel.maximumPoints,
@@ -64,7 +60,7 @@ export const AnimalCard = ({
           {prevLevel && (
             <div>
               <div>lvl. {prevLevel.ordinalNumber}</div>
-              <div>{prevLevel.name}</div>
+              <div>{prevLevel.levelName}</div>
             </div>
           )}
         </div>
@@ -72,7 +68,7 @@ export const AnimalCard = ({
           {nextLevel && (
             <div>
               <div>lvl. {nextLevel.ordinalNumber}</div>
-              <div>{nextLevel.name}</div>
+              <div>{nextLevel.levelName}</div>
             </div>
           )}
         </div>

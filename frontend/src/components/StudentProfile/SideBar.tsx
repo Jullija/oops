@@ -4,7 +4,7 @@ import { CategoriesCard } from "./cards/CategoriesCard";
 import { Styles } from "../../utils/Styles";
 import { StudentCardData } from "../../hooks/StudentProfile/useStudentData";
 import { AnimalCard } from "./cards/AnimalCard";
-import { NeighborLevel } from "../../hooks/StudentProfile/useAnimalData";
+import { LevelType } from "../../__generated__/schema.graphql.types";
 
 const styles: Styles = {
   container: {
@@ -20,9 +20,9 @@ const styles: Styles = {
 type SideBarProps = {
   student: StudentCardData;
   categoriesBarProps: PointsBarProps[];
-  prevLevel?: NeighborLevel;
-  currLevel?: NeighborLevel;
-  nextLevel?: NeighborLevel;
+  prevLevel?: LevelType;
+  currLevel: LevelType;
+  nextLevel?: LevelType;
 };
 
 export const SideBar = ({
