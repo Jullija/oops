@@ -11,15 +11,24 @@ const styles: Styles = {
   },
 };
 
-type RadioFilterGroupProps = {
-  options: FilterItem[];
-  onOptionChange: (option: FilterItem) => void;
-  selectedOption: FilterItem;
-};
+export type GroupRadioFilterItem =
+  | {
+      id: "all";
+      name: "wszystkie";
+    }
+  | {
+      id: "yours";
+      name: "twoje";
+    }
+  | {
+      id: "foreign";
+      name: "obce";
+    };
 
-export type FilterItem = {
-  id: string;
-  name: string;
+type RadioFilterGroupProps = {
+  options: GroupRadioFilterItem[];
+  onOptionChange: (option: GroupRadioFilterItem) => void;
+  selectedOption: GroupRadioFilterItem;
 };
 
 export const RadioFilterGroups = ({
