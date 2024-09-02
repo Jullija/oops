@@ -15,6 +15,7 @@ import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 
 @DgsComponent
 class EditionDataFetcher {
@@ -58,9 +59,21 @@ class EditionDataFetcher {
         if (editionRepository.existsByEditionYear(editionYear)) {
             throw IllegalArgumentException("Edition with year $editionYear already exists")
         }
+
+        val currentYear = LocalDate.now().year
+
+        if (editionYear < currentYear || editionYear > currentYear + 10) {
+            throw IllegalArgumentException("Edition year must be between ${currentYear} and ${currentYear + 10}")
+        }
+
+        val startDate = LocalDate.of(editionYear, 10, 1)
+        val endDate = LocalDate.of(editionYear + 1, 9, 30)
+
         val edition = Edition(
             editionName = editionName,
             editionYear = editionYear,
+            startDate = startDate,
+            endDate = endDate,
             label = label)
         return editionRepository.save(edition)
     }

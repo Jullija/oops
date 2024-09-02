@@ -1,25 +1,25 @@
 import requests
+import datetime
 
 
 def insert_editions(hasura_url, headers, number_of_editions=6):
     editions = {}
-
-    for year in range(2020, 2020 + number_of_editions):
+    current_year = int(datetime.datetime.now().year)
+    print(f"Attempting to insert {number_of_editions} editions starting from {current_year}")
+    for year in range(current_year, current_year + number_of_editions):
         name = f"Edition {year}"
         print(f"Attempting to insert edition: {name}")
 
         mutation = """
-        mutation MyMutation($name: String!, $year: Int!) {
-            insertEdition(objects: {name: $name, editionYear: $year, label: ""}) {
-                returning {
-                    editionId
-                    name
-                    editionYear
-                }
+        mutation AddEdition($editionName: String!, $editionYear: Int!, $label: String) {
+            addEdition(editionName: $editionName, editionYear: $editionYear, label: $label) {
+                editionId
+                editionName
+                editionYear
             }
         }
         """
-        variables = {"name": name, "year": year}
+        variables = {"editionName": name, "editionYear": year, "label": ""}
 
         response = requests.post(
             hasura_url,
@@ -31,7 +31,7 @@ def insert_editions(hasura_url, headers, number_of_editions=6):
         if "errors" in data:
             print(f"Error inserting edition '{name}': {data['errors']}")
         else:
-            returned_data = data["data"]["insertEdition"]["returning"][0]
+            returned_data = data["data"]["addEdition"]
             editions[returned_data["editionYear"]] = returned_data["editionId"]
             print(f"Successfully inserted edition '{name}' with ID {returned_data['editionId']} for year {year}")
 

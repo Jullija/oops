@@ -82,13 +82,20 @@ update_permissions:
       columns:
         - end_time
         - group_name
-        - image_file_id
         - label
         - start_time
         - teacher_id
         - weekday_id
-      filter: {}
-      check: {}
+      filter:
+        _not:
+          edition:
+            end_date:
+              _lte: now()
+      check:
+        _not:
+          edition:
+            end_date:
+              _lte: now()
       set:
         label: '""'
     comment: ""
@@ -97,7 +104,7 @@ delete_permissions:
     permission:
       filter:
         _not:
-          userGroups:
-            group_id:
-              _is_null: false
+          edition:
+            start_date:
+              _lte: now()
     comment: ""

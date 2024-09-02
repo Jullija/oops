@@ -37,6 +37,9 @@ class SubcategoriesDataFetcher {
                               @InputArgument subcategoryPrefix: String,
                               @InputArgument subcategoryCount: Int, @InputArgument maxPoints: Float): List<Subcategories> {
         val edition = editionRepository.findById(editionId).orElseThrow { throw Exception("Edition not found") }
+        if (edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
         val category = categoriesRepository.findById(categoryId).orElseThrow { throw Exception("Category not found") }
         if (category.categoryEdition.none { it.edition == edition }) {
             throw IllegalArgumentException("Category with id $categoryId does not exist in edition with id $editionId")
@@ -75,6 +78,9 @@ class SubcategoriesDataFetcher {
                        @InputArgument editionId: Long, @InputArgument label: String): Subcategories {
         val category = categoriesRepository.findById(categoryId).orElseThrow { throw Exception("Category not found") }
         val edition = editionRepository.findById(editionId).orElseThrow { throw Exception("Edition not found") }
+        if (edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
         if (category.categoryEdition.none { it.edition == edition }) {
             throw IllegalArgumentException("Category with id $categoryId does not exist in edition with id $editionId")
         }

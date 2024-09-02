@@ -57,6 +57,38 @@ update_permissions:
       columns:
         - group_id
         - user_id
-      filter: {}
-      check: {}
+      filter:
+        _and:
+          - user:
+              role:
+                _eq: student
+          - _not:
+              group:
+                edition:
+                  end_date:
+                    _lte: now()
+      check:
+        _and:
+          - user:
+              role:
+                _eq: student
+          - _not:
+              group:
+                edition:
+                  end_date:
+                    _lte: now()
+    comment: ""
+delete_permissions:
+  - role: coordinator
+    permission:
+      filter:
+        _and:
+          - user:
+              role:
+                _eq: student
+          - _not:
+              group:
+                edition:
+                  end_date:
+                    _lte: now()
     comment: ""

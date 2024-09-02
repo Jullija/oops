@@ -46,7 +46,8 @@ class BonusDataFetcher {
 
     @DgsMutation
     @Transactional
-    fun addBonusMutation(@InputArgument chestHistoryId: Long, @InputArgument awardId: Long): AddBonusReturnType {
+    fun addBonusMutation(@InputArgument chestHistoryId: Long, @InputArgument awardId: Long,
+                         @InputArgument checkDates: Boolean = true): AddBonusReturnType {
         val chestHistory = chestHistoryRepository.findById(chestHistoryId)
             .orElseThrow { IllegalArgumentException("Invalid chest history ID") }
 
@@ -79,6 +80,15 @@ class BonusDataFetcher {
             commonEditions.maxByOrNull { it.editionYear }!!
         } else {
             commonEditions.first()
+        }
+
+        if (checkDates){
+            if (edition.startDate.isAfter(java.time.LocalDate.now())){
+                throw IllegalArgumentException("Edition has not started yet")
+            }
+            if (edition.endDate.isBefore(java.time.LocalDate.now())){
+                throw IllegalArgumentException("Edition has already ended")
+            }
         }
 
         val points = when (award.awardType) {
