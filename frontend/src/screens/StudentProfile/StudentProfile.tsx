@@ -27,6 +27,7 @@ export function StudentProfile() {
   } = useStudentProfileData(user.userId);
 
   // TODO: add components for loading state and error message
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
   if (!studentData) return <p>Student is undefined</p>;

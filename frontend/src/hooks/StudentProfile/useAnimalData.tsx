@@ -45,7 +45,7 @@ export const useAnimalData = (editionId?: string, studentId?: string) => {
   }
 
   return {
-    previousLevel,
+    prevLevel: previousLevel,
     currLevel,
     nextLevel,
     loading,
