@@ -1,17 +1,17 @@
 import { useCallback, useMemo, useState } from "react";
 import { GroupSearchField } from "../../components/Groups/GroupsList/GroupSearcher";
 import { GroupsList } from "../../components/Groups/GroupsList/GroupsList";
-import { Group, useGroupsData } from "../../hooks/Groups/useGroupsData";
+import { useGroupsScreenData } from "../../hooks/Groups/useGroupsScreenData";
 import { SideFilterBar } from "../../components/Groups/FilterBar/SideFilterBar";
 import { Styles } from "../../utils/Styles";
 import { isPartOfAString } from "../../utils/strings";
-import { useFilterBarData } from "../../hooks/Groups/FilterBar/useFilterBarData";
 import { getTimestampUniqueName } from "../../hooks/Groups/FilterBar/useTimestampsData";
 import {
   GroupRadioFilterItem,
   RadioFilterGroups,
 } from "../../components/Groups/RadioFilterGroup";
 import { useUser } from "../../hooks/common/useUser";
+import { Group } from "../../hooks/Groups/useGroupsData";
 
 const styles: Styles = {
   container: {
@@ -31,6 +31,7 @@ const styles: Styles = {
   },
 };
 
+// TODO try to reuse it in hall of fame
 const radioButtonOptions: GroupRadioFilterItem[] = [
   { id: "all", name: "wszystkie" },
   { id: "yours", name: "twoje" },
@@ -40,20 +41,8 @@ const radioButtonOptions: GroupRadioFilterItem[] = [
 export const Groups = () => {
   const { user } = useUser();
   const teacherId = user.userId;
-  const {
-    groups,
-    loading: groupsLoading,
-    error: groupsError,
-  } = useGroupsData();
-  const {
-    weekdays,
-    teachers,
-    timestamps,
-    loading: filterOptionsLoading,
-    error: filterOptionsError,
-  } = useFilterBarData();
-
-  // TODO maybe one hook?
+  const { groups, weekdays, teachers, timestamps, loading, error } =
+    useGroupsScreenData();
 
   const [input, setInput] = useState("");
   const [weekdayIds, setWeekdayIds] = useState<string[]>([]);
@@ -112,10 +101,8 @@ export const Groups = () => {
 
   // TODO is it possible to reduce number of rerenders?
 
-  if (groupsLoading || filterOptionsLoading) return <div>loading...</div>;
-  if (groupsError) return <div>ERROR: {groupsError?.message}</div>;
-  if (filterOptionsError)
-    return <div>ERROR: {filterOptionsError?.message}</div>;
+  if (loading) return <div>loading...</div>;
+  if (error) return <div>ERROR: {error?.message}</div>;
 
   return (
     <div style={styles.container}>
