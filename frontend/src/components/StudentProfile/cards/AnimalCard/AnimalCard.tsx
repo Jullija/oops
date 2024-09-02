@@ -15,15 +15,12 @@ const styles: Styles = {
   title: {
     fontWeight: "bold",
   },
-  neighborLevelsContainer: {
+  levelMiniaturesContainer: {
     display: "flex",
     flexDirection: "row",
   },
-  levelContainer: {
+  levelMiniatureSpaceWrapper: {
     flex: 1,
-  },
-  opacity: {
-    opacity: 0.5,
   },
 };
 
@@ -49,23 +46,24 @@ export const AnimalCard = ({
       {/* // TODO we have a problem with backend data inconsistency */}
       <PointsBar
         points={
-          totalPoints > currLevel.minimalPoints
+          totalPoints > currLevel.minimumPoints
             ? totalPoints
-            : currLevel.minimalPoints + 2
+            : currLevel.minimumPoints + 2
         }
         bounds={{
-          lower: currLevel.minimalPoints,
+          lower: currLevel.minimumPoints,
           upper: currLevel.maximumPoints,
         }}
         showPoints
       />
 
-      <div style={styles.neighborLevelsContainer}>
-        <div style={styles.levelContainer}>
+      {/* // TODO maybe separate component */}
+      <div style={styles.levelMiniaturesContainer}>
+        <div style={styles.levelMiniatureSpaceWrapper}>
           {prevLevel && <LevelMiniature level={prevLevel} />}
         </div>
-        <div style={styles.levelContainer}>
-          {nextLevel && <LevelMiniature level={nextLevel} />}
+        <div style={styles.levelMiniatureSpaceWrapper}>
+          {nextLevel && <LevelMiniature level={nextLevel} withOpacity />}
         </div>
       </div>
     </div>

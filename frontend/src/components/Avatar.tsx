@@ -16,7 +16,7 @@ type AvatarProps = {
 type AvatarSize = "sm" | "md" | "lg";
 
 const sizeMap: Record<AvatarSize, number> = {
-  sm: 40,
+  sm: 60,
   md: 100,
   lg: 140,
 };

@@ -4,7 +4,7 @@ import { useNeighboringLevelsQuery } from "../../graphql/neighbouringLevels.grap
 
 export type Level = {
   name: string;
-  minimalPoints: number;
+  minimumPoints: number;
   maximumPoints: number;
   ordinalNumber: number;
   imageId: string | undefined;
@@ -16,7 +16,7 @@ const mapToLevel = (level: LevelType | null | undefined): Level | undefined => {
   }
   return {
     name: level.levelName,
-    minimalPoints: level.minimumPoints,
+    minimumPoints: level.minimumPoints,
     maximumPoints: level.maximumPoints,
     ordinalNumber: level.ordinalNumber,
     imageId: level.imageFile?.fileId,

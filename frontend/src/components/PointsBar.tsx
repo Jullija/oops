@@ -46,8 +46,8 @@ export const PointsBar = ({
 
   // TODO we have a problem with backend data inconsistency
   if (bounds.lower && points < bounds.lower) {
-    console.log("LOWER BOUND: ", bounds.lower);
-    console.log("POINTS: ", points);
+    // console.log("LOWER BOUND: ", bounds.lower);
+    // console.log("POINTS: ", points);
     throw new Error("points cannot be lower than lower bound");
   }
 

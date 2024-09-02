@@ -29,16 +29,14 @@ const styles: Styles = {
 export function StudentCard({
   displayName,
   index,
-  level,
   group,
   totalPoints,
-  imageIds,
+  avatarId,
 }: StudentCardData) {
   return (
     <div style={styles.container}>
-      <Avatar id={imageIds.avatar} size="lg" />
+      <Avatar id={avatarId} size="lg" />
       <div style={styles.studentName}>{displayName}</div>
-      <div>level: {level.name}</div>
       <div>indeks: {index}</div>
       <div>
         grupa:{" "}

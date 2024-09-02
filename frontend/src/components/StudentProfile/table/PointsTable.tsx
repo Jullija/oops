@@ -1,5 +1,6 @@
 import { Styles } from "../../../utils/Styles";
 import { Points } from "../../../hooks/StudentProfile/useStudentData";
+import Cell from "./Cell";
 
 const styles: Styles = {
   table: {
@@ -9,13 +10,6 @@ const styles: Styles = {
   row: {
     display: "flex",
     justifyContent: "space-between",
-  },
-  cell: {
-    border: "1px solid blue",
-    padding: 12,
-    display: "flex",
-    justifyContent: "center",
-    width: "30%",
   },
 };
 
@@ -73,23 +67,20 @@ export default function PointsTable({ points }: PointsTableProps) {
       </div>
       {points.map((item, index) => (
         <div key={index} style={styles.row}>
-          <div style={styles.cell}>{item.subcategory.subcategoryName}</div>
-          <div style={styles.cell}>
-            {item.subcategory.category.categoryName}
-          </div>
-          <div style={styles.cell}>{getPointsString(item)}</div>
-          <div style={styles.cell}>{item.subcategory.maxPoints}</div>
-          {/* TODO add fullName to backend */}
-          <div style={styles.cell}>
+          <Cell>{item.subcategory.subcategoryName}</Cell>
+          <Cell>{item.subcategory.category.categoryName}</Cell>
+          <Cell>{getPointsString(item)}</Cell>
+          <Cell>{item.subcategory.maxPoints}</Cell>
+          <Cell>
             {getDisplayDate(
               item.points.purePoints?.createdAt,
               item.points.purePoints?.updatedAt,
             )?.toLocaleDateString("pl-PL", dateOptions)}
-          </div>
-          <div style={styles.cell}>
-            {item.points.purePoints?.teacher.firstName}{" "}
-            {item.points.purePoints?.teacher.secondName}
-          </div>
+          </Cell>
+          {/* TODO add fullName to backend */}
+          <Cell>
+            {`${item.points.purePoints?.teacher.firstName} ${item.points.purePoints?.teacher.secondName}`}
+          </Cell>
         </div>
       ))}
     </div>

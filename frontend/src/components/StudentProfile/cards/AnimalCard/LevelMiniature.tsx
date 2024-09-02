@@ -4,7 +4,7 @@ import { Avatar } from "../../../Avatar";
 
 const styles: Styles = {
   opacity: {
-    opacity: 0.5,
+    opacity: 0.6,
   },
 };
 

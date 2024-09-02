@@ -12,12 +12,6 @@ export type StudentCardData = {
   id: string;
   displayName: string;
   index: number;
-  // TODO to delete
-  level: {
-    name: string;
-    ordinalNumber: number;
-    highest: boolean;
-  };
   group?: {
     name: string;
     id: string;
@@ -29,10 +23,7 @@ export type StudentCardData = {
     teacherDisplayName: string;
   };
   totalPoints: number;
-  imageIds: {
-    avatar?: string;
-    level?: string;
-  };
+  avatarId: string | undefined;
 };
 
 export const useStudentData = (props: {
@@ -58,11 +49,6 @@ export const useStudentData = (props: {
         id: user.userId.toString(),
         displayName: `${user.firstName} ${user.secondName}`,
         index: user.indexNumber,
-        level: {
-          name: data?.getStudentPoints.level?.levelName ?? "-",
-          ordinalNumber: data?.getStudentPoints.level?.ordinalNumber,
-          highest: data?.getStudentPoints.level?.highest,
-        },
         group: user.userGroups[0]
           ? {
               name: user.userGroups[0].group.groupName,
@@ -72,15 +58,11 @@ export const useStudentData = (props: {
                 start: user.userGroups[0].group.startTime,
                 end: user.userGroups[0].group.endTime,
               },
-              // TODO: why no display name
               teacherDisplayName: `${user.userGroups[0].group.teacher?.firstName ?? "-"} ${user.userGroups[0].group.teacher?.secondName ?? "-"}`,
             }
           : undefined,
         totalPoints: data.getStudentPoints.sumOfAll,
-        imageIds: {
-          avatar: user.imageFile?.fileId,
-          level: data.getStudentPoints.level?.imageFile?.fileId,
-        },
+        avatarId: user.imageFile?.fileId,
       }
     : undefined;
 

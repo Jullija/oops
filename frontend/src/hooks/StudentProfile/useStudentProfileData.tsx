@@ -26,15 +26,15 @@ export const useStudentProfileData = (studentId?: string) => {
     prevLevel,
     currLevel,
     nextLevel,
-    animalDataLoading: animalLoading,
-    animalDataError: animalError,
-    animalDataRefetch: animalRefetch,
+    animalDataLoading,
+    animalDataError,
+    animalDataRefetch,
   } = useAnimalData(editionId, studentId);
 
   const refetch = () => {
     categoriesRefetch();
     studentPointsRefetch();
-    animalRefetch();
+    animalDataRefetch();
   };
 
   return {
@@ -46,8 +46,8 @@ export const useStudentProfileData = (studentId?: string) => {
     currLevel,
     nextLevel,
     // TODO loading and error probably should be separated to sidebar and table
-    loading: categoriesLoading || studentPointsLoading || animalLoading,
-    error: categoriesError || studentPointsError || animalError,
+    loading: categoriesLoading || studentPointsLoading || animalDataLoading,
+    error: categoriesError || studentPointsError || animalDataError,
     refetch,
   };
 };
