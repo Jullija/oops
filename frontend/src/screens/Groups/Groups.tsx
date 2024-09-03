@@ -115,17 +115,17 @@ export const Groups = () => {
       <SideFilterBar
         sections={[
           {
-            pickerTitle: "dzień tygodnia",
+            pickerTitle: "Dzień Tygodnia",
             options: weekdays,
             onFiltersChange: (selectedIds) => setWeekdayIds(selectedIds),
           },
           {
-            pickerTitle: "godzina",
+            pickerTitle: "Godzina",
             options: timestamps,
             onFiltersChange: (selectedIds) => setTimestampIds(selectedIds),
           },
           {
-            pickerTitle: "prowadzący",
+            pickerTitle: "Prowadzący",
             options: teachers,
             onFiltersChange: (selectedIds) => setTeacherIds(selectedIds),
           },
