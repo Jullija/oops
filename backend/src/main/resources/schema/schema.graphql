@@ -308,7 +308,7 @@ type CategoryPointsSumType {
 type StudentPointsType {
   user: UserType!
   level: LevelType
-  subcategoryPoints: [SubcategoryPointsType]!
+  subcategoryPoints: [SubcategoryPointsType!]!
   sumOfPurePoints: Float!
   sumOfBonuses: Float!
   sumOfAll: Float!

@@ -14,7 +14,7 @@ export type StudentCardData = {
   group?: {
     name: string;
     id: string;
-    weekday: string;
+    weekday: Weekday;
     time: {
       start: string;
       end: string;
@@ -23,6 +23,11 @@ export type StudentCardData = {
   };
   totalPoints: number;
   avatarId: string | undefined;
+};
+
+export type Weekday = {
+  id: string;
+  name: string;
 };
 
 export const useStudentData = (props: {
@@ -52,7 +57,10 @@ export const useStudentData = (props: {
           ? {
               name: user.userGroups[0].group.groupName,
               id: user.userGroups[0].group.groupsId,
-              weekday: user.userGroups[0].group.weekday,
+              weekday: {
+                id: user.userGroups[0].group.weekday.weekdayId,
+                name: user.userGroups[0].group.weekday.weekdayName,
+              },
               time: {
                 start: user.userGroups[0].group.startTime,
                 end: user.userGroups[0].group.endTime,
