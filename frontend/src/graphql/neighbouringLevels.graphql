@@ -1,4 +1,4 @@
-query neighboringLevels($editionId: Int!, $studentId: Int!) {
+query NeighboringLevels($editionId: Int!, $studentId: Int!) {
   getNeighboringLevels(editionId: $editionId, studentId: $studentId) {
     currLevel {
       highest

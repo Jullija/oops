@@ -1,4 +1,4 @@
-query teachers($editionId: bigint!) {
+query Teachers($editionId: bigint!) {
   groups(distinctOn: teacherId, where: { editionId: { _eq: $editionId } }) {
     userByTeacherId {
       fullName

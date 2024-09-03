@@ -1,4 +1,4 @@
-import { useStudentsInGroupQuery } from "../../graphql/studentsInGroups.graphql.types";
+import { useStudentsInGroupQuery } from "../../graphql/studentsInGroup.graphql.types";
 import { ShortStudent } from "../../utils/types";
 
 export const useStudentsSearchData = (groupId: string) => {
