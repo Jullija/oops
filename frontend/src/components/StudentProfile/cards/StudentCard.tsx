@@ -41,7 +41,7 @@ export function StudentCard({
       <div>
         grupa:{" "}
         {group
-          ? `${group.name}, ${group.weekday} ${group.time.start}-${group.time.end}`
+          ? `${group.name}, ${group.weekday.name} ${group.time.start}-${group.time.end}`
           : "brak"}
       </div>
       <div>prowadzący: {group ? group.teacherDisplayName : "brak"}</div>
