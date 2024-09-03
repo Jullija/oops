@@ -1,5 +1,5 @@
 query weekdays {
-  weekdays {
+  weekdays(orderBy: { ordinalNumber: ASC }) {
     weekdayId
     weekdayName
   }

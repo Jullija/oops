@@ -16,7 +16,7 @@ export type WeekdaysQuery = {
 
 export const WeekdaysDocument = gql`
   query weekdays {
-    weekdays {
+    weekdays(orderBy: { ordinalNumber: ASC }) {
       weekdayId
       weekdayName
     }
