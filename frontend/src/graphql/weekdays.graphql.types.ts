@@ -3,18 +3,23 @@ import * as Types from "../__generated__/schema.graphql.types";
 import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
 const defaultOptions = {} as const;
-export type WeekdaysQueryVariables = Types.Exact<{
-  editionId: Types.Scalars["Int"]["input"];
-}>;
+export type WeekdaysQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type WeekdaysQuery = {
   __typename?: "query_root";
-  getPossibleGroupsWeekdays: Array<string>;
+  weekdays: Array<{
+    __typename?: "Weekdays";
+    weekdayId: string;
+    weekdayName: string;
+  }>;
 };
 
 export const WeekdaysDocument = gql`
-  query weekdays($editionId: Int!) {
-    getPossibleGroupsWeekdays(editionId: $editionId)
+  query weekdays {
+    weekdays {
+      weekdayId
+      weekdayName
+    }
   }
 `;
 
@@ -30,13 +35,11 @@ export const WeekdaysDocument = gql`
  * @example
  * const { data, loading, error } = useWeekdaysQuery({
  *   variables: {
- *      editionId: // value for 'editionId'
  *   },
  * });
  */
 export function useWeekdaysQuery(
-  baseOptions: Apollo.QueryHookOptions<WeekdaysQuery, WeekdaysQueryVariables> &
-    ({ variables: WeekdaysQueryVariables; skip?: boolean } | { skip: boolean }),
+  baseOptions?: Apollo.QueryHookOptions<WeekdaysQuery, WeekdaysQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<WeekdaysQuery, WeekdaysQueryVariables>(

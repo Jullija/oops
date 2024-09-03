@@ -4,7 +4,10 @@ query groups($editionId: bigint!) {
       groupName
       groupsId
       startTime
-      weekday
+      weekday {
+        weekdayId
+        weekdayName
+      }
       endTime
       userGroups(
         where: { user: { role: { _in: ["teacher", "coordinator"] } } }

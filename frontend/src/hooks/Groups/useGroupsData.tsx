@@ -4,7 +4,7 @@ import { useEditionSelection } from "../common/useEditionSelection";
 export type Group = {
   name: string;
   id: string;
-  weekday: string;
+  weekday: { id: string; name: string };
   time: Timestamp;
   teacher: { fullName: string; id: string };
 };
@@ -29,8 +29,10 @@ export const useGroupsData = () => {
       return {
         name: group.groupName,
         id: group.groupsId,
-        // TODO fix
-        weekday: group.weekday.toUpperCase(),
+        weekday: {
+          id: group.weekday.weekdayId,
+          name: group.weekday.weekdayName,
+        },
         time: { start: group.startTime, end: group.endTime },
         teacher: {
           // firstName and secondName is not nullable - hasura computes it so practically it will never be null

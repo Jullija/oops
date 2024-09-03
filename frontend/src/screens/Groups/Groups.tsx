@@ -70,7 +70,7 @@ export const Groups = () => {
   const doesGroupMatchFiltersAndInput = useCallback(
     (group: Group) => {
       const doesWeekdayMatch =
-        weekdayIds.length === 0 || weekdayIds.includes(group.weekday);
+        weekdayIds.length === 0 || weekdayIds.includes(group.weekday.id);
 
       const doesTimestampMatch =
         timestampIds.length === 0 ||

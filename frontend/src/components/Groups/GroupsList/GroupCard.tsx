@@ -34,7 +34,7 @@ export const GroupCard = ({
       <div style={styles.title}>{group.name}</div>
       <div>{group.teacher.fullName}</div>
       <div>
-        {group.weekday} {group.time.start}-{group.time.end}
+        {group.weekday.name} {group.time.start}-{group.time.end}
       </div>
       {withEditableRights && <div style={{ color: "blue" }}>editable</div>}
     </div>

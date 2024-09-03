@@ -1,19 +1,14 @@
 import { FilterItem } from "../../../components/Groups/FilterBar/FilterOptionsSection";
 import { useWeekdaysQuery } from "../../../graphql/weekdays.graphql.types";
-import { useEditionSelection } from "../../common/useEditionSelection";
 
 export const useWeekdayData = () => {
-  const { selectedEdition } = useEditionSelection();
-  const { data, loading, error } = useWeekdaysQuery({
-    variables: { editionId: parseInt(selectedEdition?.editionId ?? "") },
-    skip: !selectedEdition?.editionId,
-  });
+  const { data, loading, error } = useWeekdaysQuery();
 
   const weekdays: FilterItem[] =
-    data?.getPossibleGroupsWeekdays.map((name) => {
+    data?.weekdays.map((weekday) => {
       return {
-        name,
-        id: name,
+        name: weekday.weekdayName,
+        id: weekday.weekdayId,
       };
     }) ?? [];
 

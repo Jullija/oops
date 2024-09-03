@@ -4684,6 +4684,21 @@ enum CursorOrdering {
 }
 
 """
+Boolean expression to compare columns of type "date". All fields are combined with logical 'AND'.
+"""
+input DateComparisonExp {
+  _eq: date
+  _gt: date
+  _gte: date
+  _in: [date!]
+  _isNull: Boolean
+  _lt: date
+  _lte: date
+  _neq: date
+  _nin: [date!]
+}
+
+"""
 columns and relationships of "edition"
 """
 type Edition {
@@ -4868,6 +4883,7 @@ type Edition {
   ): ChestsAggregate!
   editionId: bigint!
   editionYear: Int!
+  endDate: date!
 
   """
   An array relationship
@@ -4990,6 +5006,7 @@ type Edition {
     where: LevelsBoolExp
   ): LevelsAggregate!
   name: String!
+  startDate: date!
 
   """
   An array relationship
@@ -5160,12 +5177,14 @@ input EditionBoolExp {
   chestsAggregate: ChestsAggregateBoolExp
   editionId: BigintComparisonExp
   editionYear: IntComparisonExp
+  endDate: DateComparisonExp
   groups: GroupsBoolExp
   groupsAggregate: GroupsAggregateBoolExp
   label: StringComparisonExp
   levels: LevelsBoolExp
   levelsAggregate: LevelsAggregateBoolExp
   name: StringComparisonExp
+  startDate: DateComparisonExp
   subcategories: SubcategoriesBoolExp
   subcategoriesAggregate: SubcategoriesAggregateBoolExp
   userLevels: UserLevelBoolExp
@@ -5199,10 +5218,12 @@ input EditionInsertInput {
   chests: ChestsArrRelInsertInput
   editionId: bigint
   editionYear: Int
+  endDate: date
   groups: GroupsArrRelInsertInput
   label: String
   levels: LevelsArrRelInsertInput
   name: String
+  startDate: date
   subcategories: SubcategoriesArrRelInsertInput
   userLevels: UserLevelArrRelInsertInput
 }
@@ -5213,8 +5234,10 @@ aggregate max on columns
 type EditionMaxFields {
   editionId: bigint
   editionYear: Int
+  endDate: date
   label: String
   name: String
+  startDate: date
 }
 
 """
@@ -5223,8 +5246,10 @@ aggregate min on columns
 type EditionMinFields {
   editionId: bigint
   editionYear: Int
+  endDate: date
   label: String
   name: String
+  startDate: date
 }
 
 """
@@ -5272,10 +5297,12 @@ input EditionOrderBy {
   chestsAggregate: ChestsAggregateOrderBy
   editionId: OrderBy
   editionYear: OrderBy
+  endDate: OrderBy
   groupsAggregate: GroupsAggregateOrderBy
   label: OrderBy
   levelsAggregate: LevelsAggregateOrderBy
   name: OrderBy
+  startDate: OrderBy
   subcategoriesAggregate: SubcategoriesAggregateOrderBy
   userLevelsAggregate: UserLevelAggregateOrderBy
 }
@@ -5304,12 +5331,22 @@ enum EditionSelectColumn {
   """
   column name
   """
+  endDate
+
+  """
+  column name
+  """
   label
 
   """
   column name
   """
   name
+
+  """
+  column name
+  """
+  startDate
 }
 
 """
@@ -5318,8 +5355,10 @@ input type for updating data in table "edition"
 input EditionSetInput {
   editionId: bigint
   editionYear: Int
+  endDate: date
   label: String
   name: String
+  startDate: date
 }
 
 """
@@ -5367,8 +5406,10 @@ Initial value of the column from where the streaming should start
 input EditionStreamCursorValueInput {
   editionId: bigint
   editionYear: Int
+  endDate: date
   label: String
   name: String
+  startDate: date
 }
 
 """
@@ -5383,7 +5424,9 @@ type EditionType {
   editionId: ID!
   editionName: String!
   editionYear: Int!
+  endDate: String!
   label: String!
+  startDate: String!
 }
 
 """
@@ -5403,12 +5446,22 @@ enum EditionUpdateColumn {
   """
   column name
   """
+  endDate
+
+  """
+  column name
+  """
   label
 
   """
   column name
   """
   name
+
+  """
+  column name
+  """
+  startDate
 }
 
 input EditionUpdates {
@@ -6539,7 +6592,7 @@ type FlywaySchemaHistoryVarianceFields {
 type GroupDateType {
   endTime: String!
   startTime: String!
-  weekday: String!
+  weekday: WeekdayType!
 }
 
 type GroupType {
@@ -6552,7 +6605,7 @@ type GroupType {
   startTime: String!
   teacher: UserType
   userGroups: [UserGroupType]!
-  weekday: String!
+  weekday: WeekdayType!
 }
 
 """
@@ -6641,7 +6694,12 @@ type Groups {
     """
     where: UserGroupsBoolExp
   ): UserGroupsAggregate!
-  weekday: String!
+
+  """
+  An object relationship
+  """
+  weekday: Weekdays!
+  weekdayId: bigint!
 }
 
 """
@@ -6710,6 +6768,7 @@ type GroupsAvgFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  weekdayId: Float
 }
 
 """
@@ -6720,6 +6779,7 @@ input GroupsAvgOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  weekdayId: OrderBy
 }
 
 """
@@ -6742,7 +6802,8 @@ input GroupsBoolExp {
   user: UsersBoolExp
   userGroups: UserGroupsBoolExp
   userGroupsAggregate: UserGroupsAggregateBoolExp
-  weekday: StringComparisonExp
+  weekday: WeekdaysBoolExp
+  weekdayId: BigintComparisonExp
 }
 
 """
@@ -6763,6 +6824,7 @@ input GroupsIncInput {
   groupsId: bigint
   imageFileId: bigint
   teacherId: bigint
+  weekdayId: bigint
 }
 
 """
@@ -6781,7 +6843,8 @@ input GroupsInsertInput {
   teacherId: bigint
   user: UsersObjRelInsertInput
   userGroups: UserGroupsArrRelInsertInput
-  weekday: String
+  weekday: WeekdaysObjRelInsertInput
+  weekdayId: bigint
 }
 
 """
@@ -6794,7 +6857,7 @@ type GroupsMaxFields {
   imageFileId: bigint
   label: String
   teacherId: bigint
-  weekday: String
+  weekdayId: bigint
 }
 
 """
@@ -6807,7 +6870,7 @@ input GroupsMaxOrderBy {
   imageFileId: OrderBy
   label: OrderBy
   teacherId: OrderBy
-  weekday: OrderBy
+  weekdayId: OrderBy
 }
 
 """
@@ -6820,7 +6883,7 @@ type GroupsMinFields {
   imageFileId: bigint
   label: String
   teacherId: bigint
-  weekday: String
+  weekdayId: bigint
 }
 
 """
@@ -6833,7 +6896,7 @@ input GroupsMinOrderBy {
   imageFileId: OrderBy
   label: OrderBy
   teacherId: OrderBy
-  weekday: OrderBy
+  weekdayId: OrderBy
 }
 
 """
@@ -6888,7 +6951,8 @@ input GroupsOrderBy {
   teacherId: OrderBy
   user: UsersOrderBy
   userGroupsAggregate: UserGroupsAggregateOrderBy
-  weekday: OrderBy
+  weekday: WeekdaysOrderBy
+  weekdayId: OrderBy
 }
 
 """
@@ -6945,7 +7009,7 @@ enum GroupsSelectColumn {
   """
   column name
   """
-  weekday
+  weekdayId
 }
 
 """
@@ -6960,7 +7024,7 @@ input GroupsSetInput {
   label: String
   startTime: time
   teacherId: bigint
-  weekday: String
+  weekdayId: bigint
 }
 
 """
@@ -6971,6 +7035,7 @@ type GroupsStddevFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  weekdayId: Float
 }
 
 """
@@ -6981,6 +7046,7 @@ input GroupsStddevOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  weekdayId: OrderBy
 }
 
 """
@@ -6991,6 +7057,7 @@ type GroupsStddevPopFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  weekdayId: Float
 }
 
 """
@@ -7001,6 +7068,7 @@ input GroupsStddevPopOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  weekdayId: OrderBy
 }
 
 """
@@ -7011,6 +7079,7 @@ type GroupsStddevSampFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  weekdayId: Float
 }
 
 """
@@ -7021,6 +7090,7 @@ input GroupsStddevSampOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  weekdayId: OrderBy
 }
 
 """
@@ -7050,7 +7120,7 @@ input GroupsStreamCursorValueInput {
   label: String
   startTime: time
   teacherId: bigint
-  weekday: String
+  weekdayId: bigint
 }
 
 """
@@ -7061,6 +7131,7 @@ type GroupsSumFields {
   groupsId: bigint
   imageFileId: bigint
   teacherId: bigint
+  weekdayId: bigint
 }
 
 """
@@ -7071,6 +7142,7 @@ input GroupsSumOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  weekdayId: OrderBy
 }
 
 """
@@ -7120,7 +7192,7 @@ enum GroupsUpdateColumn {
   """
   column name
   """
-  weekday
+  weekdayId
 }
 
 input GroupsUpdates {
@@ -7148,6 +7220,7 @@ type GroupsVarPopFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  weekdayId: Float
 }
 
 """
@@ -7158,6 +7231,7 @@ input GroupsVarPopOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  weekdayId: OrderBy
 }
 
 """
@@ -7168,6 +7242,7 @@ type GroupsVarSampFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  weekdayId: Float
 }
 
 """
@@ -7178,6 +7253,7 @@ input GroupsVarSampOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  weekdayId: OrderBy
 }
 
 """
@@ -7188,6 +7264,7 @@ type GroupsVarianceFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  weekdayId: Float
 }
 
 """
@@ -7198,6 +7275,7 @@ input GroupsVarianceOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  weekdayId: OrderBy
 }
 
 """
@@ -8410,10 +8488,10 @@ input LevelsVarianceOrderBy {
   ordinalNumber: OrderBy
 }
 
-type NeighbouringLevelsType {
-  currentLevel: LevelType!
+type NeighboringLevelsType {
+  currLevel: LevelType!
   nextLevel: LevelType
-  previousLevel: LevelType
+  prevLevel: LevelType
 }
 
 """
@@ -13123,6 +13201,410 @@ input UsersVarianceOrderBy {
   userId: OrderBy
 }
 
+type WeekdayType {
+  label: String!
+  ordinalNumber: Int!
+  weekdayAbbr: String!
+  weekdayId: ID!
+  weekdayName: String!
+}
+
+"""
+columns and relationships of "weekdays"
+"""
+type Weekdays {
+  """
+  An array relationship
+  """
+  groups(
+    """
+    distinct select on columns
+    """
+    distinctOn: [GroupsSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [GroupsOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: GroupsBoolExp
+  ): [Groups!]!
+
+  """
+  An aggregate relationship
+  """
+  groupsAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [GroupsSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [GroupsOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: GroupsBoolExp
+  ): GroupsAggregate!
+  label: String!
+  ordinalNumber: Int!
+  weekdayAbbr: String!
+  weekdayId: bigint!
+  weekdayName: String!
+}
+
+"""
+aggregated selection of "weekdays"
+"""
+type WeekdaysAggregate {
+  aggregate: WeekdaysAggregateFields
+  nodes: [Weekdays!]!
+}
+
+"""
+aggregate fields of "weekdays"
+"""
+type WeekdaysAggregateFields {
+  avg: WeekdaysAvgFields
+  count(columns: [WeekdaysSelectColumn!], distinct: Boolean): Int!
+  max: WeekdaysMaxFields
+  min: WeekdaysMinFields
+  stddev: WeekdaysStddevFields
+  stddevPop: WeekdaysStddevPopFields
+  stddevSamp: WeekdaysStddevSampFields
+  sum: WeekdaysSumFields
+  varPop: WeekdaysVarPopFields
+  varSamp: WeekdaysVarSampFields
+  variance: WeekdaysVarianceFields
+}
+
+"""
+aggregate avg on columns
+"""
+type WeekdaysAvgFields {
+  ordinalNumber: Float
+  weekdayId: Float
+}
+
+"""
+Boolean expression to filter rows from the table "weekdays". All fields are combined with a logical 'AND'.
+"""
+input WeekdaysBoolExp {
+  _and: [WeekdaysBoolExp!]
+  _not: WeekdaysBoolExp
+  _or: [WeekdaysBoolExp!]
+  groups: GroupsBoolExp
+  groupsAggregate: GroupsAggregateBoolExp
+  label: StringComparisonExp
+  ordinalNumber: IntComparisonExp
+  weekdayAbbr: StringComparisonExp
+  weekdayId: BigintComparisonExp
+  weekdayName: StringComparisonExp
+}
+
+"""
+unique or primary key constraints on table "weekdays"
+"""
+enum WeekdaysConstraint {
+  """
+  unique or primary key constraint on columns "weekday_id"
+  """
+  weekdays_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "weekdays"
+"""
+input WeekdaysIncInput {
+  ordinalNumber: Int
+  weekdayId: bigint
+}
+
+"""
+input type for inserting data into table "weekdays"
+"""
+input WeekdaysInsertInput {
+  groups: GroupsArrRelInsertInput
+  label: String
+  ordinalNumber: Int
+  weekdayAbbr: String
+  weekdayId: bigint
+  weekdayName: String
+}
+
+"""
+aggregate max on columns
+"""
+type WeekdaysMaxFields {
+  label: String
+  ordinalNumber: Int
+  weekdayAbbr: String
+  weekdayId: bigint
+  weekdayName: String
+}
+
+"""
+aggregate min on columns
+"""
+type WeekdaysMinFields {
+  label: String
+  ordinalNumber: Int
+  weekdayAbbr: String
+  weekdayId: bigint
+  weekdayName: String
+}
+
+"""
+response of any mutation on the table "weekdays"
+"""
+type WeekdaysMutationResponse {
+  """
+  number of rows affected by the mutation
+  """
+  affectedRows: Int!
+
+  """
+  data from the rows affected by the mutation
+  """
+  returning: [Weekdays!]!
+}
+
+"""
+input type for inserting object relation for remote table "weekdays"
+"""
+input WeekdaysObjRelInsertInput {
+  data: WeekdaysInsertInput!
+
+  """
+  upsert condition
+  """
+  onConflict: WeekdaysOnConflict
+}
+
+"""
+on_conflict condition type for table "weekdays"
+"""
+input WeekdaysOnConflict {
+  constraint: WeekdaysConstraint!
+  updateColumns: [WeekdaysUpdateColumn!]! = []
+  where: WeekdaysBoolExp
+}
+
+"""
+Ordering options when selecting data from "weekdays".
+"""
+input WeekdaysOrderBy {
+  groupsAggregate: GroupsAggregateOrderBy
+  label: OrderBy
+  ordinalNumber: OrderBy
+  weekdayAbbr: OrderBy
+  weekdayId: OrderBy
+  weekdayName: OrderBy
+}
+
+"""
+primary key columns input for table: weekdays
+"""
+input WeekdaysPkColumnsInput {
+  weekdayId: bigint!
+}
+
+"""
+select columns of table "weekdays"
+"""
+enum WeekdaysSelectColumn {
+  """
+  column name
+  """
+  label
+
+  """
+  column name
+  """
+  ordinalNumber
+
+  """
+  column name
+  """
+  weekdayAbbr
+
+  """
+  column name
+  """
+  weekdayId
+
+  """
+  column name
+  """
+  weekdayName
+}
+
+"""
+input type for updating data in table "weekdays"
+"""
+input WeekdaysSetInput {
+  label: String
+  ordinalNumber: Int
+  weekdayAbbr: String
+  weekdayId: bigint
+  weekdayName: String
+}
+
+"""
+aggregate stddev on columns
+"""
+type WeekdaysStddevFields {
+  ordinalNumber: Float
+  weekdayId: Float
+}
+
+"""
+aggregate stddevPop on columns
+"""
+type WeekdaysStddevPopFields {
+  ordinalNumber: Float
+  weekdayId: Float
+}
+
+"""
+aggregate stddevSamp on columns
+"""
+type WeekdaysStddevSampFields {
+  ordinalNumber: Float
+  weekdayId: Float
+}
+
+"""
+Streaming cursor of the table "weekdays"
+"""
+input WeekdaysStreamCursorInput {
+  """
+  Stream column input with initial value
+  """
+  initialValue: WeekdaysStreamCursorValueInput!
+
+  """
+  cursor ordering
+  """
+  ordering: CursorOrdering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input WeekdaysStreamCursorValueInput {
+  label: String
+  ordinalNumber: Int
+  weekdayAbbr: String
+  weekdayId: bigint
+  weekdayName: String
+}
+
+"""
+aggregate sum on columns
+"""
+type WeekdaysSumFields {
+  ordinalNumber: Int
+  weekdayId: bigint
+}
+
+"""
+update columns of table "weekdays"
+"""
+enum WeekdaysUpdateColumn {
+  """
+  column name
+  """
+  label
+
+  """
+  column name
+  """
+  ordinalNumber
+
+  """
+  column name
+  """
+  weekdayAbbr
+
+  """
+  column name
+  """
+  weekdayId
+
+  """
+  column name
+  """
+  weekdayName
+}
+
+input WeekdaysUpdates {
+  """
+  increments the numeric columns with given value of the filtered values
+  """
+  _inc: WeekdaysIncInput
+
+  """
+  sets the columns of the filtered rows to the given values
+  """
+  _set: WeekdaysSetInput
+
+  """
+  filter the rows which have to be updated
+  """
+  where: WeekdaysBoolExp!
+}
+
+"""
+aggregate varPop on columns
+"""
+type WeekdaysVarPopFields {
+  ordinalNumber: Float
+  weekdayId: Float
+}
+
+"""
+aggregate varSamp on columns
+"""
+type WeekdaysVarSampFields {
+  ordinalNumber: Float
+  weekdayId: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type WeekdaysVarianceFields {
+  ordinalNumber: Float
+  weekdayId: Float
+}
+
 type _Service {
   sdl: String!
 }
@@ -13258,6 +13740,8 @@ input chestsAggregateBoolExpCount {
   predicate: IntComparisonExp!
 }
 
+scalar date
+
 scalar float8
 
 input groupsAggregateBoolExpCount {
@@ -13367,7 +13851,11 @@ type mutation_root {
     maxUsages: Int = -1
   ): AwardType
   addAwardToEdition(awardId: Int!, editionId: Int!): AwardEditionType
-  addBonusMutation(awardId: Int!, chestHistoryId: Int!): AddBonusReturnType
+  addBonusMutation(
+    awardId: Int!
+    checkDates: Boolean = true
+    chestHistoryId: Int!
+  ): AddBonusReturnType
   addCategory(
     canAddPoints: Boolean!
     categoryName: String!
@@ -13393,7 +13881,7 @@ type mutation_root {
     label: String = ""
     startTime: String!
     teacherId: Int!
-    weekday: String!
+    weekdayId: Int!
   ): GroupType
   addLevel(
     editionId: Int!
@@ -13403,6 +13891,7 @@ type mutation_root {
     name: String!
   ): LevelType
   addPointsMutation(
+    checkDates: Boolean = true
     studentId: Int!
     subcategoryId: Int!
     teacherId: Int!
@@ -13717,6 +14206,21 @@ type mutation_root {
   delete single row from the table: "users"
   """
   deleteUsersByPk(userId: bigint!): Users
+
+  """
+  delete data from the table: "weekdays"
+  """
+  deleteWeekdays(
+    """
+    filter the rows which have to be deleted
+    """
+    where: WeekdaysBoolExp!
+  ): WeekdaysMutationResponse
+
+  """
+  delete single row from the table: "weekdays"
+  """
+  deleteWeekdaysByPk(weekdayId: bigint!): Weekdays
   generateSubcategories(
     categoryId: Int!
     editionId: Int!
@@ -14294,6 +14798,36 @@ type mutation_root {
     """
     onConflict: UsersOnConflict
   ): Users
+
+  """
+  insert data into the table: "weekdays"
+  """
+  insertWeekdays(
+    """
+    the rows to be inserted
+    """
+    objects: [WeekdaysInsertInput!]!
+
+    """
+    upsert condition
+    """
+    onConflict: WeekdaysOnConflict
+  ): WeekdaysMutationResponse
+
+  """
+  insert a single row into the table: "weekdays"
+  """
+  insertWeekdaysOne(
+    """
+    the row to be inserted
+    """
+    object: WeekdaysInsertInput!
+
+    """
+    upsert condition
+    """
+    onConflict: WeekdaysOnConflict
+  ): Weekdays
 
   """
   update data of the table: "award"
@@ -15168,6 +15702,52 @@ type mutation_root {
     """
     updates: [UsersUpdates!]!
   ): [UsersMutationResponse]
+
+  """
+  update data of the table: "weekdays"
+  """
+  updateWeekdays(
+    """
+    increments the numeric columns with given value of the filtered values
+    """
+    _inc: WeekdaysIncInput
+
+    """
+    sets the columns of the filtered rows to the given values
+    """
+    _set: WeekdaysSetInput
+
+    """
+    filter the rows which have to be updated
+    """
+    where: WeekdaysBoolExp!
+  ): WeekdaysMutationResponse
+
+  """
+  update single row of the table: "weekdays"
+  """
+  updateWeekdaysByPk(
+    """
+    increments the numeric columns with given value of the filtered values
+    """
+    _inc: WeekdaysIncInput
+
+    """
+    sets the columns of the filtered rows to the given values
+    """
+    _set: WeekdaysSetInput
+    pkColumns: WeekdaysPkColumnsInput!
+  ): Weekdays
+
+  """
+  update multiples rows of table: "weekdays"
+  """
+  updateWeekdaysMany(
+    """
+    updates to execute, in order
+    """
+    updates: [WeekdaysUpdates!]!
+  ): [WeekdaysMutationResponse]
 }
 
 input pointsAggregateBoolExpAvg {
@@ -16033,13 +16613,10 @@ type query_root {
   fetch data from the table: "flyway_schema_history" using primary key columns
   """
   flywaySchemaHistoryByPk(installedRank: Int!): FlywaySchemaHistory
-  getNeighbouringLevels(
-    editionId: Int!
-    studentId: Int!
-  ): NeighbouringLevelsType!
+  getNeighboringLevels(editionId: Int!, studentId: Int!): NeighboringLevelsType!
   getPossibleGroupDates(editionId: Int!): [GroupDateType!]!
   getPossibleGroupsTimeSpans(editionId: Int!): [TimeSpansType!]!
-  getPossibleGroupsWeekdays(editionId: Int!): [String!]!
+  getPossibleGroupsWeekdays(editionId: Int!): [WeekdayType!]!
   getStudentPoints(editionId: Int!, studentId: Int!): StudentPointsType!
   getSumOfPointsForStudentByCategory(
     editionId: Int!
@@ -16626,6 +17203,71 @@ type query_root {
   fetch data from the table: "users" using primary key columns
   """
   usersByPk(userId: bigint!): Users
+
+  """
+  fetch data from the table: "weekdays"
+  """
+  weekdays(
+    """
+    distinct select on columns
+    """
+    distinctOn: [WeekdaysSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [WeekdaysOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: WeekdaysBoolExp
+  ): [Weekdays!]!
+
+  """
+  fetch aggregated fields from the table: "weekdays"
+  """
+  weekdaysAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [WeekdaysSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [WeekdaysOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: WeekdaysBoolExp
+  ): WeekdaysAggregate!
+
+  """
+  fetch data from the table: "weekdays" using primary key columns
+  """
+  weekdaysByPk(weekdayId: bigint!): Weekdays
 }
 
 input subcategoriesAggregateBoolExpAvg {
@@ -18396,6 +19038,91 @@ type subscription_root {
     """
     where: UsersBoolExp
   ): [Users!]!
+
+  """
+  fetch data from the table: "weekdays"
+  """
+  weekdays(
+    """
+    distinct select on columns
+    """
+    distinctOn: [WeekdaysSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [WeekdaysOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: WeekdaysBoolExp
+  ): [Weekdays!]!
+
+  """
+  fetch aggregated fields from the table: "weekdays"
+  """
+  weekdaysAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [WeekdaysSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [WeekdaysOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: WeekdaysBoolExp
+  ): WeekdaysAggregate!
+
+  """
+  fetch data from the table: "weekdays" using primary key columns
+  """
+  weekdaysByPk(weekdayId: bigint!): Weekdays
+
+  """
+  fetch data from the table in a streaming manner: "weekdays"
+  """
+  weekdaysStream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batchSize: Int!
+
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [WeekdaysStreamCursorInput]!
+
+    """
+    filter the rows returned
+    """
+    where: WeekdaysBoolExp
+  ): [Weekdays!]!
 }
 
 scalar time
