@@ -3,6 +3,7 @@ import {
   StudentPointsQuery,
   useStudentPointsQuery,
 } from "../../graphql/studentPoints.graphql.types";
+import { Weekday } from "../Groups/useGroupsData";
 
 export type Points =
   StudentPointsQuery["getStudentPoints"]["subcategoryPoints"][number];
@@ -23,11 +24,6 @@ export type StudentCardData = {
   };
   totalPoints: number;
   avatarId: string | undefined;
-};
-
-export type Weekday = {
-  id: string;
-  name: string;
 };
 
 export const useStudentData = (props: {

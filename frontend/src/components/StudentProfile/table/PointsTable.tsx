@@ -45,14 +45,30 @@ export default function PointsTable({ points }: PointsTableProps) {
     return `${pure} + ${totalBonus} = ${pure + totalBonus}`;
   };
 
-  const getDisplayDate = (
-    createdAt: string | undefined,
-    updatedAt: string | undefined,
-  ): Date | undefined => {
+  const getDisplayDate = (points: Points): Date | undefined => {
+    const createdAt = points.points.purePoints
+      ? points.points.purePoints.createdAt
+      : points.points.partialBonusType[0]?.bonuses.points.createdAt;
+
+    const updatedAt = points.points.purePoints
+      ? points.points.purePoints.updatedAt
+      : points.points.partialBonusType[0]?.bonuses.points.updatedAt;
+
     if (updatedAt) {
       return new Date(updatedAt);
     }
     return createdAt ? new Date(createdAt) : undefined;
+  };
+
+  // TODO date and teacher to add to backend
+  const getTeacherDisplayName = (points: Points) => {
+    const firstName = points.points.purePoints
+      ? points.points.purePoints?.teacher.firstName
+      : points.points.partialBonusType[0]?.bonuses.points.teacher.firstName;
+    const secondName = points.points.purePoints
+      ? points.points.purePoints?.teacher.secondName
+      : points.points.partialBonusType[0]?.bonuses.points.teacher.secondName;
+    return `${firstName} ${secondName}`;
   };
 
   return (
@@ -69,15 +85,9 @@ export default function PointsTable({ points }: PointsTableProps) {
           <Cell>{getPointsString(item)}</Cell>
           <Cell>{item.subcategory.maxPoints}</Cell>
           <Cell>
-            {getDisplayDate(
-              item.points.purePoints?.createdAt,
-              item.points.purePoints?.updatedAt,
-            )?.toLocaleDateString("pl-PL", dateOptions)}
+            {getDisplayDate(item)?.toLocaleDateString("pl-PL", dateOptions)}
           </Cell>
-          {/* TODO add fullName to backend */}
-          <Cell>
-            {`${item.points.purePoints?.teacher.firstName} ${item.points.purePoints?.teacher.secondName}`}
-          </Cell>
+          <Cell>{getTeacherDisplayName(item)}</Cell>
         </div>
       ))}
     </div>

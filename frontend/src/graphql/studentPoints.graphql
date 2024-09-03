@@ -46,8 +46,14 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
             award {
               awardName
             }
-            createdAt
-            updatedAt
+            points {
+              createdAt
+              updatedAt
+              teacher {
+                firstName
+                secondName
+              }
+            }
           }
         }
       }
