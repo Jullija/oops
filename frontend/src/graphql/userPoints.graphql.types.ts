@@ -24,7 +24,7 @@ export type UserPointsQuery = {
       createdAt: string;
       label: string;
       pointsId: string;
-      value: string;
+      value: number;
       userByTeacherId: {
         __typename?: "Users";
         userId: string;

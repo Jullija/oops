@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../hooks/common/useUser";
-import { Group } from "../../../hooks/Groups/useGroupsData";
 import { pathsGenerator } from "../../../router/paths";
 import { Styles } from "../../../utils/Styles";
 import { GroupCard } from "./GroupCard";
+import { Group } from "../../../hooks/Groups/useGroupsData";
 
 const styles: Styles = {
   groupsContainer: {

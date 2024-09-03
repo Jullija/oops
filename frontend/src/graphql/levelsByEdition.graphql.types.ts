@@ -13,13 +13,13 @@ export type LevelsByEditionQuery = {
     __typename?: "Edition";
     levels: Array<{
       __typename?: "Levels";
-      grade: string;
+      grade: number;
       highest: boolean;
       imageFileId?: string | null;
       label: string;
       levelId: string;
-      maximumPoints: string;
-      minimumPoints: string;
+      maximumPoints: number;
+      minimumPoints: number;
       name: string;
     }>;
   } | null;

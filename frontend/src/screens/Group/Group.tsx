@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Styles } from "../../utils/Styles";
 import { pathsGenerator } from "../../router/paths";
 import { StudentSearcher } from "../../components/Group/StudentSearcher/StudentSearcher";
-import { useStudentsSearchData } from "../../hooks/Groups/useStudentsSearchData";
+import { useStudentsSearchData } from "../../hooks/Group/useStudentsSearchData";
 
 const styles: Styles = {
   screenContainer: {

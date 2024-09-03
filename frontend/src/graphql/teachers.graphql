@@ -1,0 +1,8 @@
+query teachers($editionId: bigint!) {
+  groups(where: { editionId: { _eq: $editionId } }) {
+    userByTeacherId {
+      fullName
+      userId
+    }
+  }
+}

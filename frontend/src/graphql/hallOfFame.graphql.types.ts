@@ -16,7 +16,7 @@ export type HallOfFameQuery = {
     levelId?: string | null;
     levelName?: string | null;
     nick?: string | null;
-    sumOfPoints?: string | null;
+    sumOfPoints?: number | null;
     userId?: string | null;
     groupsId?: string | null;
     groupName?: string | null;
