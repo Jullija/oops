@@ -9,8 +9,6 @@
 !.yarn/versions
 .eslintcache
 
-frontend/**/*.graphql.types.ts
-
 # do not delete
 backend/python
 backend/src/main/python/__pycache__/
