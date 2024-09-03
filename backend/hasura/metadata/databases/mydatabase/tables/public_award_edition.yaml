@@ -8,17 +8,6 @@ object_relationships:
   - name: edition
     using:
       foreign_key_constraint_on: edition_id
-insert_permissions:
-  - role: coordinator
-    permission:
-      check: {}
-      set:
-        label: '""'
-      columns:
-        - award_id
-        - edition_id
-        - label
-    comment: ""
 select_permissions:
   - role: coordinator
     permission:
@@ -62,9 +51,30 @@ update_permissions:
   - role: coordinator
     permission:
       columns:
+        - edition_id
         - label
-      filter: {}
-      check: {}
+      filter:
+        _and:
+          - _not:
+              award:
+                bonuses:
+                  bonus_id:
+                    _is_null: false
+          - _not:
+              edition:
+                start_date:
+                  _lte: now()
+      check:
+        _and:
+          - _not:
+              award:
+                bonuses:
+                  bonus_id:
+                    _is_null: false
+          - _not:
+              edition:
+                start_date:
+                  _lte: now()
       set:
         label: '""'
     comment: ""
@@ -72,9 +82,13 @@ delete_permissions:
   - role: coordinator
     permission:
       filter:
-        _not:
-          award:
-            bonuses:
-              bonus_id:
-                _is_null: false
+        _and:
+          - _not:
+              award:
+                bonuses:
+                  bonus_id:
+                    _is_null: false
+          - edition:
+              start_date:
+                _lte: now()
     comment: ""

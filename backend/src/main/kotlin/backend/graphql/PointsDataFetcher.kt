@@ -3,9 +3,7 @@ package backend.graphql
 import backend.points.Points
 import backend.points.PointsRepository
 import backend.bonuses.BonusesRepository
-import backend.subcategories.Subcategories
 import backend.subcategories.SubcategoriesRepository
-import backend.users.Users
 import backend.users.UsersRepository
 import backend.award.AwardType
 import backend.users.UsersRoles
@@ -33,7 +31,7 @@ class PointsDataFetcher {
     @DgsMutation
     @Transactional
     fun addPointsMutation(@InputArgument studentId: Long, @InputArgument teacherId: Long, value: Float,
-                          @InputArgument subcategoryId: Long): Points {
+                          @InputArgument subcategoryId: Long, @InputArgument checkDates: Boolean = true): Points {
         val student = usersRepository.findByUserId(studentId)
             .orElseThrow { IllegalArgumentException("Invalid user ID") }
 
@@ -43,6 +41,15 @@ class PointsDataFetcher {
         val subcategory = subcategoriesRepository.findById(subcategoryId)
             .orElseThrow { IllegalArgumentException("Invalid subcategory ID") }
 
+
+        if (checkDates){
+            if (subcategory.edition.startDate.isAfter(java.time.LocalDate.now())){
+                throw IllegalArgumentException("Subcategory edition has not started yet")
+            }
+            if (subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
+                throw IllegalArgumentException("Subcategory edition has already ended")
+            }
+        }
         if (!subcategory.category.canAddPoints) {
             throw IllegalArgumentException("This subcategory's category does not allow adding points")
         }

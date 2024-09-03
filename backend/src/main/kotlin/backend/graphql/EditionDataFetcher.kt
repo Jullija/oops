@@ -1,31 +1,21 @@
 package backend.graphql
 
-import backend.award.Award
 import backend.award.AwardRepository
-import backend.award.AwardType
-import backend.bonuses.Bonuses
 import backend.bonuses.BonusesRepository
-import backend.categories.Categories
 import backend.categories.CategoriesRepository
 import backend.edition.Edition
 import backend.edition.EditionRepository
-import backend.files.FileEntity
 import backend.files.FileEntityRepository
 import backend.groups.GroupsRepository
-import backend.levels.Levels
-import backend.points.Points
 import backend.points.PointsRepository
-import backend.subcategories.Subcategories
 import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
-import backend.users.Users
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
-import com.netflix.graphql.dgs.DgsQuery
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
-import java.sql.Time
+import java.time.LocalDate
 
 @DgsComponent
 class EditionDataFetcher {
@@ -69,9 +59,21 @@ class EditionDataFetcher {
         if (editionRepository.existsByEditionYear(editionYear)) {
             throw IllegalArgumentException("Edition with year $editionYear already exists")
         }
+
+        val currentYear = LocalDate.now().year
+
+        if (editionYear < currentYear || editionYear > currentYear + 10) {
+            throw IllegalArgumentException("Edition year must be between ${currentYear} and ${currentYear + 10}")
+        }
+
+        val startDate = LocalDate.of(editionYear, 10, 1)
+        val endDate = LocalDate.of(editionYear + 1, 9, 30)
+
         val edition = Edition(
             editionName = editionName,
             editionYear = editionYear,
+            startDate = startDate,
+            endDate = endDate,
             label = label)
         return editionRepository.save(edition)
     }

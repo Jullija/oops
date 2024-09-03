@@ -35,6 +35,9 @@ class LevelsDataFetcher {
     fun addLevel(@InputArgument editionId: Long, @InputArgument name: String, @InputArgument maximumPoints: Double,
                     @InputArgument grade: Double, @InputArgument imageFileId: Long? = null): Levels {
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
+        if (edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
         val levelsInEdition = levelsRepository.findByEdition(edition)
 
         val levelImage = if (imageFileId == null){
@@ -95,12 +98,16 @@ class LevelsDataFetcher {
     @DgsMutation
     @Transactional
     fun assignPhotoToLevel(@InputArgument levelId: Long, @InputArgument fileId: Long?): Boolean {
+        val level = levelsRepository.findById(levelId).orElseThrow { IllegalArgumentException("Invalid level ID") }
+        if (level.edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
         return photoAssigner.assignPhotoToAssignee(levelsRepository, "image/level", levelId, fileId)
     }
 
     @DgsQuery
     @Transactional
-    fun getNeighbouringLevels(@InputArgument studentId: Long, @InputArgument editionId: Long): NeighbouringLevelsType {
+    fun getNeighboringLevels(@InputArgument studentId: Long, @InputArgument editionId: Long): NeighboringLevelsType {
         val edition = editionRepository.findById(editionId)
             .orElseThrow { IllegalArgumentException("Invalid edition ID") }
         val student = usersRepository.findById(studentId)
@@ -117,16 +124,16 @@ class LevelsDataFetcher {
         val nextLevel =
             levelsRepository.findByEdition(edition)
                 .firstOrNull { it.ordinalNumber == currentLevel.ordinalNumber + 1 }
-        return NeighbouringLevelsType(
-            previousLevel = previousLevel,
-            currentLevel = currentLevel,
+        return NeighboringLevelsType(
+            prevLevel = previousLevel,
+            currLevel = currentLevel,
             nextLevel = nextLevel
         )
     }
 }
 
-data class NeighbouringLevelsType(
-    val previousLevel: Levels?,
-    val currentLevel: Levels,
+data class NeighboringLevelsType(
+    val prevLevel: Levels?,
+    val currLevel: Levels,
     val nextLevel: Levels?
 )

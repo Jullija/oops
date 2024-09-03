@@ -1,312 +1,370 @@
 type Mutation {
-    addBonusMutation(chestHistoryId: Int!,
-        awardId: Int!): AddBonusReturnType
+  addBonusMutation(
+    chestHistoryId: Int!
+    awardId: Int!
+    checkDates: Boolean = true
+  ): AddBonusReturnType
 
-    addPointsMutation (studentId: Int!,
-        teacherId: Int!,
-        value: Float!,
-        subcategoryId: Int!): PointType
-    assignPhotosToGroups(editionId: Int!): Boolean
-    assignPhotoToUser(userId: Int!, fileId: Int): Boolean
-    assignPhotoToLevel(levelId: Int!, fileId: Int): Boolean
-    assignPhotoToAward(awardId: Int!, fileId: Int): Boolean
-    assignPhotoToChest(chestId: Int!, fileId: Int): Boolean
-    addLevel(editionId: Int!, name: String!, maximumPoints: Float!, grade: Float!, imageFileId: Int): LevelType
-    addAward( awardName: String!, awardType: String!, awardValue: Float!,
-        categoryId: Int!, maxUsages: Int = -1, label: String = ""): AwardType
-    addAwardToEdition(awardId: Int!, editionId: Int!): AwardEditionType
-    addChestToUser(userId: Int!, chestId: Int!, teacherId: Int!, subcategoryId: Int!): ChestHistoryType
-    addChest(chestType: String!, editionId: Int!, label: String = ""): ChestType
-    addCategory(categoryName: String!, canAddPoints: Boolean!, label: String = ""): CategoryType
-    addCategoryToEdition(categoryId: Int!, editionId: Int!): CategoryEditionType
-    addEdition(editionName: String!, editionYear: Int!, label: String = ""): EditionType
-    addGroup(editionId: Int!, groupName: String!, weekday: String!, startTime: String!,
-        endTime: String!, teacherId: Int!, label: String = ""): GroupType
-    addSubcategory(subcategoryName: String!, maxPoints: Float!, ordinalNumber: Int!,
-        categoryId: Int!, editionId: Int!, label: String = ""): SubcategoryType
-    addUser(indexNumber: Int!, nick: String!, firstName: String!,
-        secondName: String!, role: String!, label: String = ""): UserType
-    generateSubcategories(editionId: Int!, categoryId: Int!, subcategoryPrefix: String!,
-        subcategoryCount: Int!, maxPoints: Float!): [SubcategoryType]
+  addPointsMutation(
+    studentId: Int!
+    teacherId: Int!
+    value: Float!
+    subcategoryId: Int!
+    checkDates: Boolean = true
+  ): PointType
+  assignPhotosToGroups(editionId: Int!): Boolean
+  assignPhotoToUser(userId: Int!, fileId: Int): Boolean
+  assignPhotoToLevel(levelId: Int!, fileId: Int): Boolean
+  assignPhotoToAward(awardId: Int!, fileId: Int): Boolean
+  assignPhotoToChest(chestId: Int!, fileId: Int): Boolean
+  addLevel(
+    editionId: Int!
+    name: String!
+    maximumPoints: Float!
+    grade: Float!
+    imageFileId: Int
+  ): LevelType
+  addAward(
+    awardName: String!
+    awardType: String!
+    awardValue: Float!
+    categoryId: Int!
+    maxUsages: Int = -1
+    label: String = ""
+  ): AwardType
+  addAwardToEdition(awardId: Int!, editionId: Int!): AwardEditionType
+  addChestToUser(
+    userId: Int!
+    chestId: Int!
+    teacherId: Int!
+    subcategoryId: Int!
+  ): ChestHistoryType
+  addChest(chestType: String!, editionId: Int!, label: String = ""): ChestType
+  addCategory(
+    categoryName: String!
+    canAddPoints: Boolean!
+    label: String = ""
+  ): CategoryType
+  addCategoryToEdition(categoryId: Int!, editionId: Int!): CategoryEditionType
+  addEdition(
+    editionName: String!
+    editionYear: Int!
+    label: String = ""
+  ): EditionType
+  addGroup(
+    editionId: Int!
+    groupName: String!
+    weekdayId: Int!
+    startTime: String!
+    endTime: String!
+    teacherId: Int!
+    label: String = ""
+  ): GroupType
+  addSubcategory(
+    subcategoryName: String!
+    maxPoints: Float!
+    ordinalNumber: Int!
+    categoryId: Int!
+    editionId: Int!
+    label: String = ""
+  ): SubcategoryType
+  addUser(
+    indexNumber: Int!
+    nick: String!
+    firstName: String!
+    secondName: String!
+    role: String!
+    label: String = ""
+  ): UserType
+  generateSubcategories(
+    editionId: Int!
+    categoryId: Int!
+    subcategoryPrefix: String!
+    subcategoryCount: Int!
+    maxPoints: Float!
+  ): [SubcategoryType]
 }
 
 type Query {
-    getUsersInGroupWithPoints(groupId: Int!): [UserPointsType]!
-    getStudentPoints(studentId: Int!, editionId: Int!): StudentPointsType!
-    getSumOfPointsForStudentByCategory(studentId: Int!, editionId: Int!): [CategoryPointsSumType!]!
-    getPossibleGroupsWeekdays(editionId: Int!): [String!]!
-    getPossibleGroupsTimeSpans(editionId: Int!): [TimeSpansType!]!
-    getPossibleGroupDates(editionId: Int!): [GroupDateType!]!
-    getNeighbouringLevels(studentId: Int!, editionId: Int!): NeighbouringLevelsType!
+  getUsersInGroupWithPoints(groupId: Int!): [UserPointsType]!
+  getStudentPoints(studentId: Int!, editionId: Int!): StudentPointsType!
+  getSumOfPointsForStudentByCategory(
+    studentId: Int!
+    editionId: Int!
+  ): [CategoryPointsSumType!]!
+  getPossibleGroupsWeekdays(editionId: Int!): [WeekdayType!]!
+  getPossibleGroupsTimeSpans(editionId: Int!): [TimeSpansType!]!
+  getPossibleGroupDates(editionId: Int!): [GroupDateType!]!
+  getNeighboringLevels(studentId: Int!, editionId: Int!): NeighboringLevelsType!
 }
 
 type AwardType {
-    awardId: ID!
-    awardName: String!
-    awardType: AwardTypeType!
-    label: String!
-    maxUsages: Int!
-    awardValue: Float!
-    category: CategoryType
-    imageFile: FileType
-    awardEditions: [AwardEditionType]
+  awardId: ID!
+  awardName: String!
+  awardType: AwardTypeType!
+  label: String!
+  maxUsages: Int!
+  awardValue: Float!
+  category: CategoryType
+  imageFile: FileType
+  awardEditions: [AwardEditionType]
 }
 
 type AwardEditionType {
-    awardEditionId: ID!
-    award: AwardType!
-    edition: EditionType!
-    label: String!
+  awardEditionId: ID!
+  award: AwardType!
+  edition: EditionType!
+  label: String!
 }
 
 type BonusType {
-    bonusId: ID!
-    points: PointType!
-    award: AwardType!
-    createdAt: String!
-    updatedAt: String!
-    label: String!
-    chestHistory: ChestHistoryType!
+  bonusId: ID!
+  points: PointType!
+  award: AwardType!
+  createdAt: String!
+  updatedAt: String!
+  label: String!
+  chestHistory: ChestHistoryType!
 }
 
 type CategoryType {
-    categoryId: ID!
-    categoryName: String!
-    canAddPoints: Boolean!
-    categoryEdition: [CategoryEditionType]!
-    label: String!
+  categoryId: ID!
+  categoryName: String!
+  canAddPoints: Boolean!
+  categoryEdition: [CategoryEditionType]!
+  label: String!
 }
 
 type CategoryEditionType {
-    categoryEditionId: ID!
-    category: CategoryType!
-    edition: EditionType!
-    label: String!
+  categoryEditionId: ID!
+  category: CategoryType!
+  edition: EditionType!
+  label: String!
 }
 
 type ChestAwardType {
-    chestAwardId: ID!
-    chest: ChestType!
-    award: AwardType!
-    label: String!
+  chestAwardId: ID!
+  chest: ChestType!
+  award: AwardType!
+  label: String!
 }
 
 type ChestHistoryType {
-    chestHistoryId: ID!
-    user: UserType!
-    chest: ChestType!
-    subcategory: SubcategoryType!
-    label: String!
-    createdAt: String!
-    updatedAt: String!
-    teacher: UserType!
-    opened: Boolean!
+  chestHistoryId: ID!
+  user: UserType!
+  chest: ChestType!
+  subcategory: SubcategoryType!
+  label: String!
+  createdAt: String!
+  updatedAt: String!
+  teacher: UserType!
+  opened: Boolean!
 }
 
 type ChestType {
-    chestId: ID!
-    chestType: String!
-    label: String!
-    edition: EditionType!
-    imageFile: FileType
+  chestId: ID!
+  chestType: String!
+  label: String!
+  edition: EditionType!
+  imageFile: FileType
 }
 
 type EditionType {
-    editionId: ID!
-    editionName: String!
-    editionYear: Int!
-    label: String!
+  editionId: ID!
+  editionName: String!
+  editionYear: Int!
+  startDate: String!
+  endDate: String!
+  label: String!
 }
 
 type FileType {
-    fileId: ID!
-    pathToFile: String!
-    fileName: String!
-    fileType: String!
-    label: String!
+  fileId: ID!
+  pathToFile: String!
+  fileName: String!
+  fileType: String!
+  label: String!
 }
 
 type GroupType {
-    groupsId: ID!
-    groupName: String!
-    label: String
-    teacher: UserType
-    weekday: String!
-    startTime: String!
-    endTime: String!
-    imageFile: FileType
-    userGroups: [UserGroupType]!
-    edition: EditionType!
+  groupsId: ID!
+  groupName: String!
+  label: String
+  teacher: UserType
+  weekday: WeekdayType!
+  startTime: String!
+  endTime: String!
+  imageFile: FileType
+  userGroups: [UserGroupType]!
+  edition: EditionType!
 }
 
 type LevelType {
-    levelId: ID!
-    levelName: String!
-    minimumPoints: Float!
-    maximumPoints: Float!
-    grade: Float!
-    ordinalNumber: Int!
-    label: String!
-    edition: EditionType!
-    highest: Boolean!
-    imageFile: FileType
-    userLevels: [UserLevelType]
+  levelId: ID!
+  levelName: String!
+  minimumPoints: Float!
+  maximumPoints: Float!
+  grade: Float!
+  ordinalNumber: Int!
+  label: String!
+  edition: EditionType!
+  highest: Boolean!
+  imageFile: FileType
+  userLevels: [UserLevelType]
 }
 
 type PointType {
-    pointsId: ID!
-    student: UserType!
-    teacher: UserType!
-    updatedBy: UserType!
-    value: Float!
-    subcategory: SubcategoryType!
-    label: String!
-    createdAt: String!
-    updatedAt: String!
+  pointsId: ID!
+  student: UserType!
+  teacher: UserType!
+  updatedBy: UserType!
+  value: Float!
+  subcategory: SubcategoryType!
+  label: String!
+  createdAt: String!
+  updatedAt: String!
 }
 
 type PointsHistoryType {
-    pointsHistoryId: ID!
-    pointsId: ID!
-    student: UserType!
-    teacher: UserType!
-    updatedBy: UserType!
-    value: Float!
-    subcategory: SubcategoryType!
-    label: String!
-    createdAt: String!
-    updatedAt: String!
-    copiedAt: String!
+  pointsHistoryId: ID!
+  pointsId: ID!
+  student: UserType!
+  teacher: UserType!
+  updatedBy: UserType!
+  value: Float!
+  subcategory: SubcategoryType!
+  label: String!
+  createdAt: String!
+  updatedAt: String!
+  copiedAt: String!
 }
 
 type SubcategoryType {
-    subcategoryId: ID!
-    subcategoryName: String!
-    category: CategoryType!
-    label: String!
-    edition: EditionType!
-    maxPoints: Float!
-    ordinalNumber: Int!
+  subcategoryId: ID!
+  subcategoryName: String!
+  category: CategoryType!
+  label: String!
+  edition: EditionType!
+  maxPoints: Float!
+  ordinalNumber: Int!
 }
 
 type UserGroupType {
-    userGroupsId: ID!
-    group: GroupType!
-    user: UserType!
+  userGroupsId: ID!
+  group: GroupType!
+  user: UserType!
 }
 
 type UserLevelType {
-    user: UserType!
-    level: LevelType!
-    edition: EditionType!
-    label: String!
-    userLevelId: ID!
+  user: UserType!
+  level: LevelType!
+  edition: EditionType!
+  label: String!
+  userLevelId: ID!
 }
 
 type UserType {
-    userId: ID!
-    nick: String!
-    role: UsersRolesType!
-    indexNumber: Int!
-    firstName: String!
-    secondName: String!
-    label: String!
-    imageFile: FileType
-    userGroups: [UserGroupType]!
-    userLevels: [UserLevelType]!
+  userId: ID!
+  nick: String!
+  role: UsersRolesType!
+  indexNumber: Int!
+  firstName: String!
+  secondName: String!
+  label: String!
+  imageFile: FileType
+  userGroups: [UserGroupType]!
+  userLevels: [UserLevelType]!
+}
+
+type WeekdayType {
+  weekdayId: ID!
+  weekdayName: String!
+  weekdayAbbr: String!
+  ordinalNumber: Int!
+  label: String!
 }
 
 enum UsersRolesType {
-    STUDENT
-    TEACHER
-    COORDINATOR
+  STUDENT
+  TEACHER
+  COORDINATOR
 }
 
 enum AwardTypeType {
-    ADDITIVE_NEXT
-    ADDITIVE_PREV
-    ADDITIVE
-    MULTIPLICATIVE
+  ADDITIVE_NEXT
+  ADDITIVE_PREV
+  ADDITIVE
+  MULTIPLICATIVE
 }
 
-enum WeekdayType {
-    MONDAY
-    TUESDAY
-    WEDNESDAY
-    THURSDAY
-    FRIDAY
-    SATURDAY
-    SUNDAY
+type CategoryPointsSumType {
+  category: CategoryType!
+  sumOfPurePoints: Float!
+  sumOfBonuses: Float!
+  sumOfAll: Float!
+  maxPoints: Float!
 }
 
-type CategoryPointsSumType{
-    category: CategoryType!
-    sumOfPurePoints: Float!
-    sumOfBonuses: Float!
-    sumOfAll: Float!
-    maxPoints: Float!
-}
-
-type StudentPointsType{
-    user: UserType!
-    level: LevelType
-    subcategoryPoints: [SubcategoryPointsType]!
-    sumOfPurePoints: Float!
-    sumOfBonuses: Float!
-    sumOfAll: Float!
+type StudentPointsType {
+  user: UserType!
+  level: LevelType
+  subcategoryPoints: [SubcategoryPointsType]!
+  sumOfPurePoints: Float!
+  sumOfBonuses: Float!
+  sumOfAll: Float!
 }
 
 type AddBonusReturnType {
-    bonus: BonusType!
-    points: PointType!
+  bonus: BonusType!
+  points: PointType!
 }
 
 type UserPointsType {
-    user: UserType!
-    categoriesPoints: [CategoryPointsType!]!
+  user: UserType!
+  categoriesPoints: [CategoryPointsType!]!
 }
 
 type CategoryAggregate {
-    category: CategoryType!
-    sumOfPurePoints: Float!
-    sumOfBonuses: Float!
-    sumOfAll: Float!
+  category: CategoryType!
+  sumOfPurePoints: Float!
+  sumOfBonuses: Float!
+  sumOfAll: Float!
 }
 
 type CategoryPointsType {
-    category: CategoryType!
-    subcategoryPoints: [SubcategoryPointsType!]!
-    aggregate: CategoryAggregate!
+  category: CategoryType!
+  subcategoryPoints: [SubcategoryPointsType!]!
+  aggregate: CategoryAggregate!
 }
 
 type SubcategoryPointsType {
-    subcategory: SubcategoryType!
-    points: PurePointsType!
+  subcategory: SubcategoryType!
+  points: PurePointsType!
 }
 
 type PurePointsType {
-    purePoints: PointType
-    partialBonusType: [PartialBonusType]!
+  purePoints: PointType
+  partialBonusType: [PartialBonusType]!
 }
 
 type PartialBonusType {
-    bonuses: BonusType!
-    partialValue: Float!
+  bonuses: BonusType!
+  partialValue: Float!
 }
 
 type TimeSpansType {
-    startTime: String!
-    endTime: String!
+  startTime: String!
+  endTime: String!
 }
 
 type GroupDateType {
-    weekday: String!
-    startTime: String!
-    endTime: String!
+  weekday: WeekdayType!
+  startTime: String!
+  endTime: String!
 }
 
-type NeighbouringLevelsType{
-    previousLevel: LevelType
-    currentLevel: LevelType!
-    nextLevel: LevelType
+type NeighboringLevelsType {
+  prevLevel: LevelType
+  currLevel: LevelType!
+  nextLevel: LevelType
 }

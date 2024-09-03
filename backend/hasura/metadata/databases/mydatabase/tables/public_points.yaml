@@ -22,20 +22,6 @@ array_relationships:
         table:
           name: bonuses
           schema: public
-insert_permissions:
-  - role: coordinator
-    permission:
-      check: {}
-      set:
-        label: '""'
-      columns:
-        - label
-        - student_id
-        - subcategory_id
-        - teacher_id
-        - updated_by
-        - value
-    comment: ""
 select_permissions:
   - role: coordinator
     permission:
@@ -100,12 +86,21 @@ update_permissions:
     permission:
       columns:
         - label
-        - student_id
         - subcategory_id
         - updated_by
         - value
-      filter: {}
-      check: {}
+      filter:
+        _not:
+          subcategory:
+            edition:
+              end_date:
+                _lte: now()
+      check:
+        _not:
+          subcategory:
+            edition:
+              end_date:
+                _lte: now()
       set:
         label: '""'
     comment: ""
@@ -113,16 +108,31 @@ update_permissions:
     permission:
       columns:
         - label
-        - student_id
         - subcategory_id
         - updated_by
         - value
       filter:
-        user:
-          groups:
-            teacher_id:
-              _eq: X-Hasura-User-Id
-      check: {}
+        _and:
+          - user:
+              groups:
+                teacher_id:
+                  _eq: X-Hasura-User-Id
+          - _not:
+              subcategory:
+                edition:
+                  end_date:
+                    _lte: now()
+      check:
+        _and:
+          - user:
+              groups:
+                teacher_id:
+                  _eq: X-Hasura-User-Id
+          - _not:
+              subcategory:
+                edition:
+                  end_date:
+                    _lte: now()
       set:
         label: '""'
     comment: ""

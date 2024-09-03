@@ -3,6 +3,7 @@ package backend.edition
 import backend.categoryEdition.CategoryEdition
 import backend.userLevel.UserLevel
 import jakarta.persistence.*
+import java.time.LocalDate
 
 @Entity
 @Table(name = "edition")
@@ -21,6 +22,12 @@ class Edition(
     @Column(name = "label", nullable = false, length = 256)
     var label: String,
 
+    @Column(name = "start_date", nullable = false)
+    var startDate: LocalDate,
+
+    @Column(name = "end_date", nullable = false)
+    var endDate: LocalDate,
+
     @OneToMany(mappedBy = "edition", fetch = FetchType.LAZY)
     val userLevels: Set<UserLevel> = HashSet(),
 
@@ -30,6 +37,8 @@ class Edition(
     constructor() : this(
         editionName = "",
         editionYear = 0,
+        startDate = LocalDate.now(),
+        endDate = LocalDate.now(),
         label = ""
     )
 }

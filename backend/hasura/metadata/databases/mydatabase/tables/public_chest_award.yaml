@@ -11,11 +11,16 @@ object_relationships:
 insert_permissions:
   - role: coordinator
     permission:
-      check: {}
+      check:
+        _not:
+          chest:
+            edition:
+              end_date:
+                _lte: now()
       set:
         label: '""'
       columns:
-        - chest_award_id
+        - award_id
         - chest_id
         - label
     comment: ""
@@ -65,8 +70,46 @@ update_permissions:
     permission:
       columns:
         - label
-      filter: {}
-      check: {}
+      filter:
+        _and:
+          - _not:
+              chest:
+                edition:
+                  end_date:
+                    _lte: now()
+          - _not:
+              award:
+                bonuses:
+                  bonus_id:
+                    _is_null: false
+      check:
+        _and:
+          - _not:
+              chest:
+                edition:
+                  end_date:
+                    _lte: now()
+          - _not:
+              award:
+                bonuses:
+                  bonus_id:
+                    _is_null: false
       set:
         label: '""'
+    comment: ""
+delete_permissions:
+  - role: coordinator
+    permission:
+      filter:
+        _and:
+          - _not:
+              chest:
+                edition:
+                  end_date:
+                    _lte: now()
+          - _not:
+              award:
+                bonuses:
+                  bonus_id:
+                    _is_null: false
     comment: ""
