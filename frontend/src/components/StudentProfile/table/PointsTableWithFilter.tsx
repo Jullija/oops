@@ -1,8 +1,9 @@
 import { Styles } from "../../../utils/Styles";
-import FilterMenu, { FilterItem } from "./FilterMenu";
+import FilterMenu from "./FilterMenu";
 import { useState } from "react";
 import PointsTable from "./PointsTable";
 import { Points } from "../../../hooks/StudentProfile/useStudentData";
+import { FilterItem } from "../../Groups/FilterBar/FilterOptionsSection";
 
 const styles: Styles = {
   container: {
@@ -22,9 +23,6 @@ export const PointsTableWithFilter = ({
   filterHeaderNames,
 }: PointsTableProps) => {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
-  const onSelectChange = (updatedSelectedCategoryIds: string[]) => {
-    setSelectedCategoryIds(updatedSelectedCategoryIds);
-  };
 
   const isInSelectedCategoryIds = (points: Points) => {
     return selectedCategoryIds.some(
@@ -32,20 +30,21 @@ export const PointsTableWithFilter = ({
     );
   };
 
-  const getFilteredItems = () => {
-    return selectedCategoryIds.length === 0
+  const pointsToDisplay =
+    selectedCategoryIds.length === 0
       ? points
       : points.filter(isInSelectedCategoryIds);
-  };
 
   return (
     <div style={styles.container}>
       <FilterMenu
         pickedCategoryIds={selectedCategoryIds}
-        onSelectChange={onSelectChange}
+        onSelectChange={(selectedIds) => {
+          setSelectedCategoryIds(selectedIds);
+        }}
         filterItems={filterHeaderNames}
       />
-      <PointsTable points={getFilteredItems()} />
+      <PointsTable points={pointsToDisplay} />
     </div>
   );
 };

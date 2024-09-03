@@ -13,6 +13,6 @@ const styles: Styles = {
 type CellProps = {
   children?: string | number;
 };
-export default function PointsTable({ children }: CellProps) {
+export const Cell = ({ children }: CellProps) => {
   return <div style={styles.cell}>{children}</div>;
-}
+};

@@ -1,4 +1,5 @@
 import { Styles } from "../../../utils/Styles";
+import { FilterItem } from "../../Groups/FilterBar/FilterOptionsSection";
 
 const styles: Styles = {
   container: {
@@ -12,11 +13,9 @@ const styles: Styles = {
     padding: 12,
     cursor: "pointer",
   },
-};
-
-export type FilterItem = {
-  id: string;
-  name: string;
+  active: {
+    backgroundColor: "lightblue",
+  },
 };
 
 type FilterMenuProps = {
@@ -51,7 +50,7 @@ export default function FilterMenu({
         <div
           style={{
             ...styles.item,
-            backgroundColor: isSelected(item) ? "green" : undefined,
+            ...(isSelected(item) ? styles.active : undefined),
           }}
           key={item.id}
           onClick={() => handleCategoryClick(item)}

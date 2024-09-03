@@ -1,6 +1,6 @@
 import { Styles } from "../../../utils/Styles";
 import { Points } from "../../../hooks/StudentProfile/useStudentData";
-import Cell from "./Cell";
+import { Cell } from "./Cell";
 
 const styles: Styles = {
   table: {

@@ -1,9 +1,9 @@
-import { FilterItem } from "../../components/StudentProfile/table/FilterMenu";
+import { FilterItem } from "../../components/Groups/FilterBar/FilterOptionsSection";
 import {
   StudentPointsQuery,
   useStudentPointsQuery,
 } from "../../graphql/studentPoints.graphql.types";
-import { Weekday } from "../Groups/useGroupsData";
+import { Timestamp, Weekday } from "../Groups/useGroupsData";
 
 export type Points =
   StudentPointsQuery["getStudentPoints"]["subcategoryPoints"][number];
@@ -16,10 +16,7 @@ export type StudentCardData = {
     name: string;
     id: string;
     weekday: Weekday;
-    time: {
-      start: string;
-      end: string;
-    };
+    time: Timestamp;
     teacherDisplayName: string;
   };
   totalPoints: number;
