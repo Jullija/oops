@@ -1,4 +1,4 @@
-mutation createPoints(
+mutation CreatePoints(
   $studentId: Int!
   $subcategoryId: Int!
   $teacherId: Int!

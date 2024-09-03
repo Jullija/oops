@@ -26,7 +26,7 @@ export type CategoriesPointsQuery = {
 };
 
 export const CategoriesPointsDocument = gql`
-  query categoriesPoints($editionId: Int!, $studentId: Int!) {
+  query CategoriesPoints($editionId: Int!, $studentId: Int!) {
     getSumOfPointsForStudentByCategory(
       editionId: $editionId
       studentId: $studentId

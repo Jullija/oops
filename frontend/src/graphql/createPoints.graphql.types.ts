@@ -47,7 +47,7 @@ export type CreatePointsMutation = {
 };
 
 export const CreatePointsDocument = gql`
-  mutation createPoints(
+  mutation CreatePoints(
     $studentId: Int!
     $subcategoryId: Int!
     $teacherId: Int!

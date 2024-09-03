@@ -1,32 +1,53 @@
 import { useEditionSelection } from "../common/useEditionSelection";
+import { useAnimalData } from "./useAnimalData";
 import { useCategoriesCardData } from "./useCategoriesCardData";
-import { useStudentCardData } from "./useStudentData";
+import { useStudentData } from "./useStudentData";
 
-export const useStudentProfileData = (studentId: string) => {
+export const useStudentProfileData = (studentId?: string) => {
   const { selectedEdition } = useEditionSelection();
-  const editionId = selectedEdition?.editionId ?? "-1";
+  const editionId = selectedEdition?.editionId;
 
   const { categories, categoriesLoading, categoriesError, categoriesRefetch } =
     useCategoriesCardData({
       editionId,
       studentId,
     });
-  const { student, studentLoading, studentError, studentRefetch } =
-    useStudentCardData({
-      editionId,
-      studentId,
-    });
+
+  const {
+    studentData,
+    points,
+    filterHeaderNames,
+    studentPointsLoading,
+    studentPointsError,
+    studentPointsRefetch,
+  } = useStudentData({ editionId, studentId });
+
+  const {
+    prevLevel,
+    currLevel,
+    nextLevel,
+    animalDataLoading,
+    animalDataError,
+    animalDataRefetch,
+  } = useAnimalData(editionId, studentId);
 
   const refetch = () => {
-    studentRefetch();
     categoriesRefetch();
+    studentPointsRefetch();
+    animalDataRefetch();
   };
 
   return {
     categories,
-    student,
-    loading: categoriesLoading || studentLoading,
-    error: categoriesError || studentError,
+    studentData,
+    points,
+    filterHeaderNames,
+    prevLevel,
+    currLevel,
+    nextLevel,
+    // TODO loading and error probably should be separated to sidebar and table
+    loading: categoriesLoading || studentPointsLoading || animalDataLoading,
+    error: categoriesError || studentPointsError || animalDataError,
     refetch,
   };
 };

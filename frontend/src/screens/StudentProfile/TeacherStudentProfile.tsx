@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom";
 import { PointsForm } from "../../components/StudentProfile/PointsForm/PointsForm";
 import { FormPoints } from "../../components/StudentProfile/PointsForm/types";
 import { useCreatePointsMutation } from "../../graphql/createPoints.graphql.types";
-import PointsTableWithFilter from "../../components/StudentProfile/table/PointsTableWithFilter";
 import { useUser } from "../../hooks/common/useUser";
 import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
 import { SideBar } from "../../components/StudentProfile/SideBar";
+import { PointsTableWithFilter } from "../../components/StudentProfile/table/PointsTableWithFilter";
 
 const styles: Styles = {
   container: {
@@ -28,15 +28,26 @@ export function TeacherStudentProfile() {
   const params = useParams();
   const studentId = params.id;
 
-  const { categories, student, loading, error, refetch } =
-    useStudentProfileData(studentId ?? "-1");
+  const {
+    categories,
+    studentData,
+    points,
+    prevLevel,
+    currLevel,
+    nextLevel,
+    filterHeaderNames,
+    loading,
+    error,
+    refetch,
+  } = useStudentProfileData(studentId);
 
   const [createPoints, { error: createPointsError }] =
     useCreatePointsMutation();
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-  if (!student) return <p>Student is undefined</p>;
+  if (!studentData) return <p>Student is undefined</p>;
+  if (!currLevel) return <p>Curr level is undefined</p>;
 
   const handleAdd = (formPoints: FormPoints) => {
     createPoints({
@@ -53,9 +64,18 @@ export function TeacherStudentProfile() {
 
   return (
     <div style={styles.container}>
-      <SideBar student={student} categoriesBarProps={categories} />
+      <SideBar
+        student={studentData}
+        categoriesBarProps={categories}
+        currLevel={currLevel}
+        prevLevel={prevLevel}
+        nextLevel={nextLevel}
+      />
       <div style={styles.rightContainer}>
-        <PointsTableWithFilter pointsList={student.points} />
+        <PointsTableWithFilter
+          points={points}
+          filterHeaderNames={filterHeaderNames}
+        />
         <PointsForm
           handleAddPoints={handleAdd}
           createError={createPointsError?.message}

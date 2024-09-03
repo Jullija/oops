@@ -4,9 +4,14 @@ import { useEditionSelection } from "../common/useEditionSelection";
 export type Group = {
   name: string;
   id: string;
-  weekday: { id: string; name: string };
+  weekday: Weekday;
   time: Timestamp;
   teacher: { fullName: string; id: string };
+};
+
+export type Weekday = {
+  id: string;
+  name: string;
 };
 
 export type Timestamp = {

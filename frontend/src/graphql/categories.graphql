@@ -1,4 +1,4 @@
-query categories($editionId: bigint!) {
+query Categories($editionId: bigint!) {
   categories(orderBy: { categoryName: ASC }) {
     categoryId
     categoryName

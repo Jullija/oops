@@ -1,41 +1,17 @@
-import { FILES_URL } from "../../../utils/constants";
 import { Styles } from "../../../utils/Styles";
-import { UserPoints } from "../../../utils/types";
-
-type UserCardProps = {
-  fullName?: string;
-  index: number;
-  points: UserPoints;
-};
+import { StudentCardData } from "../../../hooks/StudentProfile/useStudentData";
+import { Avatar } from "../../Avatar";
 
 const styles: Styles = {
-  userCard: {
+  container: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
-    padding: "10px",
-    border: "1px solid #ddd",
-    borderRadius: "8px",
-    marginBottom: "12px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    width: "250px",
+    border: "1px solid blue",
+    gap: 12,
+    padding: 24,
   },
-  imgPlaceholder: {
-    width: "200px",
-    height: "200px",
-    backgroundColor: "#fff",
-    marginBottom: "10px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    overflow: "hidden",
-    borderRadius: "8px",
-  },
-  userImage: {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-    borderRadius: "8px",
+  studentName: {
+    fontWeight: "bold",
   },
   progressBar: {
     width: "100%",
@@ -50,44 +26,26 @@ const styles: Styles = {
   },
 };
 
-export function StudentCard({ fullName, index, points }: UserCardProps) {
-  const totalPoints = points.reduce((acc, point) => acc + +point.value, 0);
-  const loading = false;
-  const error: Error | undefined = undefined;
-  const imageId = "1";
-
-  // TODO correct in PR with student card
-  const getImageContent = () => {
-    if (loading || error) {
-      return loading ? (
-        <div>Loading image...</div>
-      ) : (
-        <div>Error loading image</div>
-      );
-    }
-    if (imageId) {
-      return (
-        <img
-          src={`${FILES_URL}${imageId}`}
-          alt={`Image id ${imageId}`}
-          style={styles.userImage}
-        />
-      );
-    }
-    return <div style={styles.userImageContainer} />;
-  };
-
+export function StudentCard({
+  displayName,
+  index,
+  group,
+  totalPoints,
+  avatarId,
+}: StudentCardData) {
   return (
-    <div style={styles.userCard}>
-      <div style={styles.userImageContainer}>{getImageContent()}</div>
+    <div style={styles.container}>
+      <Avatar id={avatarId} size="lg" />
+      <div style={styles.studentName}>{displayName}</div>
+      <div>indeks: {index}</div>
       <div>
-        <div>{fullName}</div>
-        <div>Indeks Studenta: {index}</div>
-        <div>Punkty całkowite: {totalPoints}</div>
-        <div style={styles.progressBar}>
-          <div style={{ ...styles.progress, width: `${totalPoints}%` }}></div>
-        </div>
+        grupa:{" "}
+        {group
+          ? `${group.name}, ${group.weekday.name} ${group.time.start}-${group.time.end}`
+          : "brak"}
       </div>
+      <div>prowadzący: {group ? group.teacherDisplayName : "brak"}</div>
+      <div>punkty: {totalPoints}</div>
     </div>
   );
 }

@@ -1,8 +1,8 @@
 import { Styles } from "../../utils/Styles";
-import PointsTableWithFilter from "../../components/StudentProfile/table/PointsTableWithFilter";
 import { useUser } from "../../hooks/common/useUser";
 import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
 import { SideBar } from "../../components/StudentProfile/SideBar";
+import { PointsTableWithFilter } from "../../components/StudentProfile/table/PointsTableWithFilter";
 
 const styles: Styles = {
   container: {
@@ -14,19 +14,38 @@ const styles: Styles = {
 
 export function StudentProfile() {
   const { user } = useUser();
-  const { categories, student, loading, error } = useStudentProfileData(
-    user.userId,
-  );
+  const {
+    categories,
+    studentData,
+    points,
+    prevLevel,
+    currLevel,
+    nextLevel,
+    filterHeaderNames,
+    loading,
+    error,
+  } = useStudentProfileData(user.userId);
 
   // TODO: add components for loading state and error message
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-  if (!student) return <p>Student is undefined</p>;
+  if (!studentData) return <p>Student is undefined</p>;
+  if (!currLevel) return <p>Curr level is undefined</p>;
 
   return (
     <div style={styles.container}>
-      <SideBar student={student} categoriesBarProps={categories} />
-      <PointsTableWithFilter pointsList={student.points} />
+      <SideBar
+        student={studentData}
+        categoriesBarProps={categories}
+        prevLevel={prevLevel}
+        currLevel={currLevel}
+        nextLevel={nextLevel}
+      />
+      <PointsTableWithFilter
+        points={points}
+        filterHeaderNames={filterHeaderNames}
+      />
     </div>
   );
 }

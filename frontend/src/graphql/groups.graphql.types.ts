@@ -36,7 +36,7 @@ export type GroupsQuery = {
 };
 
 export const GroupsDocument = gql`
-  query groups($editionId: bigint!) {
+  query Groups($editionId: bigint!) {
     editionByPk(editionId: $editionId) {
       groups {
         groupName

@@ -1,0 +1,79 @@
+query NeighboringLevels($editionId: Int!, $studentId: Int!) {
+  getNeighboringLevels(editionId: $editionId, studentId: $studentId) {
+    currLevel {
+      highest
+      levelId
+      levelName
+      maximumPoints
+      minimumPoints
+      ordinalNumber
+      grade
+      label
+      edition {
+        editionId
+        editionName
+        editionYear
+        endDate
+        label
+        startDate
+      }
+      imageFile {
+        fileId
+        fileName
+        fileType
+        label
+        pathToFile
+      }
+    }
+    nextLevel {
+      highest
+      levelId
+      levelName
+      maximumPoints
+      minimumPoints
+      ordinalNumber
+      grade
+      label
+      edition {
+        editionId
+        editionName
+        editionYear
+        endDate
+        label
+        startDate
+      }
+      imageFile {
+        fileId
+        fileName
+        fileType
+        label
+        pathToFile
+      }
+    }
+    prevLevel {
+      highest
+      levelId
+      levelName
+      maximumPoints
+      minimumPoints
+      ordinalNumber
+      grade
+      label
+      edition {
+        editionId
+        editionName
+        editionYear
+        endDate
+        label
+        startDate
+      }
+      imageFile {
+        fileId
+        fileName
+        fileType
+        label
+        pathToFile
+      }
+    }
+  }
+}

@@ -40,10 +40,15 @@ export const PointsBar = ({
   showPoints,
   label,
 }: PointsBarProps) => {
-  if ((bounds.lower && points < bounds.lower) || points < 0) {
-    throw new Error(
-      "points cannot be lower than lower bound or be negative number",
-    );
+  if (points < 0) {
+    throw new Error("points cannot be negative number");
+  }
+
+  // TODO we have a problem with backend data inconsistency
+  if (bounds.lower && points < bounds.lower) {
+    // console.log("LOWER BOUND: ", bounds.lower);
+    // console.log("POINTS: ", points);
+    throw new Error("points cannot be lower than lower bound");
   }
 
   const diff = bounds.lower ?? 0;

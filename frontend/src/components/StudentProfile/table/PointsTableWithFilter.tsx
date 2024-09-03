@@ -1,8 +1,9 @@
-import { UserPoints } from "../../../utils/types";
 import { Styles } from "../../../utils/Styles";
 import FilterMenu from "./FilterMenu";
 import { useState } from "react";
 import PointsTable from "./PointsTable";
+import { Points } from "../../../hooks/StudentProfile/useStudentData";
+import { FilterItem } from "../../Groups/FilterBar/FilterOptionsSection";
 
 const styles: Styles = {
   container: {
@@ -12,36 +13,38 @@ const styles: Styles = {
   },
 };
 
-export default function PointsTableWithFilter({
-  pointsList,
-}: {
-  pointsList: UserPoints;
-}) {
-  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
-  const onSelectChange = (updatedSelectedCategoryIds: string[]) => {
-    setSelectedCategoryIds(updatedSelectedCategoryIds);
-  };
+type PointsTableProps = {
+  points: Points[];
+  filterHeaderNames: FilterItem[];
+};
 
-  const isInSelectedCategoryIds = (point: UserPoints[number]) => {
+export const PointsTableWithFilter = ({
+  points,
+  filterHeaderNames,
+}: PointsTableProps) => {
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
+
+  const isInSelectedCategoryIds = (points: Points) => {
     return selectedCategoryIds.some(
-      (selectedId) => selectedId === point.subcategory.category.categoryId,
+      (selectedId) => selectedId === points.subcategory.category.categoryId,
     );
   };
 
-  const getFilteredItems = () => {
-    return selectedCategoryIds.length === 0
-      ? pointsList
-      : pointsList.filter(isInSelectedCategoryIds);
-  };
+  const pointsToDisplay =
+    selectedCategoryIds.length === 0
+      ? points
+      : points.filter(isInSelectedCategoryIds);
 
   return (
     <div style={styles.container}>
       <FilterMenu
         pickedCategoryIds={selectedCategoryIds}
-        onSelectChange={onSelectChange}
-        points={pointsList}
+        onSelectChange={(selectedIds) => {
+          setSelectedCategoryIds(selectedIds);
+        }}
+        filterItems={filterHeaderNames}
       />
-      <PointsTable pointsList={getFilteredItems()} />
+      <PointsTable points={pointsToDisplay} />
     </div>
   );
-}
+};

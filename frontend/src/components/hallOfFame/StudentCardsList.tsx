@@ -1,5 +1,8 @@
 import { Styles } from "../../utils/Styles";
-import { HallOfFameStudentData, StudentCard } from "./StudentCard";
+import {
+  HallOfFameStudentData,
+  HallOfFameStudentCard,
+} from "./HallOfFameStudentCard";
 
 const styles: Styles = {
   cardsContainer: {
@@ -25,7 +28,7 @@ export const StudentCardsList = ({
   return (
     <div style={styles.cardsContainer}>
       {students.map((student) => (
-        <StudentCard
+        <HallOfFameStudentCard
           key={student.id}
           student={student}
           isHighlighted={student.id === highlightedStudent?.id}

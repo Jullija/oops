@@ -17,6 +17,7 @@ const styles: Styles = {
     border: "1px solid black",
     width: 500,
   },
+  title: { fontWeight: "bold" },
   error: { color: "red" },
 };
 
@@ -89,7 +90,7 @@ export const PointsForm = ({
 
   return (
     <div style={styles.container}>
-      <div>add points</div>
+      <div style={styles.title}>add points</div>
       <form onSubmit={formik.handleSubmit}>
         <SelectInput
           handleChange={handleCategoryChange}

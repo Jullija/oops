@@ -20,8 +20,8 @@ export type TeachersQuery = {
 };
 
 export const TeachersDocument = gql`
-  query teachers($editionId: bigint!) {
-    groups(where: { editionId: { _eq: $editionId } }) {
+  query Teachers($editionId: bigint!) {
+    groups(distinctOn: teacherId, where: { editionId: { _eq: $editionId } }) {
       userByTeacherId {
         fullName
         userId

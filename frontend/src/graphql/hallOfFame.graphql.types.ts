@@ -24,7 +24,7 @@ export type HallOfFameQuery = {
 };
 
 export const HallOfFameDocument = gql`
-  query hallOfFame($editionId: bigint) {
+  query HallOfFame($editionId: bigint) {
     hallOfFame(
       where: { editionId: { _eq: $editionId } }
       orderBy: [{ sumOfPoints: DESC }, { nick: ASC }]

@@ -24,7 +24,7 @@ export type CategoriesQuery = {
 };
 
 export const CategoriesDocument = gql`
-  query categories($editionId: bigint!) {
+  query Categories($editionId: bigint!) {
     categories(orderBy: { categoryName: ASC }) {
       categoryId
       categoryName

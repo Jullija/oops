@@ -17,7 +17,7 @@ export type GroupTimestampsQuery = {
 };
 
 export const GroupTimestampsDocument = gql`
-  query groupTimestamps($editionId: Int!) {
+  query GroupTimestamps($editionId: Int!) {
     getPossibleGroupsTimeSpans(editionId: $editionId) {
       endTime
       startTime

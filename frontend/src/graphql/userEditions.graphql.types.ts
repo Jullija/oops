@@ -17,7 +17,7 @@ export type UserEditionsQuery = {
 };
 
 export const UserEditionsDocument = gql`
-  query userEditions {
+  query UserEditions {
     edition(orderBy: { editionYear: DESC }) {
       editionId
       editionYear
