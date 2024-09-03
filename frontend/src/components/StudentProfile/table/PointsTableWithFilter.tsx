@@ -1,7 +1,7 @@
 import { Styles } from "../../../utils/Styles";
 import FilterMenu from "./FilterMenu";
 import { useState } from "react";
-import PointsTable from "./PointsTable";
+import PointsTable, { PointsTableTeacherButtonsProps } from "./PointsTable";
 import { Points } from "../../../hooks/StudentProfile/useStudentData";
 import { FilterItem } from "../../Groups/FilterBar/FilterOptionsSection";
 
@@ -16,11 +16,13 @@ const styles: Styles = {
 type PointsTableProps = {
   points: Points[];
   filterHeaderNames: FilterItem[];
+  buttonsProps?: PointsTableTeacherButtonsProps;
 };
 
 export const PointsTableWithFilter = ({
   points,
   filterHeaderNames,
+  buttonsProps: teacherVersionProps,
 }: PointsTableProps) => {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
 
@@ -44,7 +46,10 @@ export const PointsTableWithFilter = ({
         }}
         filterItems={filterHeaderNames}
       />
-      <PointsTable points={pointsToDisplay} />
+      <PointsTable
+        points={pointsToDisplay}
+        buttonsProps={teacherVersionProps}
+      />
     </div>
   );
 };

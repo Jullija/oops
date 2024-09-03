@@ -7,6 +7,7 @@ import { useUser } from "../../hooks/common/useUser";
 import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
 import { SideBar } from "../../components/StudentProfile/SideBar";
 import { PointsTableWithFilter } from "../../components/StudentProfile/table/PointsTableWithFilter";
+import { Points } from "../../hooks/StudentProfile/useStudentData";
 
 const styles: Styles = {
   container: {
@@ -62,6 +63,14 @@ export function TeacherStudentProfile() {
     });
   };
 
+  const handleDeleteClick = (points: Points) => {
+    console.log("handle delete: ", points);
+  };
+
+  const handleEditClick = (points: Points) => {
+    console.log("handle add", points);
+  };
+
   return (
     <div style={styles.container}>
       <SideBar
@@ -75,6 +84,10 @@ export function TeacherStudentProfile() {
         <PointsTableWithFilter
           points={points}
           filterHeaderNames={filterHeaderNames}
+          buttonsProps={{
+            handleEditClick: handleEditClick,
+            handleDeleteClick: handleDeleteClick,
+          }}
         />
         <PointsForm
           handleAddPoints={handleAdd}

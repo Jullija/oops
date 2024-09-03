@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { Styles } from "../../../utils/Styles";
 
 const styles: Styles = {
@@ -11,7 +12,7 @@ const styles: Styles = {
 };
 
 type CellProps = {
-  children?: string | number;
+  children?: string | number | ReactNode;
 };
 export const Cell = ({ children }: CellProps) => {
   return <div style={styles.cell}>{children}</div>;

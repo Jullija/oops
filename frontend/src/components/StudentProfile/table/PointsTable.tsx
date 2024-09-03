@@ -11,10 +11,31 @@ const styles: Styles = {
     display: "flex",
     justifyContent: "space-between",
   },
+  buttonsContainer: {
+    display: "flex",
+    gap: 12,
+  },
+  button: {
+    backgroundColor: "lightblue",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    paddingRight: 8,
+    paddingLeft: 8,
+  },
+  delete: {
+    backgroundColor: "red",
+  },
 };
 
 type PointsTableProps = {
   points: Points[];
+  buttonsProps?: PointsTableTeacherButtonsProps;
+};
+
+export type PointsTableTeacherButtonsProps = {
+  handleDeleteClick: (points: Points) => void;
+  handleEditClick: (points: Points) => void;
 };
 
 const dateOptions: Intl.DateTimeFormatOptions = {
@@ -26,16 +47,19 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   second: "2-digit",
 };
 
-export default function PointsTable({ points }: PointsTableProps) {
-  const headerTitles = [
-    "nazwa",
-    "kategoria",
-    "punkty",
-    "max punktów",
-    "data",
-    "prowadzący",
-  ];
+const headerTitles = [
+  "nazwa",
+  "kategoria",
+  "punkty",
+  "max punktów",
+  "data",
+  "prowadzący",
+];
 
+export default function PointsTable({
+  points,
+  buttonsProps: teacherVersionProps,
+}: PointsTableProps) {
   const getPointsString = (points: Points) => {
     const pure = points.points.purePoints?.value ?? 0;
     let totalBonus = 0;
@@ -74,12 +98,31 @@ export default function PointsTable({ points }: PointsTableProps) {
   return (
     <div style={styles.table}>
       <div style={styles.row}>
+        {teacherVersionProps && <Cell />}
         {headerTitles.map((header, index) => (
           <Cell key={index}>{header}</Cell>
         ))}
       </div>
       {points.map((item, index) => (
         <div key={index} style={styles.row}>
+          {teacherVersionProps && (
+            <Cell>
+              <div style={styles.buttonsContainer}>
+                <div
+                  style={{ ...styles.button, ...styles.delete }}
+                  onClick={() => teacherVersionProps.handleDeleteClick?.(item)}
+                >
+                  del
+                </div>
+                <div
+                  style={{ ...styles.button }}
+                  onClick={() => teacherVersionProps.handleEditClick?.(item)}
+                >
+                  edit
+                </div>
+              </div>
+            </Cell>
+          )}
           <Cell>{item.subcategory.subcategoryName}</Cell>
           <Cell>{item.subcategory.category.categoryName}</Cell>
           <Cell>{getPointsString(item)}</Cell>
