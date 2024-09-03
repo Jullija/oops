@@ -59,10 +59,21 @@ update_permissions:
   - role: coordinator
     permission:
       columns:
-        - award_id
         - label
-      filter: {}
-      check: {}
+      filter:
+        _not:
+          chestHistory:
+            subcategory:
+              edition:
+                start_date:
+                  _lte: now()
+      check:
+        _not:
+          chestHistory:
+            subcategory:
+              edition:
+                start_date:
+                  _lte: now()
       set:
         label: '""'
     comment: ""

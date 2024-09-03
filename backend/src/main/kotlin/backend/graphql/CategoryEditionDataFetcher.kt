@@ -30,11 +30,15 @@ class CategoryEditionDataFetcher {
     @DgsMutation
     @Transactional
     fun addCategoryToEdition(@InputArgument categoryId: Long, @InputArgument editionId: Long): CategoryEdition {
-        val category = categoriesRepository.findById(categoryId).orElseThrow { throw Exception("Category not found") }
-        val edition = editionRepository.findById(editionId).orElseThrow { throw Exception("Edition not found") }
+        val category = categoriesRepository.findById(categoryId).orElseThrow { throw IllegalArgumentException("Category not found") }
+        val edition = editionRepository.findById(editionId).orElseThrow { throw IllegalArgumentException("Edition not found") }
+
+        if (edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
 
         if (categoryEditionRepository.existsByCategory_CategoryNameAndEdition(category.categoryName, edition)){
-            throw Exception("Category with this name already exists in this edition")
+            throw IllegalArgumentException("Category with this name already exists in this edition")
         }
 
         val categoryEdition = CategoryEdition(

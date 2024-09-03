@@ -26,6 +26,7 @@ export type Scalars = {
   Int: { input: number; output: number };
   Float: { input: number; output: number };
   bigint: { input: string; output: string };
+  date: { input: string; output: string };
   float8: { input: number; output: number };
   time: { input: string; output: string };
   timestamp: { input: string; output: string };
@@ -3415,6 +3416,19 @@ export enum CursorOrdering {
   Desc = "DESC",
 }
 
+/** Boolean expression to compare columns of type "date". All fields are combined with logical 'AND'. */
+export type DateComparisonExp = {
+  _eq?: InputMaybe<Scalars["date"]["input"]>;
+  _gt?: InputMaybe<Scalars["date"]["input"]>;
+  _gte?: InputMaybe<Scalars["date"]["input"]>;
+  _in?: InputMaybe<Array<Scalars["date"]["input"]>>;
+  _isNull?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _lt?: InputMaybe<Scalars["date"]["input"]>;
+  _lte?: InputMaybe<Scalars["date"]["input"]>;
+  _neq?: InputMaybe<Scalars["date"]["input"]>;
+  _nin?: InputMaybe<Array<Scalars["date"]["input"]>>;
+};
+
 /** columns and relationships of "edition" */
 export type Edition = {
   __typename?: "Edition";
@@ -3432,6 +3446,7 @@ export type Edition = {
   chestsAggregate: ChestsAggregate;
   editionId: Scalars["bigint"]["output"];
   editionYear: Scalars["Int"]["output"];
+  endDate: Scalars["date"]["output"];
   /** An array relationship */
   groups: Array<Groups>;
   /** An aggregate relationship */
@@ -3442,6 +3457,7 @@ export type Edition = {
   /** An aggregate relationship */
   levelsAggregate: LevelsAggregate;
   name: Scalars["String"]["output"];
+  startDate: Scalars["date"]["output"];
   /** An array relationship */
   subcategories: Array<Subcategories>;
   /** An aggregate relationship */
@@ -3627,12 +3643,14 @@ export type EditionBoolExp = {
   chestsAggregate?: InputMaybe<ChestsAggregateBoolExp>;
   editionId?: InputMaybe<BigintComparisonExp>;
   editionYear?: InputMaybe<IntComparisonExp>;
+  endDate?: InputMaybe<DateComparisonExp>;
   groups?: InputMaybe<GroupsBoolExp>;
   groupsAggregate?: InputMaybe<GroupsAggregateBoolExp>;
   label?: InputMaybe<StringComparisonExp>;
   levels?: InputMaybe<LevelsBoolExp>;
   levelsAggregate?: InputMaybe<LevelsAggregateBoolExp>;
   name?: InputMaybe<StringComparisonExp>;
+  startDate?: InputMaybe<DateComparisonExp>;
   subcategories?: InputMaybe<SubcategoriesBoolExp>;
   subcategoriesAggregate?: InputMaybe<SubcategoriesAggregateBoolExp>;
   userLevels?: InputMaybe<UserLevelBoolExp>;
@@ -3658,10 +3676,12 @@ export type EditionInsertInput = {
   chests?: InputMaybe<ChestsArrRelInsertInput>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   editionYear?: InputMaybe<Scalars["Int"]["input"]>;
+  endDate?: InputMaybe<Scalars["date"]["input"]>;
   groups?: InputMaybe<GroupsArrRelInsertInput>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   levels?: InputMaybe<LevelsArrRelInsertInput>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  startDate?: InputMaybe<Scalars["date"]["input"]>;
   subcategories?: InputMaybe<SubcategoriesArrRelInsertInput>;
   userLevels?: InputMaybe<UserLevelArrRelInsertInput>;
 };
@@ -3671,8 +3691,10 @@ export type EditionMaxFields = {
   __typename?: "EditionMaxFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
   editionYear?: Maybe<Scalars["Int"]["output"]>;
+  endDate?: Maybe<Scalars["date"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
+  startDate?: Maybe<Scalars["date"]["output"]>;
 };
 
 /** aggregate min on columns */
@@ -3680,8 +3702,10 @@ export type EditionMinFields = {
   __typename?: "EditionMinFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
   editionYear?: Maybe<Scalars["Int"]["output"]>;
+  endDate?: Maybe<Scalars["date"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
+  startDate?: Maybe<Scalars["date"]["output"]>;
 };
 
 /** response of any mutation on the table "edition" */
@@ -3714,10 +3738,12 @@ export type EditionOrderBy = {
   chestsAggregate?: InputMaybe<ChestsAggregateOrderBy>;
   editionId?: InputMaybe<OrderBy>;
   editionYear?: InputMaybe<OrderBy>;
+  endDate?: InputMaybe<OrderBy>;
   groupsAggregate?: InputMaybe<GroupsAggregateOrderBy>;
   label?: InputMaybe<OrderBy>;
   levelsAggregate?: InputMaybe<LevelsAggregateOrderBy>;
   name?: InputMaybe<OrderBy>;
+  startDate?: InputMaybe<OrderBy>;
   subcategoriesAggregate?: InputMaybe<SubcategoriesAggregateOrderBy>;
   userLevelsAggregate?: InputMaybe<UserLevelAggregateOrderBy>;
 };
@@ -3734,17 +3760,23 @@ export enum EditionSelectColumn {
   /** column name */
   EditionYear = "editionYear",
   /** column name */
+  EndDate = "endDate",
+  /** column name */
   Label = "label",
   /** column name */
   Name = "name",
+  /** column name */
+  StartDate = "startDate",
 }
 
 /** input type for updating data in table "edition" */
 export type EditionSetInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   editionYear?: InputMaybe<Scalars["Int"]["input"]>;
+  endDate?: InputMaybe<Scalars["date"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  startDate?: InputMaybe<Scalars["date"]["input"]>;
 };
 
 /** aggregate stddev on columns */
@@ -3780,8 +3812,10 @@ export type EditionStreamCursorInput = {
 export type EditionStreamCursorValueInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   editionYear?: InputMaybe<Scalars["Int"]["input"]>;
+  endDate?: InputMaybe<Scalars["date"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  startDate?: InputMaybe<Scalars["date"]["input"]>;
 };
 
 /** aggregate sum on columns */
@@ -3796,7 +3830,9 @@ export type EditionType = {
   editionId: Scalars["ID"]["output"];
   editionName: Scalars["String"]["output"];
   editionYear: Scalars["Int"]["output"];
+  endDate: Scalars["String"]["output"];
   label: Scalars["String"]["output"];
+  startDate: Scalars["String"]["output"];
 };
 
 /** update columns of table "edition" */
@@ -3806,9 +3842,13 @@ export enum EditionUpdateColumn {
   /** column name */
   EditionYear = "editionYear",
   /** column name */
+  EndDate = "endDate",
+  /** column name */
   Label = "label",
   /** column name */
   Name = "name",
+  /** column name */
+  StartDate = "startDate",
 }
 
 export type EditionUpdates = {
@@ -4544,7 +4584,7 @@ export type GroupDateType = {
   __typename?: "GroupDateType";
   endTime: Scalars["String"]["output"];
   startTime: Scalars["String"]["output"];
-  weekday: Scalars["String"]["output"];
+  weekday: WeekdayType;
 };
 
 export type GroupType = {
@@ -4558,7 +4598,7 @@ export type GroupType = {
   startTime: Scalars["String"]["output"];
   teacher?: Maybe<UserType>;
   userGroups: Array<Maybe<UserGroupType>>;
-  weekday: Scalars["String"]["output"];
+  weekday: WeekdayType;
 };
 
 /** columns and relationships of "groups" */
@@ -4578,11 +4618,15 @@ export type Groups = {
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
   /** An object relationship */
   user?: Maybe<Users>;
+  /** An object relationship */
+  userByTeacherId?: Maybe<Users>;
   /** An array relationship */
   userGroups: Array<UserGroups>;
   /** An aggregate relationship */
   userGroupsAggregate: UserGroupsAggregate;
-  weekday: Scalars["String"]["output"];
+  /** An object relationship */
+  weekday: Weekdays;
+  weekdayId: Scalars["bigint"]["output"];
 };
 
 /** columns and relationships of "groups" */
@@ -4665,6 +4709,7 @@ export type GroupsAvgFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by avg() on columns of table "groups" */
@@ -4673,6 +4718,7 @@ export type GroupsAvgOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  weekdayId?: InputMaybe<OrderBy>;
 };
 
 /** Boolean expression to filter rows from the table "groups". All fields are combined with a logical 'AND'. */
@@ -4691,9 +4737,11 @@ export type GroupsBoolExp = {
   startTime?: InputMaybe<TimeComparisonExp>;
   teacherId?: InputMaybe<BigintComparisonExp>;
   user?: InputMaybe<UsersBoolExp>;
+  userByTeacherId?: InputMaybe<UsersBoolExp>;
   userGroups?: InputMaybe<UserGroupsBoolExp>;
   userGroupsAggregate?: InputMaybe<UserGroupsAggregateBoolExp>;
-  weekday?: InputMaybe<StringComparisonExp>;
+  weekday?: InputMaybe<WeekdaysBoolExp>;
+  weekdayId?: InputMaybe<BigintComparisonExp>;
 };
 
 /** unique or primary key constraints on table "groups" */
@@ -4708,6 +4756,7 @@ export type GroupsIncInput = {
   groupsId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
+  weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
 
 /** input type for inserting data into table "groups" */
@@ -4723,8 +4772,10 @@ export type GroupsInsertInput = {
   startTime?: InputMaybe<Scalars["time"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
   user?: InputMaybe<UsersObjRelInsertInput>;
+  userByTeacherId?: InputMaybe<UsersObjRelInsertInput>;
   userGroups?: InputMaybe<UserGroupsArrRelInsertInput>;
-  weekday?: InputMaybe<Scalars["String"]["input"]>;
+  weekday?: InputMaybe<WeekdaysObjRelInsertInput>;
+  weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
 
 /** aggregate max on columns */
@@ -4736,7 +4787,7 @@ export type GroupsMaxFields = {
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
-  weekday?: Maybe<Scalars["String"]["output"]>;
+  weekdayId?: Maybe<Scalars["bigint"]["output"]>;
 };
 
 /** order by max() on columns of table "groups" */
@@ -4747,7 +4798,7 @@ export type GroupsMaxOrderBy = {
   imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
-  weekday?: InputMaybe<OrderBy>;
+  weekdayId?: InputMaybe<OrderBy>;
 };
 
 /** aggregate min on columns */
@@ -4759,7 +4810,7 @@ export type GroupsMinFields = {
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
-  weekday?: Maybe<Scalars["String"]["output"]>;
+  weekdayId?: Maybe<Scalars["bigint"]["output"]>;
 };
 
 /** order by min() on columns of table "groups" */
@@ -4770,7 +4821,7 @@ export type GroupsMinOrderBy = {
   imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
-  weekday?: InputMaybe<OrderBy>;
+  weekdayId?: InputMaybe<OrderBy>;
 };
 
 /** response of any mutation on the table "groups" */
@@ -4809,8 +4860,10 @@ export type GroupsOrderBy = {
   startTime?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
   user?: InputMaybe<UsersOrderBy>;
+  userByTeacherId?: InputMaybe<UsersOrderBy>;
   userGroupsAggregate?: InputMaybe<UserGroupsAggregateOrderBy>;
-  weekday?: InputMaybe<OrderBy>;
+  weekday?: InputMaybe<WeekdaysOrderBy>;
+  weekdayId?: InputMaybe<OrderBy>;
 };
 
 /** primary key columns input for table: groups */
@@ -4837,7 +4890,7 @@ export enum GroupsSelectColumn {
   /** column name */
   TeacherId = "teacherId",
   /** column name */
-  Weekday = "weekday",
+  WeekdayId = "weekdayId",
 }
 
 /** input type for updating data in table "groups" */
@@ -4850,7 +4903,7 @@ export type GroupsSetInput = {
   label?: InputMaybe<Scalars["String"]["input"]>;
   startTime?: InputMaybe<Scalars["time"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
-  weekday?: InputMaybe<Scalars["String"]["input"]>;
+  weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
 
 /** aggregate stddev on columns */
@@ -4860,6 +4913,7 @@ export type GroupsStddevFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by stddev() on columns of table "groups" */
@@ -4868,6 +4922,7 @@ export type GroupsStddevOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  weekdayId?: InputMaybe<OrderBy>;
 };
 
 /** aggregate stddevPop on columns */
@@ -4877,6 +4932,7 @@ export type GroupsStddevPopFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by stddevPop() on columns of table "groups" */
@@ -4885,6 +4941,7 @@ export type GroupsStddevPopOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  weekdayId?: InputMaybe<OrderBy>;
 };
 
 /** aggregate stddevSamp on columns */
@@ -4894,6 +4951,7 @@ export type GroupsStddevSampFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by stddevSamp() on columns of table "groups" */
@@ -4902,6 +4960,7 @@ export type GroupsStddevSampOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  weekdayId?: InputMaybe<OrderBy>;
 };
 
 /** Streaming cursor of the table "groups" */
@@ -4922,7 +4981,7 @@ export type GroupsStreamCursorValueInput = {
   label?: InputMaybe<Scalars["String"]["input"]>;
   startTime?: InputMaybe<Scalars["time"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
-  weekday?: InputMaybe<Scalars["String"]["input"]>;
+  weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
 
 /** aggregate sum on columns */
@@ -4932,6 +4991,7 @@ export type GroupsSumFields = {
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
+  weekdayId?: Maybe<Scalars["bigint"]["output"]>;
 };
 
 /** order by sum() on columns of table "groups" */
@@ -4940,6 +5000,7 @@ export type GroupsSumOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  weekdayId?: InputMaybe<OrderBy>;
 };
 
 /** update columns of table "groups" */
@@ -4961,7 +5022,7 @@ export enum GroupsUpdateColumn {
   /** column name */
   TeacherId = "teacherId",
   /** column name */
-  Weekday = "weekday",
+  WeekdayId = "weekdayId",
 }
 
 export type GroupsUpdates = {
@@ -4980,6 +5041,7 @@ export type GroupsVarPopFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by varPop() on columns of table "groups" */
@@ -4988,6 +5050,7 @@ export type GroupsVarPopOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  weekdayId?: InputMaybe<OrderBy>;
 };
 
 /** aggregate varSamp on columns */
@@ -4997,6 +5060,7 @@ export type GroupsVarSampFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by varSamp() on columns of table "groups" */
@@ -5005,6 +5069,7 @@ export type GroupsVarSampOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  weekdayId?: InputMaybe<OrderBy>;
 };
 
 /** aggregate variance on columns */
@@ -5014,6 +5079,7 @@ export type GroupsVarianceFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by variance() on columns of table "groups" */
@@ -5022,6 +5088,7 @@ export type GroupsVarianceOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  weekdayId?: InputMaybe<OrderBy>;
 };
 
 /** columns and relationships of "hall_of_fame" */
@@ -5912,11 +5979,11 @@ export type LevelsVarianceOrderBy = {
   ordinalNumber?: InputMaybe<OrderBy>;
 };
 
-export type NeighbouringLevelsType = {
-  __typename?: "NeighbouringLevelsType";
-  currentLevel: LevelType;
+export type NeighboringLevelsType = {
+  __typename?: "NeighboringLevelsType";
+  currLevel: LevelType;
   nextLevel?: Maybe<LevelType>;
-  previousLevel?: Maybe<LevelType>;
+  prevLevel?: Maybe<LevelType>;
 };
 
 /** column ordering options */
@@ -7139,8 +7206,8 @@ export type StringComparisonExp = {
 
 export type StudentPointsType = {
   __typename?: "StudentPointsType";
-  level: LevelType;
-  subcategoryPoints: Array<SubcategoryPointsType>;
+  level?: Maybe<LevelType>;
+  subcategoryPoints: Array<Maybe<SubcategoryPointsType>>;
   sumOfAll: Scalars["Float"]["output"];
   sumOfBonuses: Scalars["Float"]["output"];
   sumOfPurePoints: Scalars["Float"]["output"];
@@ -9164,6 +9231,289 @@ export type UsersVarianceOrderBy = {
   userId?: InputMaybe<OrderBy>;
 };
 
+export type WeekdayType = {
+  __typename?: "WeekdayType";
+  label: Scalars["String"]["output"];
+  ordinalNumber: Scalars["Int"]["output"];
+  weekdayAbbr: Scalars["String"]["output"];
+  weekdayId: Scalars["ID"]["output"];
+  weekdayName: Scalars["String"]["output"];
+};
+
+/** columns and relationships of "weekdays" */
+export type Weekdays = {
+  __typename?: "Weekdays";
+  /** An array relationship */
+  groups: Array<Groups>;
+  /** An aggregate relationship */
+  groupsAggregate: GroupsAggregate;
+  label: Scalars["String"]["output"];
+  ordinalNumber: Scalars["Int"]["output"];
+  weekdayAbbr: Scalars["String"]["output"];
+  weekdayId: Scalars["bigint"]["output"];
+  weekdayName: Scalars["String"]["output"];
+};
+
+/** columns and relationships of "weekdays" */
+export type WeekdaysGroupsArgs = {
+  distinctOn?: InputMaybe<Array<GroupsSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<GroupsOrderBy>>;
+  where?: InputMaybe<GroupsBoolExp>;
+};
+
+/** columns and relationships of "weekdays" */
+export type WeekdaysGroupsAggregateArgs = {
+  distinctOn?: InputMaybe<Array<GroupsSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<GroupsOrderBy>>;
+  where?: InputMaybe<GroupsBoolExp>;
+};
+
+/** aggregated selection of "weekdays" */
+export type WeekdaysAggregate = {
+  __typename?: "WeekdaysAggregate";
+  aggregate?: Maybe<WeekdaysAggregateFields>;
+  nodes: Array<Weekdays>;
+};
+
+/** aggregate fields of "weekdays" */
+export type WeekdaysAggregateFields = {
+  __typename?: "WeekdaysAggregateFields";
+  avg?: Maybe<WeekdaysAvgFields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<WeekdaysMaxFields>;
+  min?: Maybe<WeekdaysMinFields>;
+  stddev?: Maybe<WeekdaysStddevFields>;
+  stddevPop?: Maybe<WeekdaysStddevPopFields>;
+  stddevSamp?: Maybe<WeekdaysStddevSampFields>;
+  sum?: Maybe<WeekdaysSumFields>;
+  varPop?: Maybe<WeekdaysVarPopFields>;
+  varSamp?: Maybe<WeekdaysVarSampFields>;
+  variance?: Maybe<WeekdaysVarianceFields>;
+};
+
+/** aggregate fields of "weekdays" */
+export type WeekdaysAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<WeekdaysSelectColumn>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** aggregate avg on columns */
+export type WeekdaysAvgFields = {
+  __typename?: "WeekdaysAvgFields";
+  ordinalNumber?: Maybe<Scalars["Float"]["output"]>;
+  weekdayId?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** Boolean expression to filter rows from the table "weekdays". All fields are combined with a logical 'AND'. */
+export type WeekdaysBoolExp = {
+  _and?: InputMaybe<Array<WeekdaysBoolExp>>;
+  _not?: InputMaybe<WeekdaysBoolExp>;
+  _or?: InputMaybe<Array<WeekdaysBoolExp>>;
+  groups?: InputMaybe<GroupsBoolExp>;
+  groupsAggregate?: InputMaybe<GroupsAggregateBoolExp>;
+  label?: InputMaybe<StringComparisonExp>;
+  ordinalNumber?: InputMaybe<IntComparisonExp>;
+  weekdayAbbr?: InputMaybe<StringComparisonExp>;
+  weekdayId?: InputMaybe<BigintComparisonExp>;
+  weekdayName?: InputMaybe<StringComparisonExp>;
+};
+
+/** unique or primary key constraints on table "weekdays" */
+export enum WeekdaysConstraint {
+  /** unique or primary key constraint on columns "weekday_id" */
+  WeekdaysPkey = "weekdays_pkey",
+}
+
+/** input type for incrementing numeric columns in table "weekdays" */
+export type WeekdaysIncInput = {
+  ordinalNumber?: InputMaybe<Scalars["Int"]["input"]>;
+  weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
+};
+
+/** input type for inserting data into table "weekdays" */
+export type WeekdaysInsertInput = {
+  groups?: InputMaybe<GroupsArrRelInsertInput>;
+  label?: InputMaybe<Scalars["String"]["input"]>;
+  ordinalNumber?: InputMaybe<Scalars["Int"]["input"]>;
+  weekdayAbbr?: InputMaybe<Scalars["String"]["input"]>;
+  weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
+  weekdayName?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type WeekdaysMaxFields = {
+  __typename?: "WeekdaysMaxFields";
+  label?: Maybe<Scalars["String"]["output"]>;
+  ordinalNumber?: Maybe<Scalars["Int"]["output"]>;
+  weekdayAbbr?: Maybe<Scalars["String"]["output"]>;
+  weekdayId?: Maybe<Scalars["bigint"]["output"]>;
+  weekdayName?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** aggregate min on columns */
+export type WeekdaysMinFields = {
+  __typename?: "WeekdaysMinFields";
+  label?: Maybe<Scalars["String"]["output"]>;
+  ordinalNumber?: Maybe<Scalars["Int"]["output"]>;
+  weekdayAbbr?: Maybe<Scalars["String"]["output"]>;
+  weekdayId?: Maybe<Scalars["bigint"]["output"]>;
+  weekdayName?: Maybe<Scalars["String"]["output"]>;
+};
+
+/** response of any mutation on the table "weekdays" */
+export type WeekdaysMutationResponse = {
+  __typename?: "WeekdaysMutationResponse";
+  /** number of rows affected by the mutation */
+  affectedRows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<Weekdays>;
+};
+
+/** input type for inserting object relation for remote table "weekdays" */
+export type WeekdaysObjRelInsertInput = {
+  data: WeekdaysInsertInput;
+  /** upsert condition */
+  onConflict?: InputMaybe<WeekdaysOnConflict>;
+};
+
+/** on_conflict condition type for table "weekdays" */
+export type WeekdaysOnConflict = {
+  constraint: WeekdaysConstraint;
+  updateColumns?: Array<WeekdaysUpdateColumn>;
+  where?: InputMaybe<WeekdaysBoolExp>;
+};
+
+/** Ordering options when selecting data from "weekdays". */
+export type WeekdaysOrderBy = {
+  groupsAggregate?: InputMaybe<GroupsAggregateOrderBy>;
+  label?: InputMaybe<OrderBy>;
+  ordinalNumber?: InputMaybe<OrderBy>;
+  weekdayAbbr?: InputMaybe<OrderBy>;
+  weekdayId?: InputMaybe<OrderBy>;
+  weekdayName?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: weekdays */
+export type WeekdaysPkColumnsInput = {
+  weekdayId: Scalars["bigint"]["input"];
+};
+
+/** select columns of table "weekdays" */
+export enum WeekdaysSelectColumn {
+  /** column name */
+  Label = "label",
+  /** column name */
+  OrdinalNumber = "ordinalNumber",
+  /** column name */
+  WeekdayAbbr = "weekdayAbbr",
+  /** column name */
+  WeekdayId = "weekdayId",
+  /** column name */
+  WeekdayName = "weekdayName",
+}
+
+/** input type for updating data in table "weekdays" */
+export type WeekdaysSetInput = {
+  label?: InputMaybe<Scalars["String"]["input"]>;
+  ordinalNumber?: InputMaybe<Scalars["Int"]["input"]>;
+  weekdayAbbr?: InputMaybe<Scalars["String"]["input"]>;
+  weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
+  weekdayName?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type WeekdaysStddevFields = {
+  __typename?: "WeekdaysStddevFields";
+  ordinalNumber?: Maybe<Scalars["Float"]["output"]>;
+  weekdayId?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** aggregate stddevPop on columns */
+export type WeekdaysStddevPopFields = {
+  __typename?: "WeekdaysStddevPopFields";
+  ordinalNumber?: Maybe<Scalars["Float"]["output"]>;
+  weekdayId?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** aggregate stddevSamp on columns */
+export type WeekdaysStddevSampFields = {
+  __typename?: "WeekdaysStddevSampFields";
+  ordinalNumber?: Maybe<Scalars["Float"]["output"]>;
+  weekdayId?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** Streaming cursor of the table "weekdays" */
+export type WeekdaysStreamCursorInput = {
+  /** Stream column input with initial value */
+  initialValue: WeekdaysStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type WeekdaysStreamCursorValueInput = {
+  label?: InputMaybe<Scalars["String"]["input"]>;
+  ordinalNumber?: InputMaybe<Scalars["Int"]["input"]>;
+  weekdayAbbr?: InputMaybe<Scalars["String"]["input"]>;
+  weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
+  weekdayName?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type WeekdaysSumFields = {
+  __typename?: "WeekdaysSumFields";
+  ordinalNumber?: Maybe<Scalars["Int"]["output"]>;
+  weekdayId?: Maybe<Scalars["bigint"]["output"]>;
+};
+
+/** update columns of table "weekdays" */
+export enum WeekdaysUpdateColumn {
+  /** column name */
+  Label = "label",
+  /** column name */
+  OrdinalNumber = "ordinalNumber",
+  /** column name */
+  WeekdayAbbr = "weekdayAbbr",
+  /** column name */
+  WeekdayId = "weekdayId",
+  /** column name */
+  WeekdayName = "weekdayName",
+}
+
+export type WeekdaysUpdates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<WeekdaysIncInput>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<WeekdaysSetInput>;
+  /** filter the rows which have to be updated */
+  where: WeekdaysBoolExp;
+};
+
+/** aggregate varPop on columns */
+export type WeekdaysVarPopFields = {
+  __typename?: "WeekdaysVarPopFields";
+  ordinalNumber?: Maybe<Scalars["Float"]["output"]>;
+  weekdayId?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** aggregate varSamp on columns */
+export type WeekdaysVarSampFields = {
+  __typename?: "WeekdaysVarSampFields";
+  ordinalNumber?: Maybe<Scalars["Float"]["output"]>;
+  weekdayId?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** aggregate variance on columns */
+export type WeekdaysVarianceFields = {
+  __typename?: "WeekdaysVarianceFields";
+  ordinalNumber?: Maybe<Scalars["Float"]["output"]>;
+  weekdayId?: Maybe<Scalars["Float"]["output"]>;
+};
+
 export type _Service = {
   __typename?: "_Service";
   sdl: Scalars["String"]["output"];
@@ -9489,6 +9839,10 @@ export type Mutation_Root = {
   deleteUsers?: Maybe<UsersMutationResponse>;
   /** delete single row from the table: "users" */
   deleteUsersByPk?: Maybe<Users>;
+  /** delete data from the table: "weekdays" */
+  deleteWeekdays?: Maybe<WeekdaysMutationResponse>;
+  /** delete single row from the table: "weekdays" */
+  deleteWeekdaysByPk?: Maybe<Weekdays>;
   generateSubcategories?: Maybe<Array<Maybe<SubcategoryType>>>;
   /** insert data into the table: "award" */
   insertAward?: Maybe<AwardMutationResponse>;
@@ -9566,6 +9920,10 @@ export type Mutation_Root = {
   insertUsers?: Maybe<UsersMutationResponse>;
   /** insert a single row into the table: "users" */
   insertUsersOne?: Maybe<Users>;
+  /** insert data into the table: "weekdays" */
+  insertWeekdays?: Maybe<WeekdaysMutationResponse>;
+  /** insert a single row into the table: "weekdays" */
+  insertWeekdaysOne?: Maybe<Weekdays>;
   /** update data of the table: "award" */
   updateAward?: Maybe<AwardMutationResponse>;
   /** update single row of the table: "award" */
@@ -9684,6 +10042,12 @@ export type Mutation_Root = {
   updateUsersByPk?: Maybe<Users>;
   /** update multiples rows of table: "users" */
   updateUsersMany?: Maybe<Array<Maybe<UsersMutationResponse>>>;
+  /** update data of the table: "weekdays" */
+  updateWeekdays?: Maybe<WeekdaysMutationResponse>;
+  /** update single row of the table: "weekdays" */
+  updateWeekdaysByPk?: Maybe<Weekdays>;
+  /** update multiples rows of table: "weekdays" */
+  updateWeekdaysMany?: Maybe<Array<Maybe<WeekdaysMutationResponse>>>;
 };
 
 /** mutation root */
@@ -9705,6 +10069,7 @@ export type Mutation_RootAddAwardToEditionArgs = {
 /** mutation root */
 export type Mutation_RootAddBonusMutationArgs = {
   awardId: Scalars["Int"]["input"];
+  checkDates?: InputMaybe<Scalars["Boolean"]["input"]>;
   chestHistoryId: Scalars["Int"]["input"];
 };
 
@@ -9751,7 +10116,7 @@ export type Mutation_RootAddGroupArgs = {
   label?: InputMaybe<Scalars["String"]["input"]>;
   startTime: Scalars["String"]["input"];
   teacherId: Scalars["Int"]["input"];
-  weekday: Scalars["String"]["input"];
+  weekdayId: Scalars["Int"]["input"];
 };
 
 /** mutation root */
@@ -9765,6 +10130,7 @@ export type Mutation_RootAddLevelArgs = {
 
 /** mutation root */
 export type Mutation_RootAddPointsMutationArgs = {
+  checkDates?: InputMaybe<Scalars["Boolean"]["input"]>;
   studentId: Scalars["Int"]["input"];
   subcategoryId: Scalars["Int"]["input"];
   teacherId: Scalars["Int"]["input"];
@@ -10015,6 +10381,16 @@ export type Mutation_RootDeleteUsersByPkArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootDeleteWeekdaysArgs = {
+  where: WeekdaysBoolExp;
+};
+
+/** mutation root */
+export type Mutation_RootDeleteWeekdaysByPkArgs = {
+  weekdayId: Scalars["bigint"]["input"];
+};
+
+/** mutation root */
 export type Mutation_RootGenerateSubcategoriesArgs = {
   categoryId: Scalars["Int"]["input"];
   editionId: Scalars["Int"]["input"];
@@ -10249,6 +10625,18 @@ export type Mutation_RootInsertUsersArgs = {
 export type Mutation_RootInsertUsersOneArgs = {
   object: UsersInsertInput;
   onConflict?: InputMaybe<UsersOnConflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsertWeekdaysArgs = {
+  objects: Array<WeekdaysInsertInput>;
+  onConflict?: InputMaybe<WeekdaysOnConflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsertWeekdaysOneArgs = {
+  object: WeekdaysInsertInput;
+  onConflict?: InputMaybe<WeekdaysOnConflict>;
 };
 
 /** mutation root */
@@ -10612,6 +11000,25 @@ export type Mutation_RootUpdateUsersManyArgs = {
   updates: Array<UsersUpdates>;
 };
 
+/** mutation root */
+export type Mutation_RootUpdateWeekdaysArgs = {
+  _inc?: InputMaybe<WeekdaysIncInput>;
+  _set?: InputMaybe<WeekdaysSetInput>;
+  where: WeekdaysBoolExp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdateWeekdaysByPkArgs = {
+  _inc?: InputMaybe<WeekdaysIncInput>;
+  _set?: InputMaybe<WeekdaysSetInput>;
+  pkColumns: WeekdaysPkColumnsInput;
+};
+
+/** mutation root */
+export type Mutation_RootUpdateWeekdaysManyArgs = {
+  updates: Array<WeekdaysUpdates>;
+};
+
 export type PointsAggregateBoolExpAvg = {
   arguments: PointsSelectColumnPointsAggregateBoolExpAvgArgumentsColumns;
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -10827,10 +11234,10 @@ export type Query_Root = {
   flywaySchemaHistoryAggregate: FlywaySchemaHistoryAggregate;
   /** fetch data from the table: "flyway_schema_history" using primary key columns */
   flywaySchemaHistoryByPk?: Maybe<FlywaySchemaHistory>;
-  getNeighbouringLevels: NeighbouringLevelsType;
+  getNeighboringLevels: NeighboringLevelsType;
   getPossibleGroupDates: Array<GroupDateType>;
   getPossibleGroupsTimeSpans: Array<TimeSpansType>;
-  getPossibleGroupsWeekdays: Array<Scalars["String"]["output"]>;
+  getPossibleGroupsWeekdays: Array<WeekdayType>;
   getStudentPoints: StudentPointsType;
   getSumOfPointsForStudentByCategory: Array<CategoryPointsSumType>;
   getUsersInGroupWithPoints: Array<Maybe<UserPointsType>>;
@@ -10886,6 +11293,12 @@ export type Query_Root = {
   usersAggregate: UsersAggregate;
   /** fetch data from the table: "users" using primary key columns */
   usersByPk?: Maybe<Users>;
+  /** fetch data from the table: "weekdays" */
+  weekdays: Array<Weekdays>;
+  /** fetch aggregated fields from the table: "weekdays" */
+  weekdaysAggregate: WeekdaysAggregate;
+  /** fetch data from the table: "weekdays" using primary key columns */
+  weekdaysByPk?: Maybe<Weekdays>;
 };
 
 export type Query_RootAwardArgs = {
@@ -11110,7 +11523,7 @@ export type Query_RootFlywaySchemaHistoryByPkArgs = {
   installedRank: Scalars["Int"]["input"];
 };
 
-export type Query_RootGetNeighbouringLevelsArgs = {
+export type Query_RootGetNeighboringLevelsArgs = {
   editionId: Scalars["Int"]["input"];
   studentId: Scalars["Int"]["input"];
 };
@@ -11317,6 +11730,26 @@ export type Query_RootUsersAggregateArgs = {
 
 export type Query_RootUsersByPkArgs = {
   userId: Scalars["bigint"]["input"];
+};
+
+export type Query_RootWeekdaysArgs = {
+  distinctOn?: InputMaybe<Array<WeekdaysSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<WeekdaysOrderBy>>;
+  where?: InputMaybe<WeekdaysBoolExp>;
+};
+
+export type Query_RootWeekdaysAggregateArgs = {
+  distinctOn?: InputMaybe<Array<WeekdaysSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<WeekdaysOrderBy>>;
+  where?: InputMaybe<WeekdaysBoolExp>;
+};
+
+export type Query_RootWeekdaysByPkArgs = {
+  weekdayId: Scalars["bigint"]["input"];
 };
 
 export type SubcategoriesAggregateBoolExpAvg = {
@@ -11552,6 +11985,14 @@ export type Subscription_Root = {
   usersByPk?: Maybe<Users>;
   /** fetch data from the table in a streaming manner: "users" */
   usersStream: Array<Users>;
+  /** fetch data from the table: "weekdays" */
+  weekdays: Array<Weekdays>;
+  /** fetch aggregated fields from the table: "weekdays" */
+  weekdaysAggregate: WeekdaysAggregate;
+  /** fetch data from the table: "weekdays" using primary key columns */
+  weekdaysByPk?: Maybe<Weekdays>;
+  /** fetch data from the table in a streaming manner: "weekdays" */
+  weekdaysStream: Array<Weekdays>;
 };
 
 export type Subscription_RootAwardArgs = {
@@ -12072,6 +12513,32 @@ export type Subscription_RootUsersStreamArgs = {
   batchSize: Scalars["Int"]["input"];
   cursor: Array<InputMaybe<UsersStreamCursorInput>>;
   where?: InputMaybe<UsersBoolExp>;
+};
+
+export type Subscription_RootWeekdaysArgs = {
+  distinctOn?: InputMaybe<Array<WeekdaysSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<WeekdaysOrderBy>>;
+  where?: InputMaybe<WeekdaysBoolExp>;
+};
+
+export type Subscription_RootWeekdaysAggregateArgs = {
+  distinctOn?: InputMaybe<Array<WeekdaysSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<WeekdaysOrderBy>>;
+  where?: InputMaybe<WeekdaysBoolExp>;
+};
+
+export type Subscription_RootWeekdaysByPkArgs = {
+  weekdayId: Scalars["bigint"]["input"];
+};
+
+export type Subscription_RootWeekdaysStreamArgs = {
+  batchSize: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<WeekdaysStreamCursorInput>>;
+  where?: InputMaybe<WeekdaysBoolExp>;
 };
 
 export type UserGroupsAggregateBoolExpCount = {

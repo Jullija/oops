@@ -23,9 +23,9 @@ export const useAnimalData = (
     },
   });
 
-  const previousLevel = data?.getNeighbouringLevels.previousLevel ?? undefined;
-  const currLevel = data?.getNeighbouringLevels.currentLevel ?? undefined;
-  const nextLevel = data?.getNeighbouringLevels.nextLevel ?? undefined;
+  const prevLevel = data?.getNeighboringLevels.prevLevel ?? undefined;
+  const currLevel = data?.getNeighboringLevels.currLevel ?? undefined;
+  const nextLevel = data?.getNeighboringLevels.nextLevel ?? undefined;
 
   if (!currLevel) {
     return {
@@ -39,7 +39,7 @@ export const useAnimalData = (
   }
 
   return {
-    prevLevel: previousLevel,
+    prevLevel,
     currLevel,
     nextLevel,
     animalDataLoading: loading,

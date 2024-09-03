@@ -1,37 +1,22 @@
 package backend.graphql
 
-import backend.award.AwardRepository
-import backend.award.AwardType
-import backend.bonuses.Bonuses
-import backend.bonuses.BonusesRepository
-import backend.categories.Categories
 import backend.categories.CategoriesRepository
 import backend.chests.Chests
 import backend.chests.ChestsRepository
 import backend.edition.EditionRepository
-import backend.files.FileEntity
 import backend.files.FileEntityRepository
 import backend.groups.GroupsRepository
-import backend.points.Points
 import backend.points.PointsRepository
-import backend.subcategories.Subcategories
 import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
-import backend.users.Users
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
-import com.netflix.graphql.dgs.DgsQuery
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
-import java.sql.Time
 
 @DgsComponent
 class ChestsDataFetcher {
-
-    @Autowired
-    private lateinit var bonusesRepository: BonusesRepository
-
     @Autowired
     lateinit var usersRepository: UsersRepository
 
@@ -62,6 +47,10 @@ class ChestsDataFetcher {
     @DgsMutation
     @Transactional
     fun assignPhotoToChest(@InputArgument chestId: Long, @InputArgument fileId: Long?): Boolean {
+        val chest = chestsRepository.findById(chestId).orElseThrow { IllegalArgumentException("Invalid chest ID") }
+        if (chest.edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
         return photoAssigner.assignPhotoToAssignee(chestsRepository, "image/chest", chestId, fileId)
     }
 
@@ -71,6 +60,9 @@ class ChestsDataFetcher {
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
         if (chestsRepository.existsByChestTypeAndEdition(chestType, edition)) {
             throw IllegalArgumentException("Chest with type $chestType already exists for edition ${edition.editionId}")
+        }
+        if (edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
         }
         val chest = Chests(
             chestType = chestType,

@@ -33,11 +33,15 @@ class AwardEditionDataFetcher {
     @DgsMutation
     @Transactional
     fun addAwardToEdition(@InputArgument awardId: Long, @InputArgument editionId: Long): AwardEdition {
-        val award = awardRepository.findById(awardId).orElseThrow { throw Exception("Award not found") }
-        val edition = editionRepository.findById(editionId).orElseThrow { throw Exception("Edition not found") }
+        val award = awardRepository.findById(awardId).orElseThrow { throw IllegalArgumentException("Award not found") }
+        val edition = editionRepository.findById(editionId).orElseThrow { throw IllegalArgumentException("Edition not found") }
+
+        if (edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
 
         if (awardEditionRepository.existsByAward_AwardNameAndEdition(award.awardName, edition)){
-            throw Exception("Award with this name already exists in this edition")
+            throw IllegalArgumentException("Award with this name already exists in this edition")
         }
 
         val awardEdition = AwardEdition(

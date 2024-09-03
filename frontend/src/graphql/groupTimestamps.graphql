@@ -1,0 +1,6 @@
+query groupTimestamps($editionId: Int!) {
+  getPossibleGroupsTimeSpans(editionId: $editionId) {
+    endTime
+    startTime
+  }
+}

@@ -11,6 +11,18 @@ object_relationships:
   - name: user
     using:
       foreign_key_constraint_on: teacher_id
+  - name: userByTeacherId
+    using:
+      manual_configuration:
+        column_mapping:
+          teacher_id: user_id
+        insertion_order: null
+        remote_table:
+          name: users
+          schema: public
+  - name: weekday
+    using:
+      foreign_key_constraint_on: weekday_id
 array_relationships:
   - name: userGroups
     using:
@@ -19,21 +31,6 @@ array_relationships:
         table:
           name: user_groups
           schema: public
-insert_permissions:
-  - role: coordinator
-    permission:
-      check: {}
-      set:
-        label: '""'
-      columns:
-        - edition_id
-        - end_time
-        - group_name
-        - image_file_id
-        - label
-        - start_time
-        - weekday
-    comment: ""
 select_permissions:
   - role: coordinator
     permission:
@@ -45,7 +42,8 @@ select_permissions:
         - image_file_id
         - label
         - start_time
-        - weekday
+        - teacher_id
+        - weekday_id
       filter: {}
       allow_aggregations: true
     comment: ""
@@ -59,7 +57,8 @@ select_permissions:
         - image_file_id
         - label
         - start_time
-        - weekday
+        - teacher_id
+        - weekday_id
       filter:
         edition:
           groups:
@@ -77,7 +76,8 @@ select_permissions:
         - image_file_id
         - label
         - start_time
-        - weekday
+        - teacher_id
+        - weekday_id
       filter:
         edition:
           groups:
@@ -91,12 +91,20 @@ update_permissions:
       columns:
         - end_time
         - group_name
-        - image_file_id
         - label
         - start_time
-        - weekday
-      filter: {}
-      check: {}
+        - teacher_id
+        - weekday_id
+      filter:
+        _not:
+          edition:
+            end_date:
+              _lte: now()
+      check:
+        _not:
+          edition:
+            end_date:
+              _lte: now()
       set:
         label: '""'
     comment: ""
@@ -105,7 +113,7 @@ delete_permissions:
     permission:
       filter:
         _not:
-          userGroups:
-            group_id:
-              _is_null: false
+          edition:
+            start_date:
+              _lte: now()
     comment: ""

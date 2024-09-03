@@ -30,21 +30,6 @@ array_relationships:
         table:
           name: chest_award
           schema: public
-insert_permissions:
-  - role: coordinator
-    permission:
-      check: {}
-      set:
-        label: '""'
-      columns:
-        - award_name
-        - award_type
-        - award_value
-        - category_id
-        - image_file_id
-        - label
-        - max_usages
-    comment: ""
 select_permissions:
   - role: coordinator
     permission:
@@ -111,7 +96,12 @@ update_permissions:
         - image_file_id
         - label
         - max_usages
-      filter: {}
+      filter:
+        _not:
+          awardEditions:
+            edition:
+              start_date:
+                _lte: now()
       check: {}
       set:
         label: '""'
@@ -120,8 +110,14 @@ delete_permissions:
   - role: coordinator
     permission:
       filter:
-        _not:
-          bonuses:
-            bonus_id:
-              _is_null: false
+        _and:
+          - _not:
+              bonuses:
+                bonus_id:
+                  _is_null: false
+          - _not:
+              awardEditions:
+                edition:
+                  start_date:
+                    _lte: now()
     comment: ""

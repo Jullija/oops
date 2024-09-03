@@ -1,4 +1,16 @@
-import { styles } from "./inputs.styles";
+import { Styles } from "../../utils/Styles";
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 2,
+    flex: 1,
+  },
+  input: {
+    flex: 1,
+  },
+};
 
 type TextInputProps = {
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -22,9 +34,10 @@ export const TextInput = ({
   placeholder,
 }: TextInputProps) => {
   return (
-    <div>
+    <div style={styles.container}>
       <label>{label}</label>
       <input
+        style={styles.input}
         name={name}
         type="text"
         onChange={handleChange}

@@ -1,6 +1,6 @@
 query neighboringLevels($editionId: Int!, $studentId: Int!) {
-  getNeighbouringLevels(editionId: $editionId, studentId: $studentId) {
-    currentLevel {
+  getNeighboringLevels(editionId: $editionId, studentId: $studentId) {
+    currLevel {
       highest
       levelId
       levelName
@@ -13,7 +13,9 @@ query neighboringLevels($editionId: Int!, $studentId: Int!) {
         editionId
         editionName
         editionYear
+        endDate
         label
+        startDate
       }
       imageFile {
         fileId
@@ -36,7 +38,9 @@ query neighboringLevels($editionId: Int!, $studentId: Int!) {
         editionId
         editionName
         editionYear
+        endDate
         label
+        startDate
       }
       imageFile {
         fileId
@@ -46,7 +50,7 @@ query neighboringLevels($editionId: Int!, $studentId: Int!) {
         pathToFile
       }
     }
-    previousLevel {
+    prevLevel {
       highest
       levelId
       levelName
@@ -59,7 +63,9 @@ query neighboringLevels($editionId: Int!, $studentId: Int!) {
         editionId
         editionName
         editionYear
+        endDate
         label
+        startDate
       }
       imageFile {
         fileId

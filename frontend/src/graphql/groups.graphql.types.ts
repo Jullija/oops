@@ -16,8 +16,12 @@ export type GroupsQuery = {
       groupName: string;
       groupsId: string;
       startTime: string;
-      weekday: string;
       endTime: string;
+      weekday: {
+        __typename?: "Weekdays";
+        weekdayId: string;
+        weekdayName: string;
+      };
       userGroups: Array<{
         __typename?: "UserGroups";
         user: {
@@ -38,7 +42,10 @@ export const GroupsDocument = gql`
         groupName
         groupsId
         startTime
-        weekday
+        weekday {
+          weekdayId
+          weekdayName
+        }
         endTime
         userGroups(
           where: { user: { role: { _in: ["teacher", "coordinator"] } } }

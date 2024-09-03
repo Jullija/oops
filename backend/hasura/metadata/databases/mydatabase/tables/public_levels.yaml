@@ -78,15 +78,18 @@ update_permissions:
     permission:
       columns:
         - grade
-        - highest
-        - image_file_id
         - label
-        - maximum_points
-        - minimum_points
         - name
-        - ordinal_number
-      filter: {}
-      check: {}
+      filter:
+        _not:
+          edition:
+            start_date:
+              _lte: now()
+      check:
+        _not:
+          edition:
+            start_date:
+              _lte: now()
       set:
         label: '""'
     comment: ""
@@ -94,9 +97,13 @@ delete_permissions:
   - role: coordinator
     permission:
       filter:
-        _not:
-          edition:
-            groups:
-              groups_id:
-                _is_null: false
+        _and:
+          - _not:
+              userLevels:
+                user_level_id:
+                  _is_null: false
+          - _not:
+              edition:
+                start_date:
+                  _lte: now()
     comment: ""

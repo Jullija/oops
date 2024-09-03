@@ -1,32 +1,32 @@
 -- Add new columns to existing tables
 ALTER TABLE categories
-    ADD COLUMN label VARCHAR(256) NOT NULL;
+    ADD COLUMN label VARCHAR(256) NOT NULL DEFAULT '';
 
 ALTER TABLE chests
-    ADD COLUMN label VARCHAR(256) NOT NULL;
+    ADD COLUMN label VARCHAR(256) NOT NULL DEFAULT '';
 
 ALTER TABLE levels
     ADD COLUMN grade DOUBLE PRECISION NOT NULL,
-    ADD COLUMN label VARCHAR(256) NOT NULL;
+    ADD COLUMN label VARCHAR(256) NOT NULL DEFAULT '';
 
 ALTER TABLE points
-    ADD COLUMN label VARCHAR(256) NOT NULL;
+    ADD COLUMN label VARCHAR(256) NOT NULL DEFAULT '';
 
 ALTER TABLE subcategories
-    ADD COLUMN label VARCHAR(256) NOT NULL;
+    ADD COLUMN label VARCHAR(256) NOT NULL DEFAULT '';
 
 ALTER TABLE users
     ADD COLUMN index_number INT NOT NULL,
     ADD COLUMN first_name VARCHAR(255) NOT NULL,
     ADD COLUMN second_name VARCHAR(255) NOT NULL,
-    ADD COLUMN label VARCHAR(256) NOT NULL;
+    ADD COLUMN label VARCHAR(256) NOT NULL DEFAULT '';
 
 -- Create new table awards
 CREATE TABLE award (
                        award_id SERIAL PRIMARY KEY,
                        award_name VARCHAR(255) NOT NULL,
                        award_type VARCHAR(255) NOT NULL,
-                       label VARCHAR(256) NOT NULL
+                       label VARCHAR(256) NOT NULL DEFAULT ''
 );
 
 -- Alter existing table chest_award to include reference to award
@@ -48,7 +48,7 @@ ADD COLUMN updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
 -- Add column to chest_history for label
 ALTER TABLE chest_history
-    ADD COLUMN label VARCHAR(256) NOT NULL;
+    ADD COLUMN label VARCHAR(256) NOT NULL DEFAULT '';
 
 -- Add timestamps to chest_history table
 ALTER TABLE chest_history

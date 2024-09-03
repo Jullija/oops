@@ -4,8 +4,8 @@ import backend.edition.Edition
 import backend.files.FileEntity
 import backend.userGroups.UserGroups
 import backend.users.Users
-import backend.users.WeekdayEnum
 import backend.utils.HasImageFile
+import backend.weekdays.Weekdays
 import jakarta.persistence.*
 import java.sql.Time
 
@@ -30,9 +30,9 @@ class Groups(
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
     val userGroups: Set<UserGroups> = HashSet(),
 
-    @Column(name = "weekday", nullable = false)
-    @Convert(converter = WeekdayConverter::class)
-    var weekday: WeekdayEnum,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "weekday_id", nullable = false)
+    var weekday: Weekdays,
 
     @Column(name = "start_time", nullable = false)
     var startTime: Time,
@@ -51,7 +51,7 @@ class Groups(
     constructor() : this(
         groupName = "",
         label = "",
-        weekday = WeekdayEnum.MONDAY,
+        weekday = Weekdays(),
         startTime = Time(0),
         endTime = Time(0),
         edition = Edition()

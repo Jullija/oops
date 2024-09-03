@@ -1,11 +1,16 @@
 type Mutation {
-  addBonusMutation(chestHistoryId: Int!, awardId: Int!): AddBonusReturnType
+  addBonusMutation(
+    chestHistoryId: Int!
+    awardId: Int!
+    checkDates: Boolean = true
+  ): AddBonusReturnType
 
   addPointsMutation(
     studentId: Int!
     teacherId: Int!
     value: Float!
     subcategoryId: Int!
+    checkDates: Boolean = true
   ): PointType
   assignPhotosToGroups(editionId: Int!): Boolean
   assignPhotoToUser(userId: Int!, fileId: Int): Boolean
@@ -49,7 +54,7 @@ type Mutation {
   addGroup(
     editionId: Int!
     groupName: String!
-    weekday: String!
+    weekdayId: Int!
     startTime: String!
     endTime: String!
     teacherId: Int!
@@ -87,13 +92,10 @@ type Query {
     studentId: Int!
     editionId: Int!
   ): [CategoryPointsSumType!]!
-  getPossibleGroupsWeekdays(editionId: Int!): [String!]!
+  getPossibleGroupsWeekdays(editionId: Int!): [WeekdayType!]!
   getPossibleGroupsTimeSpans(editionId: Int!): [TimeSpansType!]!
   getPossibleGroupDates(editionId: Int!): [GroupDateType!]!
-  getNeighbouringLevels(
-    studentId: Int!
-    editionId: Int!
-  ): NeighbouringLevelsType!
+  getNeighboringLevels(studentId: Int!, editionId: Int!): NeighboringLevelsType!
 }
 
 type AwardType {
@@ -171,6 +173,8 @@ type EditionType {
   editionId: ID!
   editionName: String!
   editionYear: Int!
+  startDate: String!
+  endDate: String!
   label: String!
 }
 
@@ -187,7 +191,7 @@ type GroupType {
   groupName: String!
   label: String
   teacher: UserType
-  weekday: String!
+  weekday: WeekdayType!
   startTime: String!
   endTime: String!
   imageFile: FileType
@@ -272,6 +276,14 @@ type UserType {
   userLevels: [UserLevelType]!
 }
 
+type WeekdayType {
+  weekdayId: ID!
+  weekdayName: String!
+  weekdayAbbr: String!
+  ordinalNumber: Int!
+  label: String!
+}
+
 enum UsersRolesType {
   STUDENT
   TEACHER
@@ -285,16 +297,6 @@ enum AwardTypeType {
   MULTIPLICATIVE
 }
 
-enum WeekdayType {
-  MONDAY
-  TUESDAY
-  WEDNESDAY
-  THURSDAY
-  FRIDAY
-  SATURDAY
-  SUNDAY
-}
-
 type CategoryPointsSumType {
   category: CategoryType!
   sumOfPurePoints: Float!
@@ -305,8 +307,8 @@ type CategoryPointsSumType {
 
 type StudentPointsType {
   user: UserType!
-  level: LevelType!
-  subcategoryPoints: [SubcategoryPointsType!]!
+  level: LevelType
+  subcategoryPoints: [SubcategoryPointsType]!
   sumOfPurePoints: Float!
   sumOfBonuses: Float!
   sumOfAll: Float!
@@ -356,13 +358,13 @@ type TimeSpansType {
 }
 
 type GroupDateType {
-  weekday: String!
+  weekday: WeekdayType!
   startTime: String!
   endTime: String!
 }
 
-type NeighbouringLevelsType {
-  previousLevel: LevelType
-  currentLevel: LevelType!
+type NeighboringLevelsType {
+  prevLevel: LevelType
+  currLevel: LevelType!
   nextLevel: LevelType
 }
