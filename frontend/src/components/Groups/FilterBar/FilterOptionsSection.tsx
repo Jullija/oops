@@ -59,13 +59,16 @@ export const FilterOptionsSection = ({
     <div style={styles.card}>
       <div style={styles.title}>{pickerTitle}</div>
       {options.map((option) => (
-        <div key={option.id} style={styles.optionContainer}>
+        <div
+          key={option.id}
+          style={styles.optionContainer}
+          onClick={() => handleOptionClick(option.id)}
+        >
           <div
             style={{
               ...styles.radio,
               ...(selectedIds.includes(option.id) ? styles.active : undefined),
             }}
-            onClick={() => handleOptionClick(option.id)}
           />
           <div>{option.name}</div>
         </div>
