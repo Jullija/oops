@@ -9,25 +9,23 @@ export type TeachersQueryVariables = Types.Exact<{
 
 export type TeachersQuery = {
   __typename?: "query_root";
-  users: Array<{
-    __typename?: "Users";
-    userId: string;
-    fullName?: string | null;
+  groups: Array<{
+    __typename?: "Groups";
+    userByTeacherId?: {
+      __typename?: "Users";
+      fullName?: string | null;
+      userId: string;
+    } | null;
   }>;
 };
 
 export const TeachersDocument = gql`
   query teachers($editionId: bigint!) {
-    users(
-      where: {
-        _and: {
-          role: { _in: ["teacher", "coordinator"] }
-          userGroups: { group: { editionId: { _eq: $editionId } } }
-        }
+    groups(where: { editionId: { _eq: $editionId } }) {
+      userByTeacherId {
+        fullName
+        userId
       }
-    ) {
-      userId
-      fullName
     }
   }
 `;

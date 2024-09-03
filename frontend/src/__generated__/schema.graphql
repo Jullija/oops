@@ -6636,6 +6636,11 @@ type Groups {
   user: Users
 
   """
+  An object relationship
+  """
+  userByTeacherId: Users
+
+  """
   An array relationship
   """
   userGroups(
@@ -6800,6 +6805,7 @@ input GroupsBoolExp {
   startTime: TimeComparisonExp
   teacherId: BigintComparisonExp
   user: UsersBoolExp
+  userByTeacherId: UsersBoolExp
   userGroups: UserGroupsBoolExp
   userGroupsAggregate: UserGroupsAggregateBoolExp
   weekday: WeekdaysBoolExp
@@ -6842,6 +6848,7 @@ input GroupsInsertInput {
   startTime: time
   teacherId: bigint
   user: UsersObjRelInsertInput
+  userByTeacherId: UsersObjRelInsertInput
   userGroups: UserGroupsArrRelInsertInput
   weekday: WeekdaysObjRelInsertInput
   weekdayId: bigint
@@ -6950,6 +6957,7 @@ input GroupsOrderBy {
   startTime: OrderBy
   teacherId: OrderBy
   user: UsersOrderBy
+  userByTeacherId: UsersOrderBy
   userGroupsAggregate: UserGroupsAggregateOrderBy
   weekday: WeekdaysOrderBy
   weekdayId: OrderBy

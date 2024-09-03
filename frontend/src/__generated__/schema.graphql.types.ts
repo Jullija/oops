@@ -4618,6 +4618,8 @@ export type Groups = {
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
   /** An object relationship */
   user?: Maybe<Users>;
+  /** An object relationship */
+  userByTeacherId?: Maybe<Users>;
   /** An array relationship */
   userGroups: Array<UserGroups>;
   /** An aggregate relationship */
@@ -4735,6 +4737,7 @@ export type GroupsBoolExp = {
   startTime?: InputMaybe<TimeComparisonExp>;
   teacherId?: InputMaybe<BigintComparisonExp>;
   user?: InputMaybe<UsersBoolExp>;
+  userByTeacherId?: InputMaybe<UsersBoolExp>;
   userGroups?: InputMaybe<UserGroupsBoolExp>;
   userGroupsAggregate?: InputMaybe<UserGroupsAggregateBoolExp>;
   weekday?: InputMaybe<WeekdaysBoolExp>;
@@ -4769,6 +4772,7 @@ export type GroupsInsertInput = {
   startTime?: InputMaybe<Scalars["time"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
   user?: InputMaybe<UsersObjRelInsertInput>;
+  userByTeacherId?: InputMaybe<UsersObjRelInsertInput>;
   userGroups?: InputMaybe<UserGroupsArrRelInsertInput>;
   weekday?: InputMaybe<WeekdaysObjRelInsertInput>;
   weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -4856,6 +4860,7 @@ export type GroupsOrderBy = {
   startTime?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
   user?: InputMaybe<UsersOrderBy>;
+  userByTeacherId?: InputMaybe<UsersOrderBy>;
   userGroupsAggregate?: InputMaybe<UserGroupsAggregateOrderBy>;
   weekday?: InputMaybe<WeekdaysOrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
