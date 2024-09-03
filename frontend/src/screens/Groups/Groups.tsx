@@ -82,7 +82,7 @@ export const Groups = () => {
       const doesInputMatch =
         input === "undefined" ||
         input === "" ||
-        isPartOfAString(input, [group.name, group.teacher.fullName]);
+        isPartOfAString(input, [group.name]);
 
       return (
         doesWeekdayMatch &&
