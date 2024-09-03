@@ -3,9 +3,7 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
     user {
       firstName
       indexNumber
-      label
       nick
-      role
       secondName
       imageFile {
         fileId
@@ -48,6 +46,8 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
             award {
               awardName
             }
+            createdAt
+            updatedAt
           }
         }
       }
