@@ -6,7 +6,6 @@ import {
   GroupRadioFilterItem,
   RadioFilterGroups,
 } from "../../components/Groups/RadioFilterGroup";
-import { useUser } from "../../hooks/common/useUser";
 import { StudentsListSearcher } from "../../components/Students/StudentsListSearcher";
 import {
   StudentList,
@@ -34,9 +33,8 @@ const styles: Styles = {
 };
 
 export const StudentsScreen = () => {
-  const { user } = useUser();
-  const teacherId = user.userId;
-  const { groups, students, loading, error } = useStudentsScreenData();
+  const { teacherId, groups, students, loading, error } =
+    useStudentsScreenData();
 
   const [input, setInput] = useState("");
   const [groupsIds, setGroupsIds] = useState<string[]>([]);
