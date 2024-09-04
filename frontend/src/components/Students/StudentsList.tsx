@@ -15,7 +15,8 @@ const styles: Styles = {
   },
 };
 
-export type StudentList = {
+// TODO name to clean up after group screen is ready
+export type StudentFromList = {
   id: string;
   avatarId?: string;
   firstName: string;
@@ -24,7 +25,7 @@ export type StudentList = {
 };
 
 type StudentsListProps = {
-  students: StudentList[];
+  students: StudentFromList[];
 };
 
 export const StudentsList = ({ students: groups }: StudentsListProps) => {

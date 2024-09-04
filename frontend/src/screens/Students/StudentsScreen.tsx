@@ -8,7 +8,7 @@ import {
 } from "../../components/Groups/RadioFilterGroup";
 import { StudentsListSearcher } from "../../components/Students/StudentsListSearcher";
 import {
-  StudentList,
+  StudentFromList,
   StudentsList,
 } from "../../components/Students/StudentsList";
 import { useStudentsScreenData } from "../../hooks/Students/useStudentsScreenData";
@@ -44,7 +44,7 @@ export const StudentsScreen = () => {
   });
 
   const doesGroupMatchRadioButtons = useCallback(
-    (student: StudentList) => {
+    (student: StudentFromList) => {
       switch (selectedOption.id) {
         case "all":
           return true;
@@ -58,7 +58,7 @@ export const StudentsScreen = () => {
   );
 
   const doesGroupMatchFiltersAndInput = useCallback(
-    (student: StudentList) => {
+    (student: StudentFromList) => {
       const doesGroupMatch =
         groupsIds.length === 0 || groupsIds.includes(student.group.id);
 

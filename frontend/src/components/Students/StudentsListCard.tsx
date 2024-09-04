@@ -1,6 +1,6 @@
 import { Styles } from "../../utils/Styles";
 import { Avatar } from "../Avatar";
-import { StudentList } from "./StudentsList";
+import { StudentFromList } from "./StudentsList";
 
 const styles: Styles = {
   container: {
@@ -33,7 +33,7 @@ const styles: Styles = {
 };
 
 type StudentsListCardProps = {
-  student: StudentList;
+  student: StudentFromList;
   onClick: () => void;
   withEditableRights: boolean;
 };

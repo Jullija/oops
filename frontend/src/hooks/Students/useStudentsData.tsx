@@ -1,4 +1,4 @@
-import { StudentList } from "../../components/Students/StudentsList";
+import { StudentFromList } from "../../components/Students/StudentsList";
 import { useStudentsQuery } from "../../graphql/students.graphql.types";
 
 export const useStudentsData = (editionId?: string) => {
@@ -11,7 +11,7 @@ export const useStudentsData = (editionId?: string) => {
     skip: !editionId,
   });
 
-  const students: StudentList[] =
+  const students: StudentFromList[] =
     studentsData?.users.map((item) => {
       const student = item.userGroups[0].user;
       const group = item.userGroups[0].group;
