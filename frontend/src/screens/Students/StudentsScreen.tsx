@@ -62,7 +62,7 @@ export const StudentsScreen = () => {
   const doesGroupMatchFiltersAndInput = useCallback(
     (student: StudentList) => {
       const doesGroupMatch =
-        groupsIds.length === 0 || groupsIds.includes(student.group.teacher.id);
+        groupsIds.length === 0 || groupsIds.includes(student.group.id);
 
       const doesInputMatch =
         input === "undefined" ||

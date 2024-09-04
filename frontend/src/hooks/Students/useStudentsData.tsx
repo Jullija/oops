@@ -18,6 +18,7 @@ export const useStudentsData = (editionId?: string) => {
       const teacher = group.userByTeacherId;
       return {
         id: student.userId,
+        avatarId: student.imageFileId ?? undefined,
         firstName: student.firstName,
         secondName: student.secondName,
         group: {

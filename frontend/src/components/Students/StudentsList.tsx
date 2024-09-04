@@ -17,6 +17,7 @@ const styles: Styles = {
 
 export type StudentList = {
   id: string;
+  avatarId?: string;
   firstName: string;
   secondName: string;
   group: Group;
@@ -31,7 +32,7 @@ export const StudentsList = ({ students: groups }: StudentsListProps) => {
   const user = useUser();
 
   return (
-    <div style={styles.groupsContainer}>
+    <div style={styles.studentsContainer}>
       {groups.map((student) => (
         <StudentsListCard
           key={student.id}
