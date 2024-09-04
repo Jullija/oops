@@ -1,17 +1,19 @@
 import { useCallback, useMemo, useState } from "react";
-import { GroupSearchField } from "../../components/Groups/GroupsList/GroupSearcher";
-import { GroupsList } from "../../components/Groups/GroupsList/GroupsList";
-import { useGroupsScreenData } from "../../hooks/Groups/useGroupsScreenData";
 import { SideFilterBar } from "../../components/Groups/FilterBar/SideFilterBar";
 import { Styles } from "../../utils/Styles";
 import { isPartOfAString } from "../../utils/strings";
-import { getTimestampUniqueString } from "../../hooks/Groups/FilterBar/useTimestampsData";
 import {
   GroupRadioFilterItem,
   RadioFilterGroups,
 } from "../../components/Groups/RadioFilterGroup";
 import { useUser } from "../../hooks/common/useUser";
-import { Group } from "../../hooks/common/useGroupsData";
+import { StudentsListSearcher } from "../../components/Students/StudentsListSearcher";
+import {
+  StudentList,
+  StudentsList,
+} from "../../components/Students/StudentsList";
+import { useStudentsScreenData } from "../../hooks/Students/useStudentsScreenData";
+import { groupsRadioButtonOptions } from "../../utils/constants";
 
 const styles: Styles = {
   container: {
@@ -31,78 +33,56 @@ const styles: Styles = {
   },
 };
 
-// TODO try to reuse it in hall of fame
-const radioButtonOptions: GroupRadioFilterItem[] = [
-  { id: "all", name: "wszystkie" },
-  { id: "yours", name: "twoje" },
-  { id: "foreign", name: "obce" },
-];
-
 export const StudentsScreen = () => {
   const { user } = useUser();
   const teacherId = user.userId;
-  const { groups, weekdays, teachers, timestamps, loading, error } =
-    useGroupsScreenData();
+  const { groups, students, loading, error } = useStudentsScreenData();
 
   const [input, setInput] = useState("");
-  const [weekdayIds, setWeekdayIds] = useState<string[]>([]);
-  const [teacherIds, setTeacherIds] = useState<string[]>([]);
-  const [timestampIds, setTimestampIds] = useState<string[]>([]);
+  const [groupsIds, setGroupsIds] = useState<string[]>([]);
   const [selectedOption, setSelectedOption] = useState<GroupRadioFilterItem>({
     id: "all",
     name: "wszystkie",
   });
 
   const doesGroupMatchRadioButtons = useCallback(
-    (group: Group) => {
+    (student: StudentList) => {
       switch (selectedOption.id) {
         case "all":
           return true;
         case "yours":
-          return group.teacher.id === teacherId;
+          return student.group.teacher.id === teacherId;
         case "foreign":
-          return group.teacher.id !== teacherId;
+          return student.group.teacher.id !== teacherId;
       }
     },
     [selectedOption.id, teacherId],
   );
 
   const doesGroupMatchFiltersAndInput = useCallback(
-    (group: Group) => {
-      const doesWeekdayMatch =
-        weekdayIds.length === 0 || weekdayIds.includes(group.weekday.id);
-
-      const doesTimestampMatch =
-        timestampIds.length === 0 ||
-        timestampIds.includes(getTimestampUniqueString(group.time));
-
-      const doesTeacherMatch =
-        teacherIds.length === 0 || teacherIds.includes(group.teacher.id);
+    (student: StudentList) => {
+      const doesGroupMatch =
+        groupsIds.length === 0 || groupsIds.includes(student.group.teacher.id);
 
       const doesInputMatch =
         input === "undefined" ||
         input === "" ||
-        isPartOfAString(input, [group.name]);
+        isPartOfAString(input, [`${student.firstName} ${student.secondName}`]);
 
-      return (
-        doesWeekdayMatch &&
-        doesTimestampMatch &&
-        doesTeacherMatch &&
-        doesInputMatch
-      );
+      return doesGroupMatch && doesInputMatch;
     },
-    [weekdayIds, input, timestampIds, teacherIds],
+    [groupsIds, input],
   );
 
   // never will be empty because of radio
-  const groupsWithFilterAndRadio = useMemo(
+  const studentsWithFilterAndRadio = useMemo(
     () =>
-      groups.filter(
-        (group) =>
-          doesGroupMatchFiltersAndInput(group) &&
-          doesGroupMatchRadioButtons(group),
+      students.filter(
+        (student) =>
+          doesGroupMatchFiltersAndInput(student) &&
+          doesGroupMatchRadioButtons(student),
       ),
-    [doesGroupMatchFiltersAndInput, doesGroupMatchRadioButtons, groups],
+    [doesGroupMatchFiltersAndInput, doesGroupMatchRadioButtons, students],
   );
 
   // TODO is it possible to reduce number of rerenders?
@@ -115,34 +95,24 @@ export const StudentsScreen = () => {
       <SideFilterBar
         sections={[
           {
-            pickerTitle: "Dzień Tygodnia",
-            options: weekdays,
-            onFiltersChange: (selectedIds) => setWeekdayIds(selectedIds),
-          },
-          {
-            pickerTitle: "Godzina",
-            options: timestamps,
-            onFiltersChange: (selectedIds) => setTimestampIds(selectedIds),
-          },
-          {
-            pickerTitle: "Prowadzący",
-            options: teachers,
-            onFiltersChange: (selectedIds) => setTeacherIds(selectedIds),
+            pickerTitle: "Grupa",
+            options: groups,
+            onFiltersChange: (selectedIds) => setGroupsIds(selectedIds),
           },
         ]}
       />
       <div style={styles.rightSide}>
         <div style={styles.topBar}>
-          <GroupSearchField
+          <StudentsListSearcher
             onInputChange={(input: string) => setInput(input)}
           />
           <RadioFilterGroups
-            options={radioButtonOptions}
+            options={groupsRadioButtonOptions}
             onOptionChange={(option) => setSelectedOption(option)}
             selectedOption={selectedOption}
           />
         </div>
-        <GroupsList groups={groupsWithFilterAndRadio} />
+        <StudentsList students={studentsWithFilterAndRadio} />
       </div>
     </div>
   );

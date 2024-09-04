@@ -5,10 +5,9 @@ query Students($editionId: bigint!) {
       userGroups: { group: { editionId: { _eq: $editionId } } }
     }
   ) {
-    userId
-    imageFileId
     userGroups {
       user {
+        userId
         firstName
         fullName
         indexNumber
@@ -25,6 +24,11 @@ query Students($editionId: bigint!) {
         editionId
         userByTeacherId {
           fullName
+          userId
+        }
+        weekday {
+          weekdayId
+          weekdayName
         }
       }
     }

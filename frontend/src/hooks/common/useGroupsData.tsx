@@ -1,5 +1,4 @@
 import { useGroupsQuery } from "../../graphql/groups.graphql.types";
-import { useEditionSelection } from "./useEditionSelection";
 
 export type Group = {
   name: string;
@@ -19,14 +18,14 @@ export type Timestamp = {
   end: string;
 };
 
-export const useGroupsData = () => {
-  const { selectedEdition } = useEditionSelection();
-
+// TODO change editionId?: to | undefined
+export const useGroupsData = (editionId: string | undefined) => {
   const { data, loading, error } = useGroupsQuery({
     variables: {
-      editionId: selectedEdition?.editionId as string,
+      // TODO thats the way how to handle undefined case!
+      editionId: editionId as string,
     },
-    skip: !selectedEdition,
+    skip: !editionId,
   });
 
   const groups: Group[] =
@@ -48,5 +47,5 @@ export const useGroupsData = () => {
       };
     }) ?? [];
 
-  return { groups, loading, error };
+  return { groups, groupsLoading: loading, groupsError: error };
 };

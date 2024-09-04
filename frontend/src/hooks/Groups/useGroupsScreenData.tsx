@@ -1,14 +1,15 @@
+import { useEditionSelection } from "../common/useEditionSelection";
 import { useGroupsData } from "../common/useGroupsData";
 import { useTeachersData } from "./FilterBar/useTeachersData";
 import { useTimestampsData } from "./FilterBar/useTimestampsData";
 import { useWeekdayData } from "./FilterBar/useWeekdaysData";
 
 export const useGroupsScreenData = () => {
-  const {
-    groups,
-    loading: groupsLoading,
-    error: groupsError,
-  } = useGroupsData();
+  // TODO export editionId
+  const { selectedEdition } = useEditionSelection();
+  const editionId = selectedEdition?.editionId;
+
+  const { groups, groupsLoading, groupsError } = useGroupsData(editionId);
 
   const {
     weekdays,
@@ -20,13 +21,13 @@ export const useGroupsScreenData = () => {
     teachers,
     loading: teachersLoading,
     error: teachersError,
-  } = useTeachersData();
+  } = useTeachersData(editionId);
 
   const {
     timestamps,
     loading: timestampsLoading,
     error: timestampsError,
-  } = useTimestampsData();
+  } = useTimestampsData(editionId);
 
   return {
     groups,

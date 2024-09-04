@@ -11,12 +11,11 @@ export type StudentsQuery = {
   __typename?: "query_root";
   users: Array<{
     __typename?: "Users";
-    userId: string;
-    imageFileId?: string | null;
     userGroups: Array<{
       __typename?: "UserGroups";
       user: {
         __typename?: "Users";
+        userId: string;
         firstName: string;
         fullName?: string | null;
         indexNumber: number;
@@ -35,7 +34,13 @@ export type StudentsQuery = {
         userByTeacherId?: {
           __typename?: "Users";
           fullName?: string | null;
+          userId: string;
         } | null;
+        weekday: {
+          __typename?: "Weekdays";
+          weekdayId: string;
+          weekdayName: string;
+        };
       };
     }>;
   }>;
@@ -49,10 +54,9 @@ export const StudentsDocument = gql`
         userGroups: { group: { editionId: { _eq: $editionId } } }
       }
     ) {
-      userId
-      imageFileId
       userGroups {
         user {
+          userId
           firstName
           fullName
           indexNumber
@@ -69,6 +73,11 @@ export const StudentsDocument = gql`
           editionId
           userByTeacherId {
             fullName
+            userId
+          }
+          weekday {
+            weekdayId
+            weekdayName
           }
         }
       }
