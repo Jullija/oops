@@ -1,0 +1,32 @@
+query Students($editionId: bigint!) {
+  users(
+    where: {
+      role: { _eq: "student" }
+      userGroups: { group: { editionId: { _eq: $editionId } } }
+    }
+  ) {
+    userId
+    imageFileId
+    userGroups {
+      user {
+        firstName
+        fullName
+        indexNumber
+        nick
+        imageFileId
+        secondName
+      }
+      group {
+        groupName
+        groupsId
+        startTime
+        teacherId
+        endTime
+        editionId
+        userByTeacherId {
+          fullName
+        }
+      }
+    }
+  }
+}

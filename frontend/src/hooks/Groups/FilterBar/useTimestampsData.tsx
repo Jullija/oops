@@ -1,7 +1,7 @@
 import { FilterItem } from "../../../components/Groups/FilterBar/FilterOptionsSection";
 import { useGroupTimestampsQuery } from "../../../graphql/groupTimestamps.graphql.types";
 import { useEditionSelection } from "../../common/useEditionSelection";
-import { Timestamp } from "../useGroupsData";
+import { Timestamp } from "../../common/useGroupsData";
 
 // assuming backend data is unique
 export const getTimestampUniqueString = (timestamp: Timestamp) => {

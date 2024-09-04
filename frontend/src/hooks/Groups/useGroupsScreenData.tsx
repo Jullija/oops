@@ -1,4 +1,4 @@
-import { useGroupsData } from "./useGroupsData";
+import { useGroupsData } from "../common/useGroupsData";
 import { useTeachersData } from "./FilterBar/useTeachersData";
 import { useTimestampsData } from "./FilterBar/useTimestampsData";
 import { useWeekdayData } from "./FilterBar/useWeekdaysData";

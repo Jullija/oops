@@ -11,7 +11,7 @@ import {
   RadioFilterGroups,
 } from "../../components/Groups/RadioFilterGroup";
 import { useUser } from "../../hooks/common/useUser";
-import { Group } from "../../hooks/Groups/useGroupsData";
+import { Group } from "../../hooks/common/useGroupsData";
 
 const styles: Styles = {
   container: {

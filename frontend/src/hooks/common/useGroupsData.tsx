@@ -1,5 +1,5 @@
 import { useGroupsQuery } from "../../graphql/groups.graphql.types";
-import { useEditionSelection } from "../common/useEditionSelection";
+import { useEditionSelection } from "./useEditionSelection";
 
 export type Group = {
   name: string;
@@ -41,8 +41,9 @@ export const useGroupsData = () => {
         time: { start: group.startTime, end: group.endTime },
         teacher: {
           // firstName and secondName is not nullable - hasura computes it so practically it will never be null
-          fullName: group.userGroups[0].user.fullName as string,
-          id: group.userGroups[0].user.userId,
+          // why userByTeacherId is null
+          fullName: group.userByTeacherId?.fullName as string,
+          id: group.userByTeacherId?.userId as string,
         },
       };
     }) ?? [];
