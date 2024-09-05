@@ -5,7 +5,11 @@ export type Group = {
   id: string;
   weekday: Weekday;
   time: Timestamp;
-  teacher: { fullName: string; id: string };
+  teacher: {
+    fullName: string;
+    id: string;
+  };
+  imageId?: string;
 };
 
 export type Weekday = {
@@ -44,6 +48,7 @@ export const useGroupsData = (editionId: string | undefined) => {
           fullName: group.userByTeacherId?.fullName as string,
           id: group.userByTeacherId?.userId as string,
         },
+        imageId: group.file?.fileId,
       };
     }) ?? [];
 
