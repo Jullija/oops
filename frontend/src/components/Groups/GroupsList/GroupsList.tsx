@@ -3,7 +3,7 @@ import { useUser } from "../../../hooks/common/useUser";
 import { pathsGenerator } from "../../../router/paths";
 import { Styles } from "../../../utils/Styles";
 import { GroupCard } from "./GroupCard";
-import { Group } from "../../../hooks/Groups/useGroupsData";
+import { Group } from "../../../hooks/common/useGroupsData";
 
 const styles: Styles = {
   groupsContainer: {

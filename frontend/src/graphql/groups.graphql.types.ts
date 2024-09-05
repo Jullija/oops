@@ -22,15 +22,13 @@ export type GroupsQuery = {
         weekdayId: string;
         weekdayName: string;
       };
-      userGroups: Array<{
-        __typename?: "UserGroups";
-        user: {
-          __typename?: "Users";
-          userId: string;
-          fullName?: string | null;
-          role: string;
-        };
-      }>;
+      userByTeacherId?: {
+        __typename?: "Users";
+        fullName?: string | null;
+        userId: string;
+        secondName: string;
+        firstName: string;
+      } | null;
     }>;
   } | null;
 };
@@ -47,14 +45,11 @@ export const GroupsDocument = gql`
           weekdayName
         }
         endTime
-        userGroups(
-          where: { user: { role: { _in: ["teacher", "coordinator"] } } }
-        ) {
-          user {
-            userId
-            fullName
-            role
-          }
+        userByTeacherId {
+          fullName
+          userId
+          secondName
+          firstName
         }
       }
     }

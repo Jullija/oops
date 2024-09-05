@@ -1,12 +1,10 @@
 import { FilterItem } from "../../../components/Groups/FilterBar/FilterOptionsSection";
 import { useTeachersQuery } from "../../../graphql/teachers.graphql.types";
-import { useEditionSelection } from "../../common/useEditionSelection";
 
-export const useTeachersData = () => {
-  const { selectedEdition } = useEditionSelection();
+export const useTeachersData = (editionId: string | undefined) => {
   const { data, loading, error } = useTeachersQuery({
-    variables: { editionId: selectedEdition?.editionId ?? "" },
-    skip: !selectedEdition?.editionId,
+    variables: { editionId: editionId as string },
+    skip: !editionId,
   });
 
   // TODO userByTeacherId - does it has to be nullable?
