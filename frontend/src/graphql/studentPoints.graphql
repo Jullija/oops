@@ -45,6 +45,9 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
           bonuses {
             award {
               awardName
+              imageFile {
+                fileId
+              }
             }
             points {
               createdAt

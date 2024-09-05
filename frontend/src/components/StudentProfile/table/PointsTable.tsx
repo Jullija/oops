@@ -1,17 +1,18 @@
-import { Styles } from "../../../utils/Styles";
+import {
+  createTheme,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  ThemeProvider,
+} from "@mui/material";
 import { Points } from "../../../hooks/StudentProfile/useStudentData";
-import { Cell } from "./Cell";
-
-const styles: Styles = {
-  table: {
-    width: 1000,
-    border: "1px solid blue",
-  },
-  row: {
-    display: "flex",
-    justifyContent: "space-between",
-  },
-};
+import { CategoryTag } from "./CategoryTag";
+import { Styles } from "../../../utils/Styles";
+import { AwardImg } from "../../images/AwardImg";
 
 type PointsTableProps = {
   points: Points[];
@@ -26,23 +27,36 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   second: "2-digit",
 };
 
-export default function PointsTable({ points }: PointsTableProps) {
-  const headerTitles = [
-    "nazwa",
-    "kategoria",
-    "punkty",
-    "max punktów",
-    "data",
-    "prowadzący",
-  ];
+type HeaderCellData = {
+  name: string;
+  align?: "center" | "left" | "right" | "justify" | "inherit" | undefined;
+};
 
+const headerTitles: HeaderCellData[] = [
+  { name: "nazwa", align: "center" },
+  { name: "bonusy", align: "center" },
+  { name: "kategoria", align: "center" },
+  { name: "punkty", align: "center" },
+  { name: "max punktów", align: "center" },
+  { name: "data", align: "center" },
+  { name: "prowadzący", align: "center" },
+];
+
+export const PointsTable = ({ points }: PointsTableProps) => {
   const getPointsString = (points: Points) => {
     const pure = points.points.purePoints?.value ?? 0;
     let totalBonus = 0;
     points.points.partialBonusType.forEach(
       (bonus) => (totalBonus += bonus?.partialValue ?? 0),
     );
-    return `${pure} + ${totalBonus} = ${pure + totalBonus}`;
+    if (totalBonus === 0 && pure === 0) {
+      return 0.0;
+    }
+    if (totalBonus === 0) {
+      return pure.toFixed(1);
+    }
+    // TODO must be a better way than tofixed
+    return `${pure.toFixed(1)} + ${totalBonus.toFixed(1)} = ${(pure + totalBonus).toFixed(1)}`;
   };
 
   const getDisplayDate = (points: Points): Date | undefined => {
@@ -71,25 +85,76 @@ export default function PointsTable({ points }: PointsTableProps) {
     return `${firstName} ${secondName}`;
   };
 
-  return (
-    <div style={styles.table}>
-      <div style={styles.row}>
-        {headerTitles.map((header, index) => (
-          <Cell key={index}>{header}</Cell>
-        ))}
+  const getAwardsPhotos = (points: Points) => {
+    const bonuses = points.points.partialBonusType;
+
+    return bonuses.length === 0 ? (
+      "---"
+    ) : (
+      <div style={styles.awardsContainer}>
+        {bonuses.map((bonus) => {
+          return (
+            <AwardImg id={bonus?.bonuses.award.imageFile?.fileId} size="s" />
+          );
+        })}
       </div>
-      {points.map((item, index) => (
-        <div key={index} style={styles.row}>
-          <Cell>{item.subcategory.subcategoryName}</Cell>
-          <Cell>{item.subcategory.category.categoryName}</Cell>
-          <Cell>{getPointsString(item)}</Cell>
-          <Cell>{item.subcategory.maxPoints}</Cell>
-          <Cell>
-            {getDisplayDate(item)?.toLocaleDateString("pl-PL", dateOptions)}
-          </Cell>
-          <Cell>{getTeacherDisplayName(item)}</Cell>
-        </div>
-      ))}
-    </div>
+    );
+  };
+
+  const darkTheme = createTheme({
+    palette: {
+      mode: "dark",
+    },
+  });
+
+  return (
+    <ThemeProvider theme={darkTheme}>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {headerTitles.map((header) => (
+                <TableCell
+                  style={{ fontWeight: "bold", fontSize: 16 }}
+                  align={header.align}
+                >
+                  {header.name}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {points.map((p, index) => (
+              <TableRow key={index}>
+                <TableCell align="center">
+                  {p.subcategory.subcategoryName}
+                </TableCell>
+                <TableCell align="center">{getAwardsPhotos(p)}</TableCell>
+                <TableCell align="center">
+                  <CategoryTag
+                    id={p.subcategory.category.categoryId}
+                    name={p.subcategory.category.categoryName}
+                  />
+                </TableCell>
+                <TableCell align="center">{getPointsString(p)}</TableCell>
+                <TableCell align="center">{p.subcategory.maxPoints}</TableCell>
+                <TableCell align="center">
+                  {getDisplayDate(p)?.toLocaleDateString("pl-PL", dateOptions)}
+                </TableCell>
+                <TableCell align="center">{getTeacherDisplayName(p)}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </ThemeProvider>
   );
-}
+};
+
+const styles: Styles = {
+  awardsContainer: {
+    display: "flex",
+    justifyContent: "center",
+    gap: 8,
+  },
+};

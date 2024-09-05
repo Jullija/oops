@@ -1,6 +1,6 @@
 import { Styles } from "../../../../utils/Styles";
 import { PointsBar } from "../../../PointsBar";
-import { Avatar } from "../../../Avatar";
+import { Avatar } from "../../../images/Avatar";
 import { LevelMiniature } from "./LevelMiniature";
 import { LevelType } from "../../../../__generated__/schema.graphql.types";
 

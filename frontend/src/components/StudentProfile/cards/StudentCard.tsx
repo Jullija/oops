@@ -1,6 +1,6 @@
 import { Styles } from "../../../utils/Styles";
 import { StudentCardData } from "../../../hooks/StudentProfile/useStudentData";
-import { Avatar } from "../../Avatar";
+import { Avatar } from "../../images/Avatar";
 
 const styles: Styles = {
   container: {

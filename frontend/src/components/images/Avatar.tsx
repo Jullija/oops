@@ -1,5 +1,5 @@
-import { FILES_URL } from "../utils/constants";
-import { Styles } from "../utils/Styles";
+import { FILES_URL } from "../../utils/constants";
+import { Styles } from "../../utils/Styles";
 
 const styles: Styles = {
   img: {

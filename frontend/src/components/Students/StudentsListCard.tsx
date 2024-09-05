@@ -1,5 +1,5 @@
 import { Styles } from "../../utils/Styles";
-import { Avatar } from "../Avatar";
+import { Avatar } from "../images/Avatar";
 import { StudentFromList } from "./StudentsList";
 
 const styles: Styles = {

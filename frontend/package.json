@@ -16,6 +16,10 @@
   },
   "dependencies": {
     "@apollo/client": "^3.10.4",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^6.0.2",
+    "@mui/x-data-grid": "^7.15.0",
     "formik": "^2.4.6",
     "graphql": "^16.8.1",
     "lint-staged": "^15.2.4",

@@ -1,6 +1,6 @@
 import { LevelType } from "../../../../__generated__/schema.graphql.types";
 import { Styles } from "../../../../utils/Styles";
-import { Avatar } from "../../../Avatar";
+import { Avatar } from "../../../images/Avatar";
 
 const styles: Styles = {
   opacity: {

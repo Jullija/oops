@@ -1,15 +1,16 @@
 import { Styles } from "../../../utils/Styles";
 import FilterMenu from "./FilterMenu";
 import { useState } from "react";
-import PointsTable from "./PointsTable";
 import { Points } from "../../../hooks/StudentProfile/useStudentData";
 import { FilterItem } from "../../Groups/FilterBar/FilterOptionsSection";
+import { PointsTable } from "./PointsTable";
 
 const styles: Styles = {
   container: {
     display: "flex",
     flexDirection: "column",
     gap: 12,
+    flex: 1,
   },
 };
 
