@@ -1,5 +1,6 @@
 import { Styles } from "../../utils/Styles";
 import { Avatar } from "../Avatar";
+import { EditableIndicator } from "../EditableIndicator";
 import { StudentFromList } from "./StudentsList";
 
 const styles: Styles = {
@@ -54,7 +55,7 @@ export const StudentsListCard = ({
         <div style={styles.title}>{student.secondName}</div>
         <div style={styles.bottomContainer}>
           <div style={styles.groupName}>{student.group.name}</div>
-          {withEditableRights && <div style={{ color: "blue" }}>editable</div>}
+          {withEditableRights && <EditableIndicator />}
         </div>
       </div>
     </div>

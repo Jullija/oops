@@ -29,6 +29,7 @@ export type GroupsQuery = {
         secondName: string;
         firstName: string;
       } | null;
+      file?: { __typename?: "Files"; fileId: string } | null;
     }>;
   } | null;
 };
@@ -50,6 +51,9 @@ export const GroupsDocument = gql`
           userId
           secondName
           firstName
+        }
+        file {
+          fileId
         }
       }
     }
