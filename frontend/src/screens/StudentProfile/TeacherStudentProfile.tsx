@@ -1,6 +1,5 @@
 import { Styles } from "../../utils/Styles";
 import { useParams } from "react-router-dom";
-import { PointsForm } from "../../components/StudentProfile/PointsForm/PointsForm";
 import { FormPoints } from "../../components/StudentProfile/PointsForm/types";
 import { useCreatePointsMutation } from "../../graphql/createPoints.graphql.types";
 import { useUser } from "../../hooks/common/useUser";
@@ -8,6 +7,8 @@ import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProf
 import { SideBar } from "../../components/StudentProfile/SideBar";
 import { PointsTableWithFilter } from "../../components/StudentProfile/table/PointsTableWithFilter";
 import { Points } from "../../hooks/StudentProfile/useStudentData";
+import { AddPointsModal } from "../../modals/AddPointsModal";
+import { useState } from "react";
 
 const styles: Styles = {
   container: {
@@ -42,15 +43,19 @@ export function TeacherStudentProfile() {
     refetch,
   } = useStudentProfileData(studentId);
 
-  const [createPoints, { error: createPointsError }] =
-    useCreatePointsMutation();
+  // const [createPoints, { error: createPointsError }] =
+  //   useCreatePointsMutation();
+
+  const [createPoints] = useCreatePointsMutation();
+
+  const [isOpen, setIsOpen] = useState(false);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
   if (!studentData) return <p>Student is undefined</p>;
   if (!currLevel) return <p>Curr level is undefined</p>;
 
-  const handleAdd = (formPoints: FormPoints) => {
+  const handleAddPoints = (formPoints: FormPoints) => {
     createPoints({
       variables: {
         studentId: parseInt(studentId ?? "-1"),
@@ -81,19 +86,21 @@ export function TeacherStudentProfile() {
         nextLevel={nextLevel}
       />
       <div style={styles.rightContainer}>
+        <button onClick={() => setIsOpen(true)}>add points</button>
         <PointsTableWithFilter
           points={points}
           filterHeaderNames={filterHeaderNames}
           buttonsProps={{
-            handleEditClick: handleEditClick,
-            handleDeleteClick: handleDeleteClick,
+            handleEditClick,
+            handleDeleteClick,
           }}
         />
-        <PointsForm
-          handleAddPoints={handleAdd}
-          createError={createPointsError?.message}
-        />
       </div>
+      <AddPointsModal
+        handleAddPoints={handleAddPoints}
+        isOpen={isOpen}
+        close={() => setIsOpen(false)}
+      />
     </div>
   );
 }
