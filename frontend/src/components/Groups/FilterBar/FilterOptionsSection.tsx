@@ -14,6 +14,7 @@ const styles: Styles = {
     gap: 4,
     display: "flex",
     flexDirection: "row",
+    cursor: "pointer",
   },
   title: {
     fontWeight: "bold",

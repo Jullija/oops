@@ -1,5 +1,7 @@
 import { Group } from "../../../hooks/common/useGroupsData";
+import { FILES_URL } from "../../../utils/constants";
 import { Styles } from "../../../utils/Styles";
+import { EditableIndicator } from "../../EditableIndicator";
 
 const styles: Styles = {
   container: {
@@ -7,14 +9,27 @@ const styles: Styles = {
     flexDirection: "column",
     border: "1px solid black",
     width: 240,
-    height: 120,
+    height: 240,
     cursor: "pointer",
     padding: 12,
     gap: 12,
+    position: "relative",
+  },
+  img: {
+    width: "100%",
+    height: 150,
+    objectFit: "cover",
+    borderRadius: 8,
+    overflow: "hidden",
   },
   title: {
     fontWeight: "bold",
     fontSize: 18,
+  },
+  editableIndicatorWrapper: {
+    top: 140,
+    right: 32,
+    position: "absolute",
   },
 };
 
@@ -31,12 +46,21 @@ export const GroupCard = ({
 }: GroupCardProps) => {
   return (
     <div style={styles.container} onClick={onClick}>
+      <img
+        src={`${FILES_URL}${group.imageId}`}
+        alt={`img id ${group.imageId}`}
+        style={styles.img}
+      />
       <div style={styles.title}>{group.name}</div>
       <div>{group.teacher.fullName}</div>
       <div>
         {group.weekday.name} {group.time.start}-{group.time.end}
       </div>
-      {withEditableRights && <div style={{ color: "blue" }}>editable</div>}
+      {withEditableRights && (
+        <div style={styles.editableIndicatorWrapper}>
+          <EditableIndicator />
+        </div>
+      )}
     </div>
   );
 };
