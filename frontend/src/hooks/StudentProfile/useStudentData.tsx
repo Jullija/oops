@@ -3,7 +3,7 @@ import {
   StudentPointsQuery,
   useStudentPointsQuery,
 } from "../../graphql/studentPoints.graphql.types";
-import { Timestamp, Weekday } from "../Groups/useGroupsData";
+import { Timestamp, Weekday } from "../common/useGroupsData";
 
 export type Points =
   StudentPointsQuery["getStudentPoints"]["subcategoryPoints"][number];

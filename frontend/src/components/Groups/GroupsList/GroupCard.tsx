@@ -1,4 +1,4 @@
-import { Group } from "../../../hooks/Groups/useGroupsData";
+import { Group } from "../../../hooks/common/useGroupsData";
 import { Styles } from "../../../utils/Styles";
 
 const styles: Styles = {

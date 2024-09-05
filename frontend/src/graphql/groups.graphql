@@ -9,14 +9,11 @@ query Groups($editionId: bigint!) {
         weekdayName
       }
       endTime
-      userGroups(
-        where: { user: { role: { _in: ["teacher", "coordinator"] } } }
-      ) {
-        user {
-          userId
-          fullName
-          role
-        }
+      userByTeacherId {
+        fullName
+        userId
+        secondName
+        firstName
       }
     }
   }

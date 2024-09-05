@@ -59,6 +59,10 @@ const teacherPaths = {
     path: "/group/:id",
     allowedRoles: [Roles.TEACHER, Roles.ADMIN, Roles.COORDINATOR],
   },
+  Students: {
+    path: "/students",
+    allowedRoles: [Roles.TEACHER, Roles.ADMIN, Roles.COORDINATOR],
+  },
 };
 
 export const pathsWithParameters = {
@@ -79,6 +83,7 @@ export const pathsGenerator = {
     Group: (id: string) => `${teacherPaths.Group.path.replace(":id", id)}`,
     StudentProfile: (id: string) =>
       `${teacherPaths.StudentProfile.path.replace(":id", id)}`,
+    Students: teacherPaths.Students.path,
   },
 };
 
@@ -108,5 +113,10 @@ export const navigationItems: NavigationItem[] = [
     title: "Grupy",
     path: pathsWithParameters.teacher.Groups.path,
     allowedRoles: pathsWithParameters.teacher.Groups.allowedRoles,
+  },
+  {
+    title: "Studenci",
+    path: pathsWithParameters.teacher.Students.path,
+    allowedRoles: pathsWithParameters.teacher.Students.allowedRoles,
   },
 ];

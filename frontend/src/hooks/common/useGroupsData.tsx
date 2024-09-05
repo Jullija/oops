@@ -1,5 +1,4 @@
 import { useGroupsQuery } from "../../graphql/groups.graphql.types";
-import { useEditionSelection } from "../common/useEditionSelection";
 
 export type Group = {
   name: string;
@@ -19,14 +18,14 @@ export type Timestamp = {
   end: string;
 };
 
-export const useGroupsData = () => {
-  const { selectedEdition } = useEditionSelection();
-
+// TODO change editionId?: to | undefined
+export const useGroupsData = (editionId: string | undefined) => {
   const { data, loading, error } = useGroupsQuery({
     variables: {
-      editionId: selectedEdition?.editionId as string,
+      // TODO thats the way how to handle undefined case!
+      editionId: editionId as string,
     },
-    skip: !selectedEdition,
+    skip: !editionId,
   });
 
   const groups: Group[] =
@@ -41,11 +40,12 @@ export const useGroupsData = () => {
         time: { start: group.startTime, end: group.endTime },
         teacher: {
           // firstName and secondName is not nullable - hasura computes it so practically it will never be null
-          fullName: group.userGroups[0].user.fullName as string,
-          id: group.userGroups[0].user.userId,
+          // why userByTeacherId is null
+          fullName: group.userByTeacherId?.fullName as string,
+          id: group.userByTeacherId?.userId as string,
         },
       };
     }) ?? [];
 
-  return { groups, loading, error };
+  return { groups, groupsLoading: loading, groupsError: error };
 };

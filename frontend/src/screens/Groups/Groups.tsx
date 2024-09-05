@@ -11,7 +11,8 @@ import {
   RadioFilterGroups,
 } from "../../components/Groups/RadioFilterGroup";
 import { useUser } from "../../hooks/common/useUser";
-import { Group } from "../../hooks/Groups/useGroupsData";
+import { Group } from "../../hooks/common/useGroupsData";
+import { groupsRadioButtonOptions } from "../../utils/constants";
 
 const styles: Styles = {
   container: {
@@ -30,13 +31,6 @@ const styles: Styles = {
     gap: 12,
   },
 };
-
-// TODO try to reuse it in hall of fame
-const radioButtonOptions: GroupRadioFilterItem[] = [
-  { id: "all", name: "wszystkie" },
-  { id: "yours", name: "twoje" },
-  { id: "foreign", name: "obce" },
-];
 
 export const Groups = () => {
   const { user } = useUser();
@@ -137,7 +131,7 @@ export const Groups = () => {
             onInputChange={(input: string) => setInput(input)}
           />
           <RadioFilterGroups
-            options={radioButtonOptions}
+            options={groupsRadioButtonOptions}
             onOptionChange={(option) => setSelectedOption(option)}
             selectedOption={selectedOption}
           />
