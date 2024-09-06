@@ -107,4 +107,75 @@ class PointsDataFetcher {
 
         return savedPoints
     }
+
+    @DgsMutation
+    @Transactional
+    fun editPoints(
+        @InputArgument pointsId: Long,
+        @InputArgument updatedById: Long,
+        @InputArgument value: Float?
+    ): Points {
+        val points = pointsRepository.findById(pointsId)
+            .orElseThrow { IllegalArgumentException("Invalid points ID") }
+
+        if (points.subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Subcategory edition has already ended")
+        }
+        if (bonusRepository.findByPoints(points).isNotEmpty()) {
+            throw IllegalArgumentException("Points with bonuses cannot be edited")
+        }
+
+        value?.let {
+            if (it < 0) {
+                throw IllegalArgumentException("Value cannot be negative")
+            }
+
+            val studentPointsSum = points.student.getPointsBySubcategory(points.subcategory.subcategoryId, pointsRepository)
+                .sumOf { p -> p.value.toDouble() }.toFloat()
+
+            if (studentPointsSum - points.value + it > points.subcategory.maxPoints) {
+                throw IllegalArgumentException("Student cannot have more than ${points.subcategory.maxPoints} points in this subcategory")
+            }
+
+            points.value = it
+        }
+
+        updatedById.let {
+            val updatedBy = usersRepository.findByUserId(it)
+                .orElseThrow { IllegalArgumentException("Invalid user ID") }
+            if (updatedBy.role != UsersRoles.TEACHER && updatedBy.role != UsersRoles.COORDINATOR) {
+                throw IllegalArgumentException("Points can only be updated by a teacher or coordinator")
+            }
+            points.updatedBy = updatedBy
+        }
+
+        val savedPoints = pointsRepository.save(points)
+
+        // Update bonuses if any
+        val bonuses = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.MULTIPLICATIVE, points.student)
+            .filter { bonus -> bonus.points.subcategory.edition == points.subcategory.edition }
+
+        bonuses.forEach { bonus ->
+            bonus.updateMultiplicativePoints(bonusRepository, pointsRepository)
+        }
+
+        return savedPoints
+    }
+
+    @DgsMutation
+    @Transactional
+    fun removePoints(@InputArgument pointsId: Long): Boolean {
+        val points = pointsRepository.findById(pointsId)
+            .orElseThrow { IllegalArgumentException("Invalid points ID") }
+
+        if (points.subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Subcategory edition has already ended")
+        }
+        if (bonusRepository.findByPoints(points).isNotEmpty()) {
+            throw IllegalArgumentException("Points with bonuses cannot be deleted")
+        }
+
+        pointsRepository.delete(points)
+        return true
+    }
 }

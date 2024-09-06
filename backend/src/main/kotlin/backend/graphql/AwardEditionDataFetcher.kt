@@ -51,4 +51,26 @@ class AwardEditionDataFetcher {
         )
         return awardEditionRepository.save(awardEdition)
     }
+
+    @DgsMutation
+    @Transactional
+    fun removeAwardFromEdition(@InputArgument awardId: Long, @InputArgument editionId: Long): Boolean {
+        val award = awardRepository.findById(awardId).orElseThrow { throw IllegalArgumentException("Award not found") }
+        val edition = editionRepository.findById(editionId).orElseThrow { throw IllegalArgumentException("Edition not found") }
+
+        if (!awardEditionRepository.existsByAwardAndEdition(award, edition)){
+            throw IllegalArgumentException("This award does not exist in this edition")
+        }
+
+        if (edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
+
+        if (edition.startDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already started")
+        }
+
+        awardEditionRepository.deleteByAwardAndEdition(award, edition)
+        return true
+    }
 }

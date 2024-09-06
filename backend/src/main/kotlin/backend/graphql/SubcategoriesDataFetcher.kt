@@ -5,6 +5,7 @@ import backend.edition.EditionRepository
 import backend.files.FileEntityRepository
 import backend.levels.Levels
 import backend.levels.LevelsRepository
+import backend.points.PointsRepository
 import backend.subcategories.Subcategories
 import backend.subcategories.SubcategoriesRepository
 import com.netflix.graphql.dgs.DgsComponent
@@ -30,6 +31,9 @@ class SubcategoriesDataFetcher {
 
     @Autowired
     lateinit var photoAssigner: PhotoAssigner
+
+    @Autowired
+    lateinit var pointsRepository: PointsRepository
 
     @DgsMutation
     @Transactional
@@ -115,5 +119,83 @@ class SubcategoriesDataFetcher {
             label = label
         )
         return subcategoriesRepository.save(subcategories)
+    }
+
+    @DgsMutation
+    @Transactional
+    fun editSubcategory(
+        @InputArgument subcategoryId: Long,
+        @InputArgument subcategoryName: String?,
+        @InputArgument maxPoints: Float?,
+        @InputArgument ordinalNumber: Int?,
+        @InputArgument label: String?
+    ): Subcategories {
+        val subcategory = subcategoriesRepository.findById(subcategoryId)
+            .orElseThrow { IllegalArgumentException("Subcategory not found") }
+
+        if (subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Subcategory edition has already ended")
+        }
+
+
+        subcategoryName?.let {
+            if (it.isBlank()) {
+                throw IllegalArgumentException("Subcategory name must not be blank")
+            }
+            if (subcategoriesRepository.findBySubcategoryNameAndCategoryAndEdition(it, subcategory.category, subcategory.edition).isPresent) {
+                throw IllegalArgumentException("Subcategory with name $it already exists in the same category and edition")
+            }
+            subcategory.subcategoryName = it
+        }
+
+        maxPoints?.let {
+            if (subcategory.edition.startDate.isBefore(java.time.LocalDate.now())){
+                throw IllegalArgumentException("Subcategory edition has already started")
+            }
+            if (it < 0) {
+                throw IllegalArgumentException("Max points must be greater than or equal to 0")
+            }
+            subcategory.maxPoints = it
+        }
+
+        ordinalNumber?.let {
+            if (subcategory.edition.startDate.isBefore(java.time.LocalDate.now())){
+                throw IllegalArgumentException("Subcategory edition has already started")
+            }
+            if (it < 0) {
+                throw IllegalArgumentException("Ordinal number must be greater or equal to 0")
+            }
+            val ordinalNumbers = subcategoriesRepository.findByCategoryAndEdition(subcategory.category, subcategory.edition).map { it.ordinalNumber }
+            if (ordinalNumbers.contains(it) && it != subcategory.ordinalNumber) {
+                throw IllegalArgumentException("Subcategory with ordinal number $it already exists")
+            }
+            if (ordinalNumbers.isEmpty() && it != 0) {
+                throw IllegalArgumentException("First subcategory must have ordinal number 0")
+            }
+            subcategory.ordinalNumber = it
+        }
+
+        label?.let {
+            subcategory.label = it
+        }
+
+        return subcategoriesRepository.save(subcategory)
+
+    }
+
+    @DgsMutation
+    @Transactional
+    fun removeSubcategory(@InputArgument subcategoryId: Long): Boolean {
+        val subcategory = subcategoriesRepository.findById(subcategoryId)
+            .orElseThrow { IllegalArgumentException("Subcategory not found") }
+
+        if (subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Subcategory edition has already ended")
+        }
+        if (pointsRepository.findBySubcategory(subcategory).isNotEmpty()) {
+            throw IllegalArgumentException("Subcategory has points")
+        }
+        subcategoriesRepository.delete(subcategory)
+        return true
     }
 }

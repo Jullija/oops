@@ -77,6 +77,77 @@ class UsersDataFetcher {
         return usersRepository.save(user)
     }
 
+    @DgsMutation
+    @Transactional
+    fun editUser(
+        @InputArgument userId: Long,
+        @InputArgument indexNumber: Int?,
+        @InputArgument nick: String?,
+        @InputArgument firstName: String?,
+        @InputArgument secondName: String?,
+        @InputArgument role: String?,
+        @InputArgument label: String?
+    ): Users {
+        val user = usersRepository.findById(userId)
+            .orElseThrow { IllegalArgumentException("User not found") }
+
+        indexNumber?.let {
+            if (usersRepository.existsByIndexNumber(it) && it != user.indexNumber) {
+                throw IllegalArgumentException("User with index number $it already exists")
+            }
+            user.indexNumber = it
+        }
+
+        nick?.let {
+            if (usersRepository.findByNick(it) != null && it != user.nick) {
+                throw IllegalArgumentException("User with nick $it already exists")
+            }
+            user.nick = it
+        }
+
+        firstName?.let {
+            user.firstName = it
+        }
+
+        secondName?.let {
+            user.secondName = it
+        }
+
+        role?.let {
+            val userRole = try {
+                UsersRoles.valueOf(it.uppercase())
+            } catch (e: IllegalArgumentException) {
+                throw IllegalArgumentException("Invalid role")
+            }
+            user.role = userRole
+        }
+
+        label?.let {
+            user.label = it
+        }
+
+        return usersRepository.save(user)
+    }
+
+    @DgsMutation
+    @Transactional
+    fun removeUser(@InputArgument userId: Long): Boolean {
+        val user = usersRepository.findById(userId)
+            .orElseThrow { IllegalArgumentException("User not found") }
+
+        if (user.role == UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Cannot remove coordinator")
+        }
+
+        if (user.userGroups.isNotEmpty()){
+            throw IllegalArgumentException("Cannot remove user that is in a group")
+        }
+
+        usersRepository.delete(user)
+        return true
+    }
+
+
     @DgsQuery
     @Transactional
     fun getStudentPoints(@InputArgument studentId: Long, @InputArgument editionId: Long): StudentPointsType {

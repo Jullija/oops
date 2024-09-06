@@ -48,4 +48,26 @@ class CategoryEditionDataFetcher {
         )
         return categoryEditionRepository.save(categoryEdition)
     }
+
+    @DgsMutation
+    @Transactional
+    fun removeCategoryFromEdition(@InputArgument categoryId: Long, @InputArgument editionId: Long): Boolean {
+        val category = categoriesRepository.findById(categoryId).orElseThrow { throw IllegalArgumentException("Category not found") }
+        val edition = editionRepository.findById(editionId).orElseThrow { throw IllegalArgumentException("Edition not found") }
+
+        if (!categoryEditionRepository.existsByCategoryAndEdition(category, edition)){
+            throw IllegalArgumentException("This Category does not exist in this edition")
+        }
+
+        if (edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
+
+        if (edition.startDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already started")
+        }
+
+        categoryEditionRepository.deleteByCategoryAndEdition(category, edition)
+        return true
+    }
 }
