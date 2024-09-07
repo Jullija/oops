@@ -159,29 +159,36 @@ class UsersDataFetcher {
         if (user.userGroups.none { it.group.edition == edition }) {
             throw IllegalArgumentException("Student is not participating in this edition")
         }
+        val teacher = user.userGroups.filter { it.group.edition == edition }.firstOrNull()?.group?.teacher
+            ?: throw IllegalArgumentException("Student is not in any group")
         val points = pointsRepository.findAllByStudentAndSubcategory_Edition(user, edition)
         val bonuses = bonusesRepository.findByChestHistory_User_UserId(studentId)
 
         val subcategoryPoints = points.groupBy { it.subcategory }
             .map { (subcategory, points) ->
-                val purePoints = points.filter { bonusesRepository.findByPoints(it).isEmpty() }
+                val purePoints = points.filter { bonusesRepository.findByPoints(it).isEmpty() }.firstOrNull()
                 val allBonuses = bonuses.filter { (it.award.awardType != AwardType.MULTIPLICATIVE && it.points.subcategory == subcategory)  ||
                         (it.award.awardType == AwardType.MULTIPLICATIVE && it.points.subcategory.category == subcategory.category) }
+                val partialBonusType = allBonuses.map { bonus ->
+                    PartialBonusType(
+                        bonuses = bonus,
+                        partialValue = if (bonus.award.awardType != AwardType.MULTIPLICATIVE) {
+                            bonus.points.value
+                        } else {
+                            purePoints?.value?.times(bonus.award.awardValue) ?: 0f
+                        }
+                    )
+                }
+                val createdAt = purePoints?.createdAt ?: allBonuses.minOfOrNull { it.points.createdAt } ?: LocalDateTime.now()
+                val updatedAt = purePoints?.updatedAt ?: allBonuses.maxOfOrNull { it.points.updatedAt } ?: LocalDateTime.now()
                 SubcategoryPointsType(
                     subcategory = subcategory,
                     points = PurePointsType(
-                        purePoints = if (purePoints.isNotEmpty()) purePoints.first() else null,
-                        partialBonusType = allBonuses.map { bonus ->
-                            PartialBonusType(
-                                bonuses = bonus,
-                                partialValue = if (bonus.award.awardType != AwardType.MULTIPLICATIVE) {
-                                    bonus.points.value
-                                } else {
-                                    purePoints.firstOrNull()?.value?.times(bonus.award.awardValue) ?: 0f
-                                }
-                            )
-                        }
-                    )
+                        purePoints = purePoints,
+                        partialBonusType = partialBonusType
+                    ),
+                    createdAt = createdAt,
+                    updatedAt = updatedAt
                 )
             }.sortedWith(compareBy(::subcategoryPointsComparator))
 
@@ -192,8 +199,9 @@ class UsersDataFetcher {
 
         return StudentPointsType(
             user = user,
+            teacher = teacher,
             level = user.getLevelByEdition(edition)?.level,
-            subcategoryPoints = subcategoryPoints,
+            subcategoryPoints = subcategoryPoints.sortedByDescending { it.createdAt },
             sumOfPurePoints = sumOfPurePoints,
             sumOfBonuses = sumOfBonuses,
             sumOfAll = sumOfAll
@@ -241,7 +249,7 @@ class UsersDataFetcher {
         val purePointsCreatedAt = subcategoryPointsType.points.purePoints?.createdAt
                                                         ?.toInstant(ZoneOffset.UTC)?.toEpochMilli()
         val bonusCreatedAt = subcategoryPointsType.points.partialBonusType.minOfOrNull {
-            it.bonuses.createdAt?.toInstant(ZoneOffset.UTC)?.toEpochMilli() ?: 0
+            it.bonuses.createdAt.toInstant(ZoneOffset.UTC)?.toEpochMilli() ?: 0
         }
         return purePointsCreatedAt ?: bonusCreatedAt ?: LocalDateTime.MIN.toInstant(ZoneOffset.UTC).toEpochMilli()
     }
@@ -249,6 +257,7 @@ class UsersDataFetcher {
 
 data class StudentPointsType(
     val user: Users,
+    val teacher: Users,
     val level: Levels?,
     val subcategoryPoints: List<SubcategoryPointsType>,
     val sumOfPurePoints: Float,
