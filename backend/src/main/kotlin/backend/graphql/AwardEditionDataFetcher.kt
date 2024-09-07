@@ -44,6 +44,10 @@ class AwardEditionDataFetcher {
             throw IllegalArgumentException("Award with this name already exists in this edition")
         }
 
+        if (award.category.categoryEdition.none { it.edition == edition }) {
+            throw IllegalArgumentException("Award's category does not exist in this edition")
+        }
+
         val awardEdition = AwardEdition(
             award = award,
             edition = edition,
