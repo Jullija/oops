@@ -165,7 +165,8 @@ class UsersDataFetcher {
         val subcategoryPoints = points.groupBy { it.subcategory }
             .map { (subcategory, points) ->
                 val purePoints = points.filter { bonusesRepository.findByPoints(it).isEmpty() }
-                val allBonuses = bonuses.filter { it.points.subcategory == subcategory }
+                val allBonuses = bonuses.filter { (it.award.awardType != AwardType.MULTIPLICATIVE && it.points.subcategory == subcategory)  ||
+                        (it.award.awardType == AwardType.MULTIPLICATIVE && it.points.subcategory.category == subcategory.category) }
                 SubcategoryPointsType(
                     subcategory = subcategory,
                     points = PurePointsType(
