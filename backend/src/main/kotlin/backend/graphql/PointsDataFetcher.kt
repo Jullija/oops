@@ -44,10 +44,10 @@ class PointsDataFetcher {
 
         if (checkDates){
             if (subcategory.edition.startDate.isAfter(java.time.LocalDate.now())){
-                throw IllegalArgumentException("Subcategory edition has not started yet")
+                throw IllegalArgumentException("Subcategory's edition has not started yet")
             }
             if (subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
-                throw IllegalArgumentException("Subcategory edition has already ended")
+                throw IllegalArgumentException("Subcategory's edition has already ended")
             }
         }
         if (!subcategory.category.canAddPoints) {
@@ -119,25 +119,26 @@ class PointsDataFetcher {
             .orElseThrow { IllegalArgumentException("Invalid points ID") }
 
         if (points.subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
-            throw IllegalArgumentException("Subcategory edition has already ended")
+            throw IllegalArgumentException("Subcategory's edition has already ended")
         }
+
         if (bonusRepository.findByPoints(points).isNotEmpty()) {
             throw IllegalArgumentException("Points with bonuses cannot be edited")
         }
 
-        value?.let {
-            if (it < 0) {
+        value?.let { newValue ->
+            if (newValue < 0) {
                 throw IllegalArgumentException("Value cannot be negative")
             }
 
             val studentPointsSum = points.student.getPointsBySubcategory(points.subcategory.subcategoryId, pointsRepository)
                 .sumOf { p -> p.value.toDouble() }.toFloat()
 
-            if (studentPointsSum - points.value + it > points.subcategory.maxPoints) {
+            if (studentPointsSum - points.value + newValue > points.subcategory.maxPoints) {
                 throw IllegalArgumentException("Student cannot have more than ${points.subcategory.maxPoints} points in this subcategory")
             }
 
-            points.value = it
+            points.value = newValue
         }
 
         updatedById.let {
@@ -169,7 +170,7 @@ class PointsDataFetcher {
             .orElseThrow { IllegalArgumentException("Invalid points ID") }
 
         if (points.subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
-            throw IllegalArgumentException("Subcategory edition has already ended")
+            throw IllegalArgumentException("Subcategory's edition has already ended")
         }
         if (bonusRepository.findByPoints(points).isNotEmpty()) {
             throw IllegalArgumentException("Points with bonuses cannot be deleted")

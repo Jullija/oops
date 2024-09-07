@@ -134,7 +134,7 @@ class SubcategoriesDataFetcher {
             .orElseThrow { IllegalArgumentException("Subcategory not found") }
 
         if (subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
-            throw IllegalArgumentException("Subcategory edition has already ended")
+            throw IllegalArgumentException("Subcategory's edition has already ended")
         }
 
 
@@ -150,7 +150,7 @@ class SubcategoriesDataFetcher {
 
         maxPoints?.let {
             if (subcategory.edition.startDate.isBefore(java.time.LocalDate.now())){
-                throw IllegalArgumentException("Subcategory edition has already started")
+                throw IllegalArgumentException("Subcategory's edition has already started")
             }
             if (it < 0) {
                 throw IllegalArgumentException("Max points must be greater than or equal to 0")
@@ -160,7 +160,7 @@ class SubcategoriesDataFetcher {
 
         ordinalNumber?.let {
             if (subcategory.edition.startDate.isBefore(java.time.LocalDate.now())){
-                throw IllegalArgumentException("Subcategory edition has already started")
+                throw IllegalArgumentException("Subcategory's edition has already started")
             }
             if (it < 0) {
                 throw IllegalArgumentException("Ordinal number must be greater or equal to 0")
@@ -190,7 +190,7 @@ class SubcategoriesDataFetcher {
             .orElseThrow { IllegalArgumentException("Subcategory not found") }
 
         if (subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
-            throw IllegalArgumentException("Subcategory edition has already ended")
+            throw IllegalArgumentException("Subcategory's edition has already ended")
         }
         if (pointsRepository.findBySubcategory(subcategory).isNotEmpty()) {
             throw IllegalArgumentException("Subcategory has points")
