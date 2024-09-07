@@ -190,7 +190,7 @@ class UsersDataFetcher {
                     createdAt = createdAt,
                     updatedAt = updatedAt
                 )
-            }.sortedWith(compareBy(::subcategoryPointsComparator))
+            }
 
         val sumOfPurePoints = subcategoryPoints.sumOf { it.points.purePoints?.value?.toDouble() ?: 0.0 }.toFloat()
         val sumOfBonuses = subcategoryPoints.sumOf { it.points.partialBonusType.sumOf { it.partialValue.toDouble() } }
@@ -243,15 +243,6 @@ class UsersDataFetcher {
                         maxPoints = maxPoints
                     )
                 }
-    }
-
-    private fun subcategoryPointsComparator(subcategoryPointsType: SubcategoryPointsType): Long {
-        val purePointsCreatedAt = subcategoryPointsType.points.purePoints?.createdAt
-                                                        ?.toInstant(ZoneOffset.UTC)?.toEpochMilli()
-        val bonusCreatedAt = subcategoryPointsType.points.partialBonusType.minOfOrNull {
-            it.bonuses.createdAt.toInstant(ZoneOffset.UTC)?.toEpochMilli() ?: 0
-        }
-        return purePointsCreatedAt ?: bonusCreatedAt ?: LocalDateTime.MIN.toInstant(ZoneOffset.UTC).toEpochMilli()
     }
 }
 
