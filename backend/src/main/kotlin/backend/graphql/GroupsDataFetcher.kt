@@ -27,6 +27,7 @@ import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import java.sql.Time
+import java.time.LocalDateTime
 
 @DgsComponent
 class GroupsDataFetcher {
@@ -273,24 +274,29 @@ class GroupsDataFetcher {
                 .groupBy { it.subcategory }
                 .mapNotNull { (subcategory, points) ->
 
-                    val purePoints = points.filter { bonusesRepository.findByPoints(it).isEmpty() }
+                    val purePoints = points.filter { bonusesRepository.findByPoints(it).isEmpty() }.firstOrNull()
                     val allBonuses = userBonuses.filter { (it.award.awardType != AwardType.MULTIPLICATIVE && it.points.subcategory == subcategory)  ||
                             (it.award.awardType == AwardType.MULTIPLICATIVE && it.points.subcategory.category == subcategory.category) }
+                    val partialBonusType = allBonuses.map { bonus ->
+                        PartialBonusType(
+                            bonuses = bonus,
+                            partialValue = if (bonus.award.awardType != AwardType.MULTIPLICATIVE) {
+                                bonus.points.value
+                            } else {
+                                purePoints?.value?.times(bonus.award.awardValue) ?: 0f
+                            }
+                        )
+                    }
+                    val createdAt = purePoints?.createdAt ?: allBonuses.minOfOrNull { it.points.createdAt } ?: LocalDateTime.now()
+                    val updatedAt = purePoints?.updatedAt ?: allBonuses.maxOfOrNull { it.points.updatedAt } ?: LocalDateTime.now()
                     SubcategoryPointsType(
                         subcategory = subcategory,
                         points = PurePointsType(
-                            purePoints = if (purePoints.isNotEmpty()) purePoints.first() else null,
-                            partialBonusType = allBonuses.map { bonus ->
-                                PartialBonusType(
-                                    bonuses = bonus,
-                                    partialValue = if (bonus.award.awardType != AwardType.MULTIPLICATIVE) {
-                                        bonus.points.value
-                                    } else {
-                                        purePoints.firstOrNull()?.value?.times(bonus.award.awardValue) ?: 0f
-                                    }
-                                )
-                            }
-                        )
+                            purePoints = purePoints,
+                            partialBonusType = partialBonusType
+                        ),
+                        createdAt = createdAt,
+                        updatedAt = updatedAt
                     )
 
                 }
@@ -315,7 +321,9 @@ class GroupsDataFetcher {
                         points = PurePointsType(
                             purePoints = null,
                             partialBonusType = emptyList()
-                        )
+                        ),
+                        createdAt = LocalDateTime.now(),
+                        updatedAt = LocalDateTime.now()
                     )
                 },
                 aggregate = CategoryAggregate(
@@ -336,7 +344,9 @@ class GroupsDataFetcher {
                 points = PurePointsType(
                     purePoints = null,
                     partialBonusType = emptyList()
-                )
+                ),
+                createdAt = LocalDateTime.now(),
+                updatedAt = LocalDateTime.now()
             )
         }
     }
@@ -383,7 +393,9 @@ data class CategoryAggregate(
 
 data class SubcategoryPointsType(
     val subcategory: Subcategories,
-    val points: PurePointsType
+    val points: PurePointsType,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime
 )
 
 data class PurePointsType(

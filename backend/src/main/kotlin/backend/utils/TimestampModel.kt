@@ -13,11 +13,11 @@ import java.time.LocalDateTime
 abstract class TimestampModel {
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    var createdAt: LocalDateTime? = null
+    var createdAt: LocalDateTime = LocalDateTime.now()
         private set
 
     @Column(nullable = false)
-    var updatedAt: LocalDateTime? = null
+    var updatedAt: LocalDateTime = LocalDateTime.now()
         private set
 
     @PrePersist
@@ -31,8 +31,4 @@ abstract class TimestampModel {
     protected fun onUpdate(){
         updatedAt = LocalDateTime.now()
     }
-
-
-
-
 }
