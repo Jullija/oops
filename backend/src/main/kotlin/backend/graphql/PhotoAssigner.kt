@@ -48,7 +48,7 @@ class PhotoAssigner {
 
         photo?.let {
             require(it.fileType == fileType) {
-                "File with ID $fileId is not an award. Please upload a file with fileType = image/award and try again."
+                "Wrong fileType of file $fileId. Please upload a file with fileType = $fileType and try again."
             }
         }
 

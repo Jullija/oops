@@ -14,4 +14,6 @@ interface PointsRepository : JpaRepository<Points, Long> {
     fun findAllByStudentAndSubcategory_SubcategoryId(student: Users, subcategoryId: Long): List<Points>
     fun findByStudent_UserIdIn(userIds: Collection<Long>): List<Points>
     fun findByStudent_UserId(userId: Long): List<Points>
+
+    fun findBySubcategory(subcategory: Subcategories): List<Points>
 }

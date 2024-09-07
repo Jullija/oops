@@ -134,6 +134,94 @@ class GroupsDataFetcher {
         return group
     }
 
+    @DgsMutation
+    @Transactional
+    fun editGroup(
+        @InputArgument groupId: Long,
+        @InputArgument groupName: String?,
+        @InputArgument weekdayId: Long?,
+        @InputArgument startTime: Time?,
+        @InputArgument endTime: Time?,
+        @InputArgument teacherId: Long?,
+        @InputArgument label: String?
+    ): Groups {
+        val group = groupsRepository.findById(groupId)
+            .orElseThrow { IllegalArgumentException("Invalid group ID") }
+
+        if (group.edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
+
+        groupName?.let {
+            if (it.isBlank()) {
+                throw IllegalArgumentException("Group name must not be blank")
+            }
+            if (groupsRepository.existsByGroupNameAndEdition(it, group.edition) && it != group.groupName) {
+                throw IllegalArgumentException("Group with name $it already exists for edition ${group.edition.editionId}")
+            }
+            group.groupName = it
+        }
+
+        weekdayId?.let {
+            val weekday = weekdaysRepository.findById(it)
+                .orElseThrow { IllegalArgumentException("Invalid weekday ID") }
+            group.weekday = weekday
+        }
+
+        startTime?.let {
+            if (endTime != null && it.after(endTime)) {
+                throw IllegalArgumentException("Start time must be before end time")
+            }
+            group.startTime = it
+        }
+
+        endTime?.let {
+            if (startTime != null && startTime.after(it)) {
+                throw IllegalArgumentException("End time must be after start time")
+            }
+            group.endTime = it
+        }
+
+        teacherId?.let {
+            val teacher = usersRepository.findById(it)
+                .orElseThrow { IllegalArgumentException("Invalid teacher ID") }
+            if (teacher.role != UsersRoles.TEACHER && teacher.role != UsersRoles.COORDINATOR) {
+                throw IllegalArgumentException("User with ID $it is not a teacher nor a coordinator")
+            }
+            if (groupsRepository.existsByTeacherAndWeekdayAndStartTimeAndEndTimeAndEdition(
+                    teacher, group.weekday, group.startTime, group.endTime, group.edition
+                ) && it != group.teacher.userId
+            ) {
+                throw IllegalArgumentException("Teacher is already teaching a group at this time")
+            }
+            group.teacher = teacher
+        }
+
+        label?.let {
+            group.label = it
+        }
+
+        return groupsRepository.save(group)
+    }
+
+    @DgsMutation
+    @Transactional
+    fun removeGroup(@InputArgument groupId: Long): Boolean {
+        val group = groupsRepository.findById(groupId)
+            .orElseThrow { IllegalArgumentException("Invalid group ID") }
+
+        if (group.edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
+
+        if (group.userGroups.map { it.user }.map { it.role }.contains(UsersRoles.STUDENT)) {
+            throw IllegalArgumentException("Group has students assigned to it")
+        }
+
+        groupsRepository.delete(group)
+        return true
+    }
+
     @DgsQuery
     @Transactional
     fun getPossibleGroupsWeekdays(@InputArgument editionId: Long): List<Weekdays> {

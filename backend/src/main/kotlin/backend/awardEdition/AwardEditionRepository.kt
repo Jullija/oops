@@ -10,5 +10,6 @@ import java.util.*
 interface AwardEditionRepository : JpaRepository<AwardEdition, Long> {
     fun findByAward(award: Award): List<AwardEdition>
     fun existsByAward_AwardNameAndEdition(awardName: String, edition: Edition): Boolean
-
+    fun existsByAwardAndEdition(award: Award, edition: Edition): Boolean
+    fun deleteByAwardAndEdition(award: Award, edition: Edition)
 }
