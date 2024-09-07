@@ -56,7 +56,7 @@ class CategoryEditionDataFetcher {
         val edition = editionRepository.findById(editionId).orElseThrow { throw IllegalArgumentException("Edition not found") }
 
         if (!categoryEditionRepository.existsByCategoryAndEdition(category, edition)){
-            throw IllegalArgumentException("This dategory does not exist in this edition")
+            throw IllegalArgumentException("This category does not exist in this edition")
         }
 
         if (edition.endDate.isBefore(java.time.LocalDate.now())){
