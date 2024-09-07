@@ -245,6 +245,7 @@ type Query {
   getPossibleGroupsTimeSpans(editionId: Int!): [TimeSpansType!]!
   getPossibleGroupDates(editionId: Int!): [GroupDateType!]!
   getNeighboringLevels(studentId: Int!, editionId: Int!): NeighboringLevelsType!
+  getGroupsInEdition(editionId: Int!, teacherId: Int!): [GroupTeacherType!]!
 }
 
 type AwardType {
@@ -519,4 +520,10 @@ type NeighboringLevelsType {
   prevLevel: LevelType
   currLevel: LevelType!
   nextLevel: LevelType
+}
+
+type GroupTeacherType {
+  group: GroupType!
+  owns: Boolean!
+  canEdit: Boolean!
 }

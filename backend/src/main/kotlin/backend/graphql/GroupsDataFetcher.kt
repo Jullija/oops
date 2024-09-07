@@ -311,6 +311,25 @@ class GroupsDataFetcher {
             UserPointsType(user, userCategoriesWithDefaults)
         }
     }
+
+    @DgsQuery
+    @Transactional
+    fun getGroupsInEdition(@InputArgument editionId: Long, @InputArgument teacherId: Long): List<GroupTeacherType> {
+        val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
+        val teacher = usersRepository.findById(teacherId).orElseThrow() { IllegalArgumentException("Invalid teacher ID") }
+        if (teacher.role != UsersRoles.TEACHER && teacher.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("User with ID $teacherId is not a teacher nor a coordinator")
+        }
+        val groups = groupsRepository.findByEdition(edition)
+        return groups.map { group ->
+            GroupTeacherType(
+                group = group,
+                owns = group.teacher == teacher,
+                canEdit = group.teacher == teacher || teacher.role == UsersRoles.COORDINATOR
+            )
+        }
+    }
+
     private fun getUserCategoriesWithDefaults(categories: List<Categories>, userPoints: List<CategoryPointsType>, subcategories: List<Subcategories>): List<CategoryPointsType> {
         return categories.filter{it.canAddPoints}.map { category ->
             userPoints.find { it.category == category } ?: CategoryPointsType(
@@ -417,4 +436,10 @@ data class GroupDateType(
     val weekday: Weekdays,
     val startTime: Time,
     val endTime: Time
+)
+
+data class GroupTeacherType(
+    val group: Groups,
+    val owns: Boolean,
+    val canEdit: Boolean
 )
