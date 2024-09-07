@@ -220,11 +220,10 @@ class UsersDataFetcher {
             throw IllegalArgumentException("Student is not participating in this edition")
         }
         val points = pointsRepository.findAllByStudentAndSubcategory_Edition(user, edition)
-        val bonuses = bonusesRepository.findByChestHistory_User_UserId(studentId)
-        val categories = categoriesRepository.findAll()
+        val bonuses = bonusesRepository.findByChestHistory_User_UserId(studentId).filter { it.points.subcategory.edition == edition }
+        val categories = categoriesRepository.findByCategoryEdition_Edition(edition)
 
         return categories.filter{it.canAddPoints}
-                .filter { it.categoryEdition.any { editionEntry -> editionEntry.edition == edition } }
                 .map { category ->
                     val categoryPoints = points.filter { it.subcategory.category == category }
                     val purePoints = categoryPoints.filter { bonusesRepository.findByPoints(it).isEmpty() }
