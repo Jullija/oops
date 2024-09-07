@@ -39,8 +39,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	implementation("com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
-
-
+	testImplementation("io.mockk:mockk:1.13.5")
 }
 
 tasks.withType<KotlinCompile> {

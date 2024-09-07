@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional
 class AwardsDataFetcher {
 
     @Autowired
-    private lateinit var bonusesRepository: BonusesRepository
+    lateinit var bonusesRepository: BonusesRepository
 
     @Autowired
     lateinit var usersRepository: UsersRepository
