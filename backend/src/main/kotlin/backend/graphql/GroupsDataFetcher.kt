@@ -302,7 +302,7 @@ class GroupsDataFetcher {
                 }
                 .groupBy { it.subcategory.category } // Grouping by category
                 .map { (category, subcategoryPoints) ->
-                    createCategoryPointsType(category, subcategoryPoints, subcategories)
+                    createCategoryPointsType(category, subcategoryPoints.sortedBy { it.subcategory.ordinalNumber }, subcategories)
                 }
 
             // Ensure all categories are included
