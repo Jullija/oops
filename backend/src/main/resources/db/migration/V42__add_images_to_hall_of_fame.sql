@@ -16,7 +16,7 @@ WITH user_points AS (
             LEFT JOIN groups g ON ug.group_id = g.groups_id
             LEFT JOIN points p ON u.user_id = p.student_id
     WHERE
-            u.role = 'student'
+        u.role = 'student'
     GROUP BY
         u.user_id, u.nick, g.edition_id, g.groups_id, g.group_name
 )
@@ -33,5 +33,5 @@ SELECT
     up.group_name
 FROM
     user_points up
-        LEFT JOIN user_level l ON l.edition_id = up.edition_id
+        LEFT JOIN user_level l ON l.edition_id = up.edition_id AND l.user_id = up.user_id
         LEFT JOIN levels l2 on l.level_id = l2.level_id
