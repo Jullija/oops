@@ -21,7 +21,7 @@ import java.time.LocalDate
 class EditionDataFetcher {
 
     @Autowired
-    private lateinit var bonusesRepository: BonusesRepository
+    lateinit var bonusesRepository: BonusesRepository
 
     @Autowired
     lateinit var usersRepository: UsersRepository

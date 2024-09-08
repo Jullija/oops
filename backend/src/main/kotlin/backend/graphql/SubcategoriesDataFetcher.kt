@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 class SubcategoriesDataFetcher {
 
     @Autowired
-    private lateinit var subcategoriesRepository: SubcategoriesRepository
+    lateinit var subcategoriesRepository: SubcategoriesRepository
 
     @Autowired
     lateinit var editionRepository: EditionRepository

@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 class CategoryEditionDataFetcher {
 
     @Autowired
-    private lateinit var categoryEditionRepository: CategoryEditionRepository
+    lateinit var categoryEditionRepository: CategoryEditionRepository
 
     @Autowired
     lateinit var editionRepository: EditionRepository

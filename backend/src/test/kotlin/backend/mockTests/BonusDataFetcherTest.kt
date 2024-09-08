@@ -25,10 +25,13 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig
 import java.sql.Time
 import java.time.LocalDate
 import java.util.*
 
+@SpringJUnitConfig
 class BonusDataFetcherTest {
 
     private lateinit var bonusDataFetcher: BonusDataFetcher
@@ -121,7 +124,7 @@ class BonusDataFetcherTest {
             label = "teacher"
         )
 
-        val weekday = Weekdays(
+        weekday = Weekdays(
             weekdayId = 1L,
             weekdayName = "Monday",
             weekdayAbbr = "M",

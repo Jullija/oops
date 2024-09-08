@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional
 @DgsComponent
 class ChestHistoryDataFetcher {
     @Autowired
-    private lateinit var bonusesRepository: BonusesRepository
+    lateinit var bonusesRepository: BonusesRepository
 
     @Autowired
     lateinit var usersRepository: UsersRepository
@@ -52,10 +52,10 @@ class ChestHistoryDataFetcher {
     lateinit var photoAssigner: PhotoAssigner
 
     @Autowired
-    private lateinit var chestsRepository: ChestsRepository
+    lateinit var chestsRepository: ChestsRepository
 
     @Autowired
-    private lateinit var chestHistoryRepository: ChestHistoryRepository
+    lateinit var chestHistoryRepository: ChestHistoryRepository
 
     @DgsMutation
     @Transactional
