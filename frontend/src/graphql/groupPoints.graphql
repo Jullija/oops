@@ -1,0 +1,27 @@
+query GroupPoints($groupId: Int!) {
+  getUsersInGroupWithPoints(groupId: $groupId) {
+    user {
+      firstName
+      secondName
+      userId
+      indexNumber
+      nick
+    }
+    categoriesPoints {
+      subcategoryPoints {
+        createdAt
+        updatedAt
+        subcategory {
+          maxPoints
+          subcategoryId
+          subcategoryName
+        }
+        points {
+          purePoints {
+            value
+          }
+        }
+      }
+    }
+  }
+}
