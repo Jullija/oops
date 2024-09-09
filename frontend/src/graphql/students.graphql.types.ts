@@ -28,7 +28,7 @@ export type StudentsQuery = {
         groupName: string;
         groupsId: string;
         startTime: string;
-        teacherId?: string | null;
+        teacherId: string;
         endTime: string;
         editionId: string;
         userByTeacherId?: {

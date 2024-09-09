@@ -1,8 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Styles } from "../../utils/Styles";
 import { pathsGenerator } from "../../router/paths";
-import { GradeTable } from "./GradeTable";
 import { useGroupScreenData } from "../../hooks/Group/useGroupScreenData";
+import { GradeTableWithFilter } from "../../components/Group/table/GradeTableWithFilter";
 
 const styles: Styles = {
   screenContainer: {
@@ -23,7 +23,7 @@ export const Group = () => {
   const params = useParams();
   const id = params.id ? parseInt(params.id) : undefined;
 
-  const { data, headers, loading, error } = useGroupScreenData(id);
+  const { data, categories, loading, error } = useGroupScreenData(id);
 
   if (loading) {
     return <div>loading...</div>;
@@ -40,7 +40,7 @@ export const Group = () => {
         </button>
         <div>params - group id: {id}</div>
       </div>
-      <GradeTable data={data} headers={headers} />
+      <GradeTableWithFilter data={data} categories={categories} />
     </div>
   );
 };

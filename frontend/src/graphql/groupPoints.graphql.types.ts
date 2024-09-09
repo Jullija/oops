@@ -21,6 +21,11 @@ export type GroupPointsQuery = {
     };
     categoriesPoints: Array<{
       __typename?: "CategoryPointsType";
+      category: {
+        __typename?: "CategoryType";
+        categoryId: string;
+        categoryName: string;
+      };
       subcategoryPoints: Array<{
         __typename?: "SubcategoryPointsType";
         createdAt: string;
@@ -51,6 +56,10 @@ export const GroupPointsDocument = gql`
         nick
       }
       categoriesPoints {
+        category {
+          categoryId
+          categoryName
+        }
         subcategoryPoints {
           createdAt
           updatedAt

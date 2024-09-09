@@ -8,6 +8,10 @@ query GroupPoints($groupId: Int!) {
       nick
     }
     categoriesPoints {
+      category {
+        categoryId
+        categoryName
+      }
       subcategoryPoints {
         createdAt
         updatedAt

@@ -9,13 +9,16 @@ import {
   TableRow,
   ThemeProvider,
 } from "@mui/material";
-import { GroupPointsQuery } from "../../graphql/groupPoints.graphql.types";
+import {
+  GradeRowData,
+  GradeSubcategory,
+} from "../../../hooks/Group/useGroupScreenData";
 
 type GradeTableProps = {
-  data: GroupPointsQuery | undefined;
-  headers: string[];
+  data: GradeRowData[];
+  subcategoriesHeaders: GradeSubcategory[];
 };
-export const GradeTable = ({ data, headers }: GradeTableProps) => {
+export const GradeTable = ({ data, subcategoriesHeaders }: GradeTableProps) => {
   const darkTheme = createTheme({
     palette: {
       mode: "dark",
@@ -31,27 +34,25 @@ export const GradeTable = ({ data, headers }: GradeTableProps) => {
               <TableCell style={{ fontWeight: "bold", fontSize: 16 }}>
                 student
               </TableCell>
-              {headers.map((header, index) => (
+              {subcategoriesHeaders.map((header, index) => (
                 <TableCell
                   key={index}
                   style={{ fontWeight: "bold", fontSize: 16 }}
                   align="center"
                 >
-                  {header}
+                  {header.name}
                 </TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {data?.getUsersInGroupWithPoints.map((item, idx) => (
+            {data.map((item, idx) => (
               <TableRow>
                 <TableCell>
-                  {idx + 1}. {item?.user.firstName} {item?.user.secondName}
+                  {idx + 1}. {item.student.fullName}
                 </TableCell>
-                {item?.categoriesPoints[0].subcategoryPoints.map((i) => (
-                  <TableCell align="center">
-                    {i.points.purePoints?.value}
-                  </TableCell>
+                {item.subcategories.map((s) => (
+                  <TableCell>{s.pure}</TableCell>
                 ))}
               </TableRow>
             ))}
