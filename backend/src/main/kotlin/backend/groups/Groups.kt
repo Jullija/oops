@@ -24,8 +24,8 @@ class Groups(
     var label: String = "",
 
     @ManyToOne
-    @JoinColumn(name = "teacher_id", referencedColumnName = "user_id", nullable = true)
-    var teacher: Users? = null,
+    @JoinColumn(name = "teacher_id", referencedColumnName = "user_id", nullable = false)
+    var teacher: Users,
 
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
     val userGroups: Set<UserGroups> = HashSet(),
@@ -51,6 +51,7 @@ class Groups(
     constructor() : this(
         groupName = "",
         label = "",
+        teacher = Users(),
         weekday = Weekdays(),
         startTime = Time(0),
         endTime = Time(0),

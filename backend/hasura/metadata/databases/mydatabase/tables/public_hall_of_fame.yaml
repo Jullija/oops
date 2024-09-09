@@ -8,7 +8,8 @@ select_permissions:
         - edition_id
         - group_name
         - groups_id
-        - image_file_id
+        - level_image_id
+        - user_image_id
         - level_id
         - level_name
         - nick
@@ -23,7 +24,8 @@ select_permissions:
         - edition_id
         - group_name
         - groups_id
-        - image_file_id
+        - level_image_id
+        - user_image_id
         - level_id
         - level_name
         - nick
@@ -38,7 +40,8 @@ select_permissions:
         - edition_id
         - group_name
         - groups_id
-        - image_file_id
+        - level_image_id
+        - user_image_id
         - level_id
         - level_name
         - nick
@@ -50,7 +53,8 @@ select_permissions:
   - role: unauthenticated_user
     permission:
       columns:
-        - image_file_id
+        - level_image_id
+        - user_image_id
         - edition_id
         - level_id
         - level_name

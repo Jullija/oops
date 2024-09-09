@@ -1,8 +1,8 @@
 -- Create the user_level table
 CREATE TABLE user_level (
-                            user_id INT NOT NULL,
-                            level_id INT NOT NULL,
-                            edition_id INT NOT NULL,
+                            user_id BIGINT NOT NULL,
+                            level_id BIGINT NOT NULL,
+                            edition_id BIGINT NOT NULL,
                             label VARCHAR(256) NOT NULL DEFAULT '',
                             PRIMARY KEY (user_id, level_id),
                             CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id),

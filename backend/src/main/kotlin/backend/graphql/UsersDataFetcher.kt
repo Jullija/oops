@@ -77,6 +77,77 @@ class UsersDataFetcher {
         return usersRepository.save(user)
     }
 
+    @DgsMutation
+    @Transactional
+    fun editUser(
+        @InputArgument userId: Long,
+        @InputArgument indexNumber: Int?,
+        @InputArgument nick: String?,
+        @InputArgument firstName: String?,
+        @InputArgument secondName: String?,
+        @InputArgument role: String?,
+        @InputArgument label: String?
+    ): Users {
+        val user = usersRepository.findById(userId)
+            .orElseThrow { IllegalArgumentException("User not found") }
+
+        indexNumber?.let {
+            if (usersRepository.existsByIndexNumber(it) && it != user.indexNumber) {
+                throw IllegalArgumentException("User with index number $it already exists")
+            }
+            user.indexNumber = it
+        }
+
+        nick?.let {
+            if (usersRepository.findByNick(it) != null && it != user.nick) {
+                throw IllegalArgumentException("User with nick $it already exists")
+            }
+            user.nick = it
+        }
+
+        firstName?.let {
+            user.firstName = it
+        }
+
+        secondName?.let {
+            user.secondName = it
+        }
+
+        role?.let {
+            val userRole = try {
+                UsersRoles.valueOf(it.uppercase())
+            } catch (e: IllegalArgumentException) {
+                throw IllegalArgumentException("Invalid role")
+            }
+            user.role = userRole
+        }
+
+        label?.let {
+            user.label = it
+        }
+
+        return usersRepository.save(user)
+    }
+
+    @DgsMutation
+    @Transactional
+    fun removeUser(@InputArgument userId: Long): Boolean {
+        val user = usersRepository.findById(userId)
+            .orElseThrow { IllegalArgumentException("User not found") }
+
+        if (user.role == UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Cannot remove coordinator")
+        }
+
+        if (user.userGroups.isNotEmpty()){
+            throw IllegalArgumentException("Cannot remove user that is in a group")
+        }
+
+        usersRepository.delete(user)
+        return true
+    }
+
+
     @DgsQuery
     @Transactional
     fun getStudentPoints(@InputArgument studentId: Long, @InputArgument editionId: Long): StudentPointsType {
@@ -88,30 +159,38 @@ class UsersDataFetcher {
         if (user.userGroups.none { it.group.edition == edition }) {
             throw IllegalArgumentException("Student is not participating in this edition")
         }
+        val teacher = user.userGroups.filter { it.group.edition == edition }.firstOrNull()?.group?.teacher
+            ?: throw IllegalArgumentException("Student is not in any group")
         val points = pointsRepository.findAllByStudentAndSubcategory_Edition(user, edition)
         val bonuses = bonusesRepository.findByChestHistory_User_UserId(studentId)
 
         val subcategoryPoints = points.groupBy { it.subcategory }
             .map { (subcategory, points) ->
-                val purePoints = points.filter { bonusesRepository.findByPoints(it).isEmpty() }
-                val allBonuses = bonuses.filter { it.points.subcategory == subcategory }
+                val purePoints = points.filter { bonusesRepository.findByPoints(it).isEmpty() }.firstOrNull()
+                val allBonuses = bonuses.filter { (it.award.awardType != AwardType.MULTIPLICATIVE && it.points.subcategory == subcategory)  ||
+                        (it.award.awardType == AwardType.MULTIPLICATIVE && it.points.subcategory.category == subcategory.category) }
+                val partialBonusType = allBonuses.map { bonus ->
+                    PartialBonusType(
+                        bonuses = bonus,
+                        partialValue = if (bonus.award.awardType != AwardType.MULTIPLICATIVE) {
+                            bonus.points.value
+                        } else {
+                            purePoints?.value?.times(bonus.award.awardValue) ?: 0f
+                        }
+                    )
+                }
+                val createdAt = purePoints?.createdAt ?: allBonuses.minOfOrNull { it.points.createdAt } ?: LocalDateTime.now()
+                val updatedAt = purePoints?.updatedAt ?: allBonuses.maxOfOrNull { it.points.updatedAt } ?: LocalDateTime.now()
                 SubcategoryPointsType(
                     subcategory = subcategory,
                     points = PurePointsType(
-                        purePoints = if (purePoints.isNotEmpty()) purePoints.first() else null,
-                        partialBonusType = allBonuses.map { bonus ->
-                            PartialBonusType(
-                                bonuses = bonus,
-                                partialValue = if (bonus.award.awardType != AwardType.MULTIPLICATIVE) {
-                                    bonus.points.value
-                                } else {
-                                    purePoints.firstOrNull()?.value?.times(bonus.award.awardValue) ?: 0f
-                                }
-                            )
-                        }
-                    )
+                        purePoints = purePoints,
+                        partialBonusType = partialBonusType
+                    ),
+                    createdAt = createdAt,
+                    updatedAt = updatedAt
                 )
-            }.sortedWith(compareBy(::subcategoryPointsComparator))
+            }
 
         val sumOfPurePoints = subcategoryPoints.sumOf { it.points.purePoints?.value?.toDouble() ?: 0.0 }.toFloat()
         val sumOfBonuses = subcategoryPoints.sumOf { it.points.partialBonusType.sumOf { it.partialValue.toDouble() } }
@@ -120,8 +199,9 @@ class UsersDataFetcher {
 
         return StudentPointsType(
             user = user,
+            teacher = teacher,
             level = user.getLevelByEdition(edition)?.level,
-            subcategoryPoints = subcategoryPoints,
+            subcategoryPoints = subcategoryPoints.sortedByDescending { it.createdAt },
             sumOfPurePoints = sumOfPurePoints,
             sumOfBonuses = sumOfBonuses,
             sumOfAll = sumOfAll
@@ -140,11 +220,10 @@ class UsersDataFetcher {
             throw IllegalArgumentException("Student is not participating in this edition")
         }
         val points = pointsRepository.findAllByStudentAndSubcategory_Edition(user, edition)
-        val bonuses = bonusesRepository.findByChestHistory_User_UserId(studentId)
-        val categories = categoriesRepository.findAll()
+        val bonuses = bonusesRepository.findByChestHistory_User_UserId(studentId).filter { it.points.subcategory.edition == edition }
+        val categories = categoriesRepository.findByCategoryEdition_Edition(edition)
 
         return categories.filter{it.canAddPoints}
-                .filter { it.categoryEdition.any { editionEntry -> editionEntry.edition == edition } }
                 .map { category ->
                     val categoryPoints = points.filter { it.subcategory.category == category }
                     val purePoints = categoryPoints.filter { bonusesRepository.findByPoints(it).isEmpty() }
@@ -164,19 +243,11 @@ class UsersDataFetcher {
                     )
                 }
     }
-
-    private fun subcategoryPointsComparator(subcategoryPointsType: SubcategoryPointsType): Long {
-        val purePointsCreatedAt = subcategoryPointsType.points.purePoints?.createdAt
-                                                        ?.toInstant(ZoneOffset.UTC)?.toEpochMilli()
-        val bonusCreatedAt = subcategoryPointsType.points.partialBonusType.minOfOrNull {
-            it.bonuses.createdAt?.toInstant(ZoneOffset.UTC)?.toEpochMilli() ?: 0
-        }
-        return purePointsCreatedAt ?: bonusCreatedAt ?: LocalDateTime.MIN.toInstant(ZoneOffset.UTC).toEpochMilli()
-    }
 }
 
 data class StudentPointsType(
     val user: Users,
+    val teacher: Users,
     val level: Levels?,
     val subcategoryPoints: List<SubcategoryPointsType>,
     val sumOfPurePoints: Float,

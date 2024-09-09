@@ -83,6 +83,155 @@ type Mutation {
     subcategoryCount: Int!
     maxPoints: Float!
   ): [SubcategoryType]
+
+  removeAwardFromEdition(
+    awardId: Int!,
+    editionId: Int!
+  ): Boolean
+
+  editAward(
+    awardId: Int!,
+    awardName: String,
+    awardType: String,
+    awardValue: Float,
+    categoryId: Int,
+    maxUsages: Int,
+    label: String
+  ): AwardType
+
+  removeCategory(
+    categoryId: Int!
+  ): Boolean
+
+  editCategory(
+    categoryId: Int!,
+    categoryName: String,
+    canAddPoints: Boolean,
+    label: String
+  ): CategoryType
+
+  removeCategoryFromEdition(
+    categoryId: Int!,
+    editionId: Int!
+  ): Boolean
+
+  editChestHistory(
+    chestHistoryId: Int!,
+    userId: Int,
+    chestId: Int,
+    teacherId: Int,
+    subcategoryId: Int,
+    label: String
+  ): ChestHistoryType
+
+  removeChestFromUser(
+    chestHistoryId: Int!
+  ): Boolean
+
+  addAwardToChest(
+    awardId: Int!,
+    chestId: Int!
+  ): ChestAwardType
+
+  removeAwardFromChest(
+    awardId: Int!,
+    chestId: Int!
+  ): Boolean
+
+  editChest(
+    chestId: Int!,
+    chestType: String,
+    editionId: Int,
+    label: String
+  ): ChestType
+
+  removeChest(
+    chestId: Int!
+  ): Boolean
+
+  editEdition(
+    editionId: Int!,
+    editionName: String,
+    editionYear: Int,
+    label: String
+  ): EditionType
+
+  removeEdition(
+    editionId: Int!
+  ): Boolean
+
+  editGroup(
+    groupId: Int!,
+    groupName: String,
+    weekdayId: Int,
+    startTime: String,
+    endTime: String,
+    teacherId: Int,
+    label: String
+  ): GroupType
+
+  removeGroup(
+    groupId: Int!
+  ): Boolean
+
+  editLevel(
+    levelId: Int!,
+    name: String,
+    maximumPoints: Float,
+    grade: Float,
+    imageFileId: Int,
+    label: String
+  ): LevelType
+
+  removeLevel(
+    levelId: Int!
+  ): Boolean
+
+  editPoints(
+    pointsId: Int!,
+    updatedById: Int!,
+    value: Float
+  ): PointType
+
+  removePoints(
+    pointsId: Int!
+  ): Boolean
+
+  editSubcategory(
+    subcategoryId: Int!,
+    subcategoryName: String,
+    maxPoints: Float,
+    ordinalNumber: Int,
+    label: String
+  ): SubcategoryType
+
+  removeSubcategory(
+    subcategoryId: Int!
+  ): Boolean
+
+  addUserToGroup(
+    userId: Int!,
+    groupId: Int!
+  ): UserGroupType
+
+  removeUserFromGroup(
+    userId: Int!,
+    groupId: Int!
+  ): Boolean
+
+  editUser(
+    userId: Int!,
+    indexNumber: Int,
+    nick: String,
+    firstName: String,
+    secondName: String,
+    role: String,
+    label: String
+  ): UserType
+
+  removeUser(
+    userId: Int!
+  ): Boolean
 }
 
 type Query {
@@ -96,6 +245,7 @@ type Query {
   getPossibleGroupsTimeSpans(editionId: Int!): [TimeSpansType!]!
   getPossibleGroupDates(editionId: Int!): [GroupDateType!]!
   getNeighboringLevels(studentId: Int!, editionId: Int!): NeighboringLevelsType!
+  getGroupsInEdition(editionId: Int!, teacherId: Int!): [GroupTeacherType!]!
 }
 
 type AwardType {
@@ -190,7 +340,7 @@ type GroupType {
   groupsId: ID!
   groupName: String!
   label: String
-  teacher: UserType
+  teacher: UserType!
   weekday: WeekdayType!
   startTime: String!
   endTime: String!
@@ -307,6 +457,7 @@ type CategoryPointsSumType {
 
 type StudentPointsType {
   user: UserType!
+  teacher: UserType!
   level: LevelType
   subcategoryPoints: [SubcategoryPointsType!]!
   sumOfPurePoints: Float!
@@ -340,6 +491,8 @@ type CategoryPointsType {
 type SubcategoryPointsType {
   subcategory: SubcategoryType!
   points: PurePointsType!
+  createdAt: String!
+  updatedAt: String!
 }
 
 type PurePointsType {
@@ -367,4 +520,10 @@ type NeighboringLevelsType {
   prevLevel: LevelType
   currLevel: LevelType!
   nextLevel: LevelType
+}
+
+type GroupTeacherType {
+  group: GroupType!
+  owns: Boolean!
+  canEdit: Boolean!
 }
