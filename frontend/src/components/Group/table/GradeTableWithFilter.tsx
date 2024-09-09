@@ -20,6 +20,7 @@ type PointsTableProps = {
   categories: GradeCategory[];
 };
 
+// TODO add horizontal scroll and vertical scroll inside
 export const GradeTableWithFilter = ({
   data,
   categories,
