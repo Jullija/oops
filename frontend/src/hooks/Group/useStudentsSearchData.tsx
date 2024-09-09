@@ -1,9 +1,10 @@
 import { useStudentsInGroupQuery } from "../../graphql/studentsInGroup.graphql.types";
 import { ShortStudent } from "../../utils/types";
 
-export const useStudentsSearchData = (groupId: string) => {
+export const useStudentsSearchData = (groupId: string | undefined) => {
   const { data, loading, error } = useStudentsInGroupQuery({
-    variables: { groupId },
+    variables: { groupId: groupId as string },
+    skip: !groupId,
   });
 
   const students: ShortStudent[] | undefined = data?.userGroups.map((group) => {

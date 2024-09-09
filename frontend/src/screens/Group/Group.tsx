@@ -23,7 +23,7 @@ export const Group = () => {
   const params = useParams();
   const id = params.id;
 
-  const { students, loading, error } = useStudentsSearchData(id ?? "-1");
+  const { students, loading, error } = useStudentsSearchData(id);
 
   if (loading) {
     return <div>loading...</div>;
