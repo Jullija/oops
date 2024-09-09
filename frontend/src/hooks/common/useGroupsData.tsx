@@ -22,7 +22,6 @@ export type Timestamp = {
   end: string;
 };
 
-// TODO change editionId?: to | undefined
 export const useGroupsData = (editionId: string | undefined) => {
   const { data, loading, error } = useGroupsQuery({
     variables: {
