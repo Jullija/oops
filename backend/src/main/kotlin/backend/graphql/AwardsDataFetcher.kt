@@ -99,4 +99,73 @@ class AwardsDataFetcher {
         awardRepository.save(award)
         return award
     }
+
+    @DgsMutation
+    @Transactional
+    fun editAward(
+        @InputArgument awardId: Long,
+        @InputArgument awardName: String?,
+        @InputArgument awardType: String?,
+        @InputArgument awardValue: Float?,
+        @InputArgument categoryId: Long?,
+        @InputArgument maxUsages: Int?,
+        @InputArgument label: String?
+    ): Award {
+        val award = awardRepository.findById(awardId).orElseThrow { IllegalArgumentException("Invalid award ID") }
+
+        if (award.awardEditions.map { it.edition }.any { it.endDate.isBefore(java.time.LocalDate.now()) }) {
+            throw IllegalArgumentException("Edition with this award has already ended")
+        }
+
+        if (award.awardEditions.map { it.edition }.any { it.startDate.isBefore(java.time.LocalDate.now()) }) {
+            throw IllegalArgumentException("Edition with this award has already started")
+        }
+
+        awardName?.let {
+            val awardsWithSameName = awardRepository.findAllByAwardName(it)
+            if (awardsWithSameName.any { existing -> existing.awardType != award.awardType }) {
+                throw IllegalArgumentException("Award with this name cannot be updated with this type (already exists with different type)")
+            }
+            award.awardName = it
+        }
+
+        awardType?.let {
+            val parsedType = try {
+                AwardType.valueOf(it.uppercase())
+            } catch (e: IllegalArgumentException) {
+                throw IllegalArgumentException("Invalid award type")
+            }
+            award.awardType = parsedType
+        }
+
+        awardValue?.let {
+            if ((award.awardType == AwardType.ADDITIVE || award.awardType == AwardType.ADDITIVE_NEXT || award.awardType == AwardType.ADDITIVE_PREV) && it < 0) {
+                throw IllegalArgumentException("Additive award value must be greater than or equal to 0")
+            }
+            if (award.awardType == AwardType.MULTIPLICATIVE && (it <= 0 || it > 1)) {
+                throw IllegalArgumentException("Multiplicative award value must be greater than 0 and less than or equal to 1")
+            }
+            award.awardValue = it
+        }
+
+        categoryId?.let {
+            val category = categoriesRepository.findById(it).orElseThrow { IllegalArgumentException("Invalid category ID") }
+            if (!category.canAddPoints) {
+                throw IllegalArgumentException("This category does not allow adding points from awards")
+            }
+            award.category = category
+        }
+
+        maxUsages?.let {
+            award.maxUsages = it
+        }
+
+        label?.let {
+            award.label = it
+        }
+
+        awardRepository.save(award)
+        return award
+    }
+
 }

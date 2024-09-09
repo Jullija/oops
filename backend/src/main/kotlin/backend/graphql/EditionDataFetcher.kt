@@ -77,4 +77,67 @@ class EditionDataFetcher {
             label = label)
         return editionRepository.save(edition)
     }
+
+    @DgsMutation
+    @Transactional
+
+    fun editEdition(
+        @InputArgument editionId: Long,
+        @InputArgument editionName: String?,
+        @InputArgument editionYear: Int?,
+        @InputArgument label: String?
+    ): Edition {
+        val edition = editionRepository.findById(editionId)
+            .orElseThrow { IllegalArgumentException("Invalid edition ID") }
+
+        if (edition.endDate.isBefore(LocalDate.now())) {
+            throw IllegalArgumentException("Edition has already ended")
+        }
+        if (edition.startDate.isBefore(LocalDate.now())) {
+            throw IllegalArgumentException("Edition has already started")
+        }
+
+        editionName?.let {
+            if (editionRepository.existsByEditionName(it) && it != edition.editionName) {
+                throw IllegalArgumentException("Edition with name $it already exists")
+            }
+            edition.editionName = it
+        }
+
+        editionYear?.let {
+            val currentYear = LocalDate.now().year
+            if (it < currentYear || it > currentYear + 10) {
+                throw IllegalArgumentException("Edition year must be between $currentYear and ${currentYear + 10}")
+            }
+            if (editionRepository.existsByEditionYear(it) && it != edition.editionYear) {
+                throw IllegalArgumentException("Edition with year $it already exists")
+            }
+            edition.editionYear = it
+            edition.startDate = LocalDate.of(it, 10, 1)
+            edition.endDate = LocalDate.of(it + 1, 9, 30)
+        }
+
+        label?.let {
+            edition.label = it
+        }
+
+        return editionRepository.save(edition)
+    }
+
+    @DgsMutation
+    @Transactional
+    fun removeEdition(@InputArgument editionId: Long): Boolean {
+        val edition = editionRepository.findById(editionId)
+            .orElseThrow { IllegalArgumentException("Invalid edition ID") }
+
+        if (edition.endDate.isBefore(LocalDate.now())) {
+            throw IllegalArgumentException("Edition has already ended")
+        }
+        if (edition.startDate.isBefore(LocalDate.now())) {
+            throw IllegalArgumentException("Edition has already started")
+        }
+
+        editionRepository.delete(edition)
+        return true
+    }
 }

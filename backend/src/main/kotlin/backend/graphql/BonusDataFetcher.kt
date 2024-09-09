@@ -195,12 +195,16 @@ class BonusDataFetcher {
         }
         val totalPointsValue = pointsInAwardCategory.sumOf { it.value.toDouble() }.toFloat()
 
+        val subcategory = subcategoriesRepository.findFirstByCategoryAndEditionOrderByOrdinalNumberAsc(
+            award.category, edition
+        ).orElseThrow { IllegalArgumentException("No subcategory found in the specified category.") }
+
         return Points(
             student = chestHistory.user,
             teacher = chestHistory.teacher,
             updatedBy = chestHistory.teacher,
             value = totalPointsValue * award.awardValue,
-            subcategory = chestHistory.subcategory,
+            subcategory = subcategory,
             label = "Points awarded for ${award.awardName}"
         )
     }
