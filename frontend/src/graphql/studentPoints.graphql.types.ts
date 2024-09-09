@@ -36,11 +36,11 @@ export type StudentPointsQuery = {
             weekdayId: string;
             weekdayName: string;
           };
-          teacher?: {
+          teacher: {
             __typename?: "UserType";
             firstName: string;
             secondName: string;
-          } | null;
+          };
         };
       } | null>;
     };

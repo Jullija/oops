@@ -1,4 +1,5 @@
 import { Styles } from "../../utils/Styles";
+import { Avatar } from "../images/Avatar";
 
 export const HALL_OF_FAME_STUDENT_CARD_ID_PREFIX = "student-";
 
@@ -11,12 +12,6 @@ const styles: Styles = {
     gap: 12,
     padding: 12,
     boxSizing: "border-box",
-  },
-  photoPlaceholder: {
-    width: 30,
-    height: 30,
-    borderRadius: "50%",
-    backgroundColor: "gray",
   },
 };
 
@@ -33,13 +28,23 @@ export type HallOfFameStudentData = {
   // TODO string wtf
   totalPoints: number | string;
   groupId: string;
+  avatarImgId?: string;
+  levelImgId?: string;
 };
 
 export const HallOfFameStudentCard = ({
   student,
   isHighlighted,
 }: HallOfFameStudentCardProps) => {
-  const { id, position, nick, levelName, totalPoints } = student;
+  const {
+    id,
+    position,
+    nick,
+    levelName,
+    totalPoints,
+    avatarImgId,
+    levelImgId,
+  } = student;
 
   return (
     <div
@@ -50,9 +55,9 @@ export const HallOfFameStudentCard = ({
       }}
     >
       <div>{position}.</div>
-      <div style={styles.photoPlaceholder} />
+      <Avatar id={avatarImgId} size={"xs"} />
       <div>{nick}</div>
-      <div style={styles.photoPlaceholder} />
+      <Avatar id={levelImgId} size={"xs"} />
       <div>{levelName}</div>
       <div>{totalPoints} pkt</div>
     </div>

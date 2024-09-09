@@ -13,12 +13,13 @@ type AvatarProps = {
   size: AvatarSize;
 };
 
-type AvatarSize = "sm" | "md" | "lg";
+type AvatarSize = "xs" | "s" | "m" | "l";
 
 const sizeMap: Record<AvatarSize, number> = {
-  sm: 60,
-  md: 100,
-  lg: 140,
+  xs: 40,
+  s: 60,
+  m: 100,
+  l: 140,
 };
 
 export const Avatar = ({ id, size }: AvatarProps) => {

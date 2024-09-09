@@ -35,7 +35,7 @@ export function StudentCard({
 }: StudentCardData) {
   return (
     <div style={styles.container}>
-      <Avatar id={avatarId} size="lg" />
+      <Avatar id={avatarId} size="l" />
       <div style={styles.studentName}>{displayName}</div>
       <div>indeks: {index}</div>
       <div>

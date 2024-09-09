@@ -48,7 +48,7 @@ export const StudentsListCard = ({
     <div style={styles.container} onClick={onClick}>
       {/* TODO why need for div? */}
       <div>
-        <Avatar id={student.avatarId} size={"sm"} />
+        <Avatar id={student.avatarId} size={"s"} />
       </div>
       <div style={styles.textContainer}>
         <div style={styles.title}>{student.firstName}</div>

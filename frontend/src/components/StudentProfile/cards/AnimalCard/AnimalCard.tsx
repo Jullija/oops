@@ -39,7 +39,7 @@ export const AnimalCard = ({
 }: AnimalCardProps) => {
   return (
     <div style={styles.card}>
-      <Avatar id={currLevel.imageFile?.fileId} size="lg" />
+      <Avatar id={currLevel.imageFile?.fileId} size="l" />
       <div style={styles.title}>
         obecny level: {currLevel.levelName} - lvl. {currLevel.ordinalNumber}
       </div>

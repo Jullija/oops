@@ -1,4 +1,5 @@
 import { Styles } from "../../../utils/Styles";
+import { Avatar } from "../../images/Avatar";
 import { HallOfFameStudentData } from "../HallOfFameStudentCard";
 
 const styles: Styles = {
@@ -13,12 +14,6 @@ const styles: Styles = {
     flexDirection: "column",
     gap: 8,
     alignItems: "center",
-  },
-  imagePlaceholder: {
-    width: 64,
-    height: 64,
-    borderRadius: "100%",
-    backgroundColor: "violet",
   },
   box: {
     display: "flex",
@@ -48,7 +43,7 @@ export const PodiumItem = ({ student, place }: PodiumItemProps) => {
   return (
     <div style={styles.container}>
       <div style={styles.studentContainer}>
-        <div style={styles.imagePlaceholder} />
+        <Avatar id={student.avatarImgId} size={"m"} />
         <div>{student.nick}</div>
       </div>
       <div

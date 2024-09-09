@@ -20,7 +20,7 @@ export const LevelMiniature = ({
   return (
     <div>
       <div style={withOpacity ? styles.opacity : undefined}>
-        <Avatar id={level.imageFile?.fileId} size="sm" />
+        <Avatar id={level.imageFile?.fileId} size="s" />
       </div>
       <div>lvl. {level.ordinalNumber}</div>
       <div>{level.levelName}</div>
