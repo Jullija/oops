@@ -7814,6 +7814,7 @@ export type SubcategoryPointsType = {
   createdAt: Scalars["String"]["output"];
   points: PurePointsType;
   subcategory: SubcategoryType;
+  teacher: UserType;
   updatedAt: Scalars["String"]["output"];
 };
 

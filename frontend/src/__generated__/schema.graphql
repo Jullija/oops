@@ -11056,6 +11056,7 @@ type SubcategoryPointsType {
   createdAt: String!
   points: PurePointsType!
   subcategory: SubcategoryType!
+  teacher: UserType!
   updatedAt: String!
 }
 
