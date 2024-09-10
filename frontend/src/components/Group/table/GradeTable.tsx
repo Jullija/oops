@@ -13,11 +13,13 @@ import {
   GradeRowData,
   GradeSubcategory,
 } from "../../../hooks/Group/useGroupScreenData";
+import { Styles } from "../../../utils/Styles";
 
 type GradeTableProps = {
   data: GradeRowData[];
   subcategoriesHeaders: GradeSubcategory[];
 };
+
 export const GradeTable = ({ data, subcategoriesHeaders }: GradeTableProps) => {
   const darkTheme = createTheme({
     palette: {
@@ -27,32 +29,27 @@ export const GradeTable = ({ data, subcategoriesHeaders }: GradeTableProps) => {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ maxHeight: 600 }}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell style={{ fontWeight: "bold", fontSize: 16 }}>
-                student
-              </TableCell>
+              <TableCell style={styles.headerStudentCell}>Student</TableCell>
               {subcategoriesHeaders.map((header, index) => (
-                <TableCell
-                  key={index}
-                  style={{ fontWeight: "bold", fontSize: 16 }}
-                  align="center"
-                >
+                <TableCell key={index} style={styles.headerCell} align="center">
                   {header.name}
                 </TableCell>
               ))}
             </TableRow>
           </TableHead>
+
           <TableBody>
             {data.map((item, idx) => (
-              <TableRow>
-                <TableCell>
+              <TableRow key={idx}>
+                <TableCell style={styles.regularStudentCell}>
                   {idx + 1}. {item.student.fullName}
                 </TableCell>
-                {item.subcategories.map((s) => (
-                  <TableCell>{s.pure}</TableCell>
+                {item.subcategories.map((subcategory, subIdx) => (
+                  <TableCell key={subIdx}>{subcategory.pure}</TableCell>
                 ))}
               </TableRow>
             ))}
@@ -61,4 +58,40 @@ export const GradeTable = ({ data, subcategoriesHeaders }: GradeTableProps) => {
       </TableContainer>
     </ThemeProvider>
   );
+};
+
+const styles: Styles = {
+  headerStudentCell: {
+    fontWeight: "bold",
+    fontSize: 16,
+    position: "sticky",
+    top: 0,
+    left: 0,
+    width: 200,
+    minWidth: 200,
+    maxWidth: 200,
+    backgroundColor: "black",
+    zIndex: 2,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  },
+  headerCell: {
+    fontWeight: "bold",
+    fontSize: 16,
+    position: "sticky",
+    top: 0,
+    backgroundColor: "black",
+    zIndex: 1,
+  },
+  regularStudentCell: {
+    position: "sticky",
+    left: 0,
+    width: 200,
+    minWidth: 200,
+    maxWidth: 200,
+    backgroundColor: "black",
+    zIndex: 1,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  },
 };
