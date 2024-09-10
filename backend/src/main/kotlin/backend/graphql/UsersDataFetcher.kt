@@ -179,6 +179,7 @@ class UsersDataFetcher {
                         }
                     )
                 }
+                val teacherToPoints = purePoints?.teacher ?: allBonuses.maxByOrNull { it.updatedAt }?.points?.teacher ?: Users()
                 val createdAt = purePoints?.createdAt ?: allBonuses.minOfOrNull { it.points.createdAt } ?: LocalDateTime.now()
                 val updatedAt = purePoints?.updatedAt ?: allBonuses.maxOfOrNull { it.points.updatedAt } ?: LocalDateTime.now()
                 SubcategoryPointsType(
@@ -187,6 +188,7 @@ class UsersDataFetcher {
                         purePoints = purePoints,
                         partialBonusType = partialBonusType
                     ),
+                    teacher = teacherToPoints,
                     createdAt = createdAt,
                     updatedAt = updatedAt
                 )
