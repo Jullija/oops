@@ -29,17 +29,13 @@ export const GroupTable = ({ rows, subcategories }: GroupTableProps) => {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <TableContainer component={Paper} sx={{ maxHeight: 600 }}>
+      <TableContainer component={Paper} sx={{ maxHeight: 560 }}>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell style={styles.headerStudentCell}>Student</TableCell>
               {subcategories.map((subcategory) => (
-                <TableCell
-                  key={subcategory.id}
-                  style={styles.headerCell}
-                  align="center"
-                >
+                <TableCell key={subcategory.id} style={styles.headerCell}>
                   {subcategory.name}
                 </TableCell>
               ))}
