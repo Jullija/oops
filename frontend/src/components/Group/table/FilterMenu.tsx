@@ -1,11 +1,11 @@
 import { Styles } from "../../../utils/Styles";
 import { FilterItem } from "../../Groups/FilterBar/FilterOptionsSection";
 
+// TODO it's a copy of another FilterMenu
 const styles: Styles = {
   container: {
     display: "flex",
-    flexWrap: "wrap", // Added to wrap items if they overflow
-    gap: "10px", // Added gap between items
+    gap: "10px",
   },
   item: {
     border: "1px solid black",

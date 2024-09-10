@@ -4,8 +4,7 @@ import { FilterItem } from "../../Groups/FilterBar/FilterOptionsSection";
 const styles: Styles = {
   container: {
     display: "flex",
-    flexWrap: "wrap", // Added to wrap items if they overflow
-    gap: "10px", // Added gap between items
+    gap: "10px",
   },
   item: {
     border: "1px solid black",
