@@ -1,17 +1,17 @@
 import { useGroupPointsQuery } from "../../graphql/groupPoints.graphql.types";
 
-export type GradeCategory = {
+export type Category = {
   id: string;
   name: string;
-  subcategories: GradeSubcategory[];
+  subcategories: Subcategory[];
 };
 
-export type GradeSubcategory = {
+export type Subcategory = {
   id: string;
   name: string;
 };
 
-export type GradeRowData = {
+export type GroupTableRow = {
   student: Student;
   subcategories: SubcategoryPoints[];
 };
@@ -22,52 +22,51 @@ type Student = {
   index: number;
 };
 
-type SubcategoryPoints = {
+export type SubcategoryPoints = {
   pure: number;
   subcategoryId: string;
   categoryId: string;
 };
 
 export const useGroupScreenData = (groupId: number | undefined) => {
-  const {
-    data,
-    loading: gLoading,
-    error: gError,
-  } = useGroupPointsQuery({
+  const { data, loading, error } = useGroupPointsQuery({
     variables: { groupId: groupId as number },
     skip: !groupId,
   });
 
-  const categories: GradeCategory[] =
-    data?.getUsersInGroupWithPoints[0]?.categoriesPoints.map((p) => {
+  const categories: Category[] =
+    data?.getUsersInGroupWithPoints[0]?.categoriesPoints.map((item) => {
+      const category = item.category;
+      const subcategoryPoints = item.subcategoryPoints;
       return {
-        id: p.category.categoryId,
-        name: p.category.categoryName,
+        id: category.categoryId,
+        name: category.categoryName,
         subcategories:
-          p.subcategoryPoints.map((s) => {
+          subcategoryPoints.map((points) => {
             return {
-              id: s.subcategory.subcategoryId,
-              name: s.subcategory.subcategoryName,
+              id: points.subcategory.subcategoryId,
+              name: points.subcategory.subcategoryName,
             };
           }) ?? [],
       };
     }) ?? [];
 
-  const rowsData: GradeRowData[] =
-    data?.getUsersInGroupWithPoints.map((item) => {
+  const rows: GroupTableRow[] =
+    data?.getUsersInGroupWithPoints.map((userPoints) => {
+      const user = userPoints?.user;
       return {
         student: {
-          id: item?.user.userId ?? "-1",
-          fullName: `${item?.user.firstName ?? "-"} ${item?.user.secondName ?? "-"}`,
-          index: item?.user.indexNumber ?? -1,
+          id: user?.userId ?? "-1",
+          fullName: `${user?.firstName ?? "-"} ${user?.secondName ?? "-"}`,
+          index: user?.indexNumber ?? -1,
         },
         subcategories:
-          item?.categoriesPoints.flatMap((c) =>
-            c.subcategoryPoints.map((sb) => {
+          userPoints?.categoriesPoints.flatMap((catPoints) =>
+            catPoints.subcategoryPoints.map((subPoints) => {
               return {
-                pure: sb.points.purePoints?.value ?? 0,
-                subcategoryId: sb.subcategory.subcategoryId,
-                categoryId: c.category.categoryId,
+                pure: subPoints.points.purePoints?.value ?? 0,
+                subcategoryId: subPoints.subcategory.subcategoryId,
+                categoryId: catPoints.category.categoryId,
               };
             }),
           ) ?? [],
@@ -75,9 +74,9 @@ export const useGroupScreenData = (groupId: number | undefined) => {
     }) ?? [];
 
   return {
-    data: rowsData,
+    rows,
     categories,
-    loading: gLoading,
-    error: gError,
+    loading,
+    error,
   };
 };

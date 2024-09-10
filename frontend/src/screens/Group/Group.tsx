@@ -21,16 +21,12 @@ const styles: Styles = {
 export const Group = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const id = params.id ? parseInt(params.id) : undefined;
+  const groupId = params.id ? parseInt(params.id) : undefined;
 
-  const { data, categories, loading, error } = useGroupScreenData(id);
+  const { rows, categories, loading, error } = useGroupScreenData(groupId);
 
-  if (loading) {
-    return <div>loading...</div>;
-  }
-  if (error) {
-    return <div>ERROR: {error.message}</div>;
-  }
+  if (loading) return <div>loading...</div>;
+  if (error) return <div>ERROR: {error.message}</div>;
 
   return (
     <div style={styles.screenContainer}>
@@ -38,9 +34,10 @@ export const Group = () => {
         <button onClick={() => navigate(pathsGenerator.teacher.Groups)}>
           go back to groups list
         </button>
-        <div>params - group id: {id}</div>
+        <div>params - group id: {groupId}</div>
       </div>
-      <GroupTableWithFilters data={data} categories={categories} />
+
+      <GroupTableWithFilters rows={rows} categories={categories} />
     </div>
   );
 };

@@ -3,50 +3,47 @@ import FilterMenu from "./FilterMenu";
 import { useState } from "react";
 import { GroupTable } from "./GroupTable";
 import {
-  GradeCategory,
-  GradeRowData,
+  Category,
+  GroupTableRow,
+  SubcategoryPoints,
 } from "../../../hooks/Group/useGroupScreenData";
 
-const styles: Styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-  },
-};
-
 type GroupTableWithFiltersProps = {
-  data: GradeRowData[];
-  categories: GradeCategory[];
+  rows: GroupTableRow[];
+  categories: Category[];
 };
 
-// TODO add horizontal scroll and vertical scroll inside
 export const GroupTableWithFilters = ({
-  data,
+  rows,
   categories,
 }: GroupTableWithFiltersProps) => {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
-  const isInSelected = (s: GradeCategory) => {
-    return selectedCategoryIds.some((categoryId) => categoryId === s.id);
+
+  const isCategorySelected = (category: Category) => {
+    return selectedCategoryIds.some((categoryId) => categoryId === category.id);
   };
 
-  const categoriesToDisplay =
-    selectedCategoryIds.length === 0
-      ? categories.map((c) => c.subcategories).flat()
-      : categories
-          .filter(isInSelected)
-          .map((c) => c.subcategories)
-          .flat();
+  const arePointsSelected = (points: SubcategoryPoints) => {
+    return selectedCategoryIds.some(
+      (categoryId) => categoryId === points.categoryId,
+    );
+  };
 
-  const dataToDisplay: GradeRowData[] = data.map((item) => {
-    return selectedCategoryIds.length === 0
-      ? item
-      : {
-          ...item,
-          subcategories: item.subcategories.filter((a) =>
-            selectedCategoryIds.some((d) => d === a.categoryId),
-          ),
-        };
+  const applyFilters = selectedCategoryIds.length !== 0;
+
+  const subcategoriesToDisplay = (
+    applyFilters ? categories.filter(isCategorySelected) : categories
+  )
+    .map((category) => category.subcategories)
+    .flat();
+
+  const rowsToDisplay: GroupTableRow[] = rows.map((row) => {
+    return {
+      ...row,
+      subcategories: applyFilters
+        ? row.subcategories.filter(arePointsSelected)
+        : row.subcategories,
+    };
   });
 
   return (
@@ -56,14 +53,19 @@ export const GroupTableWithFilters = ({
         onSelectChange={(selectedIds) => {
           setSelectedCategoryIds(selectedIds);
         }}
-        filterItems={categories.map((c) => {
-          return { id: c.id, name: c.name };
+        filterItems={categories.map((category) => {
+          return { id: category.id, name: category.name };
         })}
       />
-      <GroupTable
-        data={dataToDisplay}
-        subcategoriesHeaders={categoriesToDisplay}
-      />
+      <GroupTable rows={rowsToDisplay} subcategories={subcategoriesToDisplay} />
     </div>
   );
+};
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+  },
 };

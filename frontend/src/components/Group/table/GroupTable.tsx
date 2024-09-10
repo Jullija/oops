@@ -10,17 +10,17 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import {
-  GradeRowData,
-  GradeSubcategory,
+  GroupTableRow,
+  Subcategory,
 } from "../../../hooks/Group/useGroupScreenData";
 import { Styles } from "../../../utils/Styles";
 
 type GroupTableProps = {
-  data: GradeRowData[];
-  subcategoriesHeaders: GradeSubcategory[];
+  rows: GroupTableRow[];
+  subcategories: Subcategory[];
 };
 
-export const GroupTable = ({ data, subcategoriesHeaders }: GroupTableProps) => {
+export const GroupTable = ({ rows, subcategories }: GroupTableProps) => {
   const darkTheme = createTheme({
     palette: {
       mode: "dark",
@@ -34,22 +34,30 @@ export const GroupTable = ({ data, subcategoriesHeaders }: GroupTableProps) => {
           <TableHead>
             <TableRow>
               <TableCell style={styles.headerStudentCell}>Student</TableCell>
-              {subcategoriesHeaders.map((header, index) => (
-                <TableCell key={index} style={styles.headerCell} align="center">
-                  {header.name}
+              {subcategories.map((subcategory) => (
+                <TableCell
+                  key={subcategory.id}
+                  style={styles.headerCell}
+                  align="center"
+                >
+                  {subcategory.name}
                 </TableCell>
               ))}
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {data.map((item, idx) => (
-              <TableRow key={idx}>
+            {rows.map((row, index) => (
+              <TableRow key={row.student.id}>
                 <TableCell style={styles.regularStudentCell}>
-                  {idx + 1}. {item.student.fullName}
+                  {index + 1}. {row.student.fullName}
                 </TableCell>
-                {item.subcategories.map((subcategory, subIdx) => (
-                  <TableCell key={subIdx}>{subcategory.pure}</TableCell>
+                {row.subcategories.map((subcategory) => (
+                  <TableCell
+                    key={`${row.student.id}-${subcategory.subcategoryId}`}
+                  >
+                    {subcategory.pure}
+                  </TableCell>
                 ))}
               </TableRow>
             ))}
