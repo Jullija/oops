@@ -15,12 +15,12 @@ import {
 } from "../../../hooks/Group/useGroupScreenData";
 import { Styles } from "../../../utils/Styles";
 
-type GradeTableProps = {
+type GroupTableProps = {
   data: GradeRowData[];
   subcategoriesHeaders: GradeSubcategory[];
 };
 
-export const GradeTable = ({ data, subcategoriesHeaders }: GradeTableProps) => {
+export const GroupTable = ({ data, subcategoriesHeaders }: GroupTableProps) => {
   const darkTheme = createTheme({
     palette: {
       mode: "dark",

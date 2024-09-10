@@ -1,7 +1,7 @@
 import { Styles } from "../../../utils/Styles";
 import FilterMenu from "./FilterMenu";
 import { useState } from "react";
-import { GradeTable } from "./GradeTable";
+import { GroupTable } from "./GroupTable";
 import {
   GradeCategory,
   GradeRowData,
@@ -15,16 +15,16 @@ const styles: Styles = {
   },
 };
 
-type PointsTableProps = {
+type GroupTableWithFiltersProps = {
   data: GradeRowData[];
   categories: GradeCategory[];
 };
 
 // TODO add horizontal scroll and vertical scroll inside
-export const GradeTableWithFilter = ({
+export const GroupTableWithFilters = ({
   data,
   categories,
-}: PointsTableProps) => {
+}: GroupTableWithFiltersProps) => {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const isInSelected = (s: GradeCategory) => {
     return selectedCategoryIds.some((categoryId) => categoryId === s.id);
@@ -60,7 +60,7 @@ export const GradeTableWithFilter = ({
           return { id: c.id, name: c.name };
         })}
       />
-      <GradeTable
+      <GroupTable
         data={dataToDisplay}
         subcategoriesHeaders={categoriesToDisplay}
       />

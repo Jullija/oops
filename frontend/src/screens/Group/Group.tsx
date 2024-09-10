@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Styles } from "../../utils/Styles";
 import { pathsGenerator } from "../../router/paths";
 import { useGroupScreenData } from "../../hooks/Group/useGroupScreenData";
-import { GradeTableWithFilter } from "../../components/Group/table/GradeTableWithFilter";
+import { GroupTableWithFilters } from "../../components/Group/table/GroupTableWithFilters";
 
 const styles: Styles = {
   screenContainer: {
@@ -40,7 +40,7 @@ export const Group = () => {
         </button>
         <div>params - group id: {id}</div>
       </div>
-      <GradeTableWithFilter data={data} categories={categories} />
+      <GroupTableWithFilters data={data} categories={categories} />
     </div>
   );
 };
