@@ -30,6 +30,7 @@ dependencyManagement {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("com.google.firebase:firebase-admin:9.2.0")
 	implementation("org.flywaydb:flyway-core")
 	implementation("org.postgresql:postgresql")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
