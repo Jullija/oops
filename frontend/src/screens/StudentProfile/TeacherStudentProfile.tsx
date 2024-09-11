@@ -7,6 +7,7 @@ import { useUser } from "../../hooks/common/useUser";
 import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
 import { SideBar } from "../../components/StudentProfile/SideBar";
 import { PointsTableWithFilter } from "../../components/StudentProfile/table/PointsTableWithFilter";
+import { useCategories } from "../../hooks/common/useCategories";
 
 const styles: Styles = {
   container: {
@@ -44,12 +45,21 @@ export function TeacherStudentProfile() {
   const [createPoints, { error: createPointsError }] =
     useCreatePointsMutation();
 
-  if (loading) return <p>Loading...</p>;
+  const {
+    categories: formCategories,
+    loading: formDataLoading,
+    error: formDataError,
+  } = useCategories();
+
+  if (loading || formDataLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
+  if (formDataError) return <p>Error: {formDataError.message}</p>;
+
   if (!studentData) return <p>Student is undefined</p>;
   if (!currLevel) return <p>Curr level is undefined</p>;
 
   const handleAdd = (formPoints: FormPoints) => {
+    // console.log("VALUES: ", formPoints);
     createPoints({
       variables: {
         studentId: parseInt(studentId ?? "-1"),
@@ -72,13 +82,14 @@ export function TeacherStudentProfile() {
         nextLevel={nextLevel}
       />
       <div style={styles.rightContainer}>
-        <PointsTableWithFilter
-          points={points}
-          filterHeaderNames={filterHeaderNames}
-        />
         <PointsForm
           handleAddPoints={handleAdd}
           createError={createPointsError?.message}
+          categories={formCategories}
+        />
+        <PointsTableWithFilter
+          points={points}
+          filterHeaderNames={filterHeaderNames}
         />
       </div>
     </div>

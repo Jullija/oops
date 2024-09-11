@@ -9,6 +9,7 @@ export type Category = {
 export type Subcategory = {
   id: string;
   name: string;
+  maxPoints: number;
 };
 
 export type GroupTableRow = {
@@ -46,6 +47,7 @@ export const useGroupScreenData = (groupId: number | undefined) => {
             return {
               id: points.subcategory.subcategoryId,
               name: points.subcategory.subcategoryName,
+              maxPoints: points.subcategory.maxPoints,
             };
           }) ?? [],
       };

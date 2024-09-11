@@ -1,12 +1,11 @@
 import { useFormik } from "formik";
 import { ZodError, z } from "zod";
 import { useState } from "react";
-import { FormPoints, Subcategory } from "./types";
-import { useCategoriesQuery } from "../../../graphql/categories.graphql.types";
-import { useEditionSelection } from "../../../hooks/common/useEditionSelection";
+import { FormPoints } from "./types";
 import { Styles } from "../../../utils/Styles";
 import { NumberInput } from "../../inputs/NumberInput";
 import { SelectInput } from "../../inputs/SelectInput";
+import { Category } from "../../../hooks/Group/useGroupScreenData";
 
 const styles: Styles = {
   container: {
@@ -17,8 +16,12 @@ const styles: Styles = {
     border: "1px solid black",
     width: 500,
   },
-  title: { fontWeight: "bold" },
-  error: { color: "red" },
+  title: {
+    fontWeight: "bold",
+  },
+  error: {
+    color: "red",
+  },
 };
 
 type PointsFormValues = z.infer<typeof ValidationSchema>;
@@ -32,11 +35,13 @@ const ValidationSchema = z.object({
 type PointFormProps = {
   handleAddPoints: (formPoints: FormPoints) => void;
   createError?: string;
+  categories: Category[];
 };
 
 export const PointsForm = ({
   handleAddPoints,
   createError,
+  categories,
 }: PointFormProps) => {
   const formik = useFormik({
     initialValues: {
@@ -45,13 +50,34 @@ export const PointsForm = ({
       points: 0,
     },
     validate: (values: PointsFormValues) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const errors: any = {};
+
+      // schema validation
       try {
         ValidationSchema.parse(values);
       } catch (error) {
         if (error instanceof ZodError) {
-          return error.formErrors.fieldErrors;
+          Object.assign(errors, error.formErrors.fieldErrors);
         }
       }
+
+      // custom validation
+      const selectedCategory = categories.find(
+        (cat) => cat.id === values.categoryId,
+      );
+      const selectedSubcategory = selectedCategory?.subcategories.find(
+        (sub) => sub.id === values.subcategoryId,
+      );
+
+      if (
+        selectedSubcategory &&
+        values.points > selectedSubcategory.maxPoints
+      ) {
+        errors.points = `max is ${selectedSubcategory.maxPoints}`;
+      }
+
+      return errors;
     },
     onSubmit: (values: PointsFormValues) => {
       const points: FormPoints = {
@@ -62,36 +88,24 @@ export const PointsForm = ({
     },
   });
 
-  const [subcategories, setSubcategories] = useState<
-    Subcategory[] | undefined
-  >();
-  const { selectedEdition } = useEditionSelection();
-  const { data, loading, error } = useCategoriesQuery({
-    variables: { editionId: selectedEdition?.editionId as string },
-    skip: !selectedEdition?.editionId,
-  });
-
-  if (loading) {
-    return <div>loading...</div>;
-  }
-  if (error) {
-    return <div>ERROR: {error.message}</div>;
-  }
-  const categories = data?.categories;
+  const [subcategories, setSubcategories] = useState(
+    categories[0].subcategories,
+  );
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const categoryId = e.target.value;
-    setSubcategories(
-      categories?.find((category) => category.categoryId === categoryId)
-        ?.subcategories,
-    );
+    const updatedSubcategories =
+      categories.find((category) => category.id === categoryId)
+        ?.subcategories ?? [];
+    setSubcategories(updatedSubcategories);
+
     formik.setFieldValue("categoryId", categoryId);
-    formik.setFieldValue("subcategoryId", "-");
+    formik.setFieldValue("subcategoryId", updatedSubcategories[0]?.id ?? "");
   };
 
   return (
     <div style={styles.container}>
-      <div style={styles.title}>add points</div>
+      <div style={styles.title}>Add Points</div>
       <form onSubmit={formik.handleSubmit}>
         <SelectInput
           handleChange={handleCategoryChange}
@@ -101,10 +115,10 @@ export const PointsForm = ({
           touched={formik.touched.categoryId}
           name="categoryId"
           optionItems={categories?.map((category) => ({
-            value: category.categoryId,
-            title: category.categoryName,
+            value: category.id,
+            title: category.name,
           }))}
-          label="category"
+          label="Category"
         />
         <SelectInput
           handleChange={formik.handleChange}
@@ -114,10 +128,10 @@ export const PointsForm = ({
           touched={formik.touched.subcategoryId}
           name="subcategoryId"
           optionItems={subcategories?.map((subcategory) => ({
-            value: subcategory.subcategoryId,
-            title: subcategory.subcategoryName,
+            value: subcategory.id,
+            title: subcategory.name,
           }))}
-          label="subcategory"
+          label="Subcategory"
         />
         <NumberInput
           handleChange={formik.handleChange}
@@ -126,9 +140,9 @@ export const PointsForm = ({
           error={formik.errors.points}
           touched={formik.touched.points}
           name="points"
-          label="points"
+          label="Points"
         />
-        <button type="submit">add points</button>
+        <button type="submit">Add Points</button>
       </form>
       {createError && <p style={styles.error}>Error: {createError}</p>}
     </div>
