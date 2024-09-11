@@ -10,11 +10,11 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { Points } from "../../../hooks/StudentProfile/useStudentData";
-import { CategoryTag } from "./CategoryTag";
+import { CategoryTag } from "../../CategoryTag";
 import { Styles } from "../../../utils/Styles";
 import { AwardImg } from "../../images/AwardImg";
 
-type PointsTableProps = {
+type StudentTableProps = {
   points: Points[];
 };
 
@@ -44,7 +44,7 @@ const headerTitles: HeaderCellData[] = [
   { name: "prowadzący", align: "center" },
 ];
 
-export const PointsTable = ({ points }: PointsTableProps) => {
+export const StudentTable = ({ points }: StudentTableProps) => {
   const getPointsValueString = (points: Points) => {
     const pure = points.points.purePoints?.value ?? 0;
     let totalBonus = 0;

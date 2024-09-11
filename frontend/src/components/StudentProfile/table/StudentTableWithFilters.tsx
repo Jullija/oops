@@ -3,7 +3,7 @@ import FilterMenu from "./FilterMenu";
 import { useState } from "react";
 import { Points } from "../../../hooks/StudentProfile/useStudentData";
 import { FilterItem } from "../../Groups/FilterBar/FilterOptionsSection";
-import { PointsTable } from "./PointsTable";
+import { StudentTable } from "./StudentTable";
 
 const styles: Styles = {
   container: {
@@ -14,15 +14,15 @@ const styles: Styles = {
   },
 };
 
-type PointsTableProps = {
+type StudentTableWithFiltersProps = {
   points: Points[];
   filterHeaderNames: FilterItem[];
 };
 
-export const PointsTableWithFilter = ({
+export const StudentTableWithFilters = ({
   points,
   filterHeaderNames,
-}: PointsTableProps) => {
+}: StudentTableWithFiltersProps) => {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
 
   const isInSelectedCategoryIds = (points: Points) => {
@@ -45,7 +45,7 @@ export const PointsTableWithFilter = ({
         }}
         filterItems={filterHeaderNames}
       />
-      <PointsTable points={pointsToDisplay} />
+      <StudentTable points={pointsToDisplay} />
     </div>
   );
 };
