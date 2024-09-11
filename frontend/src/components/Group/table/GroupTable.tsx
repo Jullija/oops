@@ -52,7 +52,7 @@ export const GroupTable = ({ rows, subcategories }: GroupTableProps) => {
                   <TableCell
                     key={`${row.student.id}-${subcategory.subcategoryId}`}
                   >
-                    {subcategory.pure}
+                    {subcategory.pure ?? "---"}
                   </TableCell>
                 ))}
               </TableRow>

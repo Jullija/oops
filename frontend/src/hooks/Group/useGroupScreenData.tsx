@@ -23,7 +23,7 @@ type Student = {
 };
 
 export type SubcategoryPoints = {
-  pure: number;
+  pure: number | undefined;
   subcategoryId: string;
   categoryId: string;
 };
@@ -64,7 +64,7 @@ export const useGroupScreenData = (groupId: number | undefined) => {
           userPoints?.categoriesPoints.flatMap((catPoints) =>
             catPoints.subcategoryPoints.map((subPoints) => {
               return {
-                pure: subPoints.points.purePoints?.value ?? 0,
+                pure: subPoints.points.purePoints?.value,
                 subcategoryId: subPoints.subcategory.subcategoryId,
                 categoryId: catPoints.category.categoryId,
               };
