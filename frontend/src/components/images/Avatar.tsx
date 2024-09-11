@@ -1,19 +1,9 @@
-import { FILES_URL } from "../../utils/constants";
-import { Styles } from "../../utils/Styles";
-
-const styles: Styles = {
-  img: {
-    width: "100%",
-    objectFit: "cover",
-  },
-};
+import { Image } from "./Image";
 
 type AvatarProps = {
   id: string | undefined;
   size: AvatarSize;
 };
-
-type AvatarSize = "xs" | "s" | "m" | "l";
 
 const sizeMap: Record<AvatarSize, number> = {
   xs: 40,
@@ -22,17 +12,8 @@ const sizeMap: Record<AvatarSize, number> = {
   l: 140,
 };
 
+type AvatarSize = "xs" | "s" | "m" | "l";
+
 export const Avatar = ({ id, size }: AvatarProps) => {
-  return (
-    <div
-      style={{
-        position: "relative",
-        flex: 1,
-        width: sizeMap[size],
-        height: sizeMap[size],
-      }}
-    >
-      <img src={`${FILES_URL}${id}`} alt={`img id ${id}`} style={styles.img} />
-    </div>
-  );
+  return <Image id={id} size={sizeMap[size]} />;
 };

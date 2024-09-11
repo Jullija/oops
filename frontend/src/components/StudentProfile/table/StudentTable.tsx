@@ -12,7 +12,7 @@ import {
 import { Points } from "../../../hooks/StudentProfile/useStudentData";
 import { CategoryTag } from "../../CategoryTag";
 import { Styles } from "../../../utils/Styles";
-import { AwardImg } from "../../images/AwardImg";
+import { AwardImage } from "../../images/AwardImage";
 
 type StudentTableProps = {
   points: Points[];
@@ -82,7 +82,7 @@ export const StudentTable = ({ points }: StudentTableProps) => {
       <div style={styles.awardsContainer}>
         {bonuses.map((bonus) => {
           return (
-            <AwardImg id={bonus?.bonuses.award.imageFile?.fileId} size="s" />
+            <AwardImage id={bonus?.bonuses.award.imageFile?.fileId} size="s" />
           );
         })}
       </div>
