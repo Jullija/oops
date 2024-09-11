@@ -1,9 +1,9 @@
-query Categories($editionId: bigint!) {
+query FormCategories($editionId: bigint!) {
   categories(orderBy: { categoryName: ASC }) {
     categoryId
     categoryName
     subcategories(
-      orderBy: { subcategoryName: ASC }
+      orderBy: { ordinalNumber: ASC }
       where: { editionId: { _eq: $editionId } }
     ) {
       editionId
@@ -11,5 +11,6 @@ query Categories($editionId: bigint!) {
       subcategoryName
       maxPoints
     }
+    canAddPoints
   }
 }

@@ -7,7 +7,9 @@ import { useUser } from "../../hooks/common/useUser";
 import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
 import { SideBar } from "../../components/StudentProfile/SideBar";
 import { PointsTableWithFilter } from "../../components/StudentProfile/table/PointsTableWithFilter";
-import { useCategories } from "../../hooks/common/useCategories";
+import { useFormCategories } from "../../hooks/common/useFormCategories";
+import { Dialog } from "@mui/material";
+import { useState } from "react";
 
 const styles: Styles = {
   container: {
@@ -20,6 +22,11 @@ const styles: Styles = {
     display: "flex",
     flexDirection: "column",
     gap: 24,
+  },
+  button: {
+    cursor: "pointer",
+    backgroundColor: "pink",
+    width: 100,
   },
 };
 
@@ -49,7 +56,9 @@ export function TeacherStudentProfile() {
     categories: formCategories,
     loading: formDataLoading,
     error: formDataError,
-  } = useCategories();
+  } = useFormCategories();
+
+  const [isOpen, setIsOpen] = useState(false);
 
   if (loading || formDataLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -58,19 +67,24 @@ export function TeacherStudentProfile() {
   if (!studentData) return <p>Student is undefined</p>;
   if (!currLevel) return <p>Curr level is undefined</p>;
 
-  const handleAdd = (formPoints: FormPoints) => {
-    // console.log("VALUES: ", formPoints);
-    createPoints({
+  const handleAdd = async (formPoints: FormPoints) => {
+    await createPoints({
       variables: {
-        studentId: parseInt(studentId ?? "-1"),
+        studentId: parseInt(studentId as string),
         subcategoryId: parseInt(formPoints.subcategoryId),
         teacherId: parseInt(user.userId),
         value: formPoints.points,
       },
-    }).finally(() => {
-      refetch();
     });
+
+    if (!createPointsError) {
+      closeDialog();
+      refetch();
+    }
   };
+
+  const closeDialog = () => setIsOpen(false);
+  const openDialog = () => setIsOpen(true);
 
   return (
     <div style={styles.container}>
@@ -82,11 +96,21 @@ export function TeacherStudentProfile() {
         nextLevel={nextLevel}
       />
       <div style={styles.rightContainer}>
-        <PointsForm
-          handleAddPoints={handleAdd}
-          createError={createPointsError?.message}
-          categories={formCategories}
-        />
+        <Dialog open={isOpen}>
+          <PointsForm
+            handleAddPoints={handleAdd}
+            createError={createPointsError?.message}
+            categories={formCategories}
+          />
+          <div style={styles.button} onClick={closeDialog}>
+            close
+          </div>
+        </Dialog>
+
+        <div style={styles.button} onClick={openDialog}>
+          open
+        </div>
+
         <PointsTableWithFilter
           points={points}
           filterHeaderNames={filterHeaderNames}
