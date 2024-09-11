@@ -1,8 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Styles } from "../../utils/Styles";
 import { pathsGenerator } from "../../router/paths";
-import { StudentSearcher } from "../../components/Group/StudentSearcher/StudentSearcher";
-import { useStudentsSearchData } from "../../hooks/Group/useStudentsSearchData";
+import { useGroupScreenData } from "../../hooks/Group/useGroupScreenData";
+import { GroupTableWithFilters } from "../../components/Group/table/GroupTableWithFilters";
 
 const styles: Styles = {
   screenContainer: {
@@ -21,16 +21,12 @@ const styles: Styles = {
 export const Group = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const id = params.id;
+  const groupId = params.id ? parseInt(params.id) : undefined;
 
-  const { students, loading, error } = useStudentsSearchData(id ?? "-1");
+  const { rows, categories, loading, error } = useGroupScreenData(groupId);
 
-  if (loading) {
-    return <div>loading...</div>;
-  }
-  if (error) {
-    return <div>ERROR: {error.message}</div>;
-  }
+  if (loading) return <div>loading...</div>;
+  if (error) return <div>ERROR: {error.message}</div>;
 
   return (
     <div style={styles.screenContainer}>
@@ -38,9 +34,10 @@ export const Group = () => {
         <button onClick={() => navigate(pathsGenerator.teacher.Groups)}>
           go back to groups list
         </button>
-        <div>params - group id: {id}</div>
+        <div>params - group id: {groupId}</div>
       </div>
-      {students && <StudentSearcher students={students} />}
+
+      <GroupTableWithFilters rows={rows} categories={categories} />
     </div>
   );
 };

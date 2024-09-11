@@ -287,6 +287,7 @@ class GroupsDataFetcher {
                             }
                         )
                     }
+                    val teacherToPoints = purePoints?.teacher ?: allBonuses.maxByOrNull { it.updatedAt }?.points?.teacher ?: Users()
                     val createdAt = purePoints?.createdAt ?: allBonuses.minOfOrNull { it.points.createdAt } ?: LocalDateTime.now()
                     val updatedAt = purePoints?.updatedAt ?: allBonuses.maxOfOrNull { it.points.updatedAt } ?: LocalDateTime.now()
                     SubcategoryPointsType(
@@ -295,6 +296,7 @@ class GroupsDataFetcher {
                             purePoints = purePoints,
                             partialBonusType = partialBonusType
                         ),
+                        teacher = teacherToPoints,
                         createdAt = createdAt,
                         updatedAt = updatedAt
                     )
@@ -341,6 +343,7 @@ class GroupsDataFetcher {
                             purePoints = null,
                             partialBonusType = emptyList()
                         ),
+                        teacher = Users(),
                         createdAt = LocalDateTime.now(),
                         updatedAt = LocalDateTime.now()
                     )
@@ -364,6 +367,7 @@ class GroupsDataFetcher {
                     purePoints = null,
                     partialBonusType = emptyList()
                 ),
+                teacher = Users(),
                 createdAt = LocalDateTime.now(),
                 updatedAt = LocalDateTime.now()
             )
@@ -413,6 +417,7 @@ data class CategoryAggregate(
 data class SubcategoryPointsType(
     val subcategory: Subcategories,
     val points: PurePointsType,
+    val teacher: Users,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
 )
