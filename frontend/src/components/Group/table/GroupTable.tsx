@@ -36,7 +36,10 @@ export const GroupTable = ({ rows, subcategories }: GroupTableProps) => {
               <TableCell style={styles.headerStudentCell}>Student</TableCell>
               {subcategories.map((subcategory) => (
                 <TableCell key={subcategory.id} style={styles.headerCell}>
-                  {subcategory.name}
+                  <div style={styles.headerContentContainer}>
+                    <div style={styles.title}>{subcategory.name}</div>
+                    <div>max. {subcategory.maxPoints}</div>
+                  </div>
                 </TableCell>
               ))}
             </TableRow>
@@ -65,6 +68,21 @@ export const GroupTable = ({ rows, subcategories }: GroupTableProps) => {
 };
 
 const styles: Styles = {
+  headerCell: {
+    position: "sticky",
+    top: 0,
+    backgroundColor: "black",
+    zIndex: 1,
+  },
+  headerContentContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 2,
+    textWrap: "nowrap",
+  },
+  title: {
+    fontWeight: "bold",
+  },
   headerStudentCell: {
     fontWeight: "bold",
     fontSize: 16,
@@ -78,14 +96,6 @@ const styles: Styles = {
     zIndex: 2,
     overflow: "hidden",
     textOverflow: "ellipsis",
-  },
-  headerCell: {
-    fontWeight: "bold",
-    fontSize: 16,
-    position: "sticky",
-    top: 0,
-    backgroundColor: "black",
-    zIndex: 1,
   },
   regularStudentCell: {
     position: "sticky",
