@@ -35,30 +35,20 @@ export const HallOfFameStudentCard = ({
   student,
   isHighlighted,
 }: HallOfFameStudentCardProps) => {
-  const {
-    id,
-    position,
-    nick,
-    levelName,
-    totalPoints,
-    avatarImgId,
-    levelImgId,
-  } = student;
-
   return (
     <div
-      id={HALL_OF_FAME_STUDENT_CARD_ID_PREFIX + id}
+      id={HALL_OF_FAME_STUDENT_CARD_ID_PREFIX + student.id}
       style={{
         ...styles.item,
         backgroundColor: isHighlighted ? "pink" : "white",
       }}
     >
-      <div>{position}.</div>
-      <Avatar id={avatarImgId} size={"xs"} />
-      <div>{nick}</div>
-      <Avatar id={levelImgId} size={"xs"} />
-      <div>{levelName}</div>
-      <div>{totalPoints} pkt</div>
+      <div>{student.position}.</div>
+      <Avatar id={student.avatarImgId} size={"xs"} />
+      <div>{student.nick}</div>
+      <Avatar id={student.levelImgId} size={"xs"} />
+      <div>{student.levelName}</div>
+      <div>{student.totalPoints} pkt</div>
     </div>
   );
 };

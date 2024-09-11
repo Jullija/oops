@@ -29,12 +29,12 @@ const dateOptions: Intl.DateTimeFormatOptions = {
 
 const EMPTY_FIELD = "---";
 
-type HeaderCellData = {
+type HeaderTitle = {
   name: string;
   align?: "center" | "left" | "right" | "justify" | "inherit" | undefined;
 };
 
-const headerTitles: HeaderCellData[] = [
+const headerTitles: HeaderTitle[] = [
   { name: "nazwa", align: "center" },
   { name: "bonusy", align: "center" },
   { name: "kategoria", align: "center" },
@@ -45,14 +45,20 @@ const headerTitles: HeaderCellData[] = [
 ];
 
 export const StudentTable = ({ points }: StudentTableProps) => {
-  const getPointsValueString = (points: Points) => {
+  const darkTheme = createTheme({
+    palette: {
+      mode: "dark",
+    },
+  });
+
+  const getPointsValueString = (points: Points): string => {
     const pure = points.points.purePoints?.value ?? 0;
     let totalBonus = 0;
     points.points.partialBonusType.forEach(
       (bonus) => (totalBonus += bonus?.partialValue ?? 0),
     );
     if (totalBonus === 0 && pure === 0) {
-      return 0.0;
+      return "0.0";
     }
     if (totalBonus === 0) {
       return pure.toFixed(1);
@@ -68,7 +74,6 @@ export const StudentTable = ({ points }: StudentTableProps) => {
 
   const getAwardsPhotos = (points: Points) => {
     const bonuses = points.points.partialBonusType;
-
     if (bonuses.length === 0) {
       return EMPTY_FIELD;
     }
@@ -83,12 +88,6 @@ export const StudentTable = ({ points }: StudentTableProps) => {
       </div>
     );
   };
-
-  const darkTheme = createTheme({
-    palette: {
-      mode: "dark",
-    },
-  });
 
   return (
     <ThemeProvider theme={darkTheme}>

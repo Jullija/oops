@@ -43,7 +43,7 @@ export const PodiumItem = ({ student, place }: PodiumItemProps) => {
   return (
     <div style={styles.container}>
       <div style={styles.studentContainer}>
-        <Avatar id={student.avatarImgId} size={"m"} />
+        <Avatar id={student.avatarImgId} size="m" />
         <div>{student.nick}</div>
       </div>
       <div
