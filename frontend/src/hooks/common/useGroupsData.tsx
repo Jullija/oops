@@ -22,11 +22,9 @@ export type Timestamp = {
   end: string;
 };
 
-// TODO change editionId?: to | undefined
 export const useGroupsData = (editionId: string | undefined) => {
   const { data, loading, error } = useGroupsQuery({
     variables: {
-      // TODO thats the way how to handle undefined case!
       editionId: editionId as string,
     },
     skip: !editionId,
