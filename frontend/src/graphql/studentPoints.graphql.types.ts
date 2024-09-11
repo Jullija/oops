@@ -46,19 +46,11 @@ export type StudentPointsQuery = {
     };
     subcategoryPoints: Array<{
       __typename?: "SubcategoryPointsType";
+      updatedAt: string;
+      createdAt: string;
       points: {
         __typename?: "PurePointsType";
-        purePoints?: {
-          __typename?: "PointType";
-          value: number;
-          createdAt: string;
-          updatedAt: string;
-          teacher: {
-            __typename?: "UserType";
-            firstName: string;
-            secondName: string;
-          };
-        } | null;
+        purePoints?: { __typename?: "PointType"; value: number } | null;
         partialBonusType: Array<{
           __typename?: "PartialBonusType";
           partialValue: number;
@@ -68,16 +60,6 @@ export type StudentPointsQuery = {
               __typename?: "AwardType";
               awardName: string;
               imageFile?: { __typename?: "FileType"; fileId: string } | null;
-            };
-            points: {
-              __typename?: "PointType";
-              createdAt: string;
-              updatedAt: string;
-              teacher: {
-                __typename?: "UserType";
-                firstName: string;
-                secondName: string;
-              };
             };
           };
         } | null>;
@@ -91,6 +73,11 @@ export type StudentPointsQuery = {
           categoryId: string;
           categoryName: string;
         };
+      };
+      teacher: {
+        __typename?: "UserType";
+        firstName: string;
+        secondName: string;
       };
     }>;
   };
@@ -132,12 +119,6 @@ export const StudentPointsDocument = gql`
         points {
           purePoints {
             value
-            teacher {
-              firstName
-              secondName
-            }
-            createdAt
-            updatedAt
           }
           partialBonusType {
             partialValue
@@ -146,14 +127,6 @@ export const StudentPointsDocument = gql`
                 awardName
                 imageFile {
                   fileId
-                }
-              }
-              points {
-                createdAt
-                updatedAt
-                teacher {
-                  firstName
-                  secondName
                 }
               }
             }
@@ -167,6 +140,12 @@ export const StudentPointsDocument = gql`
           }
           maxPoints
         }
+        teacher {
+          firstName
+          secondName
+        }
+        updatedAt
+        createdAt
       }
     }
   }

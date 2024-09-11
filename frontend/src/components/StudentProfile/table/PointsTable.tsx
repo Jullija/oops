@@ -27,6 +27,8 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   second: "2-digit",
 };
 
+const EMPTY_FIELD = "---";
+
 type HeaderCellData = {
   name: string;
   align?: "center" | "left" | "right" | "justify" | "inherit" | undefined;
@@ -43,7 +45,7 @@ const headerTitles: HeaderCellData[] = [
 ];
 
 export const PointsTable = ({ points }: PointsTableProps) => {
-  const getPointsString = (points: Points) => {
+  const getPointsValueString = (points: Points) => {
     const pure = points.points.purePoints?.value ?? 0;
     let totalBonus = 0;
     points.points.partialBonusType.forEach(
@@ -59,38 +61,19 @@ export const PointsTable = ({ points }: PointsTableProps) => {
     return `${pure.toFixed(1)} + ${totalBonus.toFixed(1)} = ${(pure + totalBonus).toFixed(1)}`;
   };
 
-  const getDisplayDate = (points: Points): Date | undefined => {
-    const createdAt = points.points.purePoints
-      ? points.points.purePoints.createdAt
-      : points.points.partialBonusType[0]?.bonuses.points.createdAt;
-
-    const updatedAt = points.points.purePoints
-      ? points.points.purePoints.updatedAt
-      : points.points.partialBonusType[0]?.bonuses.points.updatedAt;
-
-    if (updatedAt) {
-      return new Date(updatedAt);
-    }
-    return createdAt ? new Date(createdAt) : undefined;
-  };
-
-  // TODO date and teacher to add to backend
-  const getTeacherDisplayName = (points: Points) => {
-    const firstName = points.points.purePoints
-      ? points.points.purePoints?.teacher.firstName
-      : points.points.partialBonusType[0]?.bonuses.points.teacher.firstName;
-    const secondName = points.points.purePoints
-      ? points.points.purePoints?.teacher.secondName
-      : points.points.partialBonusType[0]?.bonuses.points.teacher.secondName;
-    return `${firstName} ${secondName}`;
+  const getDisplayDateString = (points: Points): string => {
+    const date = new Date(points.updatedAt ?? points.createdAt);
+    return date.toLocaleDateString("pl-PL", dateOptions);
   };
 
   const getAwardsPhotos = (points: Points) => {
     const bonuses = points.points.partialBonusType;
 
-    return bonuses.length === 0 ? (
-      "---"
-    ) : (
+    if (bonuses.length === 0) {
+      return EMPTY_FIELD;
+    }
+
+    return (
       <div style={styles.awardsContainer}>
         {bonuses.map((bonus) => {
           return (
@@ -114,10 +97,7 @@ export const PointsTable = ({ points }: PointsTableProps) => {
           <TableHead>
             <TableRow>
               {headerTitles.map((header) => (
-                <TableCell
-                  style={{ fontWeight: "bold", fontSize: 16 }}
-                  align={header.align}
-                >
+                <TableCell style={styles.header} align={header.align}>
                   {header.name}
                 </TableCell>
               ))}
@@ -136,12 +116,12 @@ export const PointsTable = ({ points }: PointsTableProps) => {
                     name={p.subcategory.category.categoryName}
                   />
                 </TableCell>
-                <TableCell align="center">{getPointsString(p)}</TableCell>
+                <TableCell align="center">{getPointsValueString(p)}</TableCell>
                 <TableCell align="center">{p.subcategory.maxPoints}</TableCell>
+                <TableCell align="center">{getDisplayDateString(p)}</TableCell>
                 <TableCell align="center">
-                  {getDisplayDate(p)?.toLocaleDateString("pl-PL", dateOptions)}
+                  {p.teacher.firstName} {p.teacher.secondName}
                 </TableCell>
-                <TableCell align="center">{getTeacherDisplayName(p)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -152,6 +132,10 @@ export const PointsTable = ({ points }: PointsTableProps) => {
 };
 
 const styles: Styles = {
+  header: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
   awardsContainer: {
     display: "flex",
     justifyContent: "center",

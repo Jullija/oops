@@ -33,12 +33,6 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
       points {
         purePoints {
           value
-          teacher {
-            firstName
-            secondName
-          }
-          createdAt
-          updatedAt
         }
         partialBonusType {
           partialValue
@@ -47,14 +41,6 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
               awardName
               imageFile {
                 fileId
-              }
-            }
-            points {
-              createdAt
-              updatedAt
-              teacher {
-                firstName
-                secondName
               }
             }
           }
@@ -68,6 +54,12 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
         }
         maxPoints
       }
+      teacher {
+        firstName
+        secondName
+      }
+      updatedAt
+      createdAt
     }
   }
 }
