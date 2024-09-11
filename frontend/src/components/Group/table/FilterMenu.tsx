@@ -1,6 +1,7 @@
 import { Styles } from "../../../utils/Styles";
 import { FilterItem } from "../../Groups/FilterBar/FilterOptionsSection";
 
+// TODO it's a copy of another FilterMenu
 const styles: Styles = {
   container: {
     display: "flex",
