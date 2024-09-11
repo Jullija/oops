@@ -43,13 +43,8 @@ export const AnimalCard = ({
       <div style={styles.title}>
         obecny level: {currLevel.levelName} - lvl. {currLevel.ordinalNumber}
       </div>
-      {/* // TODO we have a problem with backend data inconsistency */}
       <PointsBar
-        points={
-          totalPoints > currLevel.minimumPoints
-            ? totalPoints
-            : currLevel.minimumPoints + 2
-        }
+        points={totalPoints}
         bounds={{
           lower: currLevel.minimumPoints,
           upper: currLevel.maximumPoints,

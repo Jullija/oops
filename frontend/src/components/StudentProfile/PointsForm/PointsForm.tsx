@@ -67,7 +67,8 @@ export const PointsForm = ({
   >();
   const { selectedEdition } = useEditionSelection();
   const { data, loading, error } = useCategoriesQuery({
-    variables: { editionId: selectedEdition?.editionId ?? "-1" },
+    variables: { editionId: selectedEdition?.editionId as string },
+    skip: !selectedEdition?.editionId,
   });
 
   if (loading) {
