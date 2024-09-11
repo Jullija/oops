@@ -36,19 +36,21 @@ type PointFormProps = {
   handleAddPoints: (formPoints: FormPoints) => void;
   createError?: string;
   categories: Category[];
+  initialValues?: PointsFormValues;
 };
 
 export const PointsForm = ({
   handleAddPoints,
   createError,
   categories,
+  initialValues = {
+    categoryId: "",
+    subcategoryId: "",
+    points: 0,
+  },
 }: PointFormProps) => {
   const formik = useFormik({
-    initialValues: {
-      categoryId: "",
-      subcategoryId: "",
-      points: 0,
-    },
+    initialValues: initialValues,
     validate: (values: PointsFormValues) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const errors: any = {};
