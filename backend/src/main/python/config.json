@@ -215,8 +215,8 @@
                 "editions": "last"
             }
         ],
-        "subcategories_percentage": 0.8,
-        "chest_percentage": 0.1,
+        "subcategories_percentage": 0.6,
+        "chest_percentage": 1,
         "open_chest_percentage": 0.9,
         "seed": 1234
     }

@@ -62,8 +62,8 @@ class EditionDataFetcher {
 
         val currentYear = LocalDate.now().year
 
-        if (editionYear < currentYear || editionYear > currentYear + 10) {
-            throw IllegalArgumentException("Edition year must be between ${currentYear} and ${currentYear + 10}")
+        if (editionYear < currentYear-1 || editionYear > currentYear + 10) {
+            throw IllegalArgumentException("Edition year must be between ${currentYear-1} and ${currentYear + 10}")
         }
 
         val startDate = LocalDate.of(editionYear, 10, 1)
