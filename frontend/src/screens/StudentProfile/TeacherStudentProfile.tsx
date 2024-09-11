@@ -35,6 +35,7 @@ export function TeacherStudentProfile() {
     prevLevel,
     currLevel,
     nextLevel,
+    bonuses,
     filterHeaderNames,
     loading,
     error,
@@ -70,6 +71,7 @@ export function TeacherStudentProfile() {
         currLevel={currLevel}
         prevLevel={prevLevel}
         nextLevel={nextLevel}
+        bonuses={bonuses}
       />
       <div style={styles.rightContainer}>
         <PointsTableWithFilter

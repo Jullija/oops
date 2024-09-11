@@ -1,0 +1,20 @@
+query Bonuses($studentId: bigint!, $editionId: bigint!) {
+  bonuses(
+    where: {
+      point: {
+        studentId: { _eq: $studentId }
+        subcategory: { editionId: { _eq: $editionId } }
+      }
+    }
+  ) {
+    award {
+      awardId
+      awardName
+      awardType
+      awardValue
+      imageFileId
+    }
+    updatedAt
+    createdAt
+  }
+}
