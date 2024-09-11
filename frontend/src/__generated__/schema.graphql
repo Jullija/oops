@@ -3300,6 +3300,13 @@ input ChestAwardSumOrderBy {
   chestId: OrderBy
 }
 
+type ChestAwardType {
+  award: AwardType!
+  chest: ChestType!
+  chestAwardId: ID!
+  label: String!
+}
+
 """
 update columns of table "chest_award"
 """
@@ -6595,6 +6602,12 @@ type GroupDateType {
   weekday: WeekdayType!
 }
 
+type GroupTeacherType {
+  canEdit: Boolean!
+  group: GroupType!
+  owns: Boolean!
+}
+
 type GroupType {
   edition: EditionType!
   endTime: String!
@@ -6603,7 +6616,7 @@ type GroupType {
   imageFile: FileType
   label: String
   startTime: String!
-  teacher: UserType
+  teacher: UserType!
   userGroups: [UserGroupType]!
   weekday: WeekdayType!
 }
@@ -6628,12 +6641,12 @@ type Groups {
   imageFileId: bigint
   label: String
   startTime: time!
-  teacherId: bigint
+  teacherId: bigint!
 
   """
   An object relationship
   """
-  user: Users
+  user: Users!
 
   """
   An object relationship
@@ -7293,12 +7306,13 @@ type HallOfFame {
   editionId: bigint
   groupName: String
   groupsId: bigint
-  imageFileId: bigint
   levelId: bigint
+  levelImageId: bigint
   levelName: String
   nick: String
   sumOfPoints: float8
   userId: bigint
+  userImageId: bigint
 }
 
 """
@@ -7332,10 +7346,11 @@ aggregate avg on columns
 type HallOfFameAvgFields {
   editionId: Float
   groupsId: Float
-  imageFileId: Float
   levelId: Float
+  levelImageId: Float
   sumOfPoints: Float
   userId: Float
+  userImageId: Float
 }
 
 """
@@ -7348,12 +7363,13 @@ input HallOfFameBoolExp {
   editionId: BigintComparisonExp
   groupName: StringComparisonExp
   groupsId: BigintComparisonExp
-  imageFileId: BigintComparisonExp
   levelId: BigintComparisonExp
+  levelImageId: BigintComparisonExp
   levelName: StringComparisonExp
   nick: StringComparisonExp
   sumOfPoints: Float8ComparisonExp
   userId: BigintComparisonExp
+  userImageId: BigintComparisonExp
 }
 
 """
@@ -7363,12 +7379,13 @@ type HallOfFameMaxFields {
   editionId: bigint
   groupName: String
   groupsId: bigint
-  imageFileId: bigint
   levelId: bigint
+  levelImageId: bigint
   levelName: String
   nick: String
   sumOfPoints: float8
   userId: bigint
+  userImageId: bigint
 }
 
 """
@@ -7378,12 +7395,13 @@ type HallOfFameMinFields {
   editionId: bigint
   groupName: String
   groupsId: bigint
-  imageFileId: bigint
   levelId: bigint
+  levelImageId: bigint
   levelName: String
   nick: String
   sumOfPoints: float8
   userId: bigint
+  userImageId: bigint
 }
 
 """
@@ -7393,12 +7411,13 @@ input HallOfFameOrderBy {
   editionId: OrderBy
   groupName: OrderBy
   groupsId: OrderBy
-  imageFileId: OrderBy
   levelId: OrderBy
+  levelImageId: OrderBy
   levelName: OrderBy
   nick: OrderBy
   sumOfPoints: OrderBy
   userId: OrderBy
+  userImageId: OrderBy
 }
 
 """
@@ -7423,12 +7442,12 @@ enum HallOfFameSelectColumn {
   """
   column name
   """
-  imageFileId
+  levelId
 
   """
   column name
   """
-  levelId
+  levelImageId
 
   """
   column name
@@ -7449,6 +7468,11 @@ enum HallOfFameSelectColumn {
   column name
   """
   userId
+
+  """
+  column name
+  """
+  userImageId
 }
 
 """
@@ -7457,10 +7481,11 @@ aggregate stddev on columns
 type HallOfFameStddevFields {
   editionId: Float
   groupsId: Float
-  imageFileId: Float
   levelId: Float
+  levelImageId: Float
   sumOfPoints: Float
   userId: Float
+  userImageId: Float
 }
 
 """
@@ -7469,10 +7494,11 @@ aggregate stddevPop on columns
 type HallOfFameStddevPopFields {
   editionId: Float
   groupsId: Float
-  imageFileId: Float
   levelId: Float
+  levelImageId: Float
   sumOfPoints: Float
   userId: Float
+  userImageId: Float
 }
 
 """
@@ -7481,10 +7507,11 @@ aggregate stddevSamp on columns
 type HallOfFameStddevSampFields {
   editionId: Float
   groupsId: Float
-  imageFileId: Float
   levelId: Float
+  levelImageId: Float
   sumOfPoints: Float
   userId: Float
+  userImageId: Float
 }
 
 """
@@ -7509,12 +7536,13 @@ input HallOfFameStreamCursorValueInput {
   editionId: bigint
   groupName: String
   groupsId: bigint
-  imageFileId: bigint
   levelId: bigint
+  levelImageId: bigint
   levelName: String
   nick: String
   sumOfPoints: float8
   userId: bigint
+  userImageId: bigint
 }
 
 """
@@ -7523,10 +7551,11 @@ aggregate sum on columns
 type HallOfFameSumFields {
   editionId: bigint
   groupsId: bigint
-  imageFileId: bigint
   levelId: bigint
+  levelImageId: bigint
   sumOfPoints: float8
   userId: bigint
+  userImageId: bigint
 }
 
 """
@@ -7535,10 +7564,11 @@ aggregate varPop on columns
 type HallOfFameVarPopFields {
   editionId: Float
   groupsId: Float
-  imageFileId: Float
   levelId: Float
+  levelImageId: Float
   sumOfPoints: Float
   userId: Float
+  userImageId: Float
 }
 
 """
@@ -7547,10 +7577,11 @@ aggregate varSamp on columns
 type HallOfFameVarSampFields {
   editionId: Float
   groupsId: Float
-  imageFileId: Float
   levelId: Float
+  levelImageId: Float
   sumOfPoints: Float
   userId: Float
+  userImageId: Float
 }
 
 """
@@ -7559,10 +7590,11 @@ aggregate variance on columns
 type HallOfFameVarianceFields {
   editionId: Float
   groupsId: Float
-  imageFileId: Float
   levelId: Float
+  levelImageId: Float
   sumOfPoints: Float
   userId: Float
+  userImageId: Float
 }
 
 """
@@ -10178,6 +10210,7 @@ type StudentPointsType {
   sumOfAll: Float!
   sumOfBonuses: Float!
   sumOfPurePoints: Float!
+  teacher: UserType!
   user: UserType!
 }
 
@@ -11020,8 +11053,11 @@ input SubcategoriesVarianceOrderBy {
 }
 
 type SubcategoryPointsType {
+  createdAt: String!
   points: PurePointsType!
   subcategory: SubcategoryType!
+  teacher: UserType!
+  updatedAt: String!
 }
 
 type SubcategoryType {
@@ -13858,6 +13894,7 @@ type mutation_root {
     label: String = ""
     maxUsages: Int = -1
   ): AwardType
+  addAwardToChest(awardId: Int!, chestId: Int!): ChestAwardType
   addAwardToEdition(awardId: Int!, editionId: Int!): AwardEditionType
   addBonusMutation(
     awardId: Int!
@@ -13921,6 +13958,7 @@ type mutation_root {
     role: String!
     secondName: String!
   ): UserType
+  addUserToGroup(groupId: Int!, userId: Int!): UserGroupType
   assignPhotoToAward(awardId: Int!, fileId: Int): Boolean
   assignPhotoToChest(chestId: Int!, fileId: Int): Boolean
   assignPhotoToLevel(fileId: Int, levelId: Int!): Boolean
@@ -14229,6 +14267,75 @@ type mutation_root {
   delete single row from the table: "weekdays"
   """
   deleteWeekdaysByPk(weekdayId: bigint!): Weekdays
+  editAward(
+    awardId: Int!
+    awardName: String
+    awardType: String
+    awardValue: Float
+    categoryId: Int
+    label: String
+    maxUsages: Int
+  ): AwardType
+  editCategory(
+    canAddPoints: Boolean
+    categoryId: Int!
+    categoryName: String
+    label: String
+  ): CategoryType
+  editChest(
+    chestId: Int!
+    chestType: String
+    editionId: Int
+    label: String
+  ): ChestType
+  editChestHistory(
+    chestHistoryId: Int!
+    chestId: Int
+    label: String
+    subcategoryId: Int
+    teacherId: Int
+    userId: Int
+  ): ChestHistoryType
+  editEdition(
+    editionId: Int!
+    editionName: String
+    editionYear: Int
+    label: String
+  ): EditionType
+  editGroup(
+    endTime: String
+    groupId: Int!
+    groupName: String
+    label: String
+    startTime: String
+    teacherId: Int
+    weekdayId: Int
+  ): GroupType
+  editLevel(
+    grade: Float
+    imageFileId: Int
+    label: String
+    levelId: Int!
+    maximumPoints: Float
+    name: String
+  ): LevelType
+  editPoints(pointsId: Int!, updatedById: Int!, value: Float): PointType
+  editSubcategory(
+    label: String
+    maxPoints: Float
+    ordinalNumber: Int
+    subcategoryId: Int!
+    subcategoryName: String
+  ): SubcategoryType
+  editUser(
+    firstName: String
+    indexNumber: Int
+    label: String
+    nick: String
+    role: String
+    secondName: String
+    userId: Int!
+  ): UserType
   generateSubcategories(
     categoryId: Int!
     editionId: Int!
@@ -14836,6 +14943,19 @@ type mutation_root {
     """
     onConflict: WeekdaysOnConflict
   ): Weekdays
+  removeAwardFromChest(awardId: Int!, chestId: Int!): Boolean
+  removeAwardFromEdition(awardId: Int!, editionId: Int!): Boolean
+  removeCategory(categoryId: Int!): Boolean
+  removeCategoryFromEdition(categoryId: Int!, editionId: Int!): Boolean
+  removeChest(chestId: Int!): Boolean
+  removeChestFromUser(chestHistoryId: Int!): Boolean
+  removeEdition(editionId: Int!): Boolean
+  removeGroup(groupId: Int!): Boolean
+  removeLevel(levelId: Int!): Boolean
+  removePoints(pointsId: Int!): Boolean
+  removeSubcategory(subcategoryId: Int!): Boolean
+  removeUser(userId: Int!): Boolean
+  removeUserFromGroup(groupId: Int!, userId: Int!): Boolean
 
   """
   update data of the table: "award"
@@ -16621,6 +16741,7 @@ type query_root {
   fetch data from the table: "flyway_schema_history" using primary key columns
   """
   flywaySchemaHistoryByPk(installedRank: Int!): FlywaySchemaHistory
+  getGroupsInEdition(editionId: Int!, teacherId: Int!): [GroupTeacherType!]!
   getNeighboringLevels(editionId: Int!, studentId: Int!): NeighboringLevelsType!
   getPossibleGroupDates(editionId: Int!): [GroupDateType!]!
   getPossibleGroupsTimeSpans(editionId: Int!): [TimeSpansType!]!
