@@ -5,7 +5,7 @@ import { FormPoints } from "./types";
 import { Styles } from "../../../utils/Styles";
 import { NumberInput } from "../../inputs/NumberInput";
 import { SelectInput } from "../../inputs/SelectInput";
-import { Category } from "../../../hooks/Group/useGroupScreenData";
+import { Category } from "../../../utils/utils";
 
 const styles: Styles = {
   container: {

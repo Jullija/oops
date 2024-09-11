@@ -1,5 +1,5 @@
 import { useFormCategoriesQuery } from "../../graphql/formCategories.graphql.types";
-import { Category } from "../Group/useGroupScreenData";
+import { Category } from "../../utils/utils";
 import { useEditionSelection } from "./useEditionSelection";
 
 export const useFormCategories = () => {

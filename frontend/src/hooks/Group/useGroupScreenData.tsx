@@ -1,16 +1,5 @@
 import { useGroupPointsQuery } from "../../graphql/groupPoints.graphql.types";
-
-export type Category = {
-  id: string;
-  name: string;
-  subcategories: Subcategory[];
-};
-
-export type Subcategory = {
-  id: string;
-  name: string;
-  maxPoints: number;
-};
+import { Category } from "../../utils/utils";
 
 export type GroupTableRow = {
   student: Student;
