@@ -2,35 +2,29 @@
 import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../firebaseConfig";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useUser } from "../../hooks/common/useUser";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { setUser } = useUser(); // Access the setUser function from context or custom hook
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      // Log in the user
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
-      const user = userCredential.user;
+      await signInWithEmailAndPassword(auth, email, password);
 
-      // Get the ID token
-      const token = await user.getIdToken();
+      setUser({
+        userId: location.state?.user?.userId,
+        role: location.state?.user?.role || "", // Use the role passed from previous navigation, or set default
+        nick: location.state?.user?.nick || "", // Use the nick passed from previous navigation, or set default
+      });
 
-      //TODO: Save this token and
-
-      // You can now send this token to your backend
-      console.log("Token:", token);
-
-      // Redirect to the dashboard or any other route after successful login
-      navigate("/dashboard");
+      navigate("/");
     } catch (error) {
       setError("Invalid email or password.");
     }

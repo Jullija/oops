@@ -57,14 +57,16 @@ export const Welcome: React.FC = () => {
   }, [searchTerm, data]);
 
   const handleUserSelect = (user: User) => {
-    setUser(user);
-    navigate(
-      user.role === Roles.STUDENT
-        ? pathsGenerator.student.StudentProfile
-        : user.role === Roles.COORDINATOR
-          ? "/login"
+    if (user.role === Roles.STUDENT || user.role === Roles.TEACHER) {
+      setUser(user);
+      navigate(
+        user.role === Roles.STUDENT
+          ? pathsGenerator.student.StudentProfile
           : pathsGenerator.teacher.Groups,
-    );
+      );
+    } else {
+      navigate("/login", { state: { user } });
+    }
   };
 
   if (loading) return <div>Ładowanie...</div>;
