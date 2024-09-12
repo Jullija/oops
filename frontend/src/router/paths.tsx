@@ -27,16 +27,6 @@ const commonPaths = {
       Roles.COORDINATOR,
     ],
   },
-  Login: {
-    path: "/login",
-    allowedRoles: [
-      Roles.UNAUTHENTICATED_USER,
-      Roles.STUDENT,
-      Roles.TEACHER,
-      Roles.ADMIN,
-      Roles.COORDINATOR,
-    ],
-  },
   HallOfFame: {
     path: "/hall-of-fame",
     allowedRoles: [
