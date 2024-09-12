@@ -2,7 +2,7 @@ import { Styles } from "../../utils/Styles";
 import { useUser } from "../../hooks/common/useUser";
 import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
 import { SideBar } from "../../components/StudentProfile/SideBar";
-import { PointsTableWithFilter } from "../../components/StudentProfile/table/PointsTableWithFilter";
+import { StudentTableWithFilters } from "../../components/StudentProfile/table/StudentTableWithFilters";
 
 const styles: Styles = {
   container: {
@@ -42,7 +42,7 @@ export function StudentProfile() {
         currLevel={currLevel}
         nextLevel={nextLevel}
       />
-      <PointsTableWithFilter
+      <StudentTableWithFilters
         points={points}
         filterHeaderNames={filterHeaderNames}
       />

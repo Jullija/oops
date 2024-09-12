@@ -41,8 +41,7 @@ export const useGroupsData = (editionId: string | undefined) => {
         },
         time: { start: group.startTime, end: group.endTime },
         teacher: {
-          // firstName and secondName is not nullable - hasura computes it so practically it will never be null
-          // why userByTeacherId is null
+          // TODO why userByTeacherId is null?
           fullName: group.userByTeacherId?.fullName as string,
           id: group.userByTeacherId?.userId as string,
         },

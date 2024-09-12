@@ -25,6 +25,8 @@ export const useHallOfFameData = () => {
         levelName: student.levelName ?? "",
         totalPoints: student?.sumOfPoints ?? -1,
         groupId: student.groupsId ?? "",
+        avatarImgId: student.userImageId ?? undefined,
+        levelImgId: student.levelImageId ?? undefined,
       };
     }) ?? [];
 
