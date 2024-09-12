@@ -248,6 +248,7 @@ type Query {
   getPossibleGroupDates(editionId: Int!): [GroupDateType!]!
   getNeighboringLevels(studentId: Int!, editionId: Int!): NeighboringLevelsType!
   getGroupsInEdition(editionId: Int!, teacherId: Int!): [GroupTeacherType!]!
+  getCurrentUser: UserType
 }
 
 type AwardType {

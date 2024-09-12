@@ -23,7 +23,7 @@ class FirebaseUserService (
     // Create a new user in Firebase Authentication with email and random password
     fun createFirebaseUser(user: Users): String {
         var randomPassword = generateRandomPassword()
-        randomPassword = "aaaa"// Generate a random password
+        randomPassword = "aaaaaa"// Generate a random password
 
         val request = UserRecord.CreateRequest()
             .setEmail(user.email) // Assuming user has an email field; if not, adjust accordingly
@@ -33,6 +33,8 @@ class FirebaseUserService (
             .setDisabled(false)
 
         val userRecord = FirebaseAuth.getInstance().createUser(request)
+        val additionalClaims = mapOf("userId" to user.userId.toString())
+        FirebaseAuth.getInstance().setCustomUserClaims(userRecord.uid, additionalClaims)
 
         sendPasswordEmail(user.email, randomPassword)
         return userRecord.uid // Return the UID of the newly created Firebase user

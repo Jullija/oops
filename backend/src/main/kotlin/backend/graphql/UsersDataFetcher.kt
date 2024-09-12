@@ -12,6 +12,7 @@ import backend.users.FirebaseUserService
 import backend.users.UsersRepository
 import backend.users.Users
 import backend.users.UsersRoles
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.DgsQuery
@@ -47,6 +48,9 @@ class UsersDataFetcher {
 
     @Autowired
     lateinit var firebaseUserService: FirebaseUserService
+
+    @Autowired
+    lateinit var userMapper: UserMapper
 
     @DgsMutation
     @Transactional
@@ -257,6 +261,12 @@ class UsersDataFetcher {
                         maxPoints = maxPoints
                     )
                 }
+    }
+    @DgsQuery
+    @Transactional
+    fun getCurrentUser(): Users {
+        val user = userMapper.getUserFromToken() ?: throw IllegalArgumentException("User not authenticated")
+        return user
     }
 
     fun isValidEmail(email: String): Boolean {

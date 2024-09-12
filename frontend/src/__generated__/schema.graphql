@@ -13994,7 +13994,7 @@ type mutation_root {
   ): SubcategoryType
   addUser(
     createFirebaseUser: Boolean = false
-    email: String = "hot.mamusia.69.2137@gmail.com"
+    email: String = "example@example.com"
     firstName: String!
     indexNumber: Int!
     label: String = ""
@@ -16785,6 +16785,7 @@ type query_root {
   fetch data from the table: "flyway_schema_history" using primary key columns
   """
   flywaySchemaHistoryByPk(installedRank: Int!): FlywaySchemaHistory
+  getCurrentUser: UserType
   getGroupsInEdition(editionId: Int!, teacherId: Int!): [GroupTeacherType!]!
   getNeighboringLevels(editionId: Int!, studentId: Int!): NeighboringLevelsType!
   getPossibleGroupDates(editionId: Int!): [GroupDateType!]!

@@ -16,8 +16,10 @@ class UserMapper(
         val authorizationHeader = request.getHeader("Authorization") ?: return null
 
         val token = authorizationHeader.removePrefix("Bearer ").trim()
-        if (token == "free") {
-            return usersRepository.findByUserId(1).orElse(null)
+        // TODO: Remove this bypass
+        if (token.startsWith("Bypass")) {
+            val id = token.substringAfter("Bypass").toLongOrNull()
+                return id?.let { usersRepository.findById(it).orElse(null) }
         }
         return try {
             val decodedToken = FirebaseAuth.getInstance().verifyIdToken(token)

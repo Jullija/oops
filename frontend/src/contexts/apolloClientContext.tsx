@@ -16,7 +16,7 @@ const httpLink = createHttpLink({
   uri: GRAPHQL_URI,
 });
 
-const createAuthLink = (user?: User) =>
+const createAuthLink = (user?: User, tokenBypass?: string) =>
   setContext(async (_, { headers }) => {
     const roleHeader =
       user && user.userId !== "unauthenticated"
@@ -34,6 +34,10 @@ const createAuthLink = (user?: User) =>
         console.error("Error fetching token:", error);
       }
     }
+    // TODO: Remove this bypass
+    if (tokenBypass) {
+      token = tokenBypass;
+    }
 
     return {
       headers: {
@@ -45,8 +49,8 @@ const createAuthLink = (user?: User) =>
     };
   });
 
-const initializeApolloClient = (user?: User) => {
-  const authLink = createAuthLink(user);
+const initializeApolloClient = (user?: User, tokenBypass?: string) => {
+  const authLink = createAuthLink(user, tokenBypass);
   return new ApolloClient({
     link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
@@ -55,12 +59,13 @@ const initializeApolloClient = (user?: User) => {
 
 export const ApolloClientProvider = ({ children }: { children: ReactNode }) => {
   const context = useContext(UserContext);
+  const userToken = context?.token ?? undefined;
   const [client, setClient] = useState(() =>
     initializeApolloClient(context?.user),
   );
 
   useEffect(() => {
-    setClient(initializeApolloClient(context?.user));
+    setClient(initializeApolloClient(context?.user, userToken));
   }, [context]);
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>;

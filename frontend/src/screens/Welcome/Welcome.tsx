@@ -1,12 +1,16 @@
-// Welcome.tsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { User } from "../../contexts/userContext";
+import { UserContext } from "../../contexts/userContext";
 import { useAllUsersQuery } from "../../graphql/allUsers.graphql.types";
+import { useCurrentUserLazyQuery } from "../../graphql/currentUser.graphql.types"; // Use lazy query here
 import { useUser } from "../../hooks/common/useUser";
 import { pathsGenerator } from "../../router/paths";
 import { Styles } from "../../utils/Styles";
 import { Roles } from "../../utils/types";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../firebaseConfig";
+import { UsersRolesType } from "../../__generated__/schema.graphql.types";
 
 const styles: Styles = {
   container: {
@@ -33,6 +37,12 @@ const styles: Styles = {
     flex: 1,
     marginLeft: "20px",
   },
+  loginForm: {
+    marginTop: "20px",
+    padding: "10px",
+    border: "1px solid #ddd",
+    borderRadius: "5px",
+  },
 };
 
 export const Welcome: React.FC = () => {
@@ -46,6 +56,13 @@ export const Welcome: React.FC = () => {
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const navigate = useNavigate();
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
+  const context = useContext(UserContext);
+  const [fetchCurrentUser, { data: currentUserData }] =
+    useCurrentUserLazyQuery(); // Lazy query hook
+
   useEffect(() => {
     if (data) {
       setFilteredUsers(
@@ -56,16 +73,62 @@ export const Welcome: React.FC = () => {
     }
   }, [searchTerm, data]);
 
-  const handleUserSelect = (user: User) => {
-    if (user.role === Roles.STUDENT || user.role === Roles.TEACHER) {
-      setUser(user);
+  useEffect(() => {
+    // TODO: rework this
+    if (currentUserData) {
+      let role = Roles.UNAUTHENTICATED_USER;
+      if (currentUserData.getCurrentUser?.role == UsersRolesType.Student) {
+        role = Roles.STUDENT;
+      } else if (
+        currentUserData.getCurrentUser?.role == UsersRolesType.Teacher
+      ) {
+        role = Roles.TEACHER;
+      } else if (
+        currentUserData.getCurrentUser?.role == UsersRolesType.Coordinator
+      ) {
+        role = Roles.COORDINATOR;
+      }
+      setUser({
+        userId: currentUserData.getCurrentUser?.userId || "",
+        role: role || "",
+        nick: currentUserData.getCurrentUser?.nick || "",
+      });
       navigate(
-        user.role === Roles.STUDENT
+        role === Roles.STUDENT
           ? pathsGenerator.student.StudentProfile
           : pathsGenerator.teacher.Groups,
       );
-    } else {
-      navigate("/login", { state: { user } });
+    }
+  }, [currentUserData, setUser, navigate]);
+
+  const handleUserSelect = (user: User) => {
+    setUser(user);
+    navigate(
+      user.role === Roles.STUDENT
+        ? pathsGenerator.student.StudentProfile
+        : pathsGenerator.teacher.Groups,
+    );
+  };
+
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!context) {
+      throw new Error("useContext must be used within a UserProvider");
+    }
+
+    const { setToken } = context;
+    try {
+      if (password.length < 4) {
+        setToken("Bypass" + password);
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+      }
+      // Set the token in the context
+      fetchCurrentUser(); // Call the query after successful login
+      setLoginError("");
+    } catch (error) {
+      setLoginError("Invalid email or password.");
     }
   };
 
@@ -119,6 +182,31 @@ export const Welcome: React.FC = () => {
             <p>ID: {selectedUser.userId}</p>
           </div>
         )}
+        <div style={styles.loginForm}>
+          <h2>Login</h2>
+          <form onSubmit={handleLogin}>
+            <div>
+              <label>Email:</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label>Password:</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            {loginError && <p className="error">{loginError}</p>}
+            <button type="submit">Login</button>
+          </form>
+        </div>
       </div>
     </div>
   );
