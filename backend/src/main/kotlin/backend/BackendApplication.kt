@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.runApplication
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
+import org.springframework.context.annotation.PropertySource
 
 @SpringBootApplication(
 	scanBasePackages = [
@@ -32,6 +33,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 	exclude = [SecurityAutoConfiguration::class]  // Exclude Spring Security completely
 )
 @EnableJpaAuditing
+@PropertySource("classpath:application-secrets.properties") // Add secrets properties file
 class BackendApplication
 
 fun main(args: Array<String>) {
