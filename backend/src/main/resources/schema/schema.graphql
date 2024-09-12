@@ -74,7 +74,9 @@ type Mutation {
     firstName: String!
     secondName: String!
     role: String!
+    email: String = "example@example.com"
     label: String = ""
+    createFirebaseUser: Boolean = false
   ): UserType
   generateSubcategories(
     editionId: Int!
@@ -420,7 +422,9 @@ type UserType {
   indexNumber: Int!
   firstName: String!
   secondName: String!
+  email: String!
   label: String!
+  firebaseUid: String
   imageFile: FileType
   userGroups: [UserGroupType]!
   userLevels: [UserLevelType]!

@@ -33,38 +33,38 @@ def insert_students(hasura_url, headers, year_group_counts, fake, random, studen
             "indexNumber": index_number,
             "firstName": first_name,
             "secondName": second_name,
-            "label": ""
         })
 
     print(f"Inserting {len(student_objects)} students...")
 
-    mutation = """
-    mutation MyMutation($users: [UsersInsertInput!]!) {
-        insertUsers(objects: $users) {
-            returning {
+    student_ids = []
+    for student in tqdm(student_objects, desc="Inserting students"):
+        mutation = """
+        mutation addUser($indexNumber: Int!, $nick: String!, $firstName: String!, $secondName: String!, $role: String!) {
+            addUser(
+                indexNumber: $indexNumber
+                nick: $nick
+                firstName: $firstName
+                secondName: $secondName
+                role: $role
+            ) {
                 userId
             }
         }
-    }
-    """
-    variables = {
-        "users": student_objects
-    }
+        """
+        variables = student
 
-    response = requests.post(
-        hasura_url,
-        json={"query": mutation, "variables": variables},
-        headers=headers
-    )
+        response = requests.post(
+            hasura_url,
+            json={"query": mutation, "variables": variables},
+            headers=headers
+        )
 
-    data = response.json()
-    student_ids = []
-    if "errors" in data:
-        print(f"Error during student insertion: {data['errors']}")
-    else:
-        returned_data = data["data"]["insertUsers"]["returning"]
-        student_ids = [int(user["userId"]) for user in returned_data]
-        print(f"Successfully inserted {len(student_ids)} students.")
+        data = response.json()
+        if "errors" in data:
+            print(f"Error during student insertion: {data['errors']}")
+        else:
+            student_ids.append(data["data"]["addUser"]["userId"])
 
     print("All students have been inserted.")
     return student_ids, students_in_group_count
@@ -89,7 +89,8 @@ def insert_teachers_and_coordinator(hasura_url, headers, fake, random, number_of
         "indexNumber": index_number,
         "firstName": first_name,
         "secondName": second_name,
-        "label": ""
+        "email": "hot.mamusia.69.2137@gmail.com",
+        "createFirebaseUser": True,
     })
 
     # Insert teachers
@@ -107,39 +108,42 @@ def insert_teachers_and_coordinator(hasura_url, headers, fake, random, number_of
             "indexNumber": index_number,
             "firstName": first_name,
             "secondName": second_name,
-            "label": ""
+            "email": None,
+            "createFirebaseUser": False,
         })
 
     print(f"Inserting {len(user_objects)} teachers and coordinator...")
 
-    mutation = """
-    mutation MyMutation($users: [UsersInsertInput!]!) {
-        insertUsers(objects: $users) {
-            returning {
+    teacher_ids = []
+    for user in tqdm(user_objects, desc="Inserting teachers and coordinator"):
+        mutation = """
+        mutation addUser($indexNumber: Int!, $nick: String!, $firstName: String!, $secondName: String!, $role: String!, $email: String, $createFirebaseUser: Boolean) {
+            addUser(
+                indexNumber: $indexNumber
+                nick: $nick
+                firstName: $firstName
+                secondName: $secondName
+                role: $role
+                email: $email
+                createFirebaseUser: $createFirebaseUser
+            ) {
                 userId
-                role
             }
         }
-    }
-    """
-    variables = {
-        "users": user_objects
-    }
+        """
+        variables = user
 
-    response = requests.post(
-        hasura_url,
-        json={"query": mutation, "variables": variables},
-        headers=headers
-    )
+        response = requests.post(
+            hasura_url,
+            json={"query": mutation, "variables": variables},
+            headers=headers
+        )
 
-    data = response.json()
-    teacher_ids = []
-    if "errors" in data:
-        print(f"Error during teachers and coordinator insertion: {data['errors']}")
-    else:
-        returned_data = data["data"]["insertUsers"]["returning"]
-        teacher_ids = [(int(user["userId"]), user["role"]) for user in returned_data]
-        print(f"Successfully inserted {len(teacher_ids)} teachers and coordinator.")
+        data = response.json()
+        if "errors" in data:
+            print(f"Error during teacher insertion: {data['errors']}")
+        else:
+            teacher_ids.append((data["data"]["addUser"]["userId"], user["role"]))
 
     print("All teachers and coordinator have been inserted.")
     return teacher_ids
@@ -191,10 +195,3 @@ def assign_photos_to_users(hasura_url, headers, user_ids, random):
             print(f"Error assigning photo '{file_id}' to user ID {user_id}: {response_assign_photo.json()['errors']}")
 
     print("Photo assignment completed.")
-
-
-# Example usage:
-# students_ids, students_in_group_count = insert_students(hasura_url, headers, year_group_counts, fake, random, students_per_group_bounds)
-# teachers_ids = insert_teachers_and_coordinator(hasura_url, headers, fake, random, number_of_teachers)
-# all_user_ids = students_ids + teachers_ids
-# assign_photos_to_users(hasura_url, headers, all_user_ids, random)

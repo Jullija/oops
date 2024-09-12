@@ -9,6 +9,7 @@ import { Group } from "../screens/Group/Group";
 import { Welcome } from "../screens/Welcome/Welcome";
 import { ProtectedRoute } from "./protectedRoute";
 import { StudentsScreen } from "../screens/Students/StudentsScreen";
+import Login from "../screens/Welcome/Login";
 
 const commonPaths = pathsWithParameters.common;
 const studentPaths = pathsWithParameters.student;
@@ -30,6 +31,15 @@ export const routes = createBrowserRouter([
           <ProtectedRoute
             element={<Welcome />}
             allowedRoles={commonPaths.Welcome.allowedRoles}
+          />
+        ),
+      },
+      {
+        path: commonPaths.Login.path,
+        element: (
+          <ProtectedRoute
+            element={<Login />}
+            allowedRoles={commonPaths.Login.allowedRoles}
           />
         ),
       },

@@ -40,6 +40,12 @@ class Users(
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val userGroups: Set<UserGroups> = HashSet(),
 
+    @Column(name = "email", nullable = false, length = 256)
+    var email: String,
+
+    @Column(name = "firebase_uid", nullable = true, length = 256)
+    var firebaseUid: String? = "",
+
     @Column(name = "label", nullable = false, length = 256)
     var label: String,
 
@@ -57,6 +63,7 @@ class Users(
         firstName = "",
         secondName = "",
         role = UsersRoles.STUDENT,
+        email = "",
         label = ""
     )
     fun getAwardUsageCount(award: Award, bonusRepository: BonusesRepository): Long {

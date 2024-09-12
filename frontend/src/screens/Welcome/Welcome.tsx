@@ -1,3 +1,4 @@
+// Welcome.tsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { User } from "../../contexts/userContext";
@@ -34,14 +35,14 @@ const styles: Styles = {
   },
 };
 
-export const Welcome = () => {
+export const Welcome: React.FC = () => {
   const { user: selectedUser, setUser } = useUser();
   const { loading, error, data } = useAllUsersQuery({
     context: {
       headers: { "x-hasura-role": Roles.UNAUTHENTICATED_USER },
     },
   });
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const navigate = useNavigate();
 
@@ -60,7 +61,9 @@ export const Welcome = () => {
     navigate(
       user.role === Roles.STUDENT
         ? pathsGenerator.student.StudentProfile
-        : pathsGenerator.teacher.Groups,
+        : user.role === Roles.COORDINATOR
+          ? "/login"
+          : pathsGenerator.teacher.Groups,
     );
   };
 

@@ -12,7 +12,7 @@ export type HallOfFameQuery = {
   hallOfFame: Array<{
     __typename?: "HallOfFame";
     editionId?: string | null;
-    imageFileId?: string | null;
+    userImageId?: string | null;
     levelId?: string | null;
     levelName?: string | null;
     nick?: string | null;
@@ -30,7 +30,7 @@ export const HallOfFameDocument = gql`
       orderBy: [{ sumOfPoints: DESC }, { nick: ASC }]
     ) {
       editionId
-      imageFileId
+      userImageId
       levelId
       levelName
       nick

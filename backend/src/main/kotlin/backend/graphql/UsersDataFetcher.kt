@@ -8,6 +8,7 @@ import backend.edition.EditionRepository
 import backend.levels.Levels
 import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
+import backend.users.FirebaseUserService
 import backend.users.UsersRepository
 import backend.users.Users
 import backend.users.UsersRoles
@@ -44,6 +45,9 @@ class UsersDataFetcher {
     @Autowired
     lateinit var photoAssigner: PhotoAssigner
 
+    @Autowired
+    lateinit var firebaseUserService: FirebaseUserService
+
     @DgsMutation
     @Transactional
     fun assignPhotoToUser(@InputArgument userId: Long, @InputArgument fileId: Long?): Boolean {
@@ -54,7 +58,7 @@ class UsersDataFetcher {
     @Transactional
     fun addUser(@InputArgument indexNumber: Int, @InputArgument nick: String,
                 @InputArgument firstName: String, @InputArgument secondName: String,
-                @InputArgument role: String, @InputArgument label: String = ""): Users {
+                @InputArgument role: String, @InputArgument email: String = "example@example.com", @InputArgument label: String = "", @InputArgument createFirebaseUser: Boolean = false): Users {
         if (usersRepository.existsByIndexNumber(indexNumber)) {
             throw IllegalArgumentException("User with index number $indexNumber already exists")
         }
@@ -66,15 +70,24 @@ class UsersDataFetcher {
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Invalid role")
         }
+        if (!isValidEmail(email)) {
+            throw IllegalArgumentException("Invalid email")
+        }
         val user = Users(
             indexNumber = indexNumber,
             nick = nick,
             firstName = firstName,
             secondName = secondName,
             role = userRole1,
+            email = email,
             label = label
         )
-        return usersRepository.save(user)
+        usersRepository.save(user)
+        if (createFirebaseUser) {
+            val firebaseUid = firebaseUserService.createFirebaseUser(user)
+            user.firebaseUid = firebaseUid
+        }
+        return user
     }
 
     @DgsMutation
@@ -142,7 +155,7 @@ class UsersDataFetcher {
         if (user.userGroups.isNotEmpty()){
             throw IllegalArgumentException("Cannot remove user that is in a group")
         }
-
+        user.firebaseUid?.let { firebaseUserService.deleteFirebaseUser(it) }
         usersRepository.delete(user)
         return true
     }
@@ -244,6 +257,11 @@ class UsersDataFetcher {
                         maxPoints = maxPoints
                     )
                 }
+    }
+
+    fun isValidEmail(email: String): Boolean {
+        val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"
+        return email.matches(Regex(emailPattern))
     }
 }
 

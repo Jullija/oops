@@ -15,6 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 	"backend.chests",
 	"backend.edition",
 	"backend.files",
+	"backend.firebase",
 	"backend.graphql",
 	"backend.groups",
 	"backend.levels",
