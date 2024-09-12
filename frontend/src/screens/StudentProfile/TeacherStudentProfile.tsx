@@ -107,8 +107,9 @@ export function TeacherStudentProfile() {
           </div>
         </Dialog>
 
+        {/* TODO display only when editable  */}
         <div style={styles.button} onClick={openDialog}>
-          open
+          add points
         </div>
 
         <StudentTableWithFilters
