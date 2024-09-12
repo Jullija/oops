@@ -29,8 +29,7 @@ import org.springframework.context.annotation.PropertySource
 		"backend.users",
 		"backend.utils",
 		"backend.weekdays"
-	],
-	exclude = [SecurityAutoConfiguration::class]  // Exclude Spring Security completely
+	]
 )
 @EnableJpaAuditing
 @PropertySource("classpath:application-secrets.properties") // Add secrets properties file

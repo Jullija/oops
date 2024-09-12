@@ -62,7 +62,9 @@ class UsersDataFetcher {
     @Transactional
     fun addUser(@InputArgument indexNumber: Int, @InputArgument nick: String,
                 @InputArgument firstName: String, @InputArgument secondName: String,
-                @InputArgument role: String, @InputArgument email: String = "example@example.com", @InputArgument label: String = "", @InputArgument createFirebaseUser: Boolean = false): Users {
+                @InputArgument role: String, @InputArgument email: String = "example@example.com",
+                @InputArgument label: String = "", @InputArgument createFirebaseUser: Boolean = false,
+                @InputArgument sendEmail: Boolean = false): Users {
         if (usersRepository.existsByIndexNumber(indexNumber)) {
             throw IllegalArgumentException("User with index number $indexNumber already exists")
         }
@@ -88,7 +90,7 @@ class UsersDataFetcher {
         )
         usersRepository.save(user)
         if (createFirebaseUser) {
-            val firebaseUid = firebaseUserService.createFirebaseUser(user)
+            val firebaseUid = firebaseUserService.createFirebaseUser(user, sendEmail)
             user.firebaseUid = firebaseUid
         }
         return user

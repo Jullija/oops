@@ -102,7 +102,12 @@ export const Welcome: React.FC = () => {
   }, [currentUserData, setUser, navigate]);
 
   const handleUserSelect = (user: User) => {
+    if (!context) {
+      throw new Error("useContext must be used within a UserProvider");
+    }
+    const { setToken } = context;
     setUser(user);
+    setToken("Bypass" + user.userId);
     navigate(
       user.role === Roles.STUDENT
         ? pathsGenerator.student.StudentProfile

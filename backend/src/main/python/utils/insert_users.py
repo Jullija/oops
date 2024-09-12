@@ -33,6 +33,9 @@ def insert_students(hasura_url, headers, year_group_counts, fake, random, studen
             "indexNumber": index_number,
             "firstName": first_name,
             "secondName": second_name,
+            "email": str(index_number) + "@example.com",
+            "createFirebaseUser": False,
+            "sendEmail": False
         })
 
     print(f"Inserting {len(student_objects)} students...")
@@ -40,13 +43,16 @@ def insert_students(hasura_url, headers, year_group_counts, fake, random, studen
     student_ids = []
     for student in tqdm(student_objects, desc="Inserting students"):
         mutation = """
-        mutation addUser($indexNumber: Int!, $nick: String!, $firstName: String!, $secondName: String!, $role: String!) {
+        mutation addUser($indexNumber: Int!, $nick: String!, $firstName: String!, $secondName: String!, $role: String!, $email: String, $createFirebaseUser: Boolean, $sendEmail: Boolean) {
             addUser(
                 indexNumber: $indexNumber
                 nick: $nick
                 firstName: $firstName
                 secondName: $secondName
                 role: $role
+                email: $email
+                createFirebaseUser: $createFirebaseUser
+                sendEmail: $sendEmail
             ) {
                 userId
             }
@@ -91,6 +97,7 @@ def insert_teachers_and_coordinator(hasura_url, headers, fake, random, number_of
         "secondName": second_name,
         "email": "hot.mamusia.69.2137@gmail.com",
         "createFirebaseUser": True,
+        "sendEmail": True,
     })
 
     # Insert teachers
@@ -108,8 +115,9 @@ def insert_teachers_and_coordinator(hasura_url, headers, fake, random, number_of
             "indexNumber": index_number,
             "firstName": first_name,
             "secondName": second_name,
-            "email": None,
+            "email": str(index_number) + "@example.com",
             "createFirebaseUser": False,
+            "sendEmail": False,
         })
 
     print(f"Inserting {len(user_objects)} teachers and coordinator...")
@@ -117,7 +125,7 @@ def insert_teachers_and_coordinator(hasura_url, headers, fake, random, number_of
     teacher_ids = []
     for user in tqdm(user_objects, desc="Inserting teachers and coordinator"):
         mutation = """
-        mutation addUser($indexNumber: Int!, $nick: String!, $firstName: String!, $secondName: String!, $role: String!, $email: String, $createFirebaseUser: Boolean) {
+        mutation addUser($indexNumber: Int!, $nick: String!, $firstName: String!, $secondName: String!, $role: String!, $email: String, $createFirebaseUser: Boolean, $sendEmail: Boolean) {
             addUser(
                 indexNumber: $indexNumber
                 nick: $nick
@@ -126,6 +134,7 @@ def insert_teachers_and_coordinator(hasura_url, headers, fake, random, number_of
                 role: $role
                 email: $email
                 createFirebaseUser: $createFirebaseUser
+                sendEmail: $sendEmail
             ) {
                 userId
             }

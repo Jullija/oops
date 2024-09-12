@@ -77,6 +77,7 @@ type Mutation {
     email: String = "example@example.com"
     label: String = ""
     createFirebaseUser: Boolean = false
+    sendEmail: Boolean = false
   ): UserType
   generateSubcategories(
     editionId: Int!
