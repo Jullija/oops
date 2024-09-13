@@ -55,7 +55,7 @@ class Bonuses(
 
     fun updateAdditiveNextPoints(bonusRepository: BonusesRepository, pointsRepository: PointsRepository) {
         if (award.awardType != AwardType.ADDITIVE_NEXT) {
-            throw IllegalArgumentException("Award type is not Ad")
+            throw IllegalArgumentException("Award type is not ADDITIVE_NEXT")
         }
         val pointsInAwardCategory = points.student.getPointsByEditionAndCategory(points.subcategory.edition,
             award.category, pointsRepository).filter{
