@@ -46,8 +46,8 @@ export const AnimalCard = ({
       <PointsBar
         points={totalPoints}
         bounds={{
-          lower: currLevel.minimumPoints,
-          upper: currLevel.maximumPoints,
+          lower: parseFloat(currLevel.minimumPoints),
+          upper: parseFloat(currLevel.maximumPoints),
         }}
         showPoints
       />
