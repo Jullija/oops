@@ -16,6 +16,7 @@ import { AwardImage } from "../../images/AwardImage";
 
 type StudentTableProps = {
   points: Points[];
+  handleEditClick?: (points: Points) => void;
 };
 
 const dateOptions: Intl.DateTimeFormatOptions = {
@@ -44,7 +45,10 @@ const headerTitles: HeaderTitle[] = [
   { name: "prowadzący", align: "center" },
 ];
 
-export const StudentTable = ({ points }: StudentTableProps) => {
+export const StudentTable = ({
+  points,
+  handleEditClick,
+}: StudentTableProps) => {
   const darkTheme = createTheme({
     palette: {
       mode: "dark",
@@ -95,6 +99,7 @@ export const StudentTable = ({ points }: StudentTableProps) => {
         <Table>
           <TableHead>
             <TableRow>
+              {handleEditClick && <TableCell></TableCell>}
               {headerTitles.map((header) => (
                 <TableCell style={styles.header} align={header.align}>
                   {header.name}
@@ -105,6 +110,9 @@ export const StudentTable = ({ points }: StudentTableProps) => {
           <TableBody>
             {points.map((p, index) => (
               <TableRow key={index}>
+                {handleEditClick && (
+                  <TableCell onClick={() => handleEditClick(p)}>edit</TableCell>
+                )}
                 <TableCell align="center">
                   {p.subcategory.subcategoryName}
                 </TableCell>

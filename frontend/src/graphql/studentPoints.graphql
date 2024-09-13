@@ -32,6 +32,7 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
     subcategoryPoints {
       points {
         purePoints {
+          pointsId
           value
         }
         partialBonusType {
@@ -47,6 +48,7 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
         }
       }
       subcategory {
+        subcategoryId
         subcategoryName
         category {
           categoryId

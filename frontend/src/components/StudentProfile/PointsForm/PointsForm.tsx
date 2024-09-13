@@ -91,7 +91,10 @@ export const PointsForm = ({
   });
 
   const [subcategories, setSubcategories] = useState(
-    categories[0].subcategories,
+    (initialValues.subcategoryId === ""
+      ? categories[0]
+      : categories.find((c) => c.id === initialValues.categoryId)
+    )?.subcategories,
   );
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
