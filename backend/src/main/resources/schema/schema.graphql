@@ -43,6 +43,8 @@ type Mutation {
   addCategory(
     categoryName: String!
     canAddPoints: Boolean!
+    lightColor: String = "#FFFFFF"
+    darkColor: String = "#000000"
     label: String = ""
   ): CategoryType
   addCategoryToEdition(categoryId: Int!, editionId: Int!): CategoryEditionType
@@ -107,6 +109,8 @@ type Mutation {
     categoryId: Int!,
     categoryName: String,
     canAddPoints: Boolean,
+    lightColor: String,
+    darkColor: String,
     label: String
   ): CategoryType
 
@@ -280,6 +284,8 @@ type BonusType {
 type CategoryType {
   categoryId: ID!
   categoryName: String!
+  lightColor: String!
+  darkColor: String!
   canAddPoints: Boolean!
   categoryEdition: [CategoryEditionType]!
   label: String!

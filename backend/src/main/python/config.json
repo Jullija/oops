@@ -78,6 +78,8 @@
                 "subcategory_prefix": "lab_",
                 "max_points_per_subcategory": 10,
                 "can_add_points": true,
+                "light_color": "#a58bce",
+                "dark_color": "#242263",
                 "editions": "all"
             },
             {
@@ -86,6 +88,8 @@
                 "subcategory_prefix": "test_",
                 "max_points_per_subcategory": 5,
                 "can_add_points": true,
+                "light_color": "#7cbcce",
+                "dark_color": "#223863",
                 "editions": "all"
             },
             {
@@ -94,6 +98,8 @@
                 "subcategory_prefix": "proj_",
                 "max_points_per_subcategory": 40,
                 "can_add_points": true,
+                "light_color": "#ceaa8b",
+                "dark_color": "#632222",
                 "editions": "all"
             },
             {
@@ -102,6 +108,8 @@
                 "subcategory_prefix": null,
                 "max_points_per_subcategory": null,
                 "can_add_points": false,
+                "light_color": "#8bcebb",
+                "dark_color": "#1c4b5c",
                 "editions": "first"
             },
             {
@@ -110,6 +118,8 @@
                 "subcategory_prefix": null,
                 "max_points_per_subcategory": null,
                 "can_add_points": true,
+                "light_color": "#1c4b5c",
+                "dark_color": "#8bcebb",
                 "editions": "last"
             }
         ],
