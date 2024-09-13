@@ -17,10 +17,10 @@ export type NeighboringLevelsQuery = {
       highest: boolean;
       levelId: string;
       levelName: string;
-      maximumPoints: number;
-      minimumPoints: number;
+      maximumPoints: string;
+      minimumPoints: string;
       ordinalNumber: number;
-      grade: number;
+      grade: string;
       label: string;
       edition: {
         __typename?: "EditionType";
@@ -45,10 +45,10 @@ export type NeighboringLevelsQuery = {
       highest: boolean;
       levelId: string;
       levelName: string;
-      maximumPoints: number;
-      minimumPoints: number;
+      maximumPoints: string;
+      minimumPoints: string;
       ordinalNumber: number;
-      grade: number;
+      grade: string;
       label: string;
       edition: {
         __typename?: "EditionType";
@@ -73,10 +73,10 @@ export type NeighboringLevelsQuery = {
       highest: boolean;
       levelId: string;
       levelName: string;
-      maximumPoints: number;
-      minimumPoints: number;
+      maximumPoints: string;
+      minimumPoints: string;
       ordinalNumber: number;
-      grade: number;
+      grade: string;
       label: string;
       edition: {
         __typename?: "EditionType";

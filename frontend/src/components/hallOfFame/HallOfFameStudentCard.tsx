@@ -25,7 +25,7 @@ export type HallOfFameStudentData = {
   id: string;
   nick: string;
   levelName: string;
-  totalPoints: number;
+  totalPoints: string | number;
   groupId: string;
   avatarImgId?: string;
   levelImgId?: string;

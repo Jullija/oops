@@ -26,6 +26,8 @@ import com.netflix.graphql.dgs.DgsQuery
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.sql.Time
 import java.time.LocalDateTime
 
@@ -281,9 +283,9 @@ class GroupsDataFetcher {
                         PartialBonusType(
                             bonuses = bonus,
                             partialValue = if (bonus.award.awardType != AwardType.MULTIPLICATIVE) {
-                                bonus.points.value
+                                bonus.points.value.toFloat()
                             } else {
-                                purePoints?.value?.times(bonus.award.awardValue) ?: 0f
+                                BigDecimal((purePoints?.value?.toFloat()?.times(bonus.award.awardValue.toFloat()) ?: 0f).toString()).setScale(2, RoundingMode.HALF_UP).toFloat()
                             }
                         )
                     }
@@ -318,7 +320,7 @@ class GroupsDataFetcher {
     @Transactional
     fun getGroupsInEdition(@InputArgument editionId: Long, @InputArgument teacherId: Long): List<GroupTeacherType> {
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
-        val teacher = usersRepository.findById(teacherId).orElseThrow() { IllegalArgumentException("Invalid teacher ID") }
+        val teacher = usersRepository.findById(teacherId).orElseThrow { IllegalArgumentException("Invalid teacher ID") }
         if (teacher.role != UsersRoles.TEACHER && teacher.role != UsersRoles.COORDINATOR) {
             throw IllegalArgumentException("User with ID $teacherId is not a teacher nor a coordinator")
         }
@@ -377,11 +379,11 @@ class GroupsDataFetcher {
     private fun createCategoryPointsType(category: Categories, subcategoryPoints: List<SubcategoryPointsType>, subcategories: List<Subcategories>): CategoryPointsType{
         val subcategoryPointsWithDefaults = getSubcategoryPointsWithDefaults(subcategoryPoints, subcategories, category)
 
-        val sumOfPurePoints = subcategoryPointsWithDefaults.sumOf { it.points.purePoints?.value?.toDouble() ?: 0.0 }.toFloat()
-        val sumOfBonuses = subcategoryPointsWithDefaults.sumOf { subcategory ->
+        val sumOfPurePoints = BigDecimal(subcategoryPointsWithDefaults.sumOf { it.points.purePoints?.value?.toDouble() ?: 0.0 }.toString()).setScale(2, RoundingMode.HALF_UP).toFloat()
+        val sumOfBonuses = BigDecimal(subcategoryPointsWithDefaults.sumOf { subcategory ->
             subcategory.points.partialBonusType.sumOf { it.partialValue.toDouble() }
-        }.toFloat()
-        val sumOfAll = sumOfPurePoints + sumOfBonuses
+        }.toString()).setScale(2, RoundingMode.HALF_UP).toFloat()
+        val sumOfAll = BigDecimal((sumOfPurePoints + sumOfBonuses).toString()).setScale(2, RoundingMode.HALF_UP).toFloat()
 
         return CategoryPointsType(
             category = category,

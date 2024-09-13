@@ -164,7 +164,7 @@ class BonusDataFetcher {
             student = chestHistory.user,
             teacher = chestHistory.teacher,
             updatedBy = chestHistory.teacher,
-            value = min(award.awardValue, nextSubcategory.maxPoints),
+            value = min(award.awardValue.toFloat(), nextSubcategory.maxPoints.toFloat()).toBigDecimal(),
             subcategory = nextSubcategory,
             label = "Points awarded for ${award.awardName}"
         )
@@ -182,7 +182,7 @@ class BonusDataFetcher {
             student = chestHistory.user,
             teacher = chestHistory.teacher,
             updatedBy = chestHistory.teacher,
-            value = min(lastPoints.subcategory.maxPoints - lastPoints.value, award.awardValue),
+            value = min((lastPoints.subcategory.maxPoints - lastPoints.value).toFloat(), award.awardValue.toFloat()).toBigDecimal(),
             subcategory = lastPoints.subcategory,
             label = "Points awarded for ${award.awardName}"
         )
@@ -203,7 +203,7 @@ class BonusDataFetcher {
             student = chestHistory.user,
             teacher = chestHistory.teacher,
             updatedBy = chestHistory.teacher,
-            value = totalPointsValue * award.awardValue,
+            value = (totalPointsValue * award.awardValue.toFloat()).toBigDecimal(),
             subcategory = subcategory,
             label = "Points awarded for ${award.awardName}"
         )

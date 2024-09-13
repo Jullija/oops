@@ -23,7 +23,7 @@ type Student = {
 };
 
 export type SubcategoryPoints = {
-  pure: number | undefined;
+  pure: string | number | undefined;
   subcategoryId: string;
   categoryId: string;
 };
