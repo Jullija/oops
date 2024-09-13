@@ -1,11 +1,13 @@
 package backend.bonuses
 
 import backend.award.Award
+import backend.award.AwardType
 import backend.chestHistory.ChestHistory
 import backend.points.Points
 import backend.points.PointsRepository
 import backend.utils.TimestampModel
 import jakarta.persistence.*
+import kotlin.math.min
 
 @Entity
 @Table(name = "bonuses")
@@ -39,6 +41,9 @@ class Bonuses(
     )
 
     fun updateMultiplicativePoints(bonusRepository: BonusesRepository, pointsRepository: PointsRepository) {
+        if (award.awardType != AwardType.MULTIPLICATIVE) {
+            throw IllegalArgumentException("Award type is not MULTIPLICATIVE")
+        }
         val pointsInAwardCategory = points.student.getPointsByEditionAndCategory(points.subcategory.edition,
             award.category, pointsRepository).filter{
                 point -> bonusRepository.findByPoints(point).isEmpty()
@@ -48,4 +53,29 @@ class Bonuses(
         pointsRepository.save(points)
     }
 
+    fun updateAdditiveNextPoints(bonusRepository: BonusesRepository, pointsRepository: PointsRepository) {
+        if (award.awardType != AwardType.ADDITIVE_NEXT) {
+            throw IllegalArgumentException("Award type is not Ad")
+        }
+        val pointsInAwardCategory = points.student.getPointsByEditionAndCategory(points.subcategory.edition,
+            award.category, pointsRepository).filter{
+                point -> bonusRepository.findByPoints(point).isEmpty()
+        }.sortedBy { it.subcategory.ordinalNumber }
+
+        if (pointsInAwardCategory.isEmpty()) {
+            throw IllegalArgumentException("No previous points found in the specified category.")
+        }
+
+        var sum = 0f
+        var i = pointsInAwardCategory.size - 1
+        while (sum < award.awardValue || i >= 0) {
+            val lastPoints = pointsInAwardCategory.getOrNull(i--)
+                ?: break
+            val pointsToAdd = min(award.awardValue - sum, lastPoints.subcategory.maxPoints - lastPoints.value)
+            sum += pointsToAdd
+        }
+
+        points.value = sum
+        pointsRepository.save(points)
+    }
 }
