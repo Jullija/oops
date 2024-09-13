@@ -1,6 +1,6 @@
 import { Styles } from "../../../../utils/Styles";
 import { PointsBar } from "../../../PointsBar";
-import { Avatar } from "../../../Avatar";
+import { Avatar } from "../../../images/Avatar";
 import { LevelMiniature } from "./LevelMiniature";
 import { LevelType } from "../../../../__generated__/schema.graphql.types";
 
@@ -39,17 +39,12 @@ export const AnimalCard = ({
 }: AnimalCardProps) => {
   return (
     <div style={styles.card}>
-      <Avatar id={currLevel.imageFile?.fileId} size="lg" />
+      <Avatar id={currLevel.imageFile?.fileId} size="l" />
       <div style={styles.title}>
         obecny level: {currLevel.levelName} - lvl. {currLevel.ordinalNumber}
       </div>
-      {/* // TODO we have a problem with backend data inconsistency */}
       <PointsBar
-        points={
-          totalPoints > currLevel.minimumPoints
-            ? totalPoints
-            : currLevel.minimumPoints + 2
-        }
+        points={totalPoints}
         bounds={{
           lower: currLevel.minimumPoints,
           upper: currLevel.maximumPoints,

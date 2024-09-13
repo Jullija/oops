@@ -1,6 +1,6 @@
 import { Styles } from "../../../utils/Styles";
 import { StudentCardData } from "../../../hooks/StudentProfile/useStudentData";
-import { Avatar } from "../../Avatar";
+import { Avatar } from "../../images/Avatar";
 
 const styles: Styles = {
   container: {
@@ -35,7 +35,7 @@ export function StudentCard({
 }: StudentCardData) {
   return (
     <div style={styles.container}>
-      <Avatar id={avatarId} size="lg" />
+      <Avatar id={avatarId} size="l" />
       <div style={styles.studentName}>{displayName}</div>
       <div>indeks: {index}</div>
       <div>

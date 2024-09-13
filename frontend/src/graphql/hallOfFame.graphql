@@ -4,7 +4,6 @@ query HallOfFame($editionId: bigint) {
     orderBy: [{ sumOfPoints: DESC }, { nick: ASC }]
   ) {
     editionId
-    userImageId
     levelId
     levelName
     nick
@@ -12,5 +11,7 @@ query HallOfFame($editionId: bigint) {
     userId
     groupsId
     groupName
+    levelImageId
+    userImageId
   }
 }

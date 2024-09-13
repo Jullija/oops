@@ -4,12 +4,14 @@ def insert_categories(hasura_url, headers, category_data):
     categories = {}
     category_editions_type_map = {}
 
-    for category_name, _, _, _, can_add_points, editions_type in category_data:
+    for category_name, _, _, _, can_add_points, lightColor, darkColor, editions_type in category_data:
         mutation = """
-        mutation addCategory($categoryName: String!, $canAddPoints: Boolean!, $label: String = "") {
+        mutation addCategory($categoryName: String!, $canAddPoints: Boolean!, $lightColor: String = "#FFFFFF", $darkColor: String = "#000000", $label: String = "") {
             addCategory(
-                categoryName: $categoryName, 
-                canAddPoints: $canAddPoints, 
+                categoryName: $categoryName,
+                canAddPoints: $canAddPoints,
+                lightColor: $lightColor,
+                darkColor: $darkColor,
                 label: $label
             ) {
                 categoryId
@@ -18,7 +20,7 @@ def insert_categories(hasura_url, headers, category_data):
             }
         }
         """
-        variables = {"categoryName": category_name, "canAddPoints": can_add_points}
+        variables = {"categoryName": category_name, "canAddPoints": can_add_points, "lightColor": lightColor, "darkColor": darkColor}
 
         print(f"Attempting to insert category: {category_name}")
         response = requests.post(

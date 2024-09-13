@@ -1460,7 +1460,9 @@ export type Categories = {
   categoryEditionsAggregate: CategoryEditionAggregate;
   categoryId: Scalars["bigint"]["output"];
   categoryName: Scalars["String"]["output"];
+  darkColor: Scalars["String"]["output"];
   label: Scalars["String"]["output"];
+  lightColor: Scalars["String"]["output"];
   /** An array relationship */
   subcategories: Array<Subcategories>;
   /** An aggregate relationship */
@@ -1568,7 +1570,9 @@ export type CategoriesBoolExp = {
   categoryEditionsAggregate?: InputMaybe<CategoryEditionAggregateBoolExp>;
   categoryId?: InputMaybe<BigintComparisonExp>;
   categoryName?: InputMaybe<StringComparisonExp>;
+  darkColor?: InputMaybe<StringComparisonExp>;
   label?: InputMaybe<StringComparisonExp>;
+  lightColor?: InputMaybe<StringComparisonExp>;
   subcategories?: InputMaybe<SubcategoriesBoolExp>;
   subcategoriesAggregate?: InputMaybe<SubcategoriesAggregateBoolExp>;
 };
@@ -1591,7 +1595,9 @@ export type CategoriesInsertInput = {
   categoryEditions?: InputMaybe<CategoryEditionArrRelInsertInput>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   categoryName?: InputMaybe<Scalars["String"]["input"]>;
+  darkColor?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
+  lightColor?: InputMaybe<Scalars["String"]["input"]>;
   subcategories?: InputMaybe<SubcategoriesArrRelInsertInput>;
 };
 
@@ -1600,7 +1606,9 @@ export type CategoriesMaxFields = {
   __typename?: "CategoriesMaxFields";
   categoryId?: Maybe<Scalars["bigint"]["output"]>;
   categoryName?: Maybe<Scalars["String"]["output"]>;
+  darkColor?: Maybe<Scalars["String"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
+  lightColor?: Maybe<Scalars["String"]["output"]>;
 };
 
 /** aggregate min on columns */
@@ -1608,7 +1616,9 @@ export type CategoriesMinFields = {
   __typename?: "CategoriesMinFields";
   categoryId?: Maybe<Scalars["bigint"]["output"]>;
   categoryName?: Maybe<Scalars["String"]["output"]>;
+  darkColor?: Maybe<Scalars["String"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
+  lightColor?: Maybe<Scalars["String"]["output"]>;
 };
 
 /** response of any mutation on the table "categories" */
@@ -1641,7 +1651,9 @@ export type CategoriesOrderBy = {
   categoryEditionsAggregate?: InputMaybe<CategoryEditionAggregateOrderBy>;
   categoryId?: InputMaybe<OrderBy>;
   categoryName?: InputMaybe<OrderBy>;
+  darkColor?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
+  lightColor?: InputMaybe<OrderBy>;
   subcategoriesAggregate?: InputMaybe<SubcategoriesAggregateOrderBy>;
 };
 
@@ -1659,7 +1671,11 @@ export enum CategoriesSelectColumn {
   /** column name */
   CategoryName = "categoryName",
   /** column name */
+  DarkColor = "darkColor",
+  /** column name */
   Label = "label",
+  /** column name */
+  LightColor = "lightColor",
 }
 
 /** input type for updating data in table "categories" */
@@ -1667,7 +1683,9 @@ export type CategoriesSetInput = {
   canAddPoints?: InputMaybe<Scalars["Boolean"]["input"]>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   categoryName?: InputMaybe<Scalars["String"]["input"]>;
+  darkColor?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
+  lightColor?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** aggregate stddev on columns */
@@ -1701,7 +1719,9 @@ export type CategoriesStreamCursorValueInput = {
   canAddPoints?: InputMaybe<Scalars["Boolean"]["input"]>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   categoryName?: InputMaybe<Scalars["String"]["input"]>;
+  darkColor?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
+  lightColor?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** aggregate sum on columns */
@@ -1719,7 +1739,11 @@ export enum CategoriesUpdateColumn {
   /** column name */
   CategoryName = "categoryName",
   /** column name */
+  DarkColor = "darkColor",
+  /** column name */
   Label = "label",
+  /** column name */
+  LightColor = "lightColor",
 }
 
 export type CategoriesUpdates = {
@@ -2136,7 +2160,9 @@ export type CategoryType = {
   categoryEdition: Array<Maybe<CategoryEditionType>>;
   categoryId: Scalars["ID"]["output"];
   categoryName: Scalars["String"]["output"];
+  darkColor: Scalars["String"]["output"];
   label: Scalars["String"]["output"];
+  lightColor: Scalars["String"]["output"];
 };
 
 /** columns and relationships of "chest_award" */
@@ -3000,6 +3026,7 @@ export type ChestType = {
 /** columns and relationships of "chests" */
 export type Chests = {
   __typename?: "Chests";
+  active: Scalars["Boolean"]["output"];
   /** An array relationship */
   chestAwards: Array<ChestAward>;
   /** An aggregate relationship */
@@ -3063,6 +3090,8 @@ export type ChestsAggregate = {
 };
 
 export type ChestsAggregateBoolExp = {
+  bool_and?: InputMaybe<ChestsAggregateBoolExpBool_And>;
+  bool_or?: InputMaybe<ChestsAggregateBoolExpBool_Or>;
   count?: InputMaybe<ChestsAggregateBoolExpCount>;
 };
 
@@ -3130,6 +3159,7 @@ export type ChestsBoolExp = {
   _and?: InputMaybe<Array<ChestsBoolExp>>;
   _not?: InputMaybe<ChestsBoolExp>;
   _or?: InputMaybe<Array<ChestsBoolExp>>;
+  active?: InputMaybe<BooleanComparisonExp>;
   chestAwards?: InputMaybe<ChestAwardBoolExp>;
   chestAwardsAggregate?: InputMaybe<ChestAwardAggregateBoolExp>;
   chestHistories?: InputMaybe<ChestHistoryBoolExp>;
@@ -3158,6 +3188,7 @@ export type ChestsIncInput = {
 
 /** input type for inserting data into table "chests" */
 export type ChestsInsertInput = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
   chestAwards?: InputMaybe<ChestAwardArrRelInsertInput>;
   chestHistories?: InputMaybe<ChestHistoryArrRelInsertInput>;
   chestId?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -3232,6 +3263,7 @@ export type ChestsOnConflict = {
 
 /** Ordering options when selecting data from "chests". */
 export type ChestsOrderBy = {
+  active?: InputMaybe<OrderBy>;
   chestAwardsAggregate?: InputMaybe<ChestAwardAggregateOrderBy>;
   chestHistoriesAggregate?: InputMaybe<ChestHistoryAggregateOrderBy>;
   chestId?: InputMaybe<OrderBy>;
@@ -3251,6 +3283,8 @@ export type ChestsPkColumnsInput = {
 /** select columns of table "chests" */
 export enum ChestsSelectColumn {
   /** column name */
+  Active = "active",
+  /** column name */
   ChestId = "chestId",
   /** column name */
   EditionId = "editionId",
@@ -3262,8 +3296,21 @@ export enum ChestsSelectColumn {
   Type = "type",
 }
 
+/** select "chestsAggregateBoolExpBool_andArgumentsColumns" columns of table "chests" */
+export enum ChestsSelectColumnChestsAggregateBoolExpBool_AndArgumentsColumns {
+  /** column name */
+  Active = "active",
+}
+
+/** select "chestsAggregateBoolExpBool_orArgumentsColumns" columns of table "chests" */
+export enum ChestsSelectColumnChestsAggregateBoolExpBool_OrArgumentsColumns {
+  /** column name */
+  Active = "active",
+}
+
 /** input type for updating data in table "chests" */
 export type ChestsSetInput = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
   chestId?: InputMaybe<Scalars["bigint"]["input"]>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -3326,6 +3373,7 @@ export type ChestsStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type ChestsStreamCursorValueInput = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
   chestId?: InputMaybe<Scalars["bigint"]["input"]>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -3350,6 +3398,8 @@ export type ChestsSumOrderBy = {
 
 /** update columns of table "chests" */
 export enum ChestsUpdateColumn {
+  /** column name */
+  Active = "active",
   /** column name */
   ChestId = "chestId",
   /** column name */
@@ -9706,6 +9756,20 @@ export type ChestHistoryAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
+export type ChestsAggregateBoolExpBool_And = {
+  arguments: ChestsSelectColumnChestsAggregateBoolExpBool_AndArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<ChestsBoolExp>;
+  predicate: BooleanComparisonExp;
+};
+
+export type ChestsAggregateBoolExpBool_Or = {
+  arguments: ChestsSelectColumnChestsAggregateBoolExpBool_OrArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<ChestsBoolExp>;
+  predicate: BooleanComparisonExp;
+};
+
 export type ChestsAggregateBoolExpCount = {
   arguments?: InputMaybe<Array<ChestsSelectColumn>>;
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -10173,7 +10237,9 @@ export type Mutation_RootAddBonusMutationArgs = {
 export type Mutation_RootAddCategoryArgs = {
   canAddPoints: Scalars["Boolean"]["input"];
   categoryName: Scalars["String"]["input"];
+  darkColor?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
+  lightColor?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** mutation root */
@@ -10253,6 +10319,7 @@ export type Mutation_RootAddUserArgs = {
   nick: Scalars["String"]["input"];
   role: Scalars["String"]["input"];
   secondName: Scalars["String"]["input"];
+  sendEmail?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 /** mutation root */
@@ -10510,7 +10577,9 @@ export type Mutation_RootEditCategoryArgs = {
   canAddPoints?: InputMaybe<Scalars["Boolean"]["input"]>;
   categoryId: Scalars["Int"]["input"];
   categoryName?: InputMaybe<Scalars["String"]["input"]>;
+  darkColor?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
+  lightColor?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** mutation root */

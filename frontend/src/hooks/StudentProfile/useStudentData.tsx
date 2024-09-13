@@ -24,15 +24,15 @@ export type StudentCardData = {
 };
 
 export const useStudentData = (props: {
-  editionId?: string;
-  studentId?: string;
+  editionId: string | undefined;
+  studentId: string | undefined;
 }) => {
   const { editionId, studentId } = props;
 
   const { data, loading, error, refetch } = useStudentPointsQuery({
     variables: {
-      editionId: parseInt(editionId ?? "-1"),
-      studentId: parseInt(studentId ?? "-1"),
+      editionId: parseInt(editionId as string),
+      studentId: parseInt(studentId as string),
     },
     skip: !editionId || !studentId,
   });

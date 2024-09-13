@@ -2081,7 +2081,9 @@ type Categories {
   ): CategoryEditionAggregate!
   categoryId: bigint!
   categoryName: String!
+  darkColor: String!
   label: String!
+  lightColor: String!
 
   """
   An array relationship
@@ -2190,7 +2192,9 @@ input CategoriesBoolExp {
   categoryEditionsAggregate: CategoryEditionAggregateBoolExp
   categoryId: BigintComparisonExp
   categoryName: StringComparisonExp
+  darkColor: StringComparisonExp
   label: StringComparisonExp
+  lightColor: StringComparisonExp
   subcategories: SubcategoriesBoolExp
   subcategoriesAggregate: SubcategoriesAggregateBoolExp
 }
@@ -2221,7 +2225,9 @@ input CategoriesInsertInput {
   categoryEditions: CategoryEditionArrRelInsertInput
   categoryId: bigint
   categoryName: String
+  darkColor: String
   label: String
+  lightColor: String
   subcategories: SubcategoriesArrRelInsertInput
 }
 
@@ -2231,7 +2237,9 @@ aggregate max on columns
 type CategoriesMaxFields {
   categoryId: bigint
   categoryName: String
+  darkColor: String
   label: String
+  lightColor: String
 }
 
 """
@@ -2240,7 +2248,9 @@ aggregate min on columns
 type CategoriesMinFields {
   categoryId: bigint
   categoryName: String
+  darkColor: String
   label: String
+  lightColor: String
 }
 
 """
@@ -2288,7 +2298,9 @@ input CategoriesOrderBy {
   categoryEditionsAggregate: CategoryEditionAggregateOrderBy
   categoryId: OrderBy
   categoryName: OrderBy
+  darkColor: OrderBy
   label: OrderBy
+  lightColor: OrderBy
   subcategoriesAggregate: SubcategoriesAggregateOrderBy
 }
 
@@ -2321,7 +2333,17 @@ enum CategoriesSelectColumn {
   """
   column name
   """
+  darkColor
+
+  """
+  column name
+  """
   label
+
+  """
+  column name
+  """
+  lightColor
 }
 
 """
@@ -2331,7 +2353,9 @@ input CategoriesSetInput {
   canAddPoints: Boolean
   categoryId: bigint
   categoryName: String
+  darkColor: String
   label: String
+  lightColor: String
 }
 
 """
@@ -2377,7 +2401,9 @@ input CategoriesStreamCursorValueInput {
   canAddPoints: Boolean
   categoryId: bigint
   categoryName: String
+  darkColor: String
   label: String
+  lightColor: String
 }
 
 """
@@ -2409,7 +2435,17 @@ enum CategoriesUpdateColumn {
   """
   column name
   """
+  darkColor
+
+  """
+  column name
+  """
   label
+
+  """
+  column name
+  """
+  lightColor
 }
 
 input CategoriesUpdates {
@@ -2941,7 +2977,9 @@ type CategoryType {
   categoryEdition: [CategoryEditionType]!
   categoryId: ID!
   categoryName: String!
+  darkColor: String!
   label: String!
+  lightColor: String!
 }
 
 """
@@ -4067,6 +4105,8 @@ type ChestType {
 columns and relationships of "chests"
 """
 type Chests {
+  active: Boolean!
+
   """
   An array relationship
   """
@@ -4212,6 +4252,8 @@ type ChestsAggregate {
 }
 
 input ChestsAggregateBoolExp {
+  bool_and: chestsAggregateBoolExpBool_and
+  bool_or: chestsAggregateBoolExpBool_or
   count: chestsAggregateBoolExpCount
 }
 
@@ -4286,6 +4328,7 @@ input ChestsBoolExp {
   _and: [ChestsBoolExp!]
   _not: ChestsBoolExp
   _or: [ChestsBoolExp!]
+  active: BooleanComparisonExp
   chestAwards: ChestAwardBoolExp
   chestAwardsAggregate: ChestAwardAggregateBoolExp
   chestHistories: ChestHistoryBoolExp
@@ -4322,6 +4365,7 @@ input ChestsIncInput {
 input type for inserting data into table "chests"
 """
 input ChestsInsertInput {
+  active: Boolean
   chestAwards: ChestAwardArrRelInsertInput
   chestHistories: ChestHistoryArrRelInsertInput
   chestId: bigint
@@ -4417,6 +4461,7 @@ input ChestsOnConflict {
 Ordering options when selecting data from "chests".
 """
 input ChestsOrderBy {
+  active: OrderBy
   chestAwardsAggregate: ChestAwardAggregateOrderBy
   chestHistoriesAggregate: ChestHistoryAggregateOrderBy
   chestId: OrderBy
@@ -4439,6 +4484,11 @@ input ChestsPkColumnsInput {
 select columns of table "chests"
 """
 enum ChestsSelectColumn {
+  """
+  column name
+  """
+  active
+
   """
   column name
   """
@@ -4466,9 +4516,30 @@ enum ChestsSelectColumn {
 }
 
 """
+select "chestsAggregateBoolExpBool_andArgumentsColumns" columns of table "chests"
+"""
+enum ChestsSelectColumnChestsAggregateBoolExpBool_andArgumentsColumns {
+  """
+  column name
+  """
+  active
+}
+
+"""
+select "chestsAggregateBoolExpBool_orArgumentsColumns" columns of table "chests"
+"""
+enum ChestsSelectColumnChestsAggregateBoolExpBool_orArgumentsColumns {
+  """
+  column name
+  """
+  active
+}
+
+"""
 input type for updating data in table "chests"
 """
 input ChestsSetInput {
+  active: Boolean
   chestId: bigint
   editionId: bigint
   imageFileId: bigint
@@ -4549,6 +4620,7 @@ input ChestsStreamCursorInput {
 Initial value of the column from where the streaming should start
 """
 input ChestsStreamCursorValueInput {
+  active: Boolean
   chestId: bigint
   editionId: bigint
   imageFileId: bigint
@@ -4578,6 +4650,11 @@ input ChestsSumOrderBy {
 update columns of table "chests"
 """
 enum ChestsUpdateColumn {
+  """
+  column name
+  """
+  active
+
   """
   column name
   """
@@ -13819,6 +13896,20 @@ input chestHistoryAggregateBoolExpCount {
   predicate: IntComparisonExp!
 }
 
+input chestsAggregateBoolExpBool_and {
+  arguments: ChestsSelectColumnChestsAggregateBoolExpBool_andArgumentsColumns!
+  distinct: Boolean
+  filter: ChestsBoolExp
+  predicate: BooleanComparisonExp!
+}
+
+input chestsAggregateBoolExpBool_or {
+  arguments: ChestsSelectColumnChestsAggregateBoolExpBool_orArgumentsColumns!
+  distinct: Boolean
+  filter: ChestsBoolExp
+  predicate: BooleanComparisonExp!
+}
+
 input chestsAggregateBoolExpCount {
   arguments: [ChestsSelectColumn!]
   distinct: Boolean
@@ -13946,7 +14037,9 @@ type mutation_root {
   addCategory(
     canAddPoints: Boolean!
     categoryName: String!
+    darkColor: String = "#000000"
     label: String = ""
+    lightColor: String = "#FFFFFF"
   ): CategoryType
   addCategoryToEdition(categoryId: Int!, editionId: Int!): CategoryEditionType
   addChest(chestType: String!, editionId: Int!, label: String = ""): ChestType
@@ -14001,6 +14094,7 @@ type mutation_root {
     nick: String!
     role: String!
     secondName: String!
+    sendEmail: Boolean = false
   ): UserType
   addUserToGroup(groupId: Int!, userId: Int!): UserGroupType
   assignPhotoToAward(awardId: Int!, fileId: Int): Boolean
@@ -14324,7 +14418,9 @@ type mutation_root {
     canAddPoints: Boolean
     categoryId: Int!
     categoryName: String
+    darkColor: String
     label: String
+    lightColor: String
   ): CategoryType
   editChest(
     chestId: Int!

@@ -31,13 +31,13 @@ def insert_subcategories(hasura_url, headers, editions, categories, category_dat
     # ]
 
     subcategories_data = {
-        category[0]: [(f"{category[2]}{i}", category[3], editions_type_id_map[category[5]]) for i in range(1, category[1] + 1)] if category[2] and category[3] is not None
+        category[0]: [(f"{category[2]}{i}", category[3], editions_type_id_map[category[7]]) for i in range(1, category[1] + 1)] if category[2] and category[3] is not None
         else
-            [(f"{category[2]}{i}", random.randint(1, 20) * 10, editions_type_id_map[category[5]]) for i in range(1, category[1] + 1)] if category[2] and not category[3] else
+            [(f"{category[2]}{i}", random.randint(1, 20) * 10, editions_type_id_map[category[7]]) for i in range(1, category[1] + 1)] if category[2] and not category[3] else
 
-            [(special_name, 10, editions_type_id_map[category[5]]) for special_name in special_event_names] + [(name, category[3], editions_type_id_map[category[5]]) for name in
+            [(special_name, 10, editions_type_id_map[category[7]]) for special_name in special_event_names] + [(name, category[3], editions_type_id_map[category[7]]) for name in
                                                                         random.sample(event_names, category[1]-1)] if category[3] else
-            [(special_name, 10, editions_type_id_map[category[5]]) for special_name in special_event_names] + [(name, random.randint(1, 20) * 10, editions_type_id_map[category[5]]) for name in
+            [(special_name, 10, editions_type_id_map[category[7]]) for special_name in special_event_names] + [(name, random.randint(1, 20) * 10, editions_type_id_map[category[7]]) for name in
                                        random.sample(event_names, category[1] - 1)]
         for category in category_data
     }

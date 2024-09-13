@@ -1,27 +1,28 @@
 import { Styles } from "../../../utils/Styles";
 import FilterMenu from "./FilterMenu";
 import { useState } from "react";
-import PointsTable from "./PointsTable";
 import { Points } from "../../../hooks/StudentProfile/useStudentData";
 import { FilterItem } from "../../Groups/FilterBar/FilterOptionsSection";
+import { StudentTable } from "./StudentTable";
 
 const styles: Styles = {
   container: {
     display: "flex",
     flexDirection: "column",
     gap: 12,
+    flex: 1,
   },
 };
 
-type PointsTableProps = {
+type StudentTableWithFiltersProps = {
   points: Points[];
   filterHeaderNames: FilterItem[];
 };
 
-export const PointsTableWithFilter = ({
+export const StudentTableWithFilters = ({
   points,
   filterHeaderNames,
-}: PointsTableProps) => {
+}: StudentTableWithFiltersProps) => {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
 
   const isInSelectedCategoryIds = (points: Points) => {
@@ -44,7 +45,7 @@ export const PointsTableWithFilter = ({
         }}
         filterItems={filterHeaderNames}
       />
-      <PointsTable points={pointsToDisplay} />
+      <StudentTable points={pointsToDisplay} />
     </div>
   );
 };

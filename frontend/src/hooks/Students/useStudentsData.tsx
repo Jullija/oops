@@ -1,7 +1,7 @@
 import { StudentFromList } from "../../components/Students/StudentsList";
 import { useStudentsQuery } from "../../graphql/students.graphql.types";
 
-export const useStudentsData = (editionId?: string) => {
+export const useStudentsData = (editionId: string | undefined) => {
   const {
     data: studentsData,
     loading,
@@ -32,7 +32,7 @@ export const useStudentsData = (editionId?: string) => {
             start: group.startTime,
             end: group.endTime,
           },
-          // TODO nullable
+          // TODO it shouldn't be nullable?
           teacher: {
             fullName: teacher?.fullName as string,
             id: teacher?.userId as string,

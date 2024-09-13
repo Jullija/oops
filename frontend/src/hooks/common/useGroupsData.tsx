@@ -22,11 +22,9 @@ export type Timestamp = {
   end: string;
 };
 
-// TODO change editionId?: to | undefined
 export const useGroupsData = (editionId: string | undefined) => {
   const { data, loading, error } = useGroupsQuery({
     variables: {
-      // TODO thats the way how to handle undefined case!
       editionId: editionId as string,
     },
     skip: !editionId,
@@ -43,8 +41,7 @@ export const useGroupsData = (editionId: string | undefined) => {
         },
         time: { start: group.startTime, end: group.endTime },
         teacher: {
-          // firstName and secondName is not nullable - hasura computes it so practically it will never be null
-          // why userByTeacherId is null
+          // TODO why userByTeacherId is null?
           fullName: group.userByTeacherId?.fullName as string,
           id: group.userByTeacherId?.userId as string,
         },

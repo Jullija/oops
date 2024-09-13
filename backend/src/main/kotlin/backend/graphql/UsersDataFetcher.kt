@@ -20,7 +20,7 @@ import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
-import java.time.ZoneOffset
+import kotlin.math.min
 
 @DgsComponent
 class UsersDataFetcher {
@@ -183,18 +183,29 @@ class UsersDataFetcher {
         val points = pointsRepository.findAllByStudentAndSubcategory_Edition(user, edition)
         val bonuses = bonusesRepository.findByChestHistory_User_UserId(studentId)
 
-        val subcategoryPoints = points.groupBy { it.subcategory }
+        val additivePrevBonuses = bonuses.filter { it.award.awardType == AwardType.ADDITIVE_PREV }
+
+        val additivePrevBonusesMap = additivePrevBonuses.associateWith { it.points.value }.toMutableMap()
+
+        val subcategoryPoints = points.sortedByDescending { it.subcategory.ordinalNumber }.groupBy { it.subcategory }
             .map { (subcategory, points) ->
                 val purePoints = points.filter { bonusesRepository.findByPoints(it).isEmpty() }.firstOrNull()
-                val allBonuses = bonuses.filter { (it.award.awardType != AwardType.MULTIPLICATIVE && it.points.subcategory == subcategory)  ||
-                        (it.award.awardType == AwardType.MULTIPLICATIVE && it.points.subcategory.category == subcategory.category) }
+                val allBonuses = bonuses.filter { (it.award.awardType != AwardType.MULTIPLICATIVE && it.award.awardType != AwardType.ADDITIVE_PREV && it.points.subcategory == subcategory)  ||
+                        ((it.award.awardType == AwardType.MULTIPLICATIVE || it.award.awardType == AwardType.ADDITIVE_PREV) && it.points.subcategory.category == subcategory.category) }
                 val partialBonusType = allBonuses.map { bonus ->
                     PartialBonusType(
                         bonuses = bonus,
-                        partialValue = if (bonus.award.awardType != AwardType.MULTIPLICATIVE) {
-                            bonus.points.value
-                        } else {
+                        partialValue = if (bonus.award.awardType == AwardType.MULTIPLICATIVE) {
                             purePoints?.value?.times(bonus.award.awardValue) ?: 0f
+                        } else if (bonus.award.awardType == AwardType.ADDITIVE_PREV) {
+                            val contribution = min(
+                                additivePrevBonusesMap[bonus] ?: 0f,
+                                purePoints?.value?.let { (purePoints.subcategory.maxPoints).minus(it) } ?: 0f
+                            )
+                            additivePrevBonusesMap[bonus] = (additivePrevBonusesMap[bonus] ?: 0f) - contribution
+                            contribution
+                        } else {
+                            bonus.points.value
                         }
                     )
                 }
