@@ -22,7 +22,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 	"backend.subcategories",
 	"backend.userGroups",
 	"backend.userLevel",
-	"backend.users"
+	"backend.users",
+	"backend.weekdays"
 ])
 @EnableJpaAuditing
 //@Import(BonusesConfiguration::class, CategoriesConfiguration::class, ChestAwardConfiguration::class, ChestHistoryConfiguration::class, ChestsConfiguration::class, PointsConfiguration::class, SubcategoriesConfiguration::class, UsersConfiguration::class, GroupsConfiguration::class)

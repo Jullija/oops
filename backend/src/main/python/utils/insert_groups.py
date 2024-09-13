@@ -23,15 +23,16 @@ def insert_groups(hasura_url, headers, editions, random, number_of_groups_per_ye
 
             # Perform addGroup mutation
             mutation = """
-            mutation addGroup($editionId: Int!, $groupName: String!, $weekdayId: Int!, $startTime: String!, $endTime: String!, $teacherId: Int!, $label: String = "") {
+            mutation addGroup($editionId: Int!, $usosId: Int!, $weekdayId: Int!, $startTime: String!, $endTime: String!, $teacherId: Int!, $label: String = "", $groupName: String = "") {
                 addGroup(
                     editionId: $editionId,
-                    groupName: $groupName,
+                    usosId: $usosId,
                     weekdayId: $weekdayId,
                     startTime: $startTime,
                     endTime: $endTime,
                     teacherId: $teacherId,
-                    label: $label
+                    label: $label,
+                    groupName: $groupName
                 ) {
                     groupsId
                     groupName
@@ -43,12 +44,13 @@ def insert_groups(hasura_url, headers, editions, random, number_of_groups_per_ye
             """
             variables = {
                 "editionId": editions[year],
-                "groupName": group_name,
+                "usosId": i,
                 "weekdayId": weekdayId,
                 "startTime": timespan[0],
                 "endTime": timespan[1],
                 "teacherId": teacher_id,
-                "label": ""
+                "label": "",
+                "groupName": group_name,
             }
 
             response = requests.post(

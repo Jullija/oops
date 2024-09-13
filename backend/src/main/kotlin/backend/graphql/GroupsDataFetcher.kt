@@ -90,14 +90,15 @@ class GroupsDataFetcher {
 
     @DgsMutation
     @Transactional
-    fun addGroup(@InputArgument editionId: Long, @InputArgument groupName: String,
+    fun addGroup(@InputArgument editionId: Long, @InputArgument usosId: Int,
                  @InputArgument weekdayId: Long, @InputArgument startTime: Time,
-                 @InputArgument endTime: Time, @InputArgument teacherId: Long, @InputArgument label: String = ""): Groups {
+                 @InputArgument endTime: Time, @InputArgument teacherId: Long, @InputArgument label: String = "",
+                 @InputArgument groupName: String = ""): Groups {
         val edition = editionRepository.findById(editionId).orElseThrow() { IllegalArgumentException("Invalid edition ID") }
         if (edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Edition has already ended")
         }
-        if (groupsRepository.existsByGroupNameAndEdition(groupName, edition)) {
+        if (groupsRepository.findAllByGroupNameAndEdition(groupName, edition).any { it.groupName.isNotBlank() }) {
             throw IllegalArgumentException("Group with name $groupName already exists for edition ${edition.editionId}")
         }
         if (startTime.after(endTime)) {
@@ -105,9 +106,6 @@ class GroupsDataFetcher {
         }
         if (startTime == endTime) {
             throw IllegalArgumentException("Start time must be different from end time")
-        }
-        if (groupName.isBlank()) {
-            throw IllegalArgumentException("Group name must not be blank")
         }
         val weekday = weekdaysRepository.findById(weekdayId).orElseThrow { IllegalArgumentException("Invalid weekday ID") }
         val teacher = usersRepository.findById(teacherId).orElseThrow { IllegalArgumentException("Invalid teacher ID") }
@@ -117,8 +115,11 @@ class GroupsDataFetcher {
         if (groupsRepository.existsByTeacherAndWeekdayAndStartTimeAndEndTimeAndEdition(teacher, weekday, startTime, endTime, edition)) {
             throw IllegalArgumentException("Teacher is already teaching a group at this time")
         }
+        val generatedName = generateGroupName(usosId, weekday, startTime, teacher)
         val group = Groups(
+            generatedName = generatedName,
             groupName = groupName,
+            usosId = usosId,
             label = label,
             teacher = teacher,
             weekday = weekday,
@@ -154,10 +155,7 @@ class GroupsDataFetcher {
         }
 
         groupName?.let {
-            if (it.isBlank()) {
-                throw IllegalArgumentException("Group name must not be blank")
-            }
-            if (groupsRepository.existsByGroupNameAndEdition(it, group.edition) && it != group.groupName) {
+            if (it != "" && groupsRepository.existsByGroupNameAndEdition(it, group.edition) && it != group.groupName) {
                 throw IllegalArgumentException("Group with name $it already exists for edition ${group.edition.editionId}")
             }
             group.groupName = it
@@ -201,6 +199,8 @@ class GroupsDataFetcher {
         label?.let {
             group.label = it
         }
+
+        group.generatedName = generateGroupName(group.usosId, group.weekday, group.startTime, group.teacher)
 
         return groupsRepository.save(group)
     }
@@ -393,6 +393,9 @@ class GroupsDataFetcher {
                 sumOfAll = sumOfAll
             )
         )
+    }
+    private fun generateGroupName(usosId: Int, weekday: Weekdays, startTime: Time, teacher: Users): String {
+        return "${weekday.weekdayAbbr}-${startTime.toString().replace(":", "").subSequence(0, 4)}-${teacher.firstName.subSequence(0, 3)}-${teacher.secondName.subSequence(0, 3)}-${usosId}"
     }
 }
 
