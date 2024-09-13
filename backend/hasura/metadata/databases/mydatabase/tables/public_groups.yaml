@@ -8,18 +8,9 @@ object_relationships:
   - name: file
     using:
       foreign_key_constraint_on: image_file_id
-  - name: user
+  - name: teacher
     using:
       foreign_key_constraint_on: teacher_id
-  - name: userByTeacherId
-    using:
-      manual_configuration:
-        column_mapping:
-          teacher_id: user_id
-        insertion_order: null
-        remote_table:
-          name: users
-          schema: public
   - name: weekday
     using:
       foreign_key_constraint_on: weekday_id
