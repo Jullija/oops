@@ -1,6 +1,7 @@
 package backend.graphql
 
 import backend.categories.CategoriesRepository
+import backend.chestAward.ChestAwardRepository
 import backend.chests.Chests
 import backend.chests.ChestsRepository
 import backend.edition.EditionRepository
@@ -18,6 +19,9 @@ import java.time.LocalDate
 
 @DgsComponent
 class ChestsDataFetcher {
+    @Autowired
+    private lateinit var chestAwardRepository: ChestAwardRepository
+
     @Autowired
     lateinit var usersRepository: UsersRepository
 
@@ -59,7 +63,7 @@ class ChestsDataFetcher {
     @Transactional
     fun addChest(@InputArgument chestType: String, @InputArgument editionId: Long, @InputArgument label: String = ""): Chests {
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
-        if (chestsRepository.existsByChestTypeAndEdition(chestType, edition)) {
+        if (chestsRepository.existsByChestTypeAndEditionAndActive(chestType, edition, true)) {
             throw IllegalArgumentException("Chest with type $chestType already exists for edition ${edition.editionId}")
         }
         if (edition.endDate.isBefore(LocalDate.now())){
@@ -90,7 +94,7 @@ class ChestsDataFetcher {
             if (chest.edition.startDate.isBefore(LocalDate.now())) {
                 throw IllegalArgumentException("Edition has already started")
             }
-            if (chestsRepository.existsByChestTypeAndEdition(it, chest.edition) && it != chest.chestType) {
+            if (chestsRepository.existsByChestTypeAndEditionAndActive(it, chest.edition, true) && it != chest.chestType) {
                 throw IllegalArgumentException("Chest with type $it already exists for edition ${chest.edition.editionId}")
             }
             chest.chestType = it
@@ -120,6 +124,9 @@ class ChestsDataFetcher {
         }
         if (chest.edition.startDate.isBefore(LocalDate.now())) {
             throw IllegalArgumentException("Edition has already started")
+        }
+        chestAwardRepository.findByChest(chest).forEach {
+            chestAwardRepository.delete(it)
         }
 
         chestsRepository.delete(chest)
