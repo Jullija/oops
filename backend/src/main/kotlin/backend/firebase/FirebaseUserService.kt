@@ -51,26 +51,64 @@ class FirebaseUserService (
         helper.setSubject("Your New Account Password")
         helper.setText(
             """
-            Hello,
+            Cześć,
 
-            Your account has been successfully created. Here are your login credentials:
+            Twoje konto w aplikacji OOPS zostało utworzone. Oto Twoje tymczasowe hasło:
 
-            Email: $email
-            Password: $password
+            Email:
+            $email
+            Password:
+            $password
 
-            Please change your password after your first login for security reasons.
+            Po zalogowaniu się do aplikacji, zmień hasło na bardziej bezpieczne.
 
-            Best regards,
-            Your Company
+            Pozdrawiamy,
+            Zespół OOPS
             """.trimIndent()
         )
 
         mailSender.send(message)
     }
 
-
     // Delete a user from Firebase Authentication
     fun deleteFirebaseUser(uid: String) {
         FirebaseAuth.getInstance().deleteUser(uid)
+    }
+
+    // Reset user password and send reset link
+    fun resetPassword(email: String): Boolean {
+        return try {
+            val resetPasswordLink = FirebaseAuth.getInstance().generatePasswordResetLink(email)
+            sendResetPasswordEmail(email, resetPasswordLink)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    // Send password reset email to the user
+    private fun sendResetPasswordEmail(email: String, resetPasswordLink: String) {
+        val message = mailSender.createMimeMessage()
+        val helper = MimeMessageHelper(message, true)
+
+        helper.setTo(email)
+        helper.setSubject("Reset Your Password")
+        helper.setText(
+            """
+        <p>Cześć,</p>
+
+        <p>Otrzymaliśmy prośbę o zresetowanie hasła do Twojego konta w aplikacji OOPS. Kliknij poniższy link, aby ustawić nowe hasło:</p>
+
+        <p><a href="$resetPasswordLink">Reset Password</a></p>
+
+        <p>Jeśli nie prosiłeś(-aś) o resetowanie hasła, zignoruj tę wiadomość.</p>
+
+        <p>Pozdrawiamy,<br/>
+        Zespół OOPS</p>
+        """.trimIndent(), true
+        )
+
+
+        mailSender.send(message)
     }
 }

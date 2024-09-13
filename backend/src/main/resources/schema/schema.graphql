@@ -85,6 +85,7 @@ type Mutation {
     fileId: Int!,
     editionId: Int!
   ): [UserType]
+  resetPassword(userId: Int!): Boolean
   generateSubcategories(
     editionId: Int!
     categoryId: Int!

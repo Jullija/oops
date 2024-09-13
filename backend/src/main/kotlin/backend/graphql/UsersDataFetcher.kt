@@ -189,6 +189,14 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
         return true
     }
 
+    @DgsMutation
+    @Transactional
+    fun resetPassword(@InputArgument userId: Long): Boolean {
+        val user = usersRepository.findByUserId(userId)
+            .orElseThrow { IllegalArgumentException("User not found") }
+        return firebaseUserService.resetPassword(user.email)
+    }
+
 
     @DgsQuery
     @Transactional
