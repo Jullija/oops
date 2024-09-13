@@ -81,6 +81,10 @@ type Mutation {
     createFirebaseUser: Boolean = false
     sendEmail: Boolean = false
   ): UserType
+  addUsersFromCsv(
+    fileId: Int!,
+    editionId: Int!
+  ): [UserType]
   generateSubcategories(
     editionId: Int!
     categoryId: Int!
