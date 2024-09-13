@@ -1,6 +1,9 @@
 package backend.graphql
 
+import backend.awardEdition.AwardEdition
+import backend.awardEdition.AwardEditionRepository
 import backend.categories.CategoriesRepository
+import backend.chestAward.ChestAward
 import backend.chestAward.ChestAwardRepository
 import backend.chests.Chests
 import backend.chests.ChestsRepository
@@ -45,6 +48,9 @@ class ChestsDataFetcher {
 
     @Autowired
     lateinit var chestsRepository: ChestsRepository
+
+    @Autowired
+    lateinit var awardEditionRepository: AwardEditionRepository
 
     @Autowired
     lateinit var photoAssigner: PhotoAssigner
@@ -131,5 +137,43 @@ class ChestsDataFetcher {
 
         chestsRepository.delete(chest)
         return true
+    }
+
+    @DgsMutation
+    @Transactional
+    fun copyChest(@InputArgument chestId: Long, @InputArgument editionId: Long): Chests {
+        val chest = chestsRepository.findById(chestId).orElseThrow { IllegalArgumentException("Invalid chest ID") }
+        val edition =
+            editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
+        if (chestsRepository.existsByChestTypeAndEditionAndActive(chest.chestType, edition, true)) {
+            throw IllegalArgumentException("Chest with type ${chest.chestType} already exists for edition ${edition.editionId}")
+        }
+        if (edition.endDate.isBefore(LocalDate.now())) {
+            throw IllegalArgumentException("Edition has already ended")
+        }
+        val newChest = Chests(
+            chestType = chest.chestType,
+            label = chest.label,
+            edition = edition
+        )
+        newChest.imageFile = chest.imageFile
+        chestsRepository.save(newChest)
+        chestAwardRepository.findByChest(chest).forEach { chestAward ->
+            if (chestAward.award.awardEditions.none { it.edition.editionId == editionId }) {
+                val awardEdition = AwardEdition(
+                    edition = edition,
+                    award = chestAward.award,
+                    label = ""
+                )
+                awardEditionRepository.save(awardEdition)
+            }
+            val newChestAward = ChestAward(
+                chest = newChest,
+                award = chestAward.award,
+                label = ""
+            )
+            chestAwardRepository.save(newChestAward)
+        }
+        return chestsRepository.save(newChest)
     }
 }

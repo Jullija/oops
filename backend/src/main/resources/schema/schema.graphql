@@ -236,6 +236,10 @@ type Mutation {
   removeUser(
     userId: Int!
   ): Boolean
+  copyChest(
+    chestId: Int!,
+    editionId: Int!
+  ): ChestType
 }
 
 type Query {
