@@ -173,17 +173,27 @@ class BonusDataFetcher {
     private fun createAdditivePrevPoints(chestHistory: ChestHistory, award: Award, edition: Edition): Points {
         val pointsInAwardCategory = chestHistory.user.getPointsByEditionAndCategory(edition,
             award.category, pointsRepository).filter{
-                point -> bonusRepository.findByPoints(point).isEmpty()  // discard points connected to bonuses
+                point -> bonusRepository.findByPoints(point).isEmpty()
+        }.sortedBy { it.subcategory.ordinalNumber }
+        if (pointsInAwardCategory.isEmpty()) {
+            throw IllegalArgumentException("No previous points found in the specified category.")
         }
-        val lastPoints = pointsInAwardCategory.maxByOrNull { it.subcategory.ordinalNumber }
-            ?: throw IllegalArgumentException("No previous points found in the specified category.")
+
+        var sum = 0f
+        var i = pointsInAwardCategory.size - 1
+        while (sum < award.awardValue && i >= 0) {
+            val lastPoints = pointsInAwardCategory.getOrNull(i--)
+                ?: break
+            val pointsToAdd = min(award.awardValue - sum, lastPoints.subcategory.maxPoints - lastPoints.value)
+            sum += pointsToAdd
+        }
 
         return Points(
             student = chestHistory.user,
             teacher = chestHistory.teacher,
             updatedBy = chestHistory.teacher,
-            value = min(lastPoints.subcategory.maxPoints - lastPoints.value, award.awardValue),
-            subcategory = lastPoints.subcategory,
+            value = sum,
+            subcategory = pointsInAwardCategory.last().subcategory,
             label = "Points awarded for ${award.awardName}"
         )
     }
