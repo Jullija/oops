@@ -37,6 +37,7 @@ select_permissions:
       columns:
         - edition_id
         - end_time
+        - generated_name
         - group_name
         - groups_id
         - image_file_id
@@ -52,6 +53,7 @@ select_permissions:
       columns:
         - edition_id
         - end_time
+        - generated_name
         - group_name
         - groups_id
         - image_file_id
@@ -71,6 +73,7 @@ select_permissions:
       columns:
         - edition_id
         - end_time
+        - generated_name
         - group_name
         - groups_id
         - image_file_id

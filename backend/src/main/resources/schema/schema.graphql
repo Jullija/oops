@@ -55,12 +55,13 @@ type Mutation {
   ): EditionType
   addGroup(
     editionId: Int!
-    groupName: String!
+    usosId: Int!
     weekdayId: Int!
     startTime: String!
     endTime: String!
     teacherId: Int!
     label: String = ""
+    groupName: String = ""
   ): GroupType
   addSubcategory(
     subcategoryName: String!
@@ -344,7 +345,9 @@ type FileType {
 
 type GroupType {
   groupsId: ID!
-  groupName: String!
+  groupName: String
+  generatedName: String!
+  usosId: Int!
   label: String
   teacher: UserType!
   weekday: WeekdayType!

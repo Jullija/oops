@@ -1,0 +1,4 @@
+ALTER TABLE groups
+    ALTER COLUMN group_name DROP NOT NULL,
+    ADD COLUMN generated_name VARCHAR(255) NOT NULL DEFAULT '',
+    ADD COLUMN usos_id INT NOT NULL DEFAULT 0;
