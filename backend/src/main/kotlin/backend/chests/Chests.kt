@@ -16,6 +16,9 @@ class Chests(
     @Column(name = "type", nullable = false)
     var chestType: String,
 
+    @Column(name="active", nullable = false)
+    var active: Boolean = true,
+
     @Column(name = "label", nullable = false, length = 256)
     var label: String,
 
