@@ -176,6 +176,7 @@ type Mutation {
   editGroup(
     groupId: Int!,
     groupName: String,
+    usosId: Int,
     weekdayId: Int,
     startTime: String,
     endTime: String,
