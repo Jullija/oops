@@ -17,8 +17,14 @@ class Groups(
     @Column(name = "groups_id")
     val groupsId: Long = 0,
 
-    @Column(name = "group_name", nullable = false)
-    var groupName: String,
+    @Column(name = "group_name", nullable = true)
+    var groupName: String = "",
+
+    @Column(name = "generated_name", nullable = false)
+    var generatedName: String,
+
+    @Column(name = "usos_id", nullable = false)
+    var usosId: Int,
 
     @Column(name = "label", nullable = true)
     var label: String = "",
@@ -49,7 +55,8 @@ class Groups(
     override var imageFile: FileEntity? = null
 ) : HasImageFile {
     constructor() : this(
-        groupName = "",
+        generatedName = "",
+        usosId = 0,
         label = "",
         teacher = Users(),
         weekday = Weekdays(),
