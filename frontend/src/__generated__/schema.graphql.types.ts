@@ -4656,13 +4656,15 @@ export type GroupType = {
   __typename?: "GroupType";
   edition: EditionType;
   endTime: Scalars["String"]["output"];
-  groupName: Scalars["String"]["output"];
+  generatedName: Scalars["String"]["output"];
+  groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId: Scalars["ID"]["output"];
   imageFile?: Maybe<FileType>;
   label?: Maybe<Scalars["String"]["output"]>;
   startTime: Scalars["String"]["output"];
   teacher: UserType;
   userGroups: Array<Maybe<UserGroupType>>;
+  usosId: Scalars["Int"]["output"];
   weekday: WeekdayType;
 };
 
@@ -4675,20 +4677,20 @@ export type Groups = {
   endTime: Scalars["time"]["output"];
   /** An object relationship */
   file?: Maybe<Files>;
-  groupName: Scalars["String"]["output"];
+  generatedName: Scalars["String"]["output"];
+  groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId: Scalars["bigint"]["output"];
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   startTime: Scalars["time"]["output"];
+  /** An object relationship */
+  teacher: Users;
   teacherId: Scalars["bigint"]["output"];
-  /** An object relationship */
-  user: Users;
-  /** An object relationship */
-  userByTeacherId?: Maybe<Users>;
   /** An array relationship */
   userGroups: Array<UserGroups>;
   /** An aggregate relationship */
   userGroupsAggregate: UserGroupsAggregate;
+  usosId: Scalars["Int"]["output"];
   /** An object relationship */
   weekday: Weekdays;
   weekdayId: Scalars["bigint"]["output"];
@@ -4774,6 +4776,7 @@ export type GroupsAvgFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -4783,6 +4786,7 @@ export type GroupsAvgOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -4795,16 +4799,17 @@ export type GroupsBoolExp = {
   editionId?: InputMaybe<BigintComparisonExp>;
   endTime?: InputMaybe<TimeComparisonExp>;
   file?: InputMaybe<FilesBoolExp>;
+  generatedName?: InputMaybe<StringComparisonExp>;
   groupName?: InputMaybe<StringComparisonExp>;
   groupsId?: InputMaybe<BigintComparisonExp>;
   imageFileId?: InputMaybe<BigintComparisonExp>;
   label?: InputMaybe<StringComparisonExp>;
   startTime?: InputMaybe<TimeComparisonExp>;
+  teacher?: InputMaybe<UsersBoolExp>;
   teacherId?: InputMaybe<BigintComparisonExp>;
-  user?: InputMaybe<UsersBoolExp>;
-  userByTeacherId?: InputMaybe<UsersBoolExp>;
   userGroups?: InputMaybe<UserGroupsBoolExp>;
   userGroupsAggregate?: InputMaybe<UserGroupsAggregateBoolExp>;
+  usosId?: InputMaybe<IntComparisonExp>;
   weekday?: InputMaybe<WeekdaysBoolExp>;
   weekdayId?: InputMaybe<BigintComparisonExp>;
 };
@@ -4821,6 +4826,7 @@ export type GroupsIncInput = {
   groupsId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
+  usosId?: InputMaybe<Scalars["Int"]["input"]>;
   weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
 
@@ -4830,15 +4836,16 @@ export type GroupsInsertInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   endTime?: InputMaybe<Scalars["time"]["input"]>;
   file?: InputMaybe<FilesObjRelInsertInput>;
+  generatedName?: InputMaybe<Scalars["String"]["input"]>;
   groupName?: InputMaybe<Scalars["String"]["input"]>;
   groupsId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   startTime?: InputMaybe<Scalars["time"]["input"]>;
+  teacher?: InputMaybe<UsersObjRelInsertInput>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
-  user?: InputMaybe<UsersObjRelInsertInput>;
-  userByTeacherId?: InputMaybe<UsersObjRelInsertInput>;
   userGroups?: InputMaybe<UserGroupsArrRelInsertInput>;
+  usosId?: InputMaybe<Scalars["Int"]["input"]>;
   weekday?: InputMaybe<WeekdaysObjRelInsertInput>;
   weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
@@ -4847,22 +4854,26 @@ export type GroupsInsertInput = {
 export type GroupsMaxFields = {
   __typename?: "GroupsMaxFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  generatedName?: Maybe<Scalars["String"]["output"]>;
   groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
+  usosId?: Maybe<Scalars["Int"]["output"]>;
   weekdayId?: Maybe<Scalars["bigint"]["output"]>;
 };
 
 /** order by max() on columns of table "groups" */
 export type GroupsMaxOrderBy = {
   editionId?: InputMaybe<OrderBy>;
+  generatedName?: InputMaybe<OrderBy>;
   groupName?: InputMaybe<OrderBy>;
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -4870,22 +4881,26 @@ export type GroupsMaxOrderBy = {
 export type GroupsMinFields = {
   __typename?: "GroupsMinFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  generatedName?: Maybe<Scalars["String"]["output"]>;
   groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
+  usosId?: Maybe<Scalars["Int"]["output"]>;
   weekdayId?: Maybe<Scalars["bigint"]["output"]>;
 };
 
 /** order by min() on columns of table "groups" */
 export type GroupsMinOrderBy = {
   editionId?: InputMaybe<OrderBy>;
+  generatedName?: InputMaybe<OrderBy>;
   groupName?: InputMaybe<OrderBy>;
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -4918,15 +4933,16 @@ export type GroupsOrderBy = {
   editionId?: InputMaybe<OrderBy>;
   endTime?: InputMaybe<OrderBy>;
   file?: InputMaybe<FilesOrderBy>;
+  generatedName?: InputMaybe<OrderBy>;
   groupName?: InputMaybe<OrderBy>;
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   startTime?: InputMaybe<OrderBy>;
+  teacher?: InputMaybe<UsersOrderBy>;
   teacherId?: InputMaybe<OrderBy>;
-  user?: InputMaybe<UsersOrderBy>;
-  userByTeacherId?: InputMaybe<UsersOrderBy>;
   userGroupsAggregate?: InputMaybe<UserGroupsAggregateOrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekday?: InputMaybe<WeekdaysOrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
@@ -4943,6 +4959,8 @@ export enum GroupsSelectColumn {
   /** column name */
   EndTime = "endTime",
   /** column name */
+  GeneratedName = "generatedName",
+  /** column name */
   GroupName = "groupName",
   /** column name */
   GroupsId = "groupsId",
@@ -4955,6 +4973,8 @@ export enum GroupsSelectColumn {
   /** column name */
   TeacherId = "teacherId",
   /** column name */
+  UsosId = "usosId",
+  /** column name */
   WeekdayId = "weekdayId",
 }
 
@@ -4962,12 +4982,14 @@ export enum GroupsSelectColumn {
 export type GroupsSetInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   endTime?: InputMaybe<Scalars["time"]["input"]>;
+  generatedName?: InputMaybe<Scalars["String"]["input"]>;
   groupName?: InputMaybe<Scalars["String"]["input"]>;
   groupsId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   startTime?: InputMaybe<Scalars["time"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
+  usosId?: InputMaybe<Scalars["Int"]["input"]>;
   weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
 
@@ -4978,6 +5000,7 @@ export type GroupsStddevFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -4987,6 +5010,7 @@ export type GroupsStddevOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -4997,6 +5021,7 @@ export type GroupsStddevPopFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -5006,6 +5031,7 @@ export type GroupsStddevPopOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -5016,6 +5042,7 @@ export type GroupsStddevSampFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -5025,6 +5052,7 @@ export type GroupsStddevSampOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -5040,12 +5068,14 @@ export type GroupsStreamCursorInput = {
 export type GroupsStreamCursorValueInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   endTime?: InputMaybe<Scalars["time"]["input"]>;
+  generatedName?: InputMaybe<Scalars["String"]["input"]>;
   groupName?: InputMaybe<Scalars["String"]["input"]>;
   groupsId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   startTime?: InputMaybe<Scalars["time"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
+  usosId?: InputMaybe<Scalars["Int"]["input"]>;
   weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
 
@@ -5056,6 +5086,7 @@ export type GroupsSumFields = {
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
+  usosId?: Maybe<Scalars["Int"]["output"]>;
   weekdayId?: Maybe<Scalars["bigint"]["output"]>;
 };
 
@@ -5065,6 +5096,7 @@ export type GroupsSumOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -5074,6 +5106,8 @@ export enum GroupsUpdateColumn {
   EditionId = "editionId",
   /** column name */
   EndTime = "endTime",
+  /** column name */
+  GeneratedName = "generatedName",
   /** column name */
   GroupName = "groupName",
   /** column name */
@@ -5086,6 +5120,8 @@ export enum GroupsUpdateColumn {
   StartTime = "startTime",
   /** column name */
   TeacherId = "teacherId",
+  /** column name */
+  UsosId = "usosId",
   /** column name */
   WeekdayId = "weekdayId",
 }
@@ -5106,6 +5142,7 @@ export type GroupsVarPopFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -5115,6 +5152,7 @@ export type GroupsVarPopOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -5125,6 +5163,7 @@ export type GroupsVarSampFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -5134,6 +5173,7 @@ export type GroupsVarSampOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -5144,6 +5184,7 @@ export type GroupsVarianceFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -5153,6 +5194,7 @@ export type GroupsVarianceOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -5160,6 +5202,7 @@ export type GroupsVarianceOrderBy = {
 export type HallOfFame = {
   __typename?: "HallOfFame";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  generatedName?: Maybe<Scalars["String"]["output"]>;
   groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
@@ -5218,6 +5261,7 @@ export type HallOfFameBoolExp = {
   _not?: InputMaybe<HallOfFameBoolExp>;
   _or?: InputMaybe<Array<HallOfFameBoolExp>>;
   editionId?: InputMaybe<BigintComparisonExp>;
+  generatedName?: InputMaybe<StringComparisonExp>;
   groupName?: InputMaybe<StringComparisonExp>;
   groupsId?: InputMaybe<BigintComparisonExp>;
   levelId?: InputMaybe<BigintComparisonExp>;
@@ -5233,6 +5277,7 @@ export type HallOfFameBoolExp = {
 export type HallOfFameMaxFields = {
   __typename?: "HallOfFameMaxFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  generatedName?: Maybe<Scalars["String"]["output"]>;
   groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
@@ -5248,6 +5293,7 @@ export type HallOfFameMaxFields = {
 export type HallOfFameMinFields = {
   __typename?: "HallOfFameMinFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  generatedName?: Maybe<Scalars["String"]["output"]>;
   groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
@@ -5262,6 +5308,7 @@ export type HallOfFameMinFields = {
 /** Ordering options when selecting data from "hall_of_fame". */
 export type HallOfFameOrderBy = {
   editionId?: InputMaybe<OrderBy>;
+  generatedName?: InputMaybe<OrderBy>;
   groupName?: InputMaybe<OrderBy>;
   groupsId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
@@ -5277,6 +5324,8 @@ export type HallOfFameOrderBy = {
 export enum HallOfFameSelectColumn {
   /** column name */
   EditionId = "editionId",
+  /** column name */
+  GeneratedName = "generatedName",
   /** column name */
   GroupName = "groupName",
   /** column name */
@@ -5344,6 +5393,7 @@ export type HallOfFameStreamCursorInput = {
 /** Initial value of the column from where the streaming should start */
 export type HallOfFameStreamCursorValueInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
+  generatedName?: InputMaybe<Scalars["String"]["input"]>;
   groupName?: InputMaybe<Scalars["String"]["input"]>;
   groupsId?: InputMaybe<Scalars["bigint"]["input"]>;
   levelId?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -9889,11 +9939,13 @@ export type Mutation_Root = {
   addSubcategory?: Maybe<SubcategoryType>;
   addUser?: Maybe<UserType>;
   addUserToGroup?: Maybe<UserGroupType>;
+  addUsersFromCsv?: Maybe<Array<Maybe<UserType>>>;
   assignPhotoToAward?: Maybe<Scalars["Boolean"]["output"]>;
   assignPhotoToChest?: Maybe<Scalars["Boolean"]["output"]>;
   assignPhotoToLevel?: Maybe<Scalars["Boolean"]["output"]>;
   assignPhotoToUser?: Maybe<Scalars["Boolean"]["output"]>;
   assignPhotosToGroups?: Maybe<Scalars["Boolean"]["output"]>;
+  copyChest?: Maybe<ChestType>;
   /** delete data from the table: "award" */
   deleteAward?: Maybe<AwardMutationResponse>;
   /** delete single row from the table: "award" */
@@ -10078,6 +10130,7 @@ export type Mutation_Root = {
   removeSubcategory?: Maybe<Scalars["Boolean"]["output"]>;
   removeUser?: Maybe<Scalars["Boolean"]["output"]>;
   removeUserFromGroup?: Maybe<Scalars["Boolean"]["output"]>;
+  resetPassword?: Maybe<Scalars["Boolean"]["output"]>;
   /** update data of the table: "award" */
   updateAward?: Maybe<AwardMutationResponse>;
   /** update single row of the table: "award" */
@@ -10274,10 +10327,11 @@ export type Mutation_RootAddEditionArgs = {
 export type Mutation_RootAddGroupArgs = {
   editionId: Scalars["Int"]["input"];
   endTime: Scalars["String"]["input"];
-  groupName: Scalars["String"]["input"];
+  groupName?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   startTime: Scalars["String"]["input"];
   teacherId: Scalars["Int"]["input"];
+  usosId: Scalars["Int"]["input"];
   weekdayId: Scalars["Int"]["input"];
 };
 
@@ -10329,6 +10383,12 @@ export type Mutation_RootAddUserToGroupArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootAddUsersFromCsvArgs = {
+  editionId: Scalars["Int"]["input"];
+  fileId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
 export type Mutation_RootAssignPhotoToAwardArgs = {
   awardId: Scalars["Int"]["input"];
   fileId?: InputMaybe<Scalars["Int"]["input"]>;
@@ -10354,6 +10414,12 @@ export type Mutation_RootAssignPhotoToUserArgs = {
 
 /** mutation root */
 export type Mutation_RootAssignPhotosToGroupsArgs = {
+  editionId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootCopyChestArgs = {
+  chestId: Scalars["Int"]["input"];
   editionId: Scalars["Int"]["input"];
 };
 
@@ -10616,6 +10682,7 @@ export type Mutation_RootEditGroupArgs = {
   label?: InputMaybe<Scalars["String"]["input"]>;
   startTime?: InputMaybe<Scalars["String"]["input"]>;
   teacherId?: InputMaybe<Scalars["Int"]["input"]>;
+  usosId?: InputMaybe<Scalars["Int"]["input"]>;
   weekdayId?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -10971,6 +11038,11 @@ export type Mutation_RootRemoveUserArgs = {
 /** mutation root */
 export type Mutation_RootRemoveUserFromGroupArgs = {
   groupId: Scalars["Int"]["input"];
+  userId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootResetPasswordArgs = {
   userId: Scalars["Int"]["input"];
 };
 

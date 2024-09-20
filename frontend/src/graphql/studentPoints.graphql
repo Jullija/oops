@@ -14,6 +14,7 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
           groupsId
           endTime
           groupName
+          generatedName
           startTime
           weekday {
             weekdayId

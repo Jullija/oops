@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { User } from "../../contexts/userContext";
 import { UserContext } from "../../contexts/userContext";
 import { useAllUsersQuery } from "../../graphql/allUsers.graphql.types";
-import { useCurrentUserLazyQuery } from "../../graphql/currentUser.graphql.types"; // Use lazy query here
+import { useCurrentUserLazyQuery } from "../../graphql/currentUser.graphql.types";
 import { useUser } from "../../hooks/common/useUser";
 import { pathsGenerator } from "../../router/paths";
 import { Styles } from "../../utils/Styles";
@@ -45,7 +45,7 @@ const styles: Styles = {
   },
 };
 
-export const Welcome: React.FC = () => {
+export const Welcome = () => {
   const { user: selectedUser, setUser } = useUser();
   const { loading, error, data } = useAllUsersQuery({
     context: {
@@ -61,7 +61,7 @@ export const Welcome: React.FC = () => {
   const [loginError, setLoginError] = useState("");
   const context = useContext(UserContext);
   const [fetchCurrentUser, { data: currentUserData }] =
-    useCurrentUserLazyQuery(); // Lazy query hook
+    useCurrentUserLazyQuery();
 
   useEffect(() => {
     if (data) {
@@ -77,21 +77,21 @@ export const Welcome: React.FC = () => {
     // TODO: rework this
     if (currentUserData) {
       let role = Roles.UNAUTHENTICATED_USER;
-      if (currentUserData.getCurrentUser?.role == UsersRolesType.Student) {
-        role = Roles.STUDENT;
-      } else if (
-        currentUserData.getCurrentUser?.role == UsersRolesType.Teacher
-      ) {
-        role = Roles.TEACHER;
-      } else if (
-        currentUserData.getCurrentUser?.role == UsersRolesType.Coordinator
-      ) {
-        role = Roles.COORDINATOR;
+      switch (currentUserData.getCurrentUser?.role) {
+        case UsersRolesType.Student:
+          role = Roles.STUDENT;
+          break;
+        case UsersRolesType.Teacher:
+          role = Roles.TEACHER;
+          break;
+        case UsersRolesType.Coordinator:
+          role = Roles.COORDINATOR;
+          break;
       }
       setUser({
-        userId: currentUserData.getCurrentUser?.userId || "",
-        role: role || "",
-        nick: currentUserData.getCurrentUser?.nick || "",
+        userId: currentUserData.getCurrentUser?.userId || "Guest",
+        role: role || "unauthenticated_user",
+        nick: currentUserData.getCurrentUser?.nick || "unauthenticated",
       });
       navigate(
         role === Roles.STUDENT
@@ -129,8 +129,7 @@ export const Welcome: React.FC = () => {
       } else {
         await signInWithEmailAndPassword(auth, email, password);
       }
-      // Set the token in the context
-      fetchCurrentUser(); // Call the query after successful login
+      fetchCurrentUser();
       setLoginError("");
     } catch (error) {
       setLoginError("Invalid email or password.");

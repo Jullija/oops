@@ -33,7 +33,7 @@ export const useGroupsData = (editionId: string | undefined) => {
   const groups: Group[] =
     data?.editionByPk?.groups.map((group) => {
       return {
-        name: group.groupName,
+        name: group.generatedName,
         id: group.groupsId,
         weekday: {
           id: group.weekday.weekdayId,
@@ -41,9 +41,8 @@ export const useGroupsData = (editionId: string | undefined) => {
         },
         time: { start: group.startTime, end: group.endTime },
         teacher: {
-          // TODO why userByTeacherId is null?
-          fullName: group.userByTeacherId?.fullName as string,
-          id: group.userByTeacherId?.userId as string,
+          fullName: group.teacher.fullName as string,
+          id: group.teacher.userId as string,
         },
         imageId: group.file?.fileId,
       };

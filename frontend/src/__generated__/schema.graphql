@@ -6688,13 +6688,15 @@ type GroupTeacherType {
 type GroupType {
   edition: EditionType!
   endTime: String!
-  groupName: String!
+  generatedName: String!
+  groupName: String
   groupsId: ID!
   imageFile: FileType
   label: String
   startTime: String!
   teacher: UserType!
   userGroups: [UserGroupType]!
+  usosId: Int!
   weekday: WeekdayType!
 }
 
@@ -6713,22 +6715,18 @@ type Groups {
   An object relationship
   """
   file: Files
-  groupName: String!
+  generatedName: String!
+  groupName: String
   groupsId: bigint!
   imageFileId: bigint
   label: String
   startTime: time!
+
+  """
+  An object relationship
+  """
+  teacher: Users!
   teacherId: bigint!
-
-  """
-  An object relationship
-  """
-  user: Users!
-
-  """
-  An object relationship
-  """
-  userByTeacherId: Users
 
   """
   An array relationship
@@ -6789,6 +6787,7 @@ type Groups {
     """
     where: UserGroupsBoolExp
   ): UserGroupsAggregate!
+  usosId: Int!
 
   """
   An object relationship
@@ -6863,6 +6862,7 @@ type GroupsAvgFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  usosId: Float
   weekdayId: Float
 }
 
@@ -6874,6 +6874,7 @@ input GroupsAvgOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -6888,16 +6889,17 @@ input GroupsBoolExp {
   editionId: BigintComparisonExp
   endTime: TimeComparisonExp
   file: FilesBoolExp
+  generatedName: StringComparisonExp
   groupName: StringComparisonExp
   groupsId: BigintComparisonExp
   imageFileId: BigintComparisonExp
   label: StringComparisonExp
   startTime: TimeComparisonExp
+  teacher: UsersBoolExp
   teacherId: BigintComparisonExp
-  user: UsersBoolExp
-  userByTeacherId: UsersBoolExp
   userGroups: UserGroupsBoolExp
   userGroupsAggregate: UserGroupsAggregateBoolExp
+  usosId: IntComparisonExp
   weekday: WeekdaysBoolExp
   weekdayId: BigintComparisonExp
 }
@@ -6920,6 +6922,7 @@ input GroupsIncInput {
   groupsId: bigint
   imageFileId: bigint
   teacherId: bigint
+  usosId: Int
   weekdayId: bigint
 }
 
@@ -6931,15 +6934,16 @@ input GroupsInsertInput {
   editionId: bigint
   endTime: time
   file: FilesObjRelInsertInput
+  generatedName: String
   groupName: String
   groupsId: bigint
   imageFileId: bigint
   label: String
   startTime: time
+  teacher: UsersObjRelInsertInput
   teacherId: bigint
-  user: UsersObjRelInsertInput
-  userByTeacherId: UsersObjRelInsertInput
   userGroups: UserGroupsArrRelInsertInput
+  usosId: Int
   weekday: WeekdaysObjRelInsertInput
   weekdayId: bigint
 }
@@ -6949,11 +6953,13 @@ aggregate max on columns
 """
 type GroupsMaxFields {
   editionId: bigint
+  generatedName: String
   groupName: String
   groupsId: bigint
   imageFileId: bigint
   label: String
   teacherId: bigint
+  usosId: Int
   weekdayId: bigint
 }
 
@@ -6962,11 +6968,13 @@ order by max() on columns of table "groups"
 """
 input GroupsMaxOrderBy {
   editionId: OrderBy
+  generatedName: OrderBy
   groupName: OrderBy
   groupsId: OrderBy
   imageFileId: OrderBy
   label: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -6975,11 +6983,13 @@ aggregate min on columns
 """
 type GroupsMinFields {
   editionId: bigint
+  generatedName: String
   groupName: String
   groupsId: bigint
   imageFileId: bigint
   label: String
   teacherId: bigint
+  usosId: Int
   weekdayId: bigint
 }
 
@@ -6988,11 +6998,13 @@ order by min() on columns of table "groups"
 """
 input GroupsMinOrderBy {
   editionId: OrderBy
+  generatedName: OrderBy
   groupName: OrderBy
   groupsId: OrderBy
   imageFileId: OrderBy
   label: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -7040,15 +7052,16 @@ input GroupsOrderBy {
   editionId: OrderBy
   endTime: OrderBy
   file: FilesOrderBy
+  generatedName: OrderBy
   groupName: OrderBy
   groupsId: OrderBy
   imageFileId: OrderBy
   label: OrderBy
   startTime: OrderBy
+  teacher: UsersOrderBy
   teacherId: OrderBy
-  user: UsersOrderBy
-  userByTeacherId: UsersOrderBy
   userGroupsAggregate: UserGroupsAggregateOrderBy
+  usosId: OrderBy
   weekday: WeekdaysOrderBy
   weekdayId: OrderBy
 }
@@ -7077,6 +7090,11 @@ enum GroupsSelectColumn {
   """
   column name
   """
+  generatedName
+
+  """
+  column name
+  """
   groupName
 
   """
@@ -7107,6 +7125,11 @@ enum GroupsSelectColumn {
   """
   column name
   """
+  usosId
+
+  """
+  column name
+  """
   weekdayId
 }
 
@@ -7116,12 +7139,14 @@ input type for updating data in table "groups"
 input GroupsSetInput {
   editionId: bigint
   endTime: time
+  generatedName: String
   groupName: String
   groupsId: bigint
   imageFileId: bigint
   label: String
   startTime: time
   teacherId: bigint
+  usosId: Int
   weekdayId: bigint
 }
 
@@ -7133,6 +7158,7 @@ type GroupsStddevFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  usosId: Float
   weekdayId: Float
 }
 
@@ -7144,6 +7170,7 @@ input GroupsStddevOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -7155,6 +7182,7 @@ type GroupsStddevPopFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  usosId: Float
   weekdayId: Float
 }
 
@@ -7166,6 +7194,7 @@ input GroupsStddevPopOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -7177,6 +7206,7 @@ type GroupsStddevSampFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  usosId: Float
   weekdayId: Float
 }
 
@@ -7188,6 +7218,7 @@ input GroupsStddevSampOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -7212,12 +7243,14 @@ Initial value of the column from where the streaming should start
 input GroupsStreamCursorValueInput {
   editionId: bigint
   endTime: time
+  generatedName: String
   groupName: String
   groupsId: bigint
   imageFileId: bigint
   label: String
   startTime: time
   teacherId: bigint
+  usosId: Int
   weekdayId: bigint
 }
 
@@ -7229,6 +7262,7 @@ type GroupsSumFields {
   groupsId: bigint
   imageFileId: bigint
   teacherId: bigint
+  usosId: Int
   weekdayId: bigint
 }
 
@@ -7240,6 +7274,7 @@ input GroupsSumOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -7256,6 +7291,11 @@ enum GroupsUpdateColumn {
   column name
   """
   endTime
+
+  """
+  column name
+  """
+  generatedName
 
   """
   column name
@@ -7286,6 +7326,11 @@ enum GroupsUpdateColumn {
   column name
   """
   teacherId
+
+  """
+  column name
+  """
+  usosId
 
   """
   column name
@@ -7318,6 +7363,7 @@ type GroupsVarPopFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  usosId: Float
   weekdayId: Float
 }
 
@@ -7329,6 +7375,7 @@ input GroupsVarPopOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -7340,6 +7387,7 @@ type GroupsVarSampFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  usosId: Float
   weekdayId: Float
 }
 
@@ -7351,6 +7399,7 @@ input GroupsVarSampOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -7362,6 +7411,7 @@ type GroupsVarianceFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  usosId: Float
   weekdayId: Float
 }
 
@@ -7373,6 +7423,7 @@ input GroupsVarianceOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -7381,6 +7432,7 @@ columns and relationships of "hall_of_fame"
 """
 type HallOfFame {
   editionId: bigint
+  generatedName: String
   groupName: String
   groupsId: bigint
   levelId: bigint
@@ -7438,6 +7490,7 @@ input HallOfFameBoolExp {
   _not: HallOfFameBoolExp
   _or: [HallOfFameBoolExp!]
   editionId: BigintComparisonExp
+  generatedName: StringComparisonExp
   groupName: StringComparisonExp
   groupsId: BigintComparisonExp
   levelId: BigintComparisonExp
@@ -7454,6 +7507,7 @@ aggregate max on columns
 """
 type HallOfFameMaxFields {
   editionId: bigint
+  generatedName: String
   groupName: String
   groupsId: bigint
   levelId: bigint
@@ -7470,6 +7524,7 @@ aggregate min on columns
 """
 type HallOfFameMinFields {
   editionId: bigint
+  generatedName: String
   groupName: String
   groupsId: bigint
   levelId: bigint
@@ -7486,6 +7541,7 @@ Ordering options when selecting data from "hall_of_fame".
 """
 input HallOfFameOrderBy {
   editionId: OrderBy
+  generatedName: OrderBy
   groupName: OrderBy
   groupsId: OrderBy
   levelId: OrderBy
@@ -7505,6 +7561,11 @@ enum HallOfFameSelectColumn {
   column name
   """
   editionId
+
+  """
+  column name
+  """
+  generatedName
 
   """
   column name
@@ -7611,6 +7672,7 @@ Initial value of the column from where the streaming should start
 """
 input HallOfFameStreamCursorValueInput {
   editionId: bigint
+  generatedName: String
   groupName: String
   groupsId: bigint
   levelId: bigint
@@ -14057,10 +14119,11 @@ type mutation_root {
   addGroup(
     editionId: Int!
     endTime: String!
-    groupName: String!
+    groupName: String = ""
     label: String = ""
     startTime: String!
     teacherId: Int!
+    usosId: Int!
     weekdayId: Int!
   ): GroupType
   addLevel(
@@ -14097,11 +14160,13 @@ type mutation_root {
     sendEmail: Boolean = false
   ): UserType
   addUserToGroup(groupId: Int!, userId: Int!): UserGroupType
+  addUsersFromCsv(editionId: Int!, fileId: Int!): [UserType]
   assignPhotoToAward(awardId: Int!, fileId: Int): Boolean
   assignPhotoToChest(chestId: Int!, fileId: Int): Boolean
   assignPhotoToLevel(fileId: Int, levelId: Int!): Boolean
   assignPhotoToUser(fileId: Int, userId: Int!): Boolean
   assignPhotosToGroups(editionId: Int!): Boolean
+  copyChest(chestId: Int!, editionId: Int!): ChestType
 
   """
   delete data from the table: "award"
@@ -14449,6 +14514,7 @@ type mutation_root {
     label: String
     startTime: String
     teacherId: Int
+    usosId: Int
     weekdayId: Int
   ): GroupType
   editLevel(
@@ -15096,6 +15162,7 @@ type mutation_root {
   removeSubcategory(subcategoryId: Int!): Boolean
   removeUser(userId: Int!): Boolean
   removeUserFromGroup(groupId: Int!, userId: Int!): Boolean
+  resetPassword(userId: Int!): Boolean
 
   """
   update data of the table: "award"

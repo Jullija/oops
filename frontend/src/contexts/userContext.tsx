@@ -11,10 +11,10 @@ export type User = AllUsersQuery["users"][number];
 
 type UserContextType = {
   // TODO: remove token from here, only needed for bypass
-  token: string | null;
+  token?: string;
   user: User;
   setUser: Dispatch<SetStateAction<User>>;
-  setToken: (token: string | null) => void;
+  setToken: (token?: string) => void;
 };
 
 const defaultUnauthenticatedUser: User = {
@@ -29,7 +29,8 @@ export const UserContext = createContext<UserContextType | undefined>(
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User>(defaultUnauthenticatedUser);
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | undefined>(undefined);
+
   return (
     <UserContext.Provider value={{ user, token, setUser, setToken }}>
       {children}

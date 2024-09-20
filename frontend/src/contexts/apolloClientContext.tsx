@@ -8,15 +8,17 @@ import { setContext } from "@apollo/client/link/context";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { User, UserContext } from "../contexts/userContext";
 import { Roles } from "../utils/types";
-import { auth } from "../../firebaseConfig"; // Ensure this is the path to your Firebase configuration
-
-export const GRAPHQL_URI = "http://127.0.0.1:9191/v1/graphql";
+import { auth } from "../../firebaseConfig";
+import { GRAPHQL_URI } from "../utils/constants";
 
 const httpLink = createHttpLink({
   uri: GRAPHQL_URI,
 });
 
-const createAuthLink = (user?: User, tokenBypass?: string) =>
+const createAuthLink = (
+  user: User | undefined,
+  tokenBypass: string | undefined,
+) =>
   setContext(async (_, { headers }) => {
     const roleHeader =
       user && user.userId !== "unauthenticated"
@@ -26,12 +28,13 @@ const createAuthLink = (user?: User, tokenBypass?: string) =>
           }
         : { "x-hasura-role": Roles.UNAUTHENTICATED_USER };
 
-    let token = "";
+    let token: string | undefined;
     if (auth.currentUser) {
       try {
         token = await auth.currentUser.getIdToken();
       } catch (error) {
         console.error("Error fetching token:", error);
+        throw error;
       }
     }
     // TODO: Remove this bypass
@@ -42,14 +45,18 @@ const createAuthLink = (user?: User, tokenBypass?: string) =>
     return {
       headers: {
         ...headers,
+        // TODO: Remove secret
         "x-hasura-admin-secret": "admin_secret",
         ...roleHeader,
-        ...(token && { Authorization: `Bearer ${token}` }), // Include the token if available
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
     };
   });
 
-const initializeApolloClient = (user?: User, tokenBypass?: string) => {
+const initializeApolloClient = (
+  user: User | undefined,
+  tokenBypass: string | undefined,
+) => {
   const authLink = createAuthLink(user, tokenBypass);
   return new ApolloClient({
     link: authLink.concat(httpLink),
@@ -59,9 +66,9 @@ const initializeApolloClient = (user?: User, tokenBypass?: string) => {
 
 export const ApolloClientProvider = ({ children }: { children: ReactNode }) => {
   const context = useContext(UserContext);
-  const userToken = context?.token ?? undefined;
+  const userToken = context?.token;
   const [client, setClient] = useState(() =>
-    initializeApolloClient(context?.user),
+    initializeApolloClient(context?.user, undefined),
   );
 
   useEffect(() => {
