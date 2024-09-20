@@ -11,8 +11,8 @@ export const useTeachersData = (editionId: string | undefined) => {
   const teachers: FilterItem[] =
     data?.groups.map((teacher) => {
       return {
-        name: teacher.userByTeacherId?.fullName ?? "-",
-        id: teacher.userByTeacherId?.userId ?? "-",
+        name: teacher.teacher?.fullName ?? "-",
+        id: teacher.teacher?.userId ?? "-",
       };
     }) ?? [];
 

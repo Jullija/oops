@@ -1,0 +1,61 @@
+table:
+  name: grading_checks
+  schema: public
+object_relationships:
+  - name: category
+    using:
+      foreign_key_constraint_on: project_id
+  - name: edition
+    using:
+      foreign_key_constraint_on: edition_id
+  - name: level
+    using:
+      foreign_key_constraint_on: end_of_labs_levels_threshold
+select_permissions:
+  - role: coordinator
+    permission:
+      columns:
+        - edition_id
+        - end_of_labs_levels_threshold
+        - grading_check_id
+        - project_id
+        - end_of_labs_date
+        - project_points_threshold
+      filter: {}
+      allow_aggregations: true
+    comment: ""
+  - role: student
+    permission:
+      columns:
+        - edition_id
+        - end_of_labs_levels_threshold
+        - grading_check_id
+        - project_id
+        - end_of_labs_date
+        - project_points_threshold
+      filter:
+        edition:
+          groups:
+            userGroups:
+              user:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      allow_aggregations: true
+    comment: ""
+  - role: teacher
+    permission:
+      columns:
+        - edition_id
+        - end_of_labs_levels_threshold
+        - grading_check_id
+        - project_id
+        - end_of_labs_date
+        - project_points_threshold
+      filter:
+        edition:
+          groups:
+            teacher:
+              user_id:
+                _eq: X-Hasura-User-Id
+      allow_aggregations: true
+    comment: ""
