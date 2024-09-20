@@ -61,6 +61,16 @@ type Mutation {
     projectId: Int!
     checkDates: Boolean = true
   ): GradingChecksType
+  editGradingCheck(
+    gradingCheckId: Int!,
+    endOfLabsDate: String,
+    endOfLabsLevelsThreshold: Int,
+    projectPointsThreshold: Float,
+    projectId: Int
+  ): GradingChecksType
+  removeGradingCheck(
+    gradingCheckId: Int!
+  ): Boolean
   addGroup(
     editionId: Int!
     usosId: Int!

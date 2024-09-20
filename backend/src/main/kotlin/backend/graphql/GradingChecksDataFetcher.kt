@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeParseException
 import kotlin.math.min
 
 @DgsComponent
@@ -87,6 +88,10 @@ class GradingChecksDataFetcher {
             throw IllegalArgumentException("Category ${project.categoryName} is not part of edition ${edition.editionName}")
         }
 
+        if (projectPointsThreshold < 0) {
+            throw IllegalArgumentException("Project points threshold cannot be negative")
+        }
+
         val gradingCheck = GradingChecks(
             endOfLabsDate = endOfLabsDateParsed,
             endOfLabsLevelsThreshold = endOfLabsLevelsThresholdLevel,
@@ -98,6 +103,82 @@ class GradingChecksDataFetcher {
         return gradingChecksRepository.save(gradingCheck)
     }
 
+    @DgsMutation
+    @Transactional
+    fun editGradingCheck(
+        @InputArgument gradingCheckId: Long,
+        @InputArgument endOfLabsDate: String?,
+        @InputArgument endOfLabsLevelsThreshold: Long?,
+        @InputArgument projectPointsThreshold: Float?,
+        @InputArgument projectId: Long?
+    ): GradingChecks {
+        val gradingCheck = gradingChecksRepository.findById(gradingCheckId)
+            .orElseThrow { IllegalArgumentException("Grading check not found") }
+
+        endOfLabsDate?.let {
+            val endOfLabsDateParsed = try {
+                LocalDate.parse(it)
+            } catch (e: DateTimeParseException) {
+                throw IllegalArgumentException("Invalid date format for endOfLabsDate")
+            }
+
+            val edition = gradingCheck.edition
+
+            if (edition.endDate.isBefore(LocalDate.now())) {
+                throw IllegalArgumentException("Edition has already ended")
+            }
+            if (endOfLabsDateParsed.isBefore(LocalDate.now())) {
+                throw IllegalArgumentException("End of labs date must be in the future")
+            }
+
+            if (endOfLabsDateParsed.isBefore(edition.startDate) || endOfLabsDateParsed.isAfter(edition.endDate)) {
+                throw IllegalArgumentException("End of labs date must be between ${edition.startDate} and ${edition.endDate}")
+            }
+
+            gradingCheck.endOfLabsDate = endOfLabsDateParsed
+        }
+
+        endOfLabsLevelsThreshold?.let {
+            val level = levelsRepository.findById(it)
+                .orElseThrow { IllegalArgumentException("Invalid level ID") }
+            gradingCheck.endOfLabsLevelsThreshold = level
+        }
+
+        projectPointsThreshold?.let {
+            if (it < 0) {
+                throw IllegalArgumentException("Project points threshold cannot be negative")
+            }
+
+            gradingCheck.projectPointsThreshold = it
+        }
+
+        projectId?.let {
+            val project = categoriesRepository.findById(it)
+                .orElseThrow { IllegalArgumentException("Invalid category ID") }
+
+            if (categoryEditionRepository.findByCategoryAndEdition(project, gradingCheck.edition).isEmpty()) {
+                throw IllegalArgumentException("Category ${project.categoryName} is not part of edition ${gradingCheck.edition.editionName}")
+            }
+
+            gradingCheck.project = project
+        }
+
+        return gradingChecksRepository.save(gradingCheck)
+    }
+
+    @DgsMutation
+    @Transactional
+    fun removeGradingCheck(@InputArgument gradingCheckId: Long): Boolean {
+        val gradingCheck = gradingChecksRepository.findById(gradingCheckId)
+            .orElseThrow { IllegalArgumentException("Grading check not found") }
+
+        if (gradingCheck.edition.endDate.isBefore(LocalDate.now())) {
+            throw IllegalArgumentException("Edition has already ended")
+        }
+
+        gradingChecksRepository.delete(gradingCheck)
+        return true
+    }
 
 }
 
