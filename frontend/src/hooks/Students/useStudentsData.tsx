@@ -15,14 +15,14 @@ export const useStudentsData = (editionId: string | undefined) => {
     studentsData?.users.map((item) => {
       const student = item.userGroups[0].user;
       const group = item.userGroups[0].group;
-      const teacher = group.userByTeacherId;
+      const teacher = group.teacher;
       return {
         id: student.userId,
         avatarId: student.imageFileId ?? undefined,
         firstName: student.firstName,
         secondName: student.secondName,
         group: {
-          name: group.groupName,
+          name: group.generatedName,
           id: group.groupsId,
           weekday: {
             id: group.weekday.weekdayId,

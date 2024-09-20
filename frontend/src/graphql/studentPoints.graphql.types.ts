@@ -29,7 +29,8 @@ export type StudentPointsQuery = {
           __typename?: "GroupType";
           groupsId: string;
           endTime: string;
-          groupName: string;
+          groupName?: string | null;
+          generatedName: string;
           startTime: string;
           weekday: {
             __typename?: "WeekdayType";
@@ -100,6 +101,7 @@ export const StudentPointsDocument = gql`
             groupsId
             endTime
             groupName
+            generatedName
             startTime
             weekday {
               weekdayId

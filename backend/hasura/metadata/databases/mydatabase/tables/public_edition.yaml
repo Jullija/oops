@@ -23,6 +23,13 @@ array_relationships:
         table:
           name: chests
           schema: public
+  - name: gradingChecks
+    using:
+      foreign_key_constraint_on:
+        column: edition_id
+        table:
+          name: grading_checks
+          schema: public
   - name: groups
     using:
       foreign_key_constraint_on:

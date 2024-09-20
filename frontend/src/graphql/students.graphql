@@ -17,12 +17,13 @@ query Students($editionId: bigint!) {
       }
       group {
         groupName
+        generatedName
         groupsId
         startTime
         teacherId
         endTime
         editionId
-        userByTeacherId {
+        teacher {
           fullName
           userId
         }

@@ -11,18 +11,14 @@ export type TeachersQuery = {
   __typename?: "query_root";
   groups: Array<{
     __typename?: "Groups";
-    userByTeacherId?: {
-      __typename?: "Users";
-      fullName?: string | null;
-      userId: string;
-    } | null;
+    teacher: { __typename?: "Users"; fullName?: string | null; userId: string };
   }>;
 };
 
 export const TeachersDocument = gql`
   query Teachers($editionId: bigint!) {
     groups(distinctOn: teacherId, where: { editionId: { _eq: $editionId } }) {
-      userByTeacherId {
+      teacher {
         fullName
         userId
       }

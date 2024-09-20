@@ -2,6 +2,7 @@ query Groups($editionId: bigint!) {
   editionByPk(editionId: $editionId) {
     groups {
       groupName
+      generatedName
       groupsId
       startTime
       weekday {
@@ -9,7 +10,7 @@ query Groups($editionId: bigint!) {
         weekdayName
       }
       endTime
-      userByTeacherId {
+      teacher {
         fullName
         userId
         secondName

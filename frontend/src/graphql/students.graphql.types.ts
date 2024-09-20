@@ -25,17 +25,18 @@ export type StudentsQuery = {
       };
       group: {
         __typename?: "Groups";
-        groupName: string;
+        groupName?: string | null;
+        generatedName: string;
         groupsId: string;
         startTime: string;
         teacherId: string;
         endTime: string;
         editionId: string;
-        userByTeacherId?: {
+        teacher: {
           __typename?: "Users";
           fullName?: string | null;
           userId: string;
-        } | null;
+        };
         weekday: {
           __typename?: "Weekdays";
           weekdayId: string;
@@ -66,12 +67,13 @@ export const StudentsDocument = gql`
         }
         group {
           groupName
+          generatedName
           groupsId
           startTime
           teacherId
           endTime
           editionId
-          userByTeacherId {
+          teacher {
             fullName
             userId
           }
