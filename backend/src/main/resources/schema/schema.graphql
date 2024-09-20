@@ -77,8 +77,16 @@ type Mutation {
     firstName: String!
     secondName: String!
     role: String!
+    email: String = "example@example.com"
     label: String = ""
+    createFirebaseUser: Boolean = false
+    sendEmail: Boolean = false
   ): UserType
+  addUsersFromCsv(
+    fileId: Int!,
+    editionId: Int!
+  ): [UserType]
+  resetPassword(userId: Int!): Boolean
   generateSubcategories(
     editionId: Int!
     categoryId: Int!
@@ -168,6 +176,7 @@ type Mutation {
   editGroup(
     groupId: Int!,
     groupName: String,
+    usosId: Int,
     weekdayId: Int,
     startTime: String,
     endTime: String,
@@ -255,6 +264,7 @@ type Query {
   getPossibleGroupDates(editionId: Int!): [GroupDateType!]!
   getNeighboringLevels(studentId: Int!, editionId: Int!): NeighboringLevelsType!
   getGroupsInEdition(editionId: Int!, teacherId: Int!): [GroupTeacherType!]!
+  getCurrentUser: UserType
 }
 
 type AwardType {
@@ -433,7 +443,9 @@ type UserType {
   indexNumber: Int!
   firstName: String!
   secondName: String!
+  email: String!
   label: String!
+  firebaseUid: String
   imageFile: FileType
   userGroups: [UserGroupType]!
   userLevels: [UserLevelType]!

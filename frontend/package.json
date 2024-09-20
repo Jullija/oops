@@ -19,6 +19,7 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^6.0.2",
+    "firebase": "^10.13.1",
     "formik": "^2.4.6",
     "graphql": "^16.8.1",
     "lint-staged": "^15.2.4",

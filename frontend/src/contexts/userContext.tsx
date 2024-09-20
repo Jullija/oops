@@ -1,11 +1,20 @@
-import React, { createContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useState,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { AllUsersQuery } from "../graphql/allUsers.graphql.types";
 
 export type User = AllUsersQuery["users"][number];
 
 type UserContextType = {
+  // TODO: remove token from here, only needed for bypass
+  token?: string;
   user: User;
-  setUser: React.Dispatch<React.SetStateAction<User>>;
+  setUser: Dispatch<SetStateAction<User>>;
+  setToken: (token?: string) => void;
 };
 
 const defaultUnauthenticatedUser: User = {
@@ -20,9 +29,10 @@ export const UserContext = createContext<UserContextType | undefined>(
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User>(defaultUnauthenticatedUser);
+  const [token, setToken] = useState<string | undefined>(undefined);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, token, setUser, setToken }}>
       {children}
     </UserContext.Provider>
   );

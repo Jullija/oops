@@ -57,6 +57,10 @@ class UserGroupsDataFetcher {
         val user = usersRepository.findById(userId).orElseThrow { throw IllegalArgumentException("User not found") }
         val group = groupsRepository.findById(groupId).orElseThrow { throw IllegalArgumentException("Group not found") }
 
+        if (userGroupsRepository.existsByUserAndGroup(user, group)){
+            throw IllegalArgumentException("This User already exists in this Group")
+        }
+
         if (group.edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Edition has already ended")
         }

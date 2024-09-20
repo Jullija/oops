@@ -99,6 +99,9 @@ class GroupsDataFetcher {
         if (edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Edition has already ended")
         }
+        if (groupsRepository.existsByUsosIdAndEdition(usosId.toLong(), edition)) {
+            throw IllegalArgumentException("Group with USOS ID $usosId already exists for edition ${edition.editionId}")
+        }
         if (groupsRepository.findAllByGroupNameAndEdition(groupName, edition).any { it.groupName.isNotBlank() }) {
             throw IllegalArgumentException("Group with name $groupName already exists for edition ${edition.editionId}")
         }
@@ -142,6 +145,7 @@ class GroupsDataFetcher {
     fun editGroup(
         @InputArgument groupId: Long,
         @InputArgument groupName: String?,
+        @InputArgument usosId: Int?,
         @InputArgument weekdayId: Long?,
         @InputArgument startTime: Time?,
         @InputArgument endTime: Time?,
@@ -160,6 +164,13 @@ class GroupsDataFetcher {
                 throw IllegalArgumentException("Group with name $it already exists for edition ${group.edition.editionId}")
             }
             group.groupName = it
+        }
+
+        usosId?.let {
+            if (groupsRepository.existsByUsosIdAndEdition(it.toLong(), group.edition) && it != group.usosId) {
+                throw IllegalArgumentException("Group with USOS ID $it already exists for edition ${group.edition.editionId}")
+            }
+            group.usosId = it
         }
 
         weekdayId?.let {
