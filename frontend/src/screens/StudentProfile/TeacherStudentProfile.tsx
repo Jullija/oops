@@ -1,44 +1,20 @@
 import { Styles } from "../../utils/Styles";
 import { useParams } from "react-router-dom";
 import { PointsForm } from "../../components/StudentProfile/PointsForm/PointsForm";
-import { FormPoints } from "../../components/StudentProfile/PointsForm/types";
-import { useCreatePointsMutation } from "../../graphql/createPoints.graphql.types";
 import { useUser } from "../../hooks/common/useUser";
 import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
 import { SideBar } from "../../components/StudentProfile/SideBar";
 import { useFormCategories } from "../../hooks/common/useFormCategories";
 import { Dialog } from "@mui/material";
-import { useState } from "react";
 import { StudentTableWithFilters } from "../../components/StudentProfile/table/StudentTableWithFilters";
-import { useEditPointsMutation } from "../../graphql/editPoints.graphql.types";
-import { Points } from "../../hooks/StudentProfile/useStudentData";
-import { useRemovePointsMutation } from "../../graphql/removePoints.graphql.types";
 import { Button } from "../../components/Button";
-
-const styles: Styles = {
-  container: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 20,
-    margin: 12,
-  },
-  rightContainer: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 24,
-  },
-  button: {
-    cursor: "pointer",
-    backgroundColor: "pink",
-    width: 100,
-  },
-};
+import { useTeacherActions } from "../../hooks/StudentProfile/useTeacherActions";
 
 export function TeacherStudentProfile() {
-  const { user } = useUser();
-
   const params = useParams();
   const studentId = params.id;
+  const { user: teacher } = useUser();
+  const teacherId = teacher.userId;
 
   const {
     categories,
@@ -53,26 +29,29 @@ export function TeacherStudentProfile() {
     refetch,
   } = useStudentProfileData(studentId);
 
-  const [createPoints, { error: createPointsError }] =
-    useCreatePointsMutation();
-
-  const [editPoints, { error: editPointsError }] = useEditPointsMutation();
-
-  const [removePoints, { error: removePointsError }] =
-    useRemovePointsMutation();
-
   const {
     categories: formCategories,
     loading: formDataLoading,
     error: formDataError,
   } = useFormCategories();
 
-  const [isAddOpen, setIsAddOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
+  const {
+    isAddDialogOpen,
+    openAddDialog,
+    closeAddDialog,
+    isEditDialogOpen,
+    openEditDialog,
+    closeEditDialog,
+    pointsToEdit,
+    handleAddPointsConfirmation,
+    addPointsError: createPointsError,
+    handleEditPointsConfirmation,
+    editPointsError,
+    handleDeletePointsClick,
+  } = useTeacherActions(refetch, studentId as string, teacherId);
 
-  const [pointsToEdit, setPointsToEdit] = useState<Points | undefined>(
-    undefined,
-  );
+  if (!studentId) return <p>StudentId is undefined</p>;
+  if (!teacherId) return <p>TeacherId is undefined</p>;
 
   if (loading || formDataLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -80,54 +59,6 @@ export function TeacherStudentProfile() {
 
   if (!studentData) return <p>Student is undefined</p>;
   if (!currLevel) return <p>Curr level is undefined</p>;
-
-  const handleAdd = async (formPoints: FormPoints) => {
-    await createPoints({
-      variables: {
-        studentId: parseInt(studentId as string),
-        subcategoryId: parseInt(formPoints.subcategoryId),
-        teacherId: parseInt(user.userId),
-        value: formPoints.points,
-      },
-    });
-
-    if (!createPointsError) {
-      closeAddDialog();
-      refetch();
-    }
-  };
-
-  const handleDelete = async (pointsId: string) => {
-    await removePoints({ variables: { pointsId: parseInt(pointsId) } });
-
-    if (!removePointsError) {
-      refetch();
-    } else {
-      // TODO display error alert
-      throw new Error("Error: " + removePointsError.message);
-    }
-  };
-
-  const handleEdit = async (formPoints: FormPoints) => {
-    await editPoints({
-      variables: {
-        pointsId: parseInt(pointsToEdit?.points.purePoints?.pointsId as string),
-        teacherId: parseInt(user.userId),
-        value: formPoints.points,
-      },
-    });
-
-    if (!editPointsError) {
-      closeEditDialog();
-      refetch();
-    }
-  };
-
-  const closeAddDialog = () => setIsAddOpen(false);
-  const openAddDialog = () => setIsAddOpen(true);
-
-  const closeEditDialog = () => setIsEditOpen(false);
-  const openEditDialog = () => setIsEditOpen(true);
 
   return (
     <div style={styles.container}>
@@ -139,9 +70,9 @@ export function TeacherStudentProfile() {
         nextLevel={nextLevel}
       />
       <div style={styles.rightContainer}>
-        <Dialog open={isAddOpen}>
+        <Dialog open={isAddDialogOpen}>
           <PointsForm
-            handleAddPoints={handleAdd}
+            handleAddPoints={handleAddPointsConfirmation}
             createError={createPointsError?.message}
             categories={formCategories}
           />
@@ -150,9 +81,9 @@ export function TeacherStudentProfile() {
           </Button>
         </Dialog>
 
-        <Dialog open={isEditOpen}>
+        <Dialog open={isEditDialogOpen}>
           <PointsForm
-            handleAddPoints={handleEdit}
+            handleAddPoints={handleEditPointsConfirmation}
             createError={editPointsError?.message}
             categories={formCategories}
             initialValues={{
@@ -175,13 +106,24 @@ export function TeacherStudentProfile() {
         <StudentTableWithFilters
           points={points}
           filterHeaderNames={filterHeaderNames}
-          handleEditClick={(points: Points) => {
-            setPointsToEdit(points);
-            setTimeout(() => openEditDialog(), 1000);
-          }}
-          handleDeleteClick={handleDelete}
+          handleEditClick={openEditDialog}
+          handleDeleteClick={handleDeletePointsClick}
         />
       </div>
     </div>
   );
 }
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 20,
+    margin: 12,
+  },
+  rightContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 24,
+  },
+};
