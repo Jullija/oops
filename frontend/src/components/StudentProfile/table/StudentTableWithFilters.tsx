@@ -18,12 +18,14 @@ type StudentTableWithFiltersProps = {
   points: Points[];
   filterHeaderNames: FilterItem[];
   handleEditClick?: (points: Points) => void;
+  handleDeleteClick?: (pointsId: string) => void;
 };
 
 export const StudentTableWithFilters = ({
   points,
   filterHeaderNames,
   handleEditClick,
+  handleDeleteClick,
 }: StudentTableWithFiltersProps) => {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
 
@@ -50,6 +52,7 @@ export const StudentTableWithFilters = ({
       <StudentTable
         points={pointsToDisplay}
         handleEditClick={handleEditClick}
+        handleDeleteClick={handleDeleteClick}
       />
     </div>
   );

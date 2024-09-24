@@ -13,10 +13,12 @@ import { Points } from "../../../hooks/StudentProfile/useStudentData";
 import { CategoryTag } from "../../CategoryTag";
 import { Styles } from "../../../utils/Styles";
 import { AwardImage } from "../../images/AwardImage";
+import { Button } from "../../Button";
 
 type StudentTableProps = {
   points: Points[];
   handleEditClick?: (points: Points) => void;
+  handleDeleteClick?: (pointsId: string) => void;
 };
 
 const dateOptions: Intl.DateTimeFormatOptions = {
@@ -48,6 +50,7 @@ const headerTitles: HeaderTitle[] = [
 export const StudentTable = ({
   points,
   handleEditClick,
+  handleDeleteClick,
 }: StudentTableProps) => {
   const darkTheme = createTheme({
     palette: {
@@ -93,13 +96,15 @@ export const StudentTable = ({
     );
   };
 
+  const displayButtonRow = handleEditClick || handleDeleteClick;
+
   return (
     <ThemeProvider theme={darkTheme}>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              {handleEditClick && <TableCell></TableCell>}
+              {displayButtonRow && <TableCell />}
               {headerTitles.map((header) => (
                 <TableCell style={styles.header} align={header.align}>
                   {header.name}
@@ -110,8 +115,32 @@ export const StudentTable = ({
           <TableBody>
             {points.map((p, index) => (
               <TableRow key={index}>
-                {handleEditClick && (
-                  <TableCell onClick={() => handleEditClick(p)}>edit</TableCell>
+                {displayButtonRow && (
+                  <TableCell>
+                    <div style={styles.buttonsContainer}>
+                      {handleEditClick && (
+                        <Button
+                          onClick={() => handleEditClick(p)}
+                          color="lightgreen"
+                        >
+                          edit
+                        </Button>
+                      )}
+                      {handleDeleteClick && p.points.purePoints?.pointsId && (
+                        <Button
+                          onClick={() => {
+                            // TODO display info that there is no pure points - bonus only
+                            if (p.points.purePoints?.pointsId) {
+                              handleDeleteClick(p.points.purePoints?.pointsId);
+                            }
+                          }}
+                          color="pink"
+                        >
+                          delete
+                        </Button>
+                      )}
+                    </div>
+                  </TableCell>
                 )}
                 <TableCell align="center">
                   {p.subcategory.subcategoryName}
@@ -147,5 +176,10 @@ const styles: Styles = {
     display: "flex",
     justifyContent: "center",
     gap: 8,
+  },
+  buttonsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 2,
   },
 };

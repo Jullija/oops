@@ -12,6 +12,8 @@ import { useState } from "react";
 import { StudentTableWithFilters } from "../../components/StudentProfile/table/StudentTableWithFilters";
 import { useEditPointsMutation } from "../../graphql/editPoints.graphql.types";
 import { Points } from "../../hooks/StudentProfile/useStudentData";
+import { useRemovePointsMutation } from "../../graphql/removePoints.graphql.types";
+import { Button } from "../../components/Button";
 
 const styles: Styles = {
   container: {
@@ -56,6 +58,9 @@ export function TeacherStudentProfile() {
 
   const [editPoints, { error: editPointsError }] = useEditPointsMutation();
 
+  const [removePoints, { error: removePointsError }] =
+    useRemovePointsMutation();
+
   const {
     categories: formCategories,
     loading: formDataLoading,
@@ -89,6 +94,17 @@ export function TeacherStudentProfile() {
     if (!createPointsError) {
       closeAddDialog();
       refetch();
+    }
+  };
+
+  const handleDelete = async (pointsId: string) => {
+    await removePoints({ variables: { pointsId: parseInt(pointsId) } });
+
+    if (!removePointsError) {
+      refetch();
+    } else {
+      // TODO display error alert
+      throw new Error("Error: " + removePointsError.message);
     }
   };
 
@@ -129,9 +145,9 @@ export function TeacherStudentProfile() {
             createError={createPointsError?.message}
             categories={formCategories}
           />
-          <div style={styles.button} onClick={closeAddDialog}>
+          <Button onClick={closeAddDialog} color="lightblue">
             close
-          </div>
+          </Button>
         </Dialog>
 
         <Dialog open={isEditOpen}>
@@ -146,15 +162,15 @@ export function TeacherStudentProfile() {
                 .categoryId as string,
             }}
           />
-          <div style={styles.button} onClick={closeEditDialog}>
+          <Button onClick={closeEditDialog} color="lightblue">
             close
-          </div>
+          </Button>
         </Dialog>
 
         {/* TODO display only when editable  */}
-        <div style={styles.button} onClick={openAddDialog}>
+        <Button onClick={openAddDialog} color="lightblue">
           add points
-        </div>
+        </Button>
 
         <StudentTableWithFilters
           points={points}
@@ -163,6 +179,7 @@ export function TeacherStudentProfile() {
             setPointsToEdit(points);
             setTimeout(() => openEditDialog(), 1000);
           }}
+          handleDeleteClick={handleDelete}
         />
       </div>
     </div>
