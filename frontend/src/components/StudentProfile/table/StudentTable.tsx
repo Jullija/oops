@@ -13,7 +13,7 @@ import { Points } from "../../../hooks/StudentProfile/useStudentData";
 import { CategoryTag } from "../../CategoryTag";
 import { Styles } from "../../../utils/Styles";
 import { AwardImage } from "../../images/AwardImage";
-import { Button } from "../../Button";
+import { ActionButton } from "./ActionButton";
 
 type StudentTableProps = {
   points: Points[];
@@ -119,25 +119,21 @@ export const StudentTable = ({
                   <TableCell>
                     <div style={styles.buttonsContainer}>
                       {handleEditClick && (
-                        <Button
+                        <ActionButton
+                          type="edit"
                           onClick={() => handleEditClick(p)}
-                          color="lightgreen"
-                        >
-                          edit
-                        </Button>
+                        />
                       )}
+                      {/* TODO display info that there is no pure points - bonus only */}
                       {handleDeleteClick && p.points.purePoints?.pointsId && (
-                        <Button
+                        <ActionButton
+                          type="delete"
                           onClick={() => {
-                            // TODO display info that there is no pure points - bonus only
                             if (p.points.purePoints?.pointsId) {
                               handleDeleteClick(p.points.purePoints?.pointsId);
                             }
                           }}
-                          color="pink"
-                        >
-                          delete
-                        </Button>
+                        />
                       )}
                     </div>
                   </TableCell>
@@ -180,6 +176,6 @@ const styles: Styles = {
   buttonsContainer: {
     display: "flex",
     flexDirection: "row",
-    gap: 2,
+    gap: 4,
   },
 };
