@@ -5,12 +5,21 @@ import backend.bonuses.BonusesRepository
 import backend.categories.Categories
 import backend.categories.CategoriesRepository
 import backend.edition.EditionRepository
+import backend.files.FileEntityRepository
+import backend.files.FileRetrievalService
+import backend.files.FileUploadService
+import backend.groups.GroupsRepository
 import backend.levels.Levels
 import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
+import backend.userGroups.UserGroups
+import backend.userGroups.UserGroupsRepository
+import backend.users.FirebaseUserService
 import backend.users.UsersRepository
 import backend.users.Users
 import backend.users.UsersRoles
+import backend.utils.CsvReader
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.DgsQuery
@@ -18,10 +27,13 @@ import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
-import java.time.ZoneOffset
+import kotlin.math.min
 
 @DgsComponent
-class UsersDataFetcher {
+class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
+
+    @Autowired
+    private lateinit var groupsRepository: GroupsRepository
 
     @Autowired
     private lateinit var subcategoriesRepository: SubcategoriesRepository
@@ -44,6 +56,21 @@ class UsersDataFetcher {
     @Autowired
     lateinit var photoAssigner: PhotoAssigner
 
+    @Autowired
+    lateinit var firebaseUserService: FirebaseUserService
+
+    @Autowired
+    lateinit var fileEntityRepository: FileEntityRepository
+
+    @Autowired
+    lateinit var userGroupsRepository: UserGroupsRepository
+
+    @Autowired
+    lateinit var userMapper: UserMapper
+
+    @Autowired
+    lateinit var csvReader: CsvReader
+
     @DgsMutation
     @Transactional
     fun assignPhotoToUser(@InputArgument userId: Long, @InputArgument fileId: Long?): Boolean {
@@ -54,27 +81,41 @@ class UsersDataFetcher {
     @Transactional
     fun addUser(@InputArgument indexNumber: Int, @InputArgument nick: String,
                 @InputArgument firstName: String, @InputArgument secondName: String,
-                @InputArgument role: String, @InputArgument label: String = ""): Users {
-        if (usersRepository.existsByIndexNumber(indexNumber)) {
-            throw IllegalArgumentException("User with index number $indexNumber already exists")
+                @InputArgument role: String, @InputArgument email: String = "example@example.com",
+                @InputArgument label: String = "", @InputArgument createFirebaseUser: Boolean = false,
+                @InputArgument sendEmail: Boolean = false): Users {
+        return addUserHelper(indexNumber, nick, firstName, secondName, role, email, label, createFirebaseUser, sendEmail)
+    }
+
+    @DgsMutation
+    @Transactional
+    fun addUsersFromCsv(@InputArgument fileId: Long, @InputArgument editionId: Long): List<Users> {
+        val file = fileEntityRepository.findById(fileId).orElseThrow { IllegalArgumentException("File not found") }
+        if (file.fileType != "text/csv") {
+            throw IllegalArgumentException("Invalid file type")
         }
-        if (usersRepository.findByNick(nick) != null) {
-            throw IllegalArgumentException("User with nick $nick already exists")
+        val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Edition not found") }
+        if (edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
         }
-        val userRole1 = try {
-            UsersRoles.valueOf(role.uppercase())
-        } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException("Invalid role")
+        val usosId = csvReader.extractGroupNumber(file.fileName).toLong()
+        val group = groupsRepository.findByUsosIdAndEdition(usosId, edition) ?: throw IllegalArgumentException("Group not found")
+        val users = csvReader.getUsersFromCsv(file)
+        // TODO: change to sendEmail = true
+        val addedUsers = users.map { user ->
+            addUserHelper(user.indexNumber, user.nick, user.firstName, user.secondName, user.role.name, user.email, user.label, true, false)
         }
-        val user = Users(
-            indexNumber = indexNumber,
-            nick = nick,
-            firstName = firstName,
-            secondName = secondName,
-            role = userRole1,
-            label = label
-        )
-        return usersRepository.save(user)
+        addedUsers.forEach { user ->
+            if (!userGroupsRepository.existsByUserAndGroup(user, group)){
+                val userGroup = UserGroups(
+                    user = user,
+                    group = group
+                )
+                userGroupsRepository.save(userGroup)
+            }
+        }
+        fileRetrievalService.deleteFile(fileId)
+        return addedUsers
     }
 
     @DgsMutation
@@ -142,9 +183,17 @@ class UsersDataFetcher {
         if (user.userGroups.isNotEmpty()){
             throw IllegalArgumentException("Cannot remove user that is in a group")
         }
-
+        user.firebaseUid?.let { firebaseUserService.deleteFirebaseUser(it) }
         usersRepository.delete(user)
         return true
+    }
+
+    @DgsMutation
+    @Transactional
+    fun resetPassword(@InputArgument userId: Long): Boolean {
+        val user = usersRepository.findByUserId(userId)
+            .orElseThrow { IllegalArgumentException("User not found") }
+        return firebaseUserService.resetPassword(user.email)
     }
 
 
@@ -164,18 +213,29 @@ class UsersDataFetcher {
         val points = pointsRepository.findAllByStudentAndSubcategory_Edition(user, edition)
         val bonuses = bonusesRepository.findByChestHistory_User_UserId(studentId)
 
-        val subcategoryPoints = points.groupBy { it.subcategory }
+        val additivePrevBonuses = bonuses.filter { it.award.awardType == AwardType.ADDITIVE_PREV }
+
+        val additivePrevBonusesMap = additivePrevBonuses.associateWith { it.points.value }.toMutableMap()
+
+        val subcategoryPoints = points.sortedByDescending { it.subcategory.ordinalNumber }.groupBy { it.subcategory }
             .map { (subcategory, points) ->
                 val purePoints = points.filter { bonusesRepository.findByPoints(it).isEmpty() }.firstOrNull()
-                val allBonuses = bonuses.filter { (it.award.awardType != AwardType.MULTIPLICATIVE && it.points.subcategory == subcategory)  ||
-                        (it.award.awardType == AwardType.MULTIPLICATIVE && it.points.subcategory.category == subcategory.category) }
+                val allBonuses = bonuses.filter { (it.award.awardType != AwardType.MULTIPLICATIVE && it.award.awardType != AwardType.ADDITIVE_PREV && it.points.subcategory == subcategory)  ||
+                        ((it.award.awardType == AwardType.MULTIPLICATIVE || it.award.awardType == AwardType.ADDITIVE_PREV) && it.points.subcategory.category == subcategory.category) }
                 val partialBonusType = allBonuses.map { bonus ->
                     PartialBonusType(
                         bonuses = bonus,
-                        partialValue = if (bonus.award.awardType != AwardType.MULTIPLICATIVE) {
-                            bonus.points.value
-                        } else {
+                        partialValue = if (bonus.award.awardType == AwardType.MULTIPLICATIVE) {
                             purePoints?.value?.times(bonus.award.awardValue) ?: 0f
+                        } else if (bonus.award.awardType == AwardType.ADDITIVE_PREV) {
+                            val contribution = min(
+                                additivePrevBonusesMap[bonus] ?: 0f,
+                                purePoints?.value?.let { (purePoints.subcategory.maxPoints).minus(it) } ?: 0f
+                            )
+                            additivePrevBonusesMap[bonus] = (additivePrevBonusesMap[bonus] ?: 0f) - contribution
+                            contribution
+                        } else {
+                            bonus.points.value
                         }
                     )
                 }
@@ -244,6 +304,53 @@ class UsersDataFetcher {
                         maxPoints = maxPoints
                     )
                 }
+    }
+    @DgsQuery
+    @Transactional
+    fun getCurrentUser(): Users {
+        val user = userMapper.getUserFromToken() ?: throw IllegalArgumentException("User not authenticated")
+        return user
+    }
+
+    fun isValidEmail(email: String): Boolean {
+        val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"
+        return email.matches(Regex(emailPattern))
+    }
+    
+    private fun addUserHelper(indexNumber: Int,  nick: String,
+                               firstName: String,  secondName: String,
+                               role: String,  email: String = "example@example.com",
+                               label: String = "",  createFirebaseUser: Boolean = false,
+                               sendEmail: Boolean = false): Users {
+        if (usersRepository.existsByIndexNumber(indexNumber)) {
+            throw IllegalArgumentException("User with index number $indexNumber already exists")
+        }
+        if (usersRepository.findByNick(nick) != null) {
+            throw IllegalArgumentException("User with nick $nick already exists")
+        }
+        val userRole1 = try {
+            UsersRoles.valueOf(role.uppercase())
+        } catch (e: IllegalArgumentException) {
+            throw IllegalArgumentException("Invalid role")
+        }
+        if (!isValidEmail(email)) {
+            throw IllegalArgumentException("Invalid email")
+        }
+        val user = Users(
+            indexNumber = indexNumber,
+            nick = nick,
+            firstName = firstName,
+            secondName = secondName,
+            role = userRole1,
+            email = email,
+            label = label
+        )
+        usersRepository.save(user)
+        if (createFirebaseUser) {
+            val firebaseUid = firebaseUserService.createFirebaseUser(user, sendEmail)
+            user.firebaseUid = firebaseUid
+        }
+        return user
     }
 }
 

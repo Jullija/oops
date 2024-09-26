@@ -49,7 +49,7 @@ export const useStudentData = (props: {
         index: user.indexNumber,
         group: user.userGroups[0]
           ? {
-              name: user.userGroups[0].group.groupName,
+              name: user.userGroups[0].group.generatedName,
               id: user.userGroups[0].group.groupsId,
               weekday: {
                 id: user.userGroups[0].group.weekday.weekdayId,

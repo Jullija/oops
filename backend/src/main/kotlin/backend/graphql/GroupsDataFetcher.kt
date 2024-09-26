@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import java.sql.Time
 import java.time.LocalDateTime
+import kotlin.math.min
 
 @DgsComponent
 class GroupsDataFetcher {
@@ -90,14 +91,18 @@ class GroupsDataFetcher {
 
     @DgsMutation
     @Transactional
-    fun addGroup(@InputArgument editionId: Long, @InputArgument groupName: String,
+    fun addGroup(@InputArgument editionId: Long, @InputArgument usosId: Int,
                  @InputArgument weekdayId: Long, @InputArgument startTime: Time,
-                 @InputArgument endTime: Time, @InputArgument teacherId: Long, @InputArgument label: String = ""): Groups {
+                 @InputArgument endTime: Time, @InputArgument teacherId: Long, @InputArgument label: String = "",
+                 @InputArgument groupName: String = ""): Groups {
         val edition = editionRepository.findById(editionId).orElseThrow() { IllegalArgumentException("Invalid edition ID") }
         if (edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Edition has already ended")
         }
-        if (groupsRepository.existsByGroupNameAndEdition(groupName, edition)) {
+        if (groupsRepository.existsByUsosIdAndEdition(usosId.toLong(), edition)) {
+            throw IllegalArgumentException("Group with USOS ID $usosId already exists for edition ${edition.editionId}")
+        }
+        if (groupsRepository.findAllByGroupNameAndEdition(groupName, edition).any { it.groupName.isNotBlank() }) {
             throw IllegalArgumentException("Group with name $groupName already exists for edition ${edition.editionId}")
         }
         if (startTime.after(endTime)) {
@@ -105,9 +110,6 @@ class GroupsDataFetcher {
         }
         if (startTime == endTime) {
             throw IllegalArgumentException("Start time must be different from end time")
-        }
-        if (groupName.isBlank()) {
-            throw IllegalArgumentException("Group name must not be blank")
         }
         val weekday = weekdaysRepository.findById(weekdayId).orElseThrow { IllegalArgumentException("Invalid weekday ID") }
         val teacher = usersRepository.findById(teacherId).orElseThrow { IllegalArgumentException("Invalid teacher ID") }
@@ -117,8 +119,11 @@ class GroupsDataFetcher {
         if (groupsRepository.existsByTeacherAndWeekdayAndStartTimeAndEndTimeAndEdition(teacher, weekday, startTime, endTime, edition)) {
             throw IllegalArgumentException("Teacher is already teaching a group at this time")
         }
+        val generatedName = generateGroupName(usosId, weekday, startTime, teacher)
         val group = Groups(
+            generatedName = generatedName,
             groupName = groupName,
+            usosId = usosId,
             label = label,
             teacher = teacher,
             weekday = weekday,
@@ -140,6 +145,7 @@ class GroupsDataFetcher {
     fun editGroup(
         @InputArgument groupId: Long,
         @InputArgument groupName: String?,
+        @InputArgument usosId: Int?,
         @InputArgument weekdayId: Long?,
         @InputArgument startTime: Time?,
         @InputArgument endTime: Time?,
@@ -154,13 +160,17 @@ class GroupsDataFetcher {
         }
 
         groupName?.let {
-            if (it.isBlank()) {
-                throw IllegalArgumentException("Group name must not be blank")
-            }
-            if (groupsRepository.existsByGroupNameAndEdition(it, group.edition) && it != group.groupName) {
+            if (it != "" && groupsRepository.existsByGroupNameAndEdition(it, group.edition) && it != group.groupName) {
                 throw IllegalArgumentException("Group with name $it already exists for edition ${group.edition.editionId}")
             }
             group.groupName = it
+        }
+
+        usosId?.let {
+            if (groupsRepository.existsByUsosIdAndEdition(it.toLong(), group.edition) && it != group.usosId) {
+                throw IllegalArgumentException("Group with USOS ID $it already exists for edition ${group.edition.editionId}")
+            }
+            group.usosId = it
         }
 
         weekdayId?.let {
@@ -201,6 +211,8 @@ class GroupsDataFetcher {
         label?.let {
             group.label = it
         }
+
+        group.generatedName = generateGroupName(group.usosId, group.weekday, group.startTime, group.teacher)
 
         return groupsRepository.save(group)
     }
@@ -270,20 +282,31 @@ class GroupsDataFetcher {
         return users.map { user ->
             val userBonuses = bonuses.filter { it.chestHistory.user.userId == user.userId }
 
+            val additivePrevBonuses = userBonuses.filter { it.award.awardType == AwardType.ADDITIVE_PREV }
+
+            val additivePrevBonusesMap = additivePrevBonuses.associateWith { it.points.value }.toMutableMap()
+
             val userPoints = points.filter { it.student.userId == user.userId }
                 .groupBy { it.subcategory }
                 .mapNotNull { (subcategory, points) ->
 
                     val purePoints = points.filter { bonusesRepository.findByPoints(it).isEmpty() }.firstOrNull()
-                    val allBonuses = userBonuses.filter { (it.award.awardType != AwardType.MULTIPLICATIVE && it.points.subcategory == subcategory)  ||
-                            (it.award.awardType == AwardType.MULTIPLICATIVE && it.points.subcategory.category == subcategory.category) }
+                    val allBonuses = bonuses.filter { (it.award.awardType != AwardType.MULTIPLICATIVE && it.award.awardType != AwardType.ADDITIVE_PREV && it.points.subcategory == subcategory)  ||
+                            ((it.award.awardType == AwardType.MULTIPLICATIVE || it.award.awardType == AwardType.ADDITIVE_PREV) && it.points.subcategory.category == subcategory.category) }
                     val partialBonusType = allBonuses.map { bonus ->
                         PartialBonusType(
                             bonuses = bonus,
-                            partialValue = if (bonus.award.awardType != AwardType.MULTIPLICATIVE) {
-                                bonus.points.value
-                            } else {
+                            partialValue = if (bonus.award.awardType == AwardType.MULTIPLICATIVE) {
                                 purePoints?.value?.times(bonus.award.awardValue) ?: 0f
+                            } else if (bonus.award.awardType == AwardType.ADDITIVE_PREV) {
+                                val contribution = min(
+                                    additivePrevBonusesMap[bonus] ?: 0f,
+                                    purePoints?.value?.let { (purePoints.subcategory.maxPoints).minus(it) } ?: 0f
+                                )
+                                additivePrevBonusesMap[bonus] = (additivePrevBonusesMap[bonus] ?: 0f) - contribution
+                                contribution
+                            } else {
+                                bonus.points.value
                             }
                         )
                     }
@@ -393,6 +416,9 @@ class GroupsDataFetcher {
                 sumOfAll = sumOfAll
             )
         )
+    }
+    private fun generateGroupName(usosId: Int, weekday: Weekdays, startTime: Time, teacher: Users): String {
+        return "${weekday.weekdayAbbr}-${startTime.toString().replace(":", "").subSequence(0, 4)}-${teacher.firstName.subSequence(0, 3)}-${teacher.secondName.subSequence(0, 3)}-${usosId}"
     }
 }
 

@@ -1460,7 +1460,9 @@ export type Categories = {
   categoryEditionsAggregate: CategoryEditionAggregate;
   categoryId: Scalars["bigint"]["output"];
   categoryName: Scalars["String"]["output"];
+  darkColor: Scalars["String"]["output"];
   label: Scalars["String"]["output"];
+  lightColor: Scalars["String"]["output"];
   /** An array relationship */
   subcategories: Array<Subcategories>;
   /** An aggregate relationship */
@@ -1568,7 +1570,9 @@ export type CategoriesBoolExp = {
   categoryEditionsAggregate?: InputMaybe<CategoryEditionAggregateBoolExp>;
   categoryId?: InputMaybe<BigintComparisonExp>;
   categoryName?: InputMaybe<StringComparisonExp>;
+  darkColor?: InputMaybe<StringComparisonExp>;
   label?: InputMaybe<StringComparisonExp>;
+  lightColor?: InputMaybe<StringComparisonExp>;
   subcategories?: InputMaybe<SubcategoriesBoolExp>;
   subcategoriesAggregate?: InputMaybe<SubcategoriesAggregateBoolExp>;
 };
@@ -1591,7 +1595,9 @@ export type CategoriesInsertInput = {
   categoryEditions?: InputMaybe<CategoryEditionArrRelInsertInput>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   categoryName?: InputMaybe<Scalars["String"]["input"]>;
+  darkColor?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
+  lightColor?: InputMaybe<Scalars["String"]["input"]>;
   subcategories?: InputMaybe<SubcategoriesArrRelInsertInput>;
 };
 
@@ -1600,7 +1606,9 @@ export type CategoriesMaxFields = {
   __typename?: "CategoriesMaxFields";
   categoryId?: Maybe<Scalars["bigint"]["output"]>;
   categoryName?: Maybe<Scalars["String"]["output"]>;
+  darkColor?: Maybe<Scalars["String"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
+  lightColor?: Maybe<Scalars["String"]["output"]>;
 };
 
 /** aggregate min on columns */
@@ -1608,7 +1616,9 @@ export type CategoriesMinFields = {
   __typename?: "CategoriesMinFields";
   categoryId?: Maybe<Scalars["bigint"]["output"]>;
   categoryName?: Maybe<Scalars["String"]["output"]>;
+  darkColor?: Maybe<Scalars["String"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
+  lightColor?: Maybe<Scalars["String"]["output"]>;
 };
 
 /** response of any mutation on the table "categories" */
@@ -1641,7 +1651,9 @@ export type CategoriesOrderBy = {
   categoryEditionsAggregate?: InputMaybe<CategoryEditionAggregateOrderBy>;
   categoryId?: InputMaybe<OrderBy>;
   categoryName?: InputMaybe<OrderBy>;
+  darkColor?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
+  lightColor?: InputMaybe<OrderBy>;
   subcategoriesAggregate?: InputMaybe<SubcategoriesAggregateOrderBy>;
 };
 
@@ -1659,7 +1671,11 @@ export enum CategoriesSelectColumn {
   /** column name */
   CategoryName = "categoryName",
   /** column name */
+  DarkColor = "darkColor",
+  /** column name */
   Label = "label",
+  /** column name */
+  LightColor = "lightColor",
 }
 
 /** input type for updating data in table "categories" */
@@ -1667,7 +1683,9 @@ export type CategoriesSetInput = {
   canAddPoints?: InputMaybe<Scalars["Boolean"]["input"]>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   categoryName?: InputMaybe<Scalars["String"]["input"]>;
+  darkColor?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
+  lightColor?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** aggregate stddev on columns */
@@ -1701,7 +1719,9 @@ export type CategoriesStreamCursorValueInput = {
   canAddPoints?: InputMaybe<Scalars["Boolean"]["input"]>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   categoryName?: InputMaybe<Scalars["String"]["input"]>;
+  darkColor?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
+  lightColor?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** aggregate sum on columns */
@@ -1719,7 +1739,11 @@ export enum CategoriesUpdateColumn {
   /** column name */
   CategoryName = "categoryName",
   /** column name */
+  DarkColor = "darkColor",
+  /** column name */
   Label = "label",
+  /** column name */
+  LightColor = "lightColor",
 }
 
 export type CategoriesUpdates = {
@@ -2136,7 +2160,9 @@ export type CategoryType = {
   categoryEdition: Array<Maybe<CategoryEditionType>>;
   categoryId: Scalars["ID"]["output"];
   categoryName: Scalars["String"]["output"];
+  darkColor: Scalars["String"]["output"];
   label: Scalars["String"]["output"];
+  lightColor: Scalars["String"]["output"];
 };
 
 /** columns and relationships of "chest_award" */
@@ -3000,6 +3026,7 @@ export type ChestType = {
 /** columns and relationships of "chests" */
 export type Chests = {
   __typename?: "Chests";
+  active: Scalars["Boolean"]["output"];
   /** An array relationship */
   chestAwards: Array<ChestAward>;
   /** An aggregate relationship */
@@ -3063,6 +3090,8 @@ export type ChestsAggregate = {
 };
 
 export type ChestsAggregateBoolExp = {
+  bool_and?: InputMaybe<ChestsAggregateBoolExpBool_And>;
+  bool_or?: InputMaybe<ChestsAggregateBoolExpBool_Or>;
   count?: InputMaybe<ChestsAggregateBoolExpCount>;
 };
 
@@ -3130,6 +3159,7 @@ export type ChestsBoolExp = {
   _and?: InputMaybe<Array<ChestsBoolExp>>;
   _not?: InputMaybe<ChestsBoolExp>;
   _or?: InputMaybe<Array<ChestsBoolExp>>;
+  active?: InputMaybe<BooleanComparisonExp>;
   chestAwards?: InputMaybe<ChestAwardBoolExp>;
   chestAwardsAggregate?: InputMaybe<ChestAwardAggregateBoolExp>;
   chestHistories?: InputMaybe<ChestHistoryBoolExp>;
@@ -3158,6 +3188,7 @@ export type ChestsIncInput = {
 
 /** input type for inserting data into table "chests" */
 export type ChestsInsertInput = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
   chestAwards?: InputMaybe<ChestAwardArrRelInsertInput>;
   chestHistories?: InputMaybe<ChestHistoryArrRelInsertInput>;
   chestId?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -3232,6 +3263,7 @@ export type ChestsOnConflict = {
 
 /** Ordering options when selecting data from "chests". */
 export type ChestsOrderBy = {
+  active?: InputMaybe<OrderBy>;
   chestAwardsAggregate?: InputMaybe<ChestAwardAggregateOrderBy>;
   chestHistoriesAggregate?: InputMaybe<ChestHistoryAggregateOrderBy>;
   chestId?: InputMaybe<OrderBy>;
@@ -3251,6 +3283,8 @@ export type ChestsPkColumnsInput = {
 /** select columns of table "chests" */
 export enum ChestsSelectColumn {
   /** column name */
+  Active = "active",
+  /** column name */
   ChestId = "chestId",
   /** column name */
   EditionId = "editionId",
@@ -3262,8 +3296,21 @@ export enum ChestsSelectColumn {
   Type = "type",
 }
 
+/** select "chestsAggregateBoolExpBool_andArgumentsColumns" columns of table "chests" */
+export enum ChestsSelectColumnChestsAggregateBoolExpBool_AndArgumentsColumns {
+  /** column name */
+  Active = "active",
+}
+
+/** select "chestsAggregateBoolExpBool_orArgumentsColumns" columns of table "chests" */
+export enum ChestsSelectColumnChestsAggregateBoolExpBool_OrArgumentsColumns {
+  /** column name */
+  Active = "active",
+}
+
 /** input type for updating data in table "chests" */
 export type ChestsSetInput = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
   chestId?: InputMaybe<Scalars["bigint"]["input"]>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -3326,6 +3373,7 @@ export type ChestsStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type ChestsStreamCursorValueInput = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
   chestId?: InputMaybe<Scalars["bigint"]["input"]>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -3350,6 +3398,8 @@ export type ChestsSumOrderBy = {
 
 /** update columns of table "chests" */
 export enum ChestsUpdateColumn {
+  /** column name */
+  Active = "active",
   /** column name */
   ChestId = "chestId",
   /** column name */
@@ -4606,13 +4656,15 @@ export type GroupType = {
   __typename?: "GroupType";
   edition: EditionType;
   endTime: Scalars["String"]["output"];
-  groupName: Scalars["String"]["output"];
+  generatedName: Scalars["String"]["output"];
+  groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId: Scalars["ID"]["output"];
   imageFile?: Maybe<FileType>;
   label?: Maybe<Scalars["String"]["output"]>;
   startTime: Scalars["String"]["output"];
   teacher: UserType;
   userGroups: Array<Maybe<UserGroupType>>;
+  usosId: Scalars["Int"]["output"];
   weekday: WeekdayType;
 };
 
@@ -4625,20 +4677,20 @@ export type Groups = {
   endTime: Scalars["time"]["output"];
   /** An object relationship */
   file?: Maybe<Files>;
-  groupName: Scalars["String"]["output"];
+  generatedName: Scalars["String"]["output"];
+  groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId: Scalars["bigint"]["output"];
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   startTime: Scalars["time"]["output"];
+  /** An object relationship */
+  teacher: Users;
   teacherId: Scalars["bigint"]["output"];
-  /** An object relationship */
-  user: Users;
-  /** An object relationship */
-  userByTeacherId?: Maybe<Users>;
   /** An array relationship */
   userGroups: Array<UserGroups>;
   /** An aggregate relationship */
   userGroupsAggregate: UserGroupsAggregate;
+  usosId: Scalars["Int"]["output"];
   /** An object relationship */
   weekday: Weekdays;
   weekdayId: Scalars["bigint"]["output"];
@@ -4724,6 +4776,7 @@ export type GroupsAvgFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -4733,6 +4786,7 @@ export type GroupsAvgOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -4745,16 +4799,17 @@ export type GroupsBoolExp = {
   editionId?: InputMaybe<BigintComparisonExp>;
   endTime?: InputMaybe<TimeComparisonExp>;
   file?: InputMaybe<FilesBoolExp>;
+  generatedName?: InputMaybe<StringComparisonExp>;
   groupName?: InputMaybe<StringComparisonExp>;
   groupsId?: InputMaybe<BigintComparisonExp>;
   imageFileId?: InputMaybe<BigintComparisonExp>;
   label?: InputMaybe<StringComparisonExp>;
   startTime?: InputMaybe<TimeComparisonExp>;
+  teacher?: InputMaybe<UsersBoolExp>;
   teacherId?: InputMaybe<BigintComparisonExp>;
-  user?: InputMaybe<UsersBoolExp>;
-  userByTeacherId?: InputMaybe<UsersBoolExp>;
   userGroups?: InputMaybe<UserGroupsBoolExp>;
   userGroupsAggregate?: InputMaybe<UserGroupsAggregateBoolExp>;
+  usosId?: InputMaybe<IntComparisonExp>;
   weekday?: InputMaybe<WeekdaysBoolExp>;
   weekdayId?: InputMaybe<BigintComparisonExp>;
 };
@@ -4771,6 +4826,7 @@ export type GroupsIncInput = {
   groupsId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
+  usosId?: InputMaybe<Scalars["Int"]["input"]>;
   weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
 
@@ -4780,15 +4836,16 @@ export type GroupsInsertInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   endTime?: InputMaybe<Scalars["time"]["input"]>;
   file?: InputMaybe<FilesObjRelInsertInput>;
+  generatedName?: InputMaybe<Scalars["String"]["input"]>;
   groupName?: InputMaybe<Scalars["String"]["input"]>;
   groupsId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   startTime?: InputMaybe<Scalars["time"]["input"]>;
+  teacher?: InputMaybe<UsersObjRelInsertInput>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
-  user?: InputMaybe<UsersObjRelInsertInput>;
-  userByTeacherId?: InputMaybe<UsersObjRelInsertInput>;
   userGroups?: InputMaybe<UserGroupsArrRelInsertInput>;
+  usosId?: InputMaybe<Scalars["Int"]["input"]>;
   weekday?: InputMaybe<WeekdaysObjRelInsertInput>;
   weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
@@ -4797,22 +4854,26 @@ export type GroupsInsertInput = {
 export type GroupsMaxFields = {
   __typename?: "GroupsMaxFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  generatedName?: Maybe<Scalars["String"]["output"]>;
   groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
+  usosId?: Maybe<Scalars["Int"]["output"]>;
   weekdayId?: Maybe<Scalars["bigint"]["output"]>;
 };
 
 /** order by max() on columns of table "groups" */
 export type GroupsMaxOrderBy = {
   editionId?: InputMaybe<OrderBy>;
+  generatedName?: InputMaybe<OrderBy>;
   groupName?: InputMaybe<OrderBy>;
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -4820,22 +4881,26 @@ export type GroupsMaxOrderBy = {
 export type GroupsMinFields = {
   __typename?: "GroupsMinFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  generatedName?: Maybe<Scalars["String"]["output"]>;
   groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
+  usosId?: Maybe<Scalars["Int"]["output"]>;
   weekdayId?: Maybe<Scalars["bigint"]["output"]>;
 };
 
 /** order by min() on columns of table "groups" */
 export type GroupsMinOrderBy = {
   editionId?: InputMaybe<OrderBy>;
+  generatedName?: InputMaybe<OrderBy>;
   groupName?: InputMaybe<OrderBy>;
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -4868,15 +4933,16 @@ export type GroupsOrderBy = {
   editionId?: InputMaybe<OrderBy>;
   endTime?: InputMaybe<OrderBy>;
   file?: InputMaybe<FilesOrderBy>;
+  generatedName?: InputMaybe<OrderBy>;
   groupName?: InputMaybe<OrderBy>;
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   startTime?: InputMaybe<OrderBy>;
+  teacher?: InputMaybe<UsersOrderBy>;
   teacherId?: InputMaybe<OrderBy>;
-  user?: InputMaybe<UsersOrderBy>;
-  userByTeacherId?: InputMaybe<UsersOrderBy>;
   userGroupsAggregate?: InputMaybe<UserGroupsAggregateOrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekday?: InputMaybe<WeekdaysOrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
@@ -4893,6 +4959,8 @@ export enum GroupsSelectColumn {
   /** column name */
   EndTime = "endTime",
   /** column name */
+  GeneratedName = "generatedName",
+  /** column name */
   GroupName = "groupName",
   /** column name */
   GroupsId = "groupsId",
@@ -4905,6 +4973,8 @@ export enum GroupsSelectColumn {
   /** column name */
   TeacherId = "teacherId",
   /** column name */
+  UsosId = "usosId",
+  /** column name */
   WeekdayId = "weekdayId",
 }
 
@@ -4912,12 +4982,14 @@ export enum GroupsSelectColumn {
 export type GroupsSetInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   endTime?: InputMaybe<Scalars["time"]["input"]>;
+  generatedName?: InputMaybe<Scalars["String"]["input"]>;
   groupName?: InputMaybe<Scalars["String"]["input"]>;
   groupsId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   startTime?: InputMaybe<Scalars["time"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
+  usosId?: InputMaybe<Scalars["Int"]["input"]>;
   weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
 
@@ -4928,6 +5000,7 @@ export type GroupsStddevFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -4937,6 +5010,7 @@ export type GroupsStddevOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -4947,6 +5021,7 @@ export type GroupsStddevPopFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -4956,6 +5031,7 @@ export type GroupsStddevPopOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -4966,6 +5042,7 @@ export type GroupsStddevSampFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -4975,6 +5052,7 @@ export type GroupsStddevSampOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -4990,12 +5068,14 @@ export type GroupsStreamCursorInput = {
 export type GroupsStreamCursorValueInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   endTime?: InputMaybe<Scalars["time"]["input"]>;
+  generatedName?: InputMaybe<Scalars["String"]["input"]>;
   groupName?: InputMaybe<Scalars["String"]["input"]>;
   groupsId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   startTime?: InputMaybe<Scalars["time"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
+  usosId?: InputMaybe<Scalars["Int"]["input"]>;
   weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
 
@@ -5006,6 +5086,7 @@ export type GroupsSumFields = {
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
+  usosId?: Maybe<Scalars["Int"]["output"]>;
   weekdayId?: Maybe<Scalars["bigint"]["output"]>;
 };
 
@@ -5015,6 +5096,7 @@ export type GroupsSumOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -5024,6 +5106,8 @@ export enum GroupsUpdateColumn {
   EditionId = "editionId",
   /** column name */
   EndTime = "endTime",
+  /** column name */
+  GeneratedName = "generatedName",
   /** column name */
   GroupName = "groupName",
   /** column name */
@@ -5036,6 +5120,8 @@ export enum GroupsUpdateColumn {
   StartTime = "startTime",
   /** column name */
   TeacherId = "teacherId",
+  /** column name */
+  UsosId = "usosId",
   /** column name */
   WeekdayId = "weekdayId",
 }
@@ -5056,6 +5142,7 @@ export type GroupsVarPopFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -5065,6 +5152,7 @@ export type GroupsVarPopOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -5075,6 +5163,7 @@ export type GroupsVarSampFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -5084,6 +5173,7 @@ export type GroupsVarSampOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -5094,6 +5184,7 @@ export type GroupsVarianceFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -5103,6 +5194,7 @@ export type GroupsVarianceOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -5110,6 +5202,7 @@ export type GroupsVarianceOrderBy = {
 export type HallOfFame = {
   __typename?: "HallOfFame";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  generatedName?: Maybe<Scalars["String"]["output"]>;
   groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
@@ -5168,6 +5261,7 @@ export type HallOfFameBoolExp = {
   _not?: InputMaybe<HallOfFameBoolExp>;
   _or?: InputMaybe<Array<HallOfFameBoolExp>>;
   editionId?: InputMaybe<BigintComparisonExp>;
+  generatedName?: InputMaybe<StringComparisonExp>;
   groupName?: InputMaybe<StringComparisonExp>;
   groupsId?: InputMaybe<BigintComparisonExp>;
   levelId?: InputMaybe<BigintComparisonExp>;
@@ -5183,6 +5277,7 @@ export type HallOfFameBoolExp = {
 export type HallOfFameMaxFields = {
   __typename?: "HallOfFameMaxFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  generatedName?: Maybe<Scalars["String"]["output"]>;
   groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
@@ -5198,6 +5293,7 @@ export type HallOfFameMaxFields = {
 export type HallOfFameMinFields = {
   __typename?: "HallOfFameMinFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  generatedName?: Maybe<Scalars["String"]["output"]>;
   groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
@@ -5212,6 +5308,7 @@ export type HallOfFameMinFields = {
 /** Ordering options when selecting data from "hall_of_fame". */
 export type HallOfFameOrderBy = {
   editionId?: InputMaybe<OrderBy>;
+  generatedName?: InputMaybe<OrderBy>;
   groupName?: InputMaybe<OrderBy>;
   groupsId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
@@ -5227,6 +5324,8 @@ export type HallOfFameOrderBy = {
 export enum HallOfFameSelectColumn {
   /** column name */
   EditionId = "editionId",
+  /** column name */
+  GeneratedName = "generatedName",
   /** column name */
   GroupName = "groupName",
   /** column name */
@@ -5294,6 +5393,7 @@ export type HallOfFameStreamCursorInput = {
 /** Initial value of the column from where the streaming should start */
 export type HallOfFameStreamCursorValueInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
+  generatedName?: InputMaybe<Scalars["String"]["input"]>;
   groupName?: InputMaybe<Scalars["String"]["input"]>;
   groupsId?: InputMaybe<Scalars["bigint"]["input"]>;
   levelId?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -8275,9 +8375,9 @@ export type UserLevelBoolExp = {
 
 /** unique or primary key constraints on table "user_level" */
 export enum UserLevelConstraint {
-  /** unique or primary key constraint on columns "user_id", "edition_id" */
+  /** unique or primary key constraint on columns "edition_id", "user_id" */
   UniqueUserEdition = "unique_user_edition",
-  /** unique or primary key constraint on columns "user_id", "level_id" */
+  /** unique or primary key constraint on columns "level_id", "user_id" */
   UserLevelPkey = "user_level_pkey",
 }
 
@@ -8572,6 +8672,8 @@ export type UserPointsType = {
 
 export type UserType = {
   __typename?: "UserType";
+  email: Scalars["String"]["output"];
+  firebaseUid?: Maybe<Scalars["String"]["output"]>;
   firstName: Scalars["String"]["output"];
   imageFile?: Maybe<FileType>;
   indexNumber: Scalars["Int"]["output"];
@@ -8595,8 +8697,10 @@ export type Users = {
   chestHistoriesByTeacherId: Array<ChestHistory>;
   /** An aggregate relationship */
   chestHistoriesByTeacherIdAggregate: ChestHistoryAggregate;
+  email: Scalars["String"]["output"];
   /** An object relationship */
   file?: Maybe<Files>;
+  firebaseUid?: Maybe<Scalars["String"]["output"]>;
   firstName: Scalars["String"]["output"];
   /** A computed field, executes function "users_fullname" */
   fullName?: Maybe<Scalars["String"]["output"]>;
@@ -8900,7 +9004,9 @@ export type UsersBoolExp = {
   chestHistoriesAggregate?: InputMaybe<ChestHistoryAggregateBoolExp>;
   chestHistoriesByTeacherId?: InputMaybe<ChestHistoryBoolExp>;
   chestHistoriesByTeacherIdAggregate?: InputMaybe<ChestHistoryAggregateBoolExp>;
+  email?: InputMaybe<StringComparisonExp>;
   file?: InputMaybe<FilesBoolExp>;
+  firebaseUid?: InputMaybe<StringComparisonExp>;
   firstName?: InputMaybe<StringComparisonExp>;
   fullName?: InputMaybe<StringComparisonExp>;
   groups?: InputMaybe<GroupsBoolExp>;
@@ -8949,7 +9055,9 @@ export type UsersIncInput = {
 export type UsersInsertInput = {
   chestHistories?: InputMaybe<ChestHistoryArrRelInsertInput>;
   chestHistoriesByTeacherId?: InputMaybe<ChestHistoryArrRelInsertInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
   file?: InputMaybe<FilesObjRelInsertInput>;
+  firebaseUid?: InputMaybe<Scalars["String"]["input"]>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   groups?: InputMaybe<GroupsArrRelInsertInput>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -8971,6 +9079,8 @@ export type UsersInsertInput = {
 /** aggregate max on columns */
 export type UsersMaxFields = {
   __typename?: "UsersMaxFields";
+  email?: Maybe<Scalars["String"]["output"]>;
+  firebaseUid?: Maybe<Scalars["String"]["output"]>;
   firstName?: Maybe<Scalars["String"]["output"]>;
   /** A computed field, executes function "users_fullname" */
   fullName?: Maybe<Scalars["String"]["output"]>;
@@ -8985,6 +9095,8 @@ export type UsersMaxFields = {
 
 /** order by max() on columns of table "users" */
 export type UsersMaxOrderBy = {
+  email?: InputMaybe<OrderBy>;
+  firebaseUid?: InputMaybe<OrderBy>;
   firstName?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   indexNumber?: InputMaybe<OrderBy>;
@@ -8998,6 +9110,8 @@ export type UsersMaxOrderBy = {
 /** aggregate min on columns */
 export type UsersMinFields = {
   __typename?: "UsersMinFields";
+  email?: Maybe<Scalars["String"]["output"]>;
+  firebaseUid?: Maybe<Scalars["String"]["output"]>;
   firstName?: Maybe<Scalars["String"]["output"]>;
   /** A computed field, executes function "users_fullname" */
   fullName?: Maybe<Scalars["String"]["output"]>;
@@ -9012,6 +9126,8 @@ export type UsersMinFields = {
 
 /** order by min() on columns of table "users" */
 export type UsersMinOrderBy = {
+  email?: InputMaybe<OrderBy>;
+  firebaseUid?: InputMaybe<OrderBy>;
   firstName?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   indexNumber?: InputMaybe<OrderBy>;
@@ -9049,7 +9165,9 @@ export type UsersOnConflict = {
 export type UsersOrderBy = {
   chestHistoriesAggregate?: InputMaybe<ChestHistoryAggregateOrderBy>;
   chestHistoriesByTeacherIdAggregate?: InputMaybe<ChestHistoryAggregateOrderBy>;
+  email?: InputMaybe<OrderBy>;
   file?: InputMaybe<FilesOrderBy>;
+  firebaseUid?: InputMaybe<OrderBy>;
   firstName?: InputMaybe<OrderBy>;
   fullName?: InputMaybe<OrderBy>;
   groupsAggregate?: InputMaybe<GroupsAggregateOrderBy>;
@@ -9083,6 +9201,10 @@ export enum UsersRolesType {
 /** select columns of table "users" */
 export enum UsersSelectColumn {
   /** column name */
+  Email = "email",
+  /** column name */
+  FirebaseUid = "firebaseUid",
+  /** column name */
   FirstName = "firstName",
   /** column name */
   ImageFileId = "imageFileId",
@@ -9102,6 +9224,8 @@ export enum UsersSelectColumn {
 
 /** input type for updating data in table "users" */
 export type UsersSetInput = {
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  firebaseUid?: InputMaybe<Scalars["String"]["input"]>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   indexNumber?: InputMaybe<Scalars["Int"]["input"]>;
@@ -9167,6 +9291,8 @@ export type UsersStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type UsersStreamCursorValueInput = {
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  firebaseUid?: InputMaybe<Scalars["String"]["input"]>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   indexNumber?: InputMaybe<Scalars["Int"]["input"]>;
@@ -9194,6 +9320,10 @@ export type UsersSumOrderBy = {
 
 /** update columns of table "users" */
 export enum UsersUpdateColumn {
+  /** column name */
+  Email = "email",
+  /** column name */
+  FirebaseUid = "firebaseUid",
   /** column name */
   FirstName = "firstName",
   /** column name */
@@ -9676,6 +9806,20 @@ export type ChestHistoryAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
+export type ChestsAggregateBoolExpBool_And = {
+  arguments: ChestsSelectColumnChestsAggregateBoolExpBool_AndArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<ChestsBoolExp>;
+  predicate: BooleanComparisonExp;
+};
+
+export type ChestsAggregateBoolExpBool_Or = {
+  arguments: ChestsSelectColumnChestsAggregateBoolExpBool_OrArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<ChestsBoolExp>;
+  predicate: BooleanComparisonExp;
+};
+
 export type ChestsAggregateBoolExpCount = {
   arguments?: InputMaybe<Array<ChestsSelectColumn>>;
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -9795,11 +9939,13 @@ export type Mutation_Root = {
   addSubcategory?: Maybe<SubcategoryType>;
   addUser?: Maybe<UserType>;
   addUserToGroup?: Maybe<UserGroupType>;
+  addUsersFromCsv?: Maybe<Array<Maybe<UserType>>>;
   assignPhotoToAward?: Maybe<Scalars["Boolean"]["output"]>;
   assignPhotoToChest?: Maybe<Scalars["Boolean"]["output"]>;
   assignPhotoToLevel?: Maybe<Scalars["Boolean"]["output"]>;
   assignPhotoToUser?: Maybe<Scalars["Boolean"]["output"]>;
   assignPhotosToGroups?: Maybe<Scalars["Boolean"]["output"]>;
+  copyChest?: Maybe<ChestType>;
   /** delete data from the table: "award" */
   deleteAward?: Maybe<AwardMutationResponse>;
   /** delete single row from the table: "award" */
@@ -9984,6 +10130,7 @@ export type Mutation_Root = {
   removeSubcategory?: Maybe<Scalars["Boolean"]["output"]>;
   removeUser?: Maybe<Scalars["Boolean"]["output"]>;
   removeUserFromGroup?: Maybe<Scalars["Boolean"]["output"]>;
+  resetPassword?: Maybe<Scalars["Boolean"]["output"]>;
   /** update data of the table: "award" */
   updateAward?: Maybe<AwardMutationResponse>;
   /** update single row of the table: "award" */
@@ -10143,7 +10290,9 @@ export type Mutation_RootAddBonusMutationArgs = {
 export type Mutation_RootAddCategoryArgs = {
   canAddPoints: Scalars["Boolean"]["input"];
   categoryName: Scalars["String"]["input"];
+  darkColor?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
+  lightColor?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** mutation root */
@@ -10178,10 +10327,11 @@ export type Mutation_RootAddEditionArgs = {
 export type Mutation_RootAddGroupArgs = {
   editionId: Scalars["Int"]["input"];
   endTime: Scalars["String"]["input"];
-  groupName: Scalars["String"]["input"];
+  groupName?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   startTime: Scalars["String"]["input"];
   teacherId: Scalars["Int"]["input"];
+  usosId: Scalars["Int"]["input"];
   weekdayId: Scalars["Int"]["input"];
 };
 
@@ -10215,18 +10365,27 @@ export type Mutation_RootAddSubcategoryArgs = {
 
 /** mutation root */
 export type Mutation_RootAddUserArgs = {
+  createFirebaseUser?: InputMaybe<Scalars["Boolean"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
   firstName: Scalars["String"]["input"];
   indexNumber: Scalars["Int"]["input"];
   label?: InputMaybe<Scalars["String"]["input"]>;
   nick: Scalars["String"]["input"];
   role: Scalars["String"]["input"];
   secondName: Scalars["String"]["input"];
+  sendEmail?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 /** mutation root */
 export type Mutation_RootAddUserToGroupArgs = {
   groupId: Scalars["Int"]["input"];
   userId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootAddUsersFromCsvArgs = {
+  editionId: Scalars["Int"]["input"];
+  fileId: Scalars["Int"]["input"];
 };
 
 /** mutation root */
@@ -10255,6 +10414,12 @@ export type Mutation_RootAssignPhotoToUserArgs = {
 
 /** mutation root */
 export type Mutation_RootAssignPhotosToGroupsArgs = {
+  editionId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootCopyChestArgs = {
+  chestId: Scalars["Int"]["input"];
   editionId: Scalars["Int"]["input"];
 };
 
@@ -10478,7 +10643,9 @@ export type Mutation_RootEditCategoryArgs = {
   canAddPoints?: InputMaybe<Scalars["Boolean"]["input"]>;
   categoryId: Scalars["Int"]["input"];
   categoryName?: InputMaybe<Scalars["String"]["input"]>;
+  darkColor?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
+  lightColor?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** mutation root */
@@ -10515,6 +10682,7 @@ export type Mutation_RootEditGroupArgs = {
   label?: InputMaybe<Scalars["String"]["input"]>;
   startTime?: InputMaybe<Scalars["String"]["input"]>;
   teacherId?: InputMaybe<Scalars["Int"]["input"]>;
+  usosId?: InputMaybe<Scalars["Int"]["input"]>;
   weekdayId?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -10870,6 +11038,11 @@ export type Mutation_RootRemoveUserArgs = {
 /** mutation root */
 export type Mutation_RootRemoveUserFromGroupArgs = {
   groupId: Scalars["Int"]["input"];
+  userId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootResetPasswordArgs = {
   userId: Scalars["Int"]["input"];
 };
 
@@ -11468,6 +11641,7 @@ export type Query_Root = {
   flywaySchemaHistoryAggregate: FlywaySchemaHistoryAggregate;
   /** fetch data from the table: "flyway_schema_history" using primary key columns */
   flywaySchemaHistoryByPk?: Maybe<FlywaySchemaHistory>;
+  getCurrentUser?: Maybe<UserType>;
   getGroupsInEdition: Array<GroupTeacherType>;
   getNeighboringLevels: NeighboringLevelsType;
   getPossibleGroupDates: Array<GroupDateType>;

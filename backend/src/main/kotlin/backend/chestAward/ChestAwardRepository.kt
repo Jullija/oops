@@ -10,4 +10,5 @@ interface ChestAwardRepository : JpaRepository<ChestAward, Long> {
     fun existsByAwardAndChest(award: Award, chest: Chests): Boolean
 
     fun deleteByAwardAndChest(award: Award, chest: Chests)
+    fun findByChest(chest: Chests): List<ChestAward>
 }

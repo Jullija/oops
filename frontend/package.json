@@ -20,6 +20,7 @@
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^6.1.1",
     "@mui/material": "^6.1.1",
+    "firebase": "^10.13.1",
     "formik": "^2.4.6",
     "graphql": "^16.8.1",
     "lint-staged": "^15.2.4",
