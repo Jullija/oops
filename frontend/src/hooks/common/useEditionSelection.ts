@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useUserEditions } from "./useUserEditions";
 import { isActive } from "../../utils/utils";
 
+// TODO refactor this to has editionId ?
 export function useEditionSelection() {
   const { editions, selectedEdition, setSelectedEdition } = useUserEditions();
 
@@ -15,6 +16,7 @@ export function useEditionSelection() {
     }
   }, [editions, setSelectedEdition]);
 
+  // TODO will be used later on
   // const handleEditionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
   //   const selectedId = event.target.value;
   //   const selectedEdition = editions.find(
