@@ -19,6 +19,8 @@ type StudentTableProps = {
   points: Points[];
   handleEditClick?: (points: Points) => void;
   handleDeleteClick?: (pointsId: string) => void;
+  isTeacher: boolean;
+  isBlocked: boolean;
 };
 
 const dateOptions: Intl.DateTimeFormatOptions = {
@@ -51,6 +53,8 @@ export const StudentTable = ({
   points,
   handleEditClick,
   handleDeleteClick,
+  isTeacher,
+  isBlocked,
 }: StudentTableProps) => {
   const darkTheme = createTheme({
     palette: {
@@ -96,7 +100,7 @@ export const StudentTable = ({
     );
   };
 
-  const displayButtonRow = handleEditClick || handleDeleteClick;
+  const displayButtonRow = isTeacher && (handleEditClick || handleDeleteClick);
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -118,23 +122,25 @@ export const StudentTable = ({
                 {displayButtonRow && (
                   <TableCell>
                     <div style={styles.buttonsContainer}>
-                      {handleEditClick && (
-                        <ActionButton
-                          type="edit"
-                          onClick={() => handleEditClick(p)}
-                        />
-                      )}
-                      {/* TODO display info that there is no pure points - bonus only */}
-                      {handleDeleteClick && p.points.purePoints?.pointsId && (
-                        <ActionButton
-                          type="delete"
-                          onClick={() => {
-                            if (p.points.purePoints?.pointsId) {
-                              handleDeleteClick(p.points.purePoints?.pointsId);
-                            }
-                          }}
-                        />
-                      )}
+                      <ActionButton
+                        type="edit"
+                        onClick={() => handleEditClick?.(p)}
+                        isDisabled={isBlocked || !handleEditClick}
+                      />
+
+                      <ActionButton
+                        type="delete"
+                        onClick={() => {
+                          if (p.points.purePoints?.pointsId) {
+                            handleDeleteClick?.(p.points.purePoints?.pointsId);
+                          }
+                        }}
+                        // TODO display info that there is no pure points - bonus only
+                        isDisabled={
+                          isBlocked ||
+                          !(handleDeleteClick && p.points.purePoints?.pointsId)
+                        }
+                      />
                     </div>
                   </TableCell>
                 )}

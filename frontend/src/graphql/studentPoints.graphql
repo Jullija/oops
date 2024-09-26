@@ -20,6 +20,7 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
             weekdayName
           }
           teacher {
+            userId
             firstName
             secondName
           }

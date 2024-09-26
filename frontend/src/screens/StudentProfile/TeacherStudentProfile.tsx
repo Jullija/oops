@@ -9,12 +9,16 @@ import { Dialog } from "@mui/material";
 import { StudentTableWithFilters } from "../../components/StudentProfile/table/StudentTableWithFilters";
 import { Button } from "../../components/Button";
 import { useTeacherActions } from "../../hooks/StudentProfile/useTeacherActions";
+import { useEditionSelection } from "../../hooks/common/useEditionSelection";
+import { Roles } from "../../router/paths";
 
 export function TeacherStudentProfile() {
   const params = useParams();
   const studentId = params.id;
-  const { user: teacher } = useUser();
-  const teacherId = teacher.userId;
+  const { user } = useUser();
+  const userId = user.userId;
+
+  const { selectedEdition } = useEditionSelection();
 
   const {
     categories,
@@ -48,10 +52,10 @@ export function TeacherStudentProfile() {
     handleEditPointsConfirmation,
     editPointsError,
     handleDeletePointsClick,
-  } = useTeacherActions(refetch, studentId as string, teacherId);
+  } = useTeacherActions(refetch, studentId as string, userId);
 
   if (!studentId) return <p>StudentId is undefined</p>;
-  if (!teacherId) return <p>TeacherId is undefined</p>;
+  if (!userId) return <p>TeacherId is undefined</p>;
 
   if (loading || formDataLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -59,6 +63,16 @@ export function TeacherStudentProfile() {
 
   if (!studentData) return <p>Student is undefined</p>;
   if (!currLevel) return <p>Curr level is undefined</p>;
+
+  // can be edited
+  // 1. edition is active
+  // 2. teacher has editable rights or is coordinator
+
+  const hasEditableRights =
+    studentData.group?.teacherId === userId || user.role === Roles.COORDINATOR;
+  // TODO correct
+  const isEditionActive = selectedEdition?.editionId === "1";
+  const disableEditMode = !(isEditionActive && hasEditableRights);
 
   return (
     <div style={styles.container}>
@@ -99,7 +113,11 @@ export function TeacherStudentProfile() {
         </Dialog>
 
         {/* TODO display only when editable  */}
-        <Button onClick={openAddDialog} color="lightblue">
+        <Button
+          onClick={openAddDialog}
+          color="lightblue"
+          disabled={disableEditMode}
+        >
           add points
         </Button>
 
@@ -108,6 +126,8 @@ export function TeacherStudentProfile() {
           filterHeaderNames={filterHeaderNames}
           handleEditClick={openEditDialog}
           handleDeleteClick={handleDeletePointsClick}
+          isTeacher={true}
+          isBlocked={disableEditMode}
         />
       </div>
     </div>

@@ -16,7 +16,7 @@ export const Button = ({ children, onClick, disabled, color }: ButtonProps) => {
 
   const getButtonStyles = () => {
     if (disabled) {
-      return { ...styles.button, backgroundColor: "grey" };
+      return { ...styles.button, ...styles.disabled };
     }
     return { ...styles.button, backgroundColor: color };
   };
@@ -38,5 +38,6 @@ const styles: Styles = {
   },
   disabled: {
     backgroundColor: "grey",
+    cursor: "auto",
   },
 };

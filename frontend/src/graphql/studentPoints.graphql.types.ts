@@ -38,6 +38,7 @@ export type StudentPointsQuery = {
           };
           teacher: {
             __typename?: "UserType";
+            userId: string;
             firstName: string;
             secondName: string;
           };
@@ -111,6 +112,7 @@ export const StudentPointsDocument = gql`
               weekdayName
             }
             teacher {
+              userId
               firstName
               secondName
             }
