@@ -20,7 +20,7 @@ type StudentTableProps = {
   handleEditClick?: (points: Points) => void;
   handleDeleteClick?: (pointsId: string) => void;
   isTeacher: boolean;
-  isBlocked: boolean;
+  isEditBlocked: boolean;
 };
 
 const dateOptions: Intl.DateTimeFormatOptions = {
@@ -54,7 +54,7 @@ export const StudentTable = ({
   handleEditClick,
   handleDeleteClick,
   isTeacher,
-  isBlocked,
+  isEditBlocked,
 }: StudentTableProps) => {
   const darkTheme = createTheme({
     palette: {
@@ -125,7 +125,7 @@ export const StudentTable = ({
                       <ActionButton
                         type="edit"
                         onClick={() => handleEditClick?.(p)}
-                        isDisabled={isBlocked || !handleEditClick}
+                        isDisabled={isEditBlocked || !handleEditClick}
                       />
 
                       <ActionButton
@@ -137,7 +137,7 @@ export const StudentTable = ({
                         }}
                         // TODO display info that there is no pure points - bonus only
                         isDisabled={
-                          isBlocked ||
+                          isEditBlocked ||
                           !(handleDeleteClick && p.points.purePoints?.pointsId)
                         }
                       />

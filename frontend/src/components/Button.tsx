@@ -1,5 +1,7 @@
 import { Styles } from "../utils/Styles";
 
+// TODO to correct
+
 type ButtonProps = {
   children: string;
   onClick?: () => void;

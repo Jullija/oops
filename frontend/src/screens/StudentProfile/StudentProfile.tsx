@@ -45,8 +45,6 @@ export function StudentProfile() {
       <StudentTableWithFilters
         points={points}
         filterHeaderNames={filterHeaderNames}
-        isTeacher={false}
-        isBlocked={false}
       />
     </div>
   );

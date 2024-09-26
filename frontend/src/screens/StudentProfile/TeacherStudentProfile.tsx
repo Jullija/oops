@@ -127,7 +127,7 @@ export function TeacherStudentProfile() {
           handleDeleteClick={handleDeletePointsClick}
           // TODO it should be discussed when buttons should be displayed
           isTeacher={true}
-          isBlocked={disableEditMode}
+          isEditBlocked={disableEditMode}
         />
       </div>
     </div>
