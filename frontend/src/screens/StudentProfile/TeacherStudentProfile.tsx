@@ -11,7 +11,7 @@ import { Button } from "../../components/Button";
 import { useTeacherActions } from "../../hooks/StudentProfile/useTeacherActions";
 import { useEditionSelection } from "../../hooks/common/useEditionSelection";
 import { Roles } from "../../router/paths";
-import { isActive } from "../../utils/utils";
+import { isEditionActive } from "../../utils/utils";
 
 export function TeacherStudentProfile() {
   const params = useParams();
@@ -68,9 +68,10 @@ export function TeacherStudentProfile() {
   const hasEditableRights =
     studentData.group?.teacherId === userId || user.role === Roles.COORDINATOR;
 
-  const isEditionActive = selectedEdition && isActive(selectedEdition);
+  const isSelectedEditionActive =
+    selectedEdition && isEditionActive(selectedEdition);
 
-  const disableEditMode = !(isEditionActive && hasEditableRights);
+  const disableEditMode = !(isSelectedEditionActive && hasEditableRights);
 
   return (
     <div style={styles.container}>
@@ -126,8 +127,8 @@ export function TeacherStudentProfile() {
           handleEditClick={openEditDialog}
           handleDeleteClick={handleDeletePointsClick}
           // TODO it should be discussed when buttons should be displayed
-          isTeacher={true}
-          isEditBlocked={disableEditMode}
+          showActionButtons={true}
+          blockActionButtons={disableEditMode}
         />
       </div>
     </div>

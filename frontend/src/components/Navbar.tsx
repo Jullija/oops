@@ -3,7 +3,7 @@ import { navigationItems } from "../router/paths";
 import { Styles } from "../utils/Styles";
 import { useEditionSelection } from "../hooks/common/useEditionSelection";
 import { useUser } from "../hooks/common/useUser";
-import { hasRole, isActive } from "../utils/utils";
+import { hasRole, isEditionActive } from "../utils/utils";
 
 export const NAV_BAR_HEIGHT = 100;
 
@@ -44,10 +44,14 @@ export const Navbar = () => {
             {item.title}
           </div>
         ))}
-      <div style={styles.editionName}>
-        edition: {selectedEdition?.editionId},{" "}
-        {selectedEdition && isActive(selectedEdition) ? "active" : "not active"}
-      </div>
+      {selectedEdition ? (
+        <div style={styles.editionName}>
+          edition: {selectedEdition.editionId},{" "}
+          {isEditionActive(selectedEdition) ? "active" : "not active"}
+        </div>
+      ) : (
+        <div>no edition selected</div>
+      )}
     </div>
   );
 };

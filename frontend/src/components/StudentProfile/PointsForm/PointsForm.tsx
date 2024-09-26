@@ -40,15 +40,17 @@ type PointFormProps = {
   variant: "add" | "edit";
 };
 
+const emptyValues = {
+  categoryId: "",
+  subcategoryId: "",
+  points: 0,
+};
+
 export const PointsForm = ({
   categories,
   handleConfirmClick,
   mutationError,
-  initialValues = {
-    categoryId: "",
-    subcategoryId: "",
-    points: 0,
-  },
+  initialValues = emptyValues,
   variant,
 }: PointFormProps) => {
   const formik = useFormik({
@@ -93,7 +95,7 @@ export const PointsForm = ({
   });
 
   const [subcategories, setSubcategories] = useState(
-    (initialValues.subcategoryId === ""
+    (initialValues.subcategoryId === emptyValues.subcategoryId
       ? categories[0]
       : categories.find((c) => c.id === initialValues.categoryId)
     )?.subcategories,
@@ -101,6 +103,7 @@ export const PointsForm = ({
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const categoryId = e.target.value;
+    // TODO probably it should be handled somehow in the future
     const updatedSubcategories =
       categories.find((category) => category.id === categoryId)
         ?.subcategories ?? [];

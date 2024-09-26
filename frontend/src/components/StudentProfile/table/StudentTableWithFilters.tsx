@@ -19,8 +19,8 @@ type StudentTableWithFiltersProps = {
   filterHeaderNames: FilterItem[];
   handleEditClick?: (points: Points) => void;
   handleDeleteClick?: (pointsId: string) => void;
-  isTeacher?: boolean;
-  isEditBlocked?: boolean;
+  showActionButtons?: boolean;
+  blockActionButtons?: boolean;
 };
 
 export const StudentTableWithFilters = ({
@@ -28,8 +28,8 @@ export const StudentTableWithFilters = ({
   filterHeaderNames,
   handleEditClick,
   handleDeleteClick,
-  isTeacher = false,
-  isEditBlocked = true,
+  showActionButtons = false,
+  blockActionButtons = true,
 }: StudentTableWithFiltersProps) => {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
 
@@ -57,8 +57,8 @@ export const StudentTableWithFilters = ({
         points={pointsToDisplay}
         handleEditClick={handleEditClick}
         handleDeleteClick={handleDeleteClick}
-        isTeacher={isTeacher}
-        isEditBlocked={isEditBlocked}
+        showActionButtons={showActionButtons}
+        blockActionButtons={blockActionButtons}
       />
     </div>
   );

@@ -21,7 +21,7 @@ export const hasRole = (user: User, allowedRoles: Roles[]) => {
   return allowedRoles.includes(user.role as Roles);
 };
 
-export const isActive = (edition: Edition) => {
+export const isEditionActive = (edition: Edition) => {
   const now = new Date();
   // TODO where to put <=
   return new Date(edition.startDate) < now && now < new Date(edition.endDate);

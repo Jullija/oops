@@ -89,6 +89,7 @@ export const useTeacherActions = (
     closeEditDialog,
     pointsToEdit,
     handleAddPointsConfirmation,
+    // TODO clear error
     addPointsError: createError,
     handleEditPointsConfirmation,
     editPointsError: editError,

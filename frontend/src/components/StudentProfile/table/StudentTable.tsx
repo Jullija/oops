@@ -19,8 +19,8 @@ type StudentTableProps = {
   points: Points[];
   handleEditClick?: (points: Points) => void;
   handleDeleteClick?: (pointsId: string) => void;
-  isTeacher: boolean;
-  isEditBlocked: boolean;
+  showActionButtons: boolean;
+  blockActionButtons: boolean;
 };
 
 const dateOptions: Intl.DateTimeFormatOptions = {
@@ -53,8 +53,8 @@ export const StudentTable = ({
   points,
   handleEditClick,
   handleDeleteClick,
-  isTeacher,
-  isEditBlocked,
+  showActionButtons,
+  blockActionButtons,
 }: StudentTableProps) => {
   const darkTheme = createTheme({
     palette: {
@@ -100,7 +100,11 @@ export const StudentTable = ({
     );
   };
 
-  const displayButtonRow = isTeacher && (handleEditClick || handleDeleteClick);
+  if (showActionButtons && (!handleEditClick || !handleDeleteClick)) {
+    throw new Error(
+      "Invalid arguments passed - handleEditClick or handleDeleteClick is undefined.",
+    );
+  }
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -108,7 +112,7 @@ export const StudentTable = ({
         <Table>
           <TableHead>
             <TableRow>
-              {displayButtonRow && <TableCell />}
+              {showActionButtons && <TableCell />}
               {headerTitles.map((header) => (
                 <TableCell style={styles.header} align={header.align}>
                   {header.name}
@@ -119,13 +123,13 @@ export const StudentTable = ({
           <TableBody>
             {points.map((p, index) => (
               <TableRow key={index}>
-                {displayButtonRow && (
+                {showActionButtons && (
                   <TableCell>
                     <div style={styles.buttonsContainer}>
                       <ActionButton
                         type="edit"
                         onClick={() => handleEditClick?.(p)}
-                        isDisabled={isEditBlocked || !handleEditClick}
+                        isDisabled={blockActionButtons}
                       />
 
                       <ActionButton
@@ -135,10 +139,9 @@ export const StudentTable = ({
                             handleDeleteClick?.(p.points.purePoints?.pointsId);
                           }
                         }}
-                        // TODO display info that there is no pure points - bonus only
+                        // TODO disable if pure points is empty
                         isDisabled={
-                          isEditBlocked ||
-                          !(handleDeleteClick && p.points.purePoints?.pointsId)
+                          blockActionButtons || !p.points.purePoints?.pointsId
                         }
                       />
                     </div>
