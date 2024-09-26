@@ -1,15 +1,15 @@
 import { useEffect } from "react";
 import { useUserEditions } from "./useUserEditions";
+import { isActive } from "../../utils/utils";
 
 export function useEditionSelection() {
   const { editions, selectedEdition, setSelectedEdition } = useUserEditions();
 
   useEffect(() => {
-    // TODO set current edition as a default one
-    const oneEdition = editions.find((e) => e.editionId === "1");
+    const activeEdition = editions.find(isActive);
 
-    if (oneEdition) {
-      setSelectedEdition(oneEdition);
+    if (activeEdition) {
+      setSelectedEdition(activeEdition);
     } else {
       setSelectedEdition(editions[0]);
     }

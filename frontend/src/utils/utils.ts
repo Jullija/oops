@@ -1,3 +1,4 @@
+import { Edition } from "../contexts/userEditionsContext";
 import { Roles } from "./types";
 
 type User = {
@@ -16,6 +17,12 @@ export type Subcategory = {
   maxPoints: number;
 };
 
-export function hasRole(user: User, allowedRoles: Roles[]) {
+export const hasRole = (user: User, allowedRoles: Roles[]) => {
   return allowedRoles.includes(user.role as Roles);
-}
+};
+
+export const isActive = (edition: Edition) => {
+  const now = new Date();
+  // TODO where to put <=
+  return new Date(edition.startDate) < now && now < new Date(edition.endDate);
+};
