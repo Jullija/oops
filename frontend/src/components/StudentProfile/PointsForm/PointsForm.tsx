@@ -33,21 +33,23 @@ const ValidationSchema = z.object({
 });
 
 type PointFormProps = {
-  handleAddPoints: (formPoints: FormPoints) => void;
-  createError?: string;
   categories: Category[];
+  handleConfirmClick: (formPoints: FormPoints) => void;
+  mutationError?: string;
   initialValues?: PointsFormValues;
+  variant: "add" | "edit";
 };
 
 export const PointsForm = ({
-  handleAddPoints,
-  createError,
   categories,
+  handleConfirmClick,
+  mutationError,
   initialValues = {
     categoryId: "",
     subcategoryId: "",
     points: 0,
   },
+  variant,
 }: PointFormProps) => {
   const formik = useFormik({
     initialValues: initialValues,
@@ -86,7 +88,7 @@ export const PointsForm = ({
         points: values.points,
         subcategoryId: values.subcategoryId,
       };
-      handleAddPoints(points);
+      handleConfirmClick(points);
     },
   });
 
@@ -110,7 +112,9 @@ export const PointsForm = ({
 
   return (
     <div style={styles.container}>
-      <div style={styles.title}>Add Points</div>
+      <div style={styles.title}>
+        {variant === "edit" ? "Edit Points" : "Add Points"}
+      </div>
       <form onSubmit={formik.handleSubmit}>
         <SelectInput
           handleChange={handleCategoryChange}
@@ -147,9 +151,9 @@ export const PointsForm = ({
           name="points"
           label="Points"
         />
-        <button type="submit">Add Points</button>
+        <button type="submit">{variant === "edit" ? "edit" : "add"}</button>
       </form>
-      {createError && <p style={styles.error}>Error: {createError}</p>}
+      {mutationError && <p style={styles.error}>Error: {mutationError}</p>}
     </div>
   );
 };

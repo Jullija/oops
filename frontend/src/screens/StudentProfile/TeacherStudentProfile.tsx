@@ -48,7 +48,7 @@ export function TeacherStudentProfile() {
     closeEditDialog,
     pointsToEdit,
     handleAddPointsConfirmation,
-    addPointsError: createPointsError,
+    addPointsError,
     handleEditPointsConfirmation,
     editPointsError,
     handleDeletePointsClick,
@@ -63,10 +63,6 @@ export function TeacherStudentProfile() {
 
   if (!studentData) return <p>Student is undefined</p>;
   if (!currLevel) return <p>Curr level is undefined</p>;
-
-  // can be edited
-  // 1. edition is active
-  // 2. teacher has editable rights or is coordinator
 
   const hasEditableRights =
     studentData.group?.teacherId === userId || user.role === Roles.COORDINATOR;
@@ -86,9 +82,10 @@ export function TeacherStudentProfile() {
       <div style={styles.rightContainer}>
         <Dialog open={isAddDialogOpen}>
           <PointsForm
-            handleAddPoints={handleAddPointsConfirmation}
-            createError={createPointsError?.message}
             categories={formCategories}
+            handleConfirmClick={handleAddPointsConfirmation}
+            mutationError={addPointsError?.message}
+            variant="add"
           />
           <Button onClick={closeAddDialog} color="lightblue">
             close
@@ -97,22 +94,22 @@ export function TeacherStudentProfile() {
 
         <Dialog open={isEditDialogOpen}>
           <PointsForm
-            handleAddPoints={handleEditPointsConfirmation}
-            createError={editPointsError?.message}
             categories={formCategories}
+            handleConfirmClick={handleEditPointsConfirmation}
+            mutationError={editPointsError?.message}
             initialValues={{
               subcategoryId: pointsToEdit?.subcategory.subcategoryId as string,
               points: pointsToEdit?.points.purePoints?.value ?? 0,
               categoryId: pointsToEdit?.subcategory.category
                 .categoryId as string,
             }}
+            variant="edit"
           />
           <Button onClick={closeEditDialog} color="lightblue">
             close
           </Button>
         </Dialog>
 
-        {/* TODO display only when editable  */}
         <Button
           onClick={openAddDialog}
           color="lightblue"
