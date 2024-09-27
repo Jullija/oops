@@ -51,7 +51,7 @@ export const StudentTable = ({ points }: StudentTableProps) => {
     },
   });
 
-  const getPointsValueString = (points: Points) => {
+  const getPointsValueString = (points: Points): string => {
     const pure = points.points.purePoints?.value
       ? parseFloat(points.points.purePoints?.value)
       : 0;
