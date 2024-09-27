@@ -4,6 +4,7 @@ import { pathsGenerator } from "../../router/paths";
 import { Styles } from "../../utils/Styles";
 import { StudentsListCard } from "./StudentsListCard";
 import { Group } from "../../hooks/common/useGroupsData";
+import { Roles } from "../../utils/types";
 
 const styles: Styles = {
   studentsContainer: {
@@ -41,7 +42,10 @@ export const StudentsList = ({ students: groups }: StudentsListProps) => {
           onClick={() =>
             navigate(pathsGenerator.teacher.StudentProfile(student.id))
           }
-          withEditableRights={student.group.teacher.id === user.user.userId}
+          withEditableRights={
+            student.group.teacher.id === user.user.userId ||
+            user.user.role === Roles.COORDINATOR
+          }
         />
       ))}
     </div>
