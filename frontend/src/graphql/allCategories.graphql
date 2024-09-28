@@ -1,0 +1,12 @@
+query AllCategories {
+  categories(orderBy: { categoryName: ASC }) {
+    categoryId
+    categoryName
+    subcategories(orderBy: { subcategoryName: ASC }) {
+      editionId
+      subcategoryId
+      subcategoryName
+      maxPoints
+    }
+  }
+}
