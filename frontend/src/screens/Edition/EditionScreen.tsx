@@ -4,7 +4,7 @@ import { pathsGenerator } from "../../router/paths";
 import { SectionsBar } from "../../components/Edition/SectionsBar";
 import { ReactElement, useState } from "react";
 import { AwardsSection } from "../../components/Edition/Sections/AwardsSection";
-import { CategoriesSection } from "../../components/Edition/Sections/CategoriesSection";
+import { CategoriesSection } from "../../components/Edition/Sections/CategoriesSection/CategoriesSection";
 import { GroupsSection } from "../../components/Edition/Sections/GroupsSection";
 import { LevelsSection } from "../../components/Edition/Sections/LevelsSection";
 import { SubcategoriesSection } from "../../components/Edition/Sections/SubcategoriesSection";
@@ -41,7 +41,7 @@ export const EditionScreen = () => {
   const params = useParams();
   const editionId = params.id ? parseInt(params.id) : undefined;
 
-  const [activeSection, setActiveSection] = useState(sections[0]);
+  const [activeSection, setActiveSection] = useState(sections[2]);
 
   return (
     <div style={styles.screenContainer}>

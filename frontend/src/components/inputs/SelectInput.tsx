@@ -9,6 +9,7 @@ type SelectInputProps = {
   name: string;
   label?: string;
   optionItems?: SelectOptionItem[];
+  withEmpty?: boolean;
 };
 
 export type SelectOptionItem = {
@@ -25,6 +26,7 @@ export const SelectInput = ({
   name,
   label,
   optionItems,
+  withEmpty = true,
 }: SelectInputProps) => {
   return (
     <div>
@@ -35,7 +37,7 @@ export const SelectInput = ({
         onBlur={handleBlur}
         value={value}
       >
-        <option value="">-</option>
+        {withEmpty && <option value="">-</option>}
         {optionItems?.map((item, index) => (
           <option value={item.value} key={index}>
             {item.title}

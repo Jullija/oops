@@ -10,6 +10,9 @@ const styles: Styles = {
   input: {
     flex: 1,
   },
+  error: {
+    color: "red",
+  },
 };
 
 type TextInputProps = {
