@@ -42,35 +42,38 @@ export const AddCategoryForm = ({
     <div style={styles.container}>
       <div style={styles.title}>Add Category</div>
       <form onSubmit={formik.handleSubmit}>
-        <TextField
-          fullWidth
-          name="categoryName"
-          label="Category Name"
-          variant="outlined"
-          value={formik.values.categoryName}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={Boolean(
-            formik.touched.categoryName && formik.errors.categoryName,
-          )}
-          helperText={formik.touched.categoryName && formik.errors.categoryName}
-          margin="normal"
-        />
+        <div>
+          <TextField
+            fullWidth
+            name="categoryName"
+            label="nazwa"
+            variant="outlined"
+            value={formik.values.categoryName}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={Boolean(
+              formik.touched.categoryName && formik.errors.categoryName,
+            )}
+            helperText={
+              formik.touched.categoryName && formik.errors.categoryName
+            }
+          />
 
-        <FormControlLabel
-          control={
-            <Switch
-              name="canAddPoints"
-              checked={formik.values.canAddPoints}
-              onChange={(event) =>
-                formik.setFieldValue("canAddPoints", event.target.checked)
-              }
-              onBlur={formik.handleBlur}
-              color="primary"
-            />
-          }
-          label="can add points"
-        />
+          <FormControlLabel
+            control={
+              <Switch
+                name="canAddPoints"
+                checked={formik.values.canAddPoints}
+                onChange={(event) =>
+                  formik.setFieldValue("canAddPoints", event.target.checked)
+                }
+                onBlur={formik.handleBlur}
+              />
+            }
+            label="dodawanie punktów"
+          />
+        </div>
+
         <button type="submit">add category</button>
       </form>
 
