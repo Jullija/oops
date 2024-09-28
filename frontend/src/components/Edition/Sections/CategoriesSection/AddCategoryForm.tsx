@@ -1,15 +1,13 @@
 import { z, ZodError } from "zod";
 import { useFormik } from "formik";
-import { SelectInput } from "../../../inputs/SelectInput";
-import { TextInput } from "../../../inputs/TextInput";
 import { Styles } from "../../../../utils/Styles";
+import { FormControlLabel, Switch, TextField } from "@mui/material";
 
 type CategoriesFormValues = z.infer<typeof ValidationSchema>;
 
 const ValidationSchema = z.object({
   categoryName: z.string().min(1, "required"),
-  // TODO xd
-  canAddPoints: z.string(),
+  canAddPoints: z.boolean(),
 });
 
 type AddCategoryFormProps = {
@@ -24,7 +22,7 @@ export const AddCategoryForm = ({
   const formik = useFormik({
     initialValues: {
       categoryName: "",
-      canAddPoints: "no",
+      canAddPoints: false,
     },
     validate: (values: CategoriesFormValues) => {
       try {
@@ -42,38 +40,38 @@ export const AddCategoryForm = ({
 
   return (
     <div style={styles.container}>
-      <div style={styles.title}>add category</div>
+      <div style={styles.title}>Add Category</div>
       <form onSubmit={formik.handleSubmit}>
-        <TextInput
-          handleChange={formik.handleChange}
-          handleBlur={formik.handleBlur}
-          value={formik.values.categoryName}
-          error={formik.errors.categoryName}
-          touched={formik.touched.categoryName}
+        <TextField
+          fullWidth
           name="categoryName"
-          label="category name"
+          label="Category Name"
+          variant="outlined"
+          value={formik.values.categoryName}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={Boolean(
+            formik.touched.categoryName && formik.errors.categoryName,
+          )}
+          helperText={formik.touched.categoryName && formik.errors.categoryName}
+          margin="normal"
         />
-        <SelectInput
-          handleChange={formik.handleChange}
-          handleBlur={formik.handleBlur}
-          value={formik.values.canAddPoints}
-          error={formik.errors.canAddPoints}
-          touched={formik.touched.canAddPoints}
-          name="canAddPoints"
-          optionItems={[
-            {
-              value: "yes",
-              title: "yes",
-            },
-            {
-              value: "no",
-              title: "no",
-            },
-          ]}
+
+        <FormControlLabel
+          control={
+            <Switch
+              name="canAddPoints"
+              checked={formik.values.canAddPoints}
+              onChange={(event) =>
+                formik.setFieldValue("canAddPoints", event.target.checked)
+              }
+              onBlur={formik.handleBlur}
+              color="primary"
+            />
+          }
           label="can add points"
-          withEmpty={false}
         />
-        <button type="submit">add points</button>
+        <button type="submit">add category</button>
       </form>
 
       {createError && <p style={styles.error}>Error: {createError}</p>}

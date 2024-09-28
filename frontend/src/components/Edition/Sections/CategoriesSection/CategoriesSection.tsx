@@ -14,7 +14,7 @@ export const CategoriesSection = () => {
           await addCategory({
             variables: {
               categoryName: values.categoryName,
-              canAddPoints: values.canAddPoints === "yes" ? true : false,
+              canAddPoints: values.canAddPoints,
             },
           });
         }}
