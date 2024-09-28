@@ -26,7 +26,10 @@ export type FormCategoriesQuery = {
 
 export const FormCategoriesDocument = gql`
   query FormCategories($editionId: bigint!) {
-    categories(orderBy: { categoryName: ASC }) {
+    categories(
+      orderBy: { categoryName: ASC }
+      where: { categoryEditions: { editionId: { _eq: $editionId } } }
+    ) {
       categoryId
       categoryName
       subcategories(
