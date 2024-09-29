@@ -7,12 +7,12 @@ import { UserEditionsProvider } from "./contexts/userEditionsContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <UserProvider>
-      <ApolloClientProvider>
+    <ApolloClientProvider>
+      <UserProvider>
         <UserEditionsProvider>
           <App />
         </UserEditionsProvider>
-      </ApolloClientProvider>
-    </UserProvider>
+      </UserProvider>
+    </ApolloClientProvider>
   </React.StrictMode>,
 );

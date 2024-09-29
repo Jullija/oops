@@ -1,16 +1,16 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { User } from "../../contexts/userContext";
-import { UserContext } from "../../contexts/userContext";
+import { User, UserContext } from "../../contexts/userContext";
 import { useAllUsersQuery } from "../../graphql/allUsers.graphql.types";
 import { useCurrentUserLazyQuery } from "../../graphql/currentUser.graphql.types";
 import { useUser } from "../../hooks/common/useUser";
 import { pathsGenerator } from "../../router/paths";
 import { Styles } from "../../utils/Styles";
-import { Roles } from "../../utils/types";
+import { Roles, defaultUnauthenticatedUser } from "../../utils/types";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../firebaseConfig";
 import { UsersRolesType } from "../../__generated__/schema.graphql.types";
+import Cookies from "js-cookie";
 
 const styles: Styles = {
   container: {
@@ -74,7 +74,6 @@ export const Welcome = () => {
   }, [searchTerm, data]);
 
   useEffect(() => {
-    // TODO: rework this
     if (currentUserData) {
       let role = Roles.UNAUTHENTICATED_USER;
       switch (currentUserData.getCurrentUser?.role) {
@@ -88,11 +87,18 @@ export const Welcome = () => {
           role = Roles.COORDINATOR;
           break;
       }
-      setUser({
-        userId: currentUserData.getCurrentUser?.userId || "Guest",
-        role: role || "unauthenticated_user",
-        nick: currentUserData.getCurrentUser?.nick || "unauthenticated",
-      });
+      const userData = {
+        userId:
+          currentUserData.getCurrentUser?.userId ||
+          defaultUnauthenticatedUser.userId,
+        role: role || defaultUnauthenticatedUser.role,
+        nick:
+          currentUserData.getCurrentUser?.nick ||
+          defaultUnauthenticatedUser.nick,
+      };
+      setUser(userData);
+      // Store user data in cookies
+      Cookies.set("user", JSON.stringify(userData));
       navigate(
         role === Roles.STUDENT
           ? pathsGenerator.student.StudentProfile
@@ -105,9 +111,15 @@ export const Welcome = () => {
     if (!context) {
       throw new Error("useContext must be used within a UserProvider");
     }
-    const { setToken } = context;
+    const userData = {
+      userId: user?.userId || defaultUnauthenticatedUser.userId,
+      role: user?.role || defaultUnauthenticatedUser.role,
+      nick: user?.nick || defaultUnauthenticatedUser.nick,
+    };
     setUser(user);
-    setToken("Bypass" + user.userId);
+    const token = "Bypass" + user.userId;
+    Cookies.set("token", token || "");
+    Cookies.set("user", JSON.stringify(userData));
     navigate(
       user.role === Roles.STUDENT
         ? pathsGenerator.student.StudentProfile
@@ -122,13 +134,15 @@ export const Welcome = () => {
       throw new Error("useContext must be used within a UserProvider");
     }
 
-    const { setToken } = context;
     try {
+      let token: string | undefined;
       if (password.length < 4) {
-        setToken("Bypass" + password);
+        token = "Bypass" + password;
       } else {
         await signInWithEmailAndPassword(auth, email, password);
+        token = await auth.currentUser?.getIdToken();
       }
+      Cookies.set("token", token || "");
       fetchCurrentUser();
       setLoginError("");
     } catch (error) {

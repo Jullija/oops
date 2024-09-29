@@ -5,41 +5,39 @@ import {
   createHttpLink,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { ReactNode, useContext, useEffect, useState } from "react";
-import { User, UserContext } from "../contexts/userContext";
+import { ReactNode } from "react";
 import { Roles } from "../utils/types";
 import { auth } from "../../firebaseConfig";
 import { GRAPHQL_URI } from "../utils/constants";
+import Cookies from "js-cookie";
 
 const httpLink = createHttpLink({
   uri: GRAPHQL_URI,
 });
 
-const createAuthLink = (
-  user: User | undefined,
-  tokenBypass: string | undefined,
-) =>
+const createAuthLink = () =>
   setContext(async (_, { headers }) => {
-    const roleHeader =
-      user && user.userId !== "unauthenticated"
-        ? {
-            "x-hasura-user-id": user.userId,
-            "x-hasura-role": user.role.toLowerCase(),
-          }
-        : { "x-hasura-role": Roles.UNAUTHENTICATED_USER };
+    let token = Cookies.get("token");
+    let roleHeader;
+    const userCookie = Cookies.get("user");
+    if (userCookie) {
+      const user = JSON.parse(userCookie);
+      roleHeader = {
+        "x-hasura-user-id": user.userId,
+        "x-hasura-role": user.role.toLowerCase(),
+      };
+    } else {
+      roleHeader = { "x-hasura-role": Roles.UNAUTHENTICATED_USER };
+    }
 
-    let token: string | undefined;
-    if (auth.currentUser) {
+    if (!token && auth.currentUser) {
       try {
         token = await auth.currentUser.getIdToken();
+        Cookies.set("token", token);
       } catch (error) {
         console.error("Error fetching token:", error);
         throw error;
       }
-    }
-    // TODO: Remove this bypass
-    if (tokenBypass) {
-      token = tokenBypass;
     }
 
     return {
@@ -53,11 +51,8 @@ const createAuthLink = (
     };
   });
 
-const initializeApolloClient = (
-  user: User | undefined,
-  tokenBypass: string | undefined,
-) => {
-  const authLink = createAuthLink(user, tokenBypass);
+const initializeApolloClient = () => {
+  const authLink = createAuthLink();
   return new ApolloClient({
     link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
@@ -65,15 +60,6 @@ const initializeApolloClient = (
 };
 
 export const ApolloClientProvider = ({ children }: { children: ReactNode }) => {
-  const context = useContext(UserContext);
-  const userToken = context?.token;
-  const [client, setClient] = useState(() =>
-    initializeApolloClient(context?.user, undefined),
-  );
-
-  useEffect(() => {
-    setClient(initializeApolloClient(context?.user, userToken));
-  }, [context]);
-
+  const client = initializeApolloClient();
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };
