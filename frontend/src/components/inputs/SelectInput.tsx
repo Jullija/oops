@@ -35,7 +35,6 @@ export const SelectInput = ({
         onBlur={handleBlur}
         value={value}
       >
-        <option value="">-</option>
         {optionItems?.map((item, index) => (
           <option value={item.value} key={index}>
             {item.title}

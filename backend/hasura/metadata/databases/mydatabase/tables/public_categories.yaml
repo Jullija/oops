@@ -30,7 +30,9 @@ select_permissions:
         - can_add_points
         - category_id
         - category_name
+        - dark_color
         - label
+        - light_color
       filter: {}
       allow_aggregations: true
     comment: ""
@@ -40,7 +42,9 @@ select_permissions:
         - can_add_points
         - category_id
         - category_name
+        - dark_color
         - label
+        - light_color
       filter: {}
     comment: ""
   - role: teacher
@@ -49,7 +53,9 @@ select_permissions:
         - can_add_points
         - category_id
         - category_name
+        - dark_color
         - label
+        - light_color
       filter: {}
     comment: ""
 update_permissions:
@@ -58,7 +64,9 @@ update_permissions:
       columns:
         - can_add_points
         - category_name
+        - dark_color
         - label
+        - light_color
       filter:
         _not:
           categoryEditions:

@@ -1,0 +1,19 @@
+query FormCategories($editionId: bigint!) {
+  categories(
+    orderBy: { categoryName: ASC }
+    where: { categoryEditions: { editionId: { _eq: $editionId } } }
+  ) {
+    categoryId
+    categoryName
+    subcategories(
+      orderBy: { ordinalNumber: ASC }
+      where: { editionId: { _eq: $editionId } }
+    ) {
+      editionId
+      subcategoryId
+      subcategoryName
+      maxPoints
+    }
+    canAddPoints
+  }
+}

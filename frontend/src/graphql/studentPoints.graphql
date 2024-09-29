@@ -14,12 +14,14 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
           groupsId
           endTime
           groupName
+          generatedName
           startTime
           weekday {
             weekdayId
             weekdayName
           }
           teacher {
+            userId
             firstName
             secondName
           }
@@ -32,6 +34,7 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
     subcategoryPoints {
       points {
         purePoints {
+          pointsId
           value
         }
         partialBonusType {
@@ -47,6 +50,7 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
         }
       }
       subcategory {
+        subcategoryId
         subcategoryName
         category {
           categoryId

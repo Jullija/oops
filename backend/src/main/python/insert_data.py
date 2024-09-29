@@ -145,6 +145,8 @@ def insert_data():
             category['subcategory_prefix'],
             category['max_points_per_subcategory'],
             category["can_add_points"],
+            category["light_color"],
+            category["dark_color"],
             category["editions"]
         )
         for category in category_data_struct

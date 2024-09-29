@@ -3,10 +3,10 @@ import FilterMenu from "./FilterMenu";
 import { useState } from "react";
 import { GroupTable } from "./GroupTable";
 import {
-  Category,
   GroupTableRow,
   SubcategoryPoints,
 } from "../../../hooks/Group/useGroupScreenData";
+import { Category } from "../../../utils/utils";
 
 type GroupTableWithFiltersProps = {
   rows: GroupTableRow[];

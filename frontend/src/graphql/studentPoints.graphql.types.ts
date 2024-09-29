@@ -29,7 +29,8 @@ export type StudentPointsQuery = {
           __typename?: "GroupType";
           groupsId: string;
           endTime: string;
-          groupName: string;
+          groupName?: string | null;
+          generatedName: string;
           startTime: string;
           weekday: {
             __typename?: "WeekdayType";
@@ -38,6 +39,7 @@ export type StudentPointsQuery = {
           };
           teacher: {
             __typename?: "UserType";
+            userId: string;
             firstName: string;
             secondName: string;
           };
@@ -50,7 +52,11 @@ export type StudentPointsQuery = {
       createdAt: string;
       points: {
         __typename?: "PurePointsType";
-        purePoints?: { __typename?: "PointType"; value: string } | null;
+        purePoints?: {
+          __typename?: "PointType";
+          pointsId: string;
+          value: string;
+        } | null;
         partialBonusType: Array<{
           __typename?: "PartialBonusType";
           partialValue: number;
@@ -66,6 +72,7 @@ export type StudentPointsQuery = {
       };
       subcategory: {
         __typename?: "SubcategoryType";
+        subcategoryId: string;
         subcategoryName: string;
         maxPoints: string;
         category: {
@@ -100,12 +107,14 @@ export const StudentPointsDocument = gql`
             groupsId
             endTime
             groupName
+            generatedName
             startTime
             weekday {
               weekdayId
               weekdayName
             }
             teacher {
+              userId
               firstName
               secondName
             }
@@ -118,6 +127,7 @@ export const StudentPointsDocument = gql`
       subcategoryPoints {
         points {
           purePoints {
+            pointsId
             value
           }
           partialBonusType {
@@ -133,6 +143,7 @@ export const StudentPointsDocument = gql`
           }
         }
         subcategory {
+          subcategoryId
           subcategoryName
           category {
             categoryId

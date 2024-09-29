@@ -9,11 +9,9 @@ import {
   TableRow,
   ThemeProvider,
 } from "@mui/material";
-import {
-  GroupTableRow,
-  Subcategory,
-} from "../../../hooks/Group/useGroupScreenData";
+import { GroupTableRow } from "../../../hooks/Group/useGroupScreenData";
 import { Styles } from "../../../utils/Styles";
+import { Subcategory } from "../../../utils/utils";
 
 type GroupTableProps = {
   rows: GroupTableRow[];

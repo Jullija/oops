@@ -18,6 +18,8 @@ import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
+import java.math.RoundingMode
 import kotlin.math.min
 
 @DgsComponent
@@ -173,17 +175,27 @@ class BonusDataFetcher {
     private fun createAdditivePrevPoints(chestHistory: ChestHistory, award: Award, edition: Edition): Points {
         val pointsInAwardCategory = chestHistory.user.getPointsByEditionAndCategory(edition,
             award.category, pointsRepository).filter{
-                point -> bonusRepository.findByPoints(point).isEmpty()  // discard points connected to bonuses
+                point -> bonusRepository.findByPoints(point).isEmpty()
+        }.sortedBy { it.subcategory.ordinalNumber }
+        if (pointsInAwardCategory.isEmpty()) {
+            throw IllegalArgumentException("No previous points found in the specified category.")
         }
-        val lastPoints = pointsInAwardCategory.maxByOrNull { it.subcategory.ordinalNumber }
-            ?: throw IllegalArgumentException("No previous points found in the specified category.")
+
+        var sum = 0f
+        var i = pointsInAwardCategory.size - 1
+        while (sum < award.awardValue.toFloat() && i >= 0) {
+            val lastPoints = pointsInAwardCategory.getOrNull(i--)
+                ?: break
+            val pointsToAdd = min(award.awardValue.toFloat() - sum, lastPoints.subcategory.maxPoints.toFloat() - lastPoints.value.toFloat())
+            sum += pointsToAdd
+        }
 
         return Points(
             student = chestHistory.user,
             teacher = chestHistory.teacher,
             updatedBy = chestHistory.teacher,
-            value = min((lastPoints.subcategory.maxPoints - lastPoints.value).toFloat(), award.awardValue.toFloat()).toBigDecimal(),
-            subcategory = lastPoints.subcategory,
+            value = BigDecimal(sum.toString()).setScale(2, RoundingMode.HALF_UP),
+            subcategory = pointsInAwardCategory.last().subcategory,
             label = "Points awarded for ${award.awardName}"
         )
     }

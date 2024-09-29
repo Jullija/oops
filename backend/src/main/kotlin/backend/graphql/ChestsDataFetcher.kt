@@ -1,6 +1,10 @@
 package backend.graphql
 
+import backend.awardEdition.AwardEdition
+import backend.awardEdition.AwardEditionRepository
 import backend.categories.CategoriesRepository
+import backend.chestAward.ChestAward
+import backend.chestAward.ChestAwardRepository
 import backend.chests.Chests
 import backend.chests.ChestsRepository
 import backend.edition.EditionRepository
@@ -18,6 +22,9 @@ import java.time.LocalDate
 
 @DgsComponent
 class ChestsDataFetcher {
+    @Autowired
+    private lateinit var chestAwardRepository: ChestAwardRepository
+
     @Autowired
     lateinit var usersRepository: UsersRepository
 
@@ -43,6 +50,9 @@ class ChestsDataFetcher {
     lateinit var chestsRepository: ChestsRepository
 
     @Autowired
+    lateinit var awardEditionRepository: AwardEditionRepository
+
+    @Autowired
     lateinit var photoAssigner: PhotoAssigner
 
     @DgsMutation
@@ -59,7 +69,7 @@ class ChestsDataFetcher {
     @Transactional
     fun addChest(@InputArgument chestType: String, @InputArgument editionId: Long, @InputArgument label: String = ""): Chests {
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
-        if (chestsRepository.existsByChestTypeAndEdition(chestType, edition)) {
+        if (chestsRepository.existsByChestTypeAndEditionAndActive(chestType, edition, true)) {
             throw IllegalArgumentException("Chest with type $chestType already exists for edition ${edition.editionId}")
         }
         if (edition.endDate.isBefore(LocalDate.now())){
@@ -90,7 +100,7 @@ class ChestsDataFetcher {
             if (chest.edition.startDate.isBefore(LocalDate.now())) {
                 throw IllegalArgumentException("Edition has already started")
             }
-            if (chestsRepository.existsByChestTypeAndEdition(it, chest.edition) && it != chest.chestType) {
+            if (chestsRepository.existsByChestTypeAndEditionAndActive(it, chest.edition, true) && it != chest.chestType) {
                 throw IllegalArgumentException("Chest with type $it already exists for edition ${chest.edition.editionId}")
             }
             chest.chestType = it
@@ -121,8 +131,49 @@ class ChestsDataFetcher {
         if (chest.edition.startDate.isBefore(LocalDate.now())) {
             throw IllegalArgumentException("Edition has already started")
         }
+        chestAwardRepository.findByChest(chest).forEach {
+            chestAwardRepository.delete(it)
+        }
 
         chestsRepository.delete(chest)
         return true
+    }
+
+    @DgsMutation
+    @Transactional
+    fun copyChest(@InputArgument chestId: Long, @InputArgument editionId: Long): Chests {
+        val chest = chestsRepository.findById(chestId).orElseThrow { IllegalArgumentException("Invalid chest ID") }
+        val edition =
+            editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
+        if (chestsRepository.existsByChestTypeAndEditionAndActive(chest.chestType, edition, true)) {
+            throw IllegalArgumentException("Chest with type ${chest.chestType} already exists for edition ${edition.editionId}")
+        }
+        if (edition.endDate.isBefore(LocalDate.now())) {
+            throw IllegalArgumentException("Edition has already ended")
+        }
+        val newChest = Chests(
+            chestType = chest.chestType,
+            label = chest.label,
+            edition = edition
+        )
+        newChest.imageFile = chest.imageFile
+        chestsRepository.save(newChest)
+        chestAwardRepository.findByChest(chest).forEach { chestAward ->
+            if (chestAward.award.awardEditions.none { it.edition.editionId == editionId }) {
+                val awardEdition = AwardEdition(
+                    edition = edition,
+                    award = chestAward.award,
+                    label = ""
+                )
+                awardEditionRepository.save(awardEdition)
+            }
+            val newChestAward = ChestAward(
+                chest = newChest,
+                award = chestAward.award,
+                label = ""
+            )
+            chestAwardRepository.save(newChestAward)
+        }
+        return chestsRepository.save(newChest)
     }
 }
