@@ -11,7 +11,7 @@ export type EditPointsMutationVariables = Types.Exact<{
 
 export type EditPointsMutation = {
   __typename?: "mutation_root";
-  editPoints?: { __typename?: "PointType"; value: number } | null;
+  editPoints?: { __typename?: "PointType"; value: string } | null;
 };
 
 export const EditPointsDocument = gql`

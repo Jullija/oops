@@ -36,7 +36,7 @@ export const useGroupScreenData = (groupId: number | undefined) => {
             return {
               id: points.subcategory.subcategoryId,
               name: points.subcategory.subcategoryName,
-              maxPoints: points.subcategory.maxPoints,
+              maxPoints: parseFloat(points.subcategory.maxPoints),
             };
           }) ?? [],
       };
@@ -55,7 +55,9 @@ export const useGroupScreenData = (groupId: number | undefined) => {
           userPoints?.categoriesPoints.flatMap((catPoints) =>
             catPoints.subcategoryPoints.map((subPoints) => {
               return {
-                pure: subPoints.points.purePoints?.value,
+                pure: subPoints.points.purePoints?.value
+                  ? parseFloat(subPoints.points.purePoints?.value)
+                  : undefined,
                 subcategoryId: subPoints.subcategory.subcategoryId,
                 categoryId: catPoints.category.categoryId,
               };

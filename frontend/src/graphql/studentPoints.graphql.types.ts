@@ -55,7 +55,7 @@ export type StudentPointsQuery = {
         purePoints?: {
           __typename?: "PointType";
           pointsId: string;
-          value: number;
+          value: string;
         } | null;
         partialBonusType: Array<{
           __typename?: "PartialBonusType";
@@ -74,7 +74,7 @@ export type StudentPointsQuery = {
         __typename?: "SubcategoryType";
         subcategoryId: string;
         subcategoryName: string;
-        maxPoints: number;
+        maxPoints: string;
         category: {
           __typename?: "CategoryType";
           categoryId: string;

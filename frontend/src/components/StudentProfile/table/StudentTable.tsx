@@ -63,19 +63,22 @@ export const StudentTable = ({
   });
 
   const getPointsValueString = (points: Points): string => {
-    const pure = points.points.purePoints?.value ?? 0;
+    const pure = points.points.purePoints?.value
+      ? parseFloat(points.points.purePoints?.value)
+      : 0;
+
     let totalBonus = 0;
     points.points.partialBonusType.forEach(
       (bonus) => (totalBonus += bonus?.partialValue ?? 0),
     );
     if (totalBonus === 0 && pure === 0) {
-      return "0.0";
+      return "0.00";
     }
     if (totalBonus === 0) {
-      return pure.toFixed(1);
+      return pure.toFixed(2);
     }
-    // TODO must be a better way than tofixed
-    return `${pure.toFixed(1)} + ${totalBonus.toFixed(1)} = ${(pure + totalBonus).toFixed(1)}`;
+
+    return `${pure.toFixed(2)} + ${totalBonus.toFixed(2)} = ${(pure + totalBonus).toFixed(2)}`;
   };
 
   const getDisplayDateString = (points: Points): string => {

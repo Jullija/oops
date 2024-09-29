@@ -11,6 +11,7 @@ import com.netflix.graphql.dgs.DgsQuery
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
 
 @DgsComponent
 class LevelsDataFetcher {
@@ -58,9 +59,9 @@ class LevelsDataFetcher {
         if (levelsInEdition.isEmpty()){
             val level = Levels(
                 levelName = name,
-                minimumPoints = 0.0,
-                maximumPoints = maximumPoints,
-                grade = grade,
+                minimumPoints = BigDecimal.ZERO,
+                maximumPoints = maximumPoints.toBigDecimal(),
+                grade = grade.toBigDecimal(),
                 label = "",
                 edition = edition
             )
@@ -73,10 +74,10 @@ class LevelsDataFetcher {
 
         val highestLevel = levelsInEdition.maxByOrNull { it.ordinalNumber }!!
 
-        if (highestLevel.maximumPoints >= maximumPoints){
+        if (highestLevel.maximumPoints >= maximumPoints.toBigDecimal()){
             throw IllegalArgumentException("Maximum points must be higher than the highest level in the edition")
         }
-        if (highestLevel.grade > grade){
+        if (highestLevel.grade > grade.toBigDecimal()){
             throw IllegalArgumentException("Grade must be higher or equal to the highest level in the edition")
         }
         if (levelsInEdition.any { it.levelName == name }){
@@ -87,8 +88,8 @@ class LevelsDataFetcher {
         val level = Levels(
             levelName = name,
             minimumPoints = highestLevel.maximumPoints,
-            maximumPoints = maximumPoints,
-            grade = grade,
+            maximumPoints = maximumPoints.toBigDecimal(),
+            grade = grade.toBigDecimal(),
             label = "",
             edition = edition
         )
@@ -138,26 +139,26 @@ class LevelsDataFetcher {
             if (it <= 0) {
                 throw IllegalArgumentException("Maximum points must be a positive value")
             }
-            if (previousLevel != null && previousLevel.maximumPoints >= it){
+            if (previousLevel != null && previousLevel.maximumPoints >= it.toBigDecimal()){
                 throw IllegalArgumentException("Maximum points must be higher than the previous level")
             }
-            if (nextLevel != null && nextLevel.maximumPoints <= it){
+            if (nextLevel != null && nextLevel.maximumPoints <= it.toBigDecimal()){
                 throw IllegalArgumentException("Maximum points must be lower than the next level")
             }
-            level.maximumPoints = it
+            level.maximumPoints = it.toBigDecimal()
         }
 
         grade?.let {
             if (it < 0) {
                 throw IllegalArgumentException("Grade must be a non-negative value")
             }
-            if (previousLevel != null && previousLevel.grade > it){
+            if (previousLevel != null && previousLevel.grade > it.toBigDecimal()){
                 throw IllegalArgumentException("Grade must be higher or equal to the previous level")
             }
-            if (nextLevel != null && nextLevel.grade < it){
+            if (nextLevel != null && nextLevel.grade < it.toBigDecimal()){
                 throw IllegalArgumentException("Grade must be lower or equal to the next level")
             }
-            level.grade = it
+            level.grade = it.toBigDecimal()
         }
 
         imageFileId?.let {

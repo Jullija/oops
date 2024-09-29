@@ -31,8 +31,9 @@ import org.springframework.context.annotation.PropertySource
 		"backend.weekdays"
 	]
 )
+
 @EnableJpaAuditing
-@PropertySource("classpath:application-secrets.properties") // Add secrets properties file
+@PropertySource("classpath:application-secrets.properties")
 class BackendApplication
 
 fun main(args: Array<String>) {

@@ -102,7 +102,7 @@ export function TeacherStudentProfile() {
             mutationError={editPointsError?.message}
             initialValues={{
               subcategoryId: pointsToEdit?.subcategory.subcategoryId as string,
-              points: pointsToEdit?.points.purePoints?.value ?? 0,
+              points: parseFloat(pointsToEdit?.points.purePoints?.value ?? "0"),
               categoryId: pointsToEdit?.subcategory.category
                 .categoryId as string,
             }}

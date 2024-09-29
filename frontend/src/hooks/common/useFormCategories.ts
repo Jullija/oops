@@ -22,7 +22,7 @@ export const useFormCategories = () => {
             return {
               id: s.subcategoryId,
               name: s.subcategoryName,
-              maxPoints: s.maxPoints,
+              maxPoints: parseFloat(s.maxPoints),
             };
           }),
         };
