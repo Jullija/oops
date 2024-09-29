@@ -36,7 +36,7 @@ export const useGroupScreenData = (groupId: number | undefined) => {
             return {
               id: points.subcategory.subcategoryId,
               name: points.subcategory.subcategoryName,
-              maxPoints: points.subcategory.maxPoints,
+              maxPoints: parseFloat(points.subcategory.maxPoints),
             };
           }) ?? [],
       };
