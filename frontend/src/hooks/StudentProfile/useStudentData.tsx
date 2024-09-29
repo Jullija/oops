@@ -18,6 +18,7 @@ export type StudentCardData = {
     weekday: Weekday;
     time: Timestamp;
     teacherDisplayName: string;
+    teacherId: string;
   };
   totalPoints: number;
   avatarId: string | undefined;
@@ -59,6 +60,7 @@ export const useStudentData = (props: {
                 end: user.userGroups[0].group.endTime,
               },
               teacherDisplayName: `${user.userGroups[0].group.teacher?.firstName ?? "-"} ${user.userGroups[0].group.teacher?.secondName ?? "-"}`,
+              teacherId: user.userGroups[0].group.teacher.userId,
             }
           : undefined,
         totalPoints: data.getStudentPoints.sumOfAll,

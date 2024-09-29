@@ -1,15 +1,5 @@
 import { useGroupPointsQuery } from "../../graphql/groupPoints.graphql.types";
-
-export type Category = {
-  id: string;
-  name: string;
-  subcategories: Subcategory[];
-};
-
-export type Subcategory = {
-  id: string;
-  name: string;
-};
+import { Category } from "../../utils/utils";
 
 export type GroupTableRow = {
   student: Student;
@@ -46,6 +36,7 @@ export const useGroupScreenData = (groupId: number | undefined) => {
             return {
               id: points.subcategory.subcategoryId,
               name: points.subcategory.subcategoryName,
+              maxPoints: points.subcategory.maxPoints,
             };
           }) ?? [],
       };

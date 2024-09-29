@@ -13,9 +13,14 @@ import { Points } from "../../../hooks/StudentProfile/useStudentData";
 import { CategoryTag } from "../../CategoryTag";
 import { Styles } from "../../../utils/Styles";
 import { AwardImage } from "../../images/AwardImage";
+import { ActionButton } from "./ActionButton";
 
 type StudentTableProps = {
   points: Points[];
+  handleEditClick?: (points: Points) => void;
+  handleDeleteClick?: (pointsId: string) => void;
+  showActionButtons: boolean;
+  blockActionButtons: boolean;
 };
 
 const dateOptions: Intl.DateTimeFormatOptions = {
@@ -44,7 +49,13 @@ const headerTitles: HeaderTitle[] = [
   { name: "prowadzący", align: "center" },
 ];
 
-export const StudentTable = ({ points }: StudentTableProps) => {
+export const StudentTable = ({
+  points,
+  handleEditClick,
+  handleDeleteClick,
+  showActionButtons,
+  blockActionButtons,
+}: StudentTableProps) => {
   const darkTheme = createTheme({
     palette: {
       mode: "dark",
@@ -89,12 +100,19 @@ export const StudentTable = ({ points }: StudentTableProps) => {
     );
   };
 
+  if (showActionButtons && (!handleEditClick || !handleDeleteClick)) {
+    throw new Error(
+      "Invalid arguments passed - handleEditClick or handleDeleteClick is undefined.",
+    );
+  }
+
   return (
     <ThemeProvider theme={darkTheme}>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
+              {showActionButtons && <TableCell />}
               {headerTitles.map((header) => (
                 <TableCell style={styles.header} align={header.align}>
                   {header.name}
@@ -105,6 +123,30 @@ export const StudentTable = ({ points }: StudentTableProps) => {
           <TableBody>
             {points.map((p, index) => (
               <TableRow key={index}>
+                {showActionButtons && (
+                  <TableCell>
+                    <div style={styles.buttonsContainer}>
+                      <ActionButton
+                        type="edit"
+                        onClick={() => handleEditClick?.(p)}
+                        isDisabled={blockActionButtons}
+                      />
+
+                      <ActionButton
+                        type="delete"
+                        onClick={() => {
+                          if (p.points.purePoints?.pointsId) {
+                            handleDeleteClick?.(p.points.purePoints?.pointsId);
+                          }
+                        }}
+                        // TODO disable if pure points is empty
+                        isDisabled={
+                          blockActionButtons || !p.points.purePoints?.pointsId
+                        }
+                      />
+                    </div>
+                  </TableCell>
+                )}
                 <TableCell align="center">
                   {p.subcategory.subcategoryName}
                 </TableCell>
@@ -139,5 +181,10 @@ const styles: Styles = {
     display: "flex",
     justifyContent: "center",
     gap: 8,
+  },
+  buttonsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 4,
   },
 };
