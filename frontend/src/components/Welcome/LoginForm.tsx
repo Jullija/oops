@@ -1,20 +1,19 @@
 import { useState } from "react";
 import { Styles } from "../../utils/Styles";
+import { useLogin } from "../../hooks/auth/useLogin";
 
-type LoginFormProps = {
-  tryLogin: (email: string, password: string) => void;
-};
+export const LoginForm = () => {
+  const { loginWithCredentials } = useLogin();
 
-export const LoginForm = ({ tryLogin }: LoginFormProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      tryLogin(email, password);
+      await loginWithCredentials({ email, password });
       setLoginError("");
     } catch (error) {
       console.error("ERROR: ", error);

@@ -30,7 +30,6 @@ const commonPaths = {
   HallOfFame: {
     path: "/hall-of-fame",
     allowedRoles: [
-      Roles.UNAUTHENTICATED_USER,
       Roles.STUDENT,
       Roles.TEACHER,
       Roles.ADMIN,

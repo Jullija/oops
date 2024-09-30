@@ -1,5 +1,6 @@
 import { User } from "../contexts/userContext";
 
+// do we have admin?
 export enum Roles {
   ADMIN = "admin",
   COORDINATOR = "coordinator",
@@ -10,6 +11,6 @@ export enum Roles {
 
 export const defaultUnauthenticatedUser: User = {
   nick: "Guest",
-  role: "unauthenticated_user",
+  role: Roles.UNAUTHENTICATED_USER,
   userId: "unauthenticated",
 };

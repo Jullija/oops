@@ -4,8 +4,8 @@ import { Styles } from "../utils/Styles";
 import { useEditionSelection } from "../hooks/common/useEditionSelection";
 import { useUser } from "../hooks/common/useUser";
 import { hasRole, isEditionActive } from "../utils/utils";
-import { defaultUnauthenticatedUser } from "../utils/types";
-import Cookies from "js-cookie";
+import { Roles } from "../utils/types";
+import { useLogin } from "../hooks/auth/useLogin";
 
 export const NAV_BAR_HEIGHT = 100;
 
@@ -31,20 +31,8 @@ const styles: Styles = {
 export const Navbar = () => {
   const navigate = useNavigate();
   const { selectedEdition } = useEditionSelection();
-  const { user, setUser } = useUser();
-
-  const handleLogout = () => {
-    Cookies.remove("token");
-    Cookies.remove("user");
-
-    setUser({
-      nick: defaultUnauthenticatedUser.nick,
-      role: defaultUnauthenticatedUser.role,
-      userId: defaultUnauthenticatedUser.userId,
-    });
-
-    navigate("/");
-  };
+  const { user } = useUser();
+  const { logout } = useLogin();
 
   return (
     <div style={styles.container}>
@@ -59,8 +47,8 @@ export const Navbar = () => {
             {item.title}
           </div>
         ))}
-      {user.userId !== "unauthenticated" && (
-        <div onClick={handleLogout} style={styles.navbarItem}>
+      {user.role !== Roles.UNAUTHENTICATED_USER && (
+        <div onClick={logout} style={styles.navbarItem}>
           Logout
         </div>
       )}

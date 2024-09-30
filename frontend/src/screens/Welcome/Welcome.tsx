@@ -15,7 +15,7 @@ export const Welcome = () => {
     },
   });
 
-  const { handleLogin, handleUserSelect } = useLogin();
+  const { loginWithUserSelect } = useLogin();
 
   if (loading) return <div>Ładowanie...</div>;
   if (error) return <div>Błąd podczas ładowania użytkowników.</div>;
@@ -24,12 +24,15 @@ export const Welcome = () => {
     <div style={styles.screenContainer}>
       <div style={styles.leftSectionContainer}>
         <h1>Witaj!</h1>
-        <UsersListWithFilter data={data} handleUserSelect={handleUserSelect} />
+        <UsersListWithFilter
+          data={data}
+          handleUserSelect={loginWithUserSelect}
+        />
       </div>
 
       <div style={styles.rightSectionContainer}>
         <SelectedUserInfo user={selectedUser} />
-        <LoginForm tryLogin={handleLogin} />
+        <LoginForm />
       </div>
     </div>
   );
