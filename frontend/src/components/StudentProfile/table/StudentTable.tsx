@@ -91,9 +91,13 @@ export const StudentTable = ({
 
     return (
       <div style={styles.awardsContainer}>
-        {bonuses.map((bonus) => {
+        {bonuses.map((bonus, index) => {
           return (
-            <AwardImage id={bonus?.bonuses.award.imageFile?.fileId} size="s" />
+            <AwardImage
+              key={index}
+              id={bonus?.bonuses.award.imageFile?.fileId}
+              size="s"
+            />
           );
         })}
       </div>
