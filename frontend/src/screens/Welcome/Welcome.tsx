@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { User, UserContext } from "../../contexts/userContext";
 import { useAllUsersQuery } from "../../graphql/allUsers.graphql.types";
@@ -11,67 +11,23 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../firebaseConfig";
 import { UsersRolesType } from "../../__generated__/schema.graphql.types";
 import Cookies from "js-cookie";
-
-const styles: Styles = {
-  container: {
-    display: "flex",
-    flexDirection: "row",
-  },
-  userList: {
-    flex: 1,
-  },
-  searchInput: {
-    marginBottom: "10px",
-    padding: "8px",
-    width: "100%",
-    boxSizing: "border-box",
-  },
-  table: {
-    width: "100%",
-    borderCollapse: "collapse",
-  },
-  tableRow: {
-    cursor: "pointer",
-  },
-  selectedUser: {
-    flex: 1,
-    marginLeft: "20px",
-  },
-  loginForm: {
-    marginTop: "20px",
-    padding: "10px",
-    border: "1px solid #ddd",
-    borderRadius: "5px",
-  },
-};
+import { LoginForm } from "../../components/Welcome/LoginForm";
+import { SelectedUserInfo } from "../../components/Welcome/SelectedUserInfo";
+import { UsersListWithFilter } from "../../components/Welcome/UsersListWithFilter/UsersListWithFilter";
 
 export const Welcome = () => {
+  const navigate = useNavigate();
+  const context = useContext(UserContext);
+
   const { user: selectedUser, setUser } = useUser();
   const { loading, error, data } = useAllUsersQuery({
     context: {
       headers: { "x-hasura-role": Roles.UNAUTHENTICATED_USER },
     },
   });
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-  const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loginError, setLoginError] = useState("");
-  const context = useContext(UserContext);
   const [fetchCurrentUser, { data: currentUserData }] =
     useCurrentUserLazyQuery();
-
-  useEffect(() => {
-    if (data) {
-      setFilteredUsers(
-        data.users.filter((user) =>
-          user.nick.toLowerCase().includes(searchTerm.toLowerCase()),
-        ),
-      );
-    }
-  }, [searchTerm, data]);
 
   useEffect(() => {
     if (currentUserData) {
@@ -127,9 +83,7 @@ export const Welcome = () => {
     );
   };
 
-  const handleLogin = async (event: React.FormEvent) => {
-    event.preventDefault();
-
+  const handleLogin = async (email: string, password: string) => {
     if (!context) {
       throw new Error("useContext must be used within a UserProvider");
     }
@@ -144,9 +98,8 @@ export const Welcome = () => {
       }
       Cookies.set("token", token || "");
       fetchCurrentUser();
-      setLoginError("");
     } catch (error) {
-      setLoginError("Invalid email or password.");
+      throw new Error("Invalid email or password.");
     }
   };
 
@@ -154,78 +107,30 @@ export const Welcome = () => {
   if (error) return <div>Błąd podczas ładowania użytkowników.</div>;
 
   return (
-    <div style={styles.container}>
-      <div style={styles.userList}>
+    <div style={styles.screenContainer}>
+      <div style={styles.leftSectionContainer}>
         <h1>Witaj!</h1>
-        <input
-          type="text"
-          placeholder="Search Users"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={styles.searchInput}
-        />
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th>Nick</th>
-              <th>Role</th>
-              <th>User ID</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredUsers.map((user) => (
-              <tr
-                key={user.userId}
-                onClick={() => handleUserSelect(user)}
-                style={styles.tableRow}
-              >
-                <td
-                  style={{ color: user.role === "teacher" ? "red" : "black" }}
-                >
-                  {user.nick}
-                </td>
-                <td>{user.role}</td>
-                <td>{user.userId}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <UsersListWithFilter data={data} handleUserSelect={handleUserSelect} />
       </div>
-      <div style={styles.selectedUser}>
-        {selectedUser && (
-          <div>
-            <h2>Wybrany użytkownik:</h2>
-            <p>Nick: {selectedUser.nick}</p>
-            <p>Rola: {selectedUser.role}</p>
-            <p>ID: {selectedUser.userId}</p>
-          </div>
-        )}
-        <div style={styles.loginForm}>
-          <h2>Login</h2>
-          <form onSubmit={handleLogin}>
-            <div>
-              <label>Email:</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label>Password:</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            {loginError && <p className="error">{loginError}</p>}
-            <button type="submit">Login</button>
-          </form>
-        </div>
+
+      <div style={styles.rightSectionContainer}>
+        <SelectedUserInfo user={selectedUser} />
+        <LoginForm tryLogin={handleLogin} />
       </div>
     </div>
   );
+};
+
+const styles: Styles = {
+  screenContainer: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  leftSectionContainer: {
+    flex: 1,
+  },
+  rightSectionContainer: {
+    margin: 20,
+    flex: 1,
+  },
 };
