@@ -57,7 +57,10 @@ export const useLogin = () => {
     }
 
     // fetch current user
-    const { data, error } = await fetchCurrentUser();
+    // this header is necessary due to caching
+    const { data, error } = await fetchCurrentUser({
+      fetchPolicy: "network-only",
+    });
     const user: User | undefined = data?.getCurrentUser
       ? {
           nick: data?.getCurrentUser.nick,
