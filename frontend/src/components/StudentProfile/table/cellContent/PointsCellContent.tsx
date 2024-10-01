@@ -1,12 +1,12 @@
-import { Points } from "../../../hooks/StudentProfile/useStudentData";
-import { EMPTY_FIELD_STRING } from "../../../utils/constants";
-import { Styles } from "../../../utils/Styles";
+import { Points } from "../../../../hooks/StudentProfile/useStudentData";
+import { EMPTY_FIELD_STRING } from "../../../../utils/constants";
+import { Styles } from "../../../../utils/Styles";
 
 type PointsCellProps = {
   points: Points;
 };
 
-export const PointsCell = ({ points }: PointsCellProps) => {
+export const PointsCellContent = ({ points }: PointsCellProps) => {
   const bonusesPoints =
     points.points.partialBonusType.length === 0
       ? undefined

@@ -12,10 +12,10 @@ import {
 import { Points } from "../../../hooks/StudentProfile/useStudentData";
 import { CategoryTag } from "../../CategoryTag";
 import { Styles } from "../../../utils/Styles";
-import { AwardImage } from "../../images/AwardImage";
 import { ActionButton } from "./ActionButton";
-import { PointsCell } from "./PointsCell";
-import { dateOptions, EMPTY_FIELD_STRING } from "../../../utils/constants";
+import { PointsCellContent } from "./cellContent/PointsCellContent";
+import { AwardsCellContent } from "./cellContent/AwardsCellContent";
+import { DateCellContent } from "./cellContent/DateCellContent";
 
 type StudentTableProps = {
   points: Points[];
@@ -52,28 +52,6 @@ export const StudentTable = ({
       mode: "dark",
     },
   });
-
-  const getDisplayDateString = (points: Points): string => {
-    const date = new Date(points.updatedAt ?? points.createdAt);
-    return date.toLocaleDateString("pl-PL", dateOptions);
-  };
-
-  const getAwardsPhotos = (points: Points) => {
-    const bonuses = points.points.partialBonusType;
-    if (bonuses.length === 0) {
-      return EMPTY_FIELD_STRING;
-    }
-
-    return (
-      <div style={styles.awardsContainer}>
-        {bonuses.map((bonus) => {
-          return (
-            <AwardImage id={bonus?.bonuses.award.imageFile?.fileId} size="s" />
-          );
-        })}
-      </div>
-    );
-  };
 
   if (showActionButtons && (!handleEditClick || !handleDeleteClick)) {
     throw new Error(
@@ -125,7 +103,9 @@ export const StudentTable = ({
                 <TableCell align="center">
                   {p.subcategory.subcategoryName}
                 </TableCell>
-                <TableCell align="center">{getAwardsPhotos(p)}</TableCell>
+                <TableCell align="center">
+                  <AwardsCellContent points={p} />
+                </TableCell>
                 <TableCell align="center">
                   <CategoryTag
                     id={p.subcategory.category.categoryId}
@@ -133,10 +113,12 @@ export const StudentTable = ({
                   />
                 </TableCell>
                 <TableCell align="center">
-                  <PointsCell points={p} />
+                  <PointsCellContent points={p} />
                 </TableCell>
                 <TableCell align="center">{p.subcategory.maxPoints}</TableCell>
-                <TableCell align="center">{getDisplayDateString(p)}</TableCell>
+                <TableCell align="center">
+                  <DateCellContent points={p} />
+                </TableCell>
                 <TableCell align="center">
                   {p.teacher.firstName} {p.teacher.secondName}
                 </TableCell>
@@ -153,13 +135,6 @@ const styles: Styles = {
   header: {
     fontWeight: "bold",
     fontSize: 16,
-  },
-  awardsContainer: {
-    display: "flex",
-    justifyContent: "center",
-    gap: 8,
-    maxWidth: 240,
-    flexWrap: "wrap",
   },
   buttonsContainer: {
     display: "flex",
