@@ -1,7 +1,6 @@
 import { GroupRadioFilterItem } from "../components/Groups/RadioFilterGroup";
 
 export const FILES_URL = "http://localhost:9090/files/";
-
 export const GRAPHQL_URI = "http://127.0.0.1:9191/v1/graphql";
 
 // TODO try to reuse it in hall of fame
@@ -19,3 +18,5 @@ export const dateOptions: Intl.DateTimeFormatOptions = {
   minute: "2-digit",
   second: "2-digit",
 };
+
+export const EMPTY_FIELD_STRING = "---";

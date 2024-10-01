@@ -1,4 +1,5 @@
 import { Points } from "../../../hooks/StudentProfile/useStudentData";
+import { EMPTY_FIELD_STRING } from "../../../utils/constants";
 import { Styles } from "../../../utils/Styles";
 
 type PointsCellProps = {
@@ -27,7 +28,7 @@ export const PointsCell = ({ points }: PointsCellProps) => {
     if (!bonusesPoints) {
       return undefined;
     }
-    return `${purePoints ? purePoints.toFixed(2) : "---"} + ${bonusesPoints.toFixed(2)}`;
+    return `${purePoints ? purePoints.toFixed(2) : EMPTY_FIELD_STRING} + ${bonusesPoints.toFixed(2)}`;
   };
 
   const description = getPointsDescriptionString();

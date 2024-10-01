@@ -15,7 +15,7 @@ import { Styles } from "../../../utils/Styles";
 import { AwardImage } from "../../images/AwardImage";
 import { ActionButton } from "./ActionButton";
 import { PointsCell } from "./PointsCell";
-import { dateOptions } from "../../../utils/constants";
+import { dateOptions, EMPTY_FIELD_STRING } from "../../../utils/constants";
 
 type StudentTableProps = {
   points: Points[];
@@ -24,8 +24,6 @@ type StudentTableProps = {
   showActionButtons: boolean;
   blockActionButtons: boolean;
 };
-
-const EMPTY_FIELD = "---";
 
 type HeaderTitle = {
   name: string;
@@ -63,7 +61,7 @@ export const StudentTable = ({
   const getAwardsPhotos = (points: Points) => {
     const bonuses = points.points.partialBonusType;
     if (bonuses.length === 0) {
-      return EMPTY_FIELD;
+      return EMPTY_FIELD_STRING;
     }
 
     return (
