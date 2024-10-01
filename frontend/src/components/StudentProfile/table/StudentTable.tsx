@@ -14,7 +14,7 @@ import { CategoryTag } from "../../CategoryTag";
 import { Styles } from "../../../utils/Styles";
 import { AwardImage } from "../../images/AwardImage";
 import { ActionButton } from "./ActionButton";
-import { dateOptions } from "../../../utils/constants";
+import { PointsCell } from "./PointsCell";
 
 type StudentTableProps = {
   points: Points[];
@@ -53,25 +53,6 @@ export const StudentTable = ({
       mode: "dark",
     },
   });
-
-  const getPointsValueString = (points: Points): string => {
-    const pure = points.points.purePoints?.value
-      ? parseFloat(points.points.purePoints?.value)
-      : 0;
-
-    let totalBonus = 0;
-    points.points.partialBonusType.forEach(
-      (bonus) => (totalBonus += bonus?.partialValue ?? 0),
-    );
-    if (totalBonus === 0 && pure === 0) {
-      return "0.00";
-    }
-    if (totalBonus === 0) {
-      return pure.toFixed(2);
-    }
-
-    return `${pure.toFixed(2)} + ${totalBonus.toFixed(2)} = ${(pure + totalBonus).toFixed(2)}`;
-  };
 
   const getDisplayDateString = (points: Points): string => {
     const date = new Date(points.updatedAt ?? points.createdAt);
@@ -152,7 +133,9 @@ export const StudentTable = ({
                     name={p.subcategory.category.categoryName}
                   />
                 </TableCell>
-                <TableCell align="center">{getPointsValueString(p)}</TableCell>
+                <TableCell align="center">
+                  <PointsCell points={p} />
+                </TableCell>
                 <TableCell align="center">{p.subcategory.maxPoints}</TableCell>
                 <TableCell align="center">{getDisplayDateString(p)}</TableCell>
                 <TableCell align="center">
