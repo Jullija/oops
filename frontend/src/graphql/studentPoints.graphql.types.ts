@@ -29,7 +29,8 @@ export type StudentPointsQuery = {
           __typename?: "GroupType";
           groupsId: string;
           endTime: string;
-          groupName: string;
+          groupName?: string | null;
+          generatedName: string;
           startTime: string;
           weekday: {
             __typename?: "WeekdayType";
@@ -38,6 +39,7 @@ export type StudentPointsQuery = {
           };
           teacher: {
             __typename?: "UserType";
+            userId: string;
             firstName: string;
             secondName: string;
           };
@@ -46,47 +48,43 @@ export type StudentPointsQuery = {
     };
     subcategoryPoints: Array<{
       __typename?: "SubcategoryPointsType";
+      updatedAt: string;
+      createdAt: string;
       points: {
         __typename?: "PurePointsType";
         purePoints?: {
           __typename?: "PointType";
-          value: number;
-          createdAt: string;
-          updatedAt: string;
-          teacher: {
-            __typename?: "UserType";
-            firstName: string;
-            secondName: string;
-          };
+          pointsId: string;
+          value: string;
         } | null;
         partialBonusType: Array<{
           __typename?: "PartialBonusType";
           partialValue: number;
           bonuses: {
             __typename?: "BonusType";
-            award: { __typename?: "AwardType"; awardName: string };
-            points: {
-              __typename?: "PointType";
-              createdAt: string;
-              updatedAt: string;
-              teacher: {
-                __typename?: "UserType";
-                firstName: string;
-                secondName: string;
-              };
+            award: {
+              __typename?: "AwardType";
+              awardName: string;
+              imageFile?: { __typename?: "FileType"; fileId: string } | null;
             };
           };
         } | null>;
       };
       subcategory: {
         __typename?: "SubcategoryType";
+        subcategoryId: string;
         subcategoryName: string;
-        maxPoints: number;
+        maxPoints: string;
         category: {
           __typename?: "CategoryType";
           categoryId: string;
           categoryName: string;
         };
+      };
+      teacher: {
+        __typename?: "UserType";
+        firstName: string;
+        secondName: string;
       };
     }>;
   };
@@ -109,12 +107,14 @@ export const StudentPointsDocument = gql`
             groupsId
             endTime
             groupName
+            generatedName
             startTime
             weekday {
               weekdayId
               weekdayName
             }
             teacher {
+              userId
               firstName
               secondName
             }
@@ -127,32 +127,23 @@ export const StudentPointsDocument = gql`
       subcategoryPoints {
         points {
           purePoints {
+            pointsId
             value
-            teacher {
-              firstName
-              secondName
-            }
-            createdAt
-            updatedAt
           }
           partialBonusType {
             partialValue
             bonuses {
               award {
                 awardName
-              }
-              points {
-                createdAt
-                updatedAt
-                teacher {
-                  firstName
-                  secondName
+                imageFile {
+                  fileId
                 }
               }
             }
           }
         }
         subcategory {
+          subcategoryId
           subcategoryName
           category {
             categoryId
@@ -160,6 +151,12 @@ export const StudentPointsDocument = gql`
           }
           maxPoints
         }
+        teacher {
+          firstName
+          secondName
+        }
+        updatedAt
+        createdAt
       }
     }
   }

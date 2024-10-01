@@ -5,6 +5,7 @@ import backend.categories.Categories
 import backend.files.FileEntity
 import backend.utils.HasImageFile
 import jakarta.persistence.*
+import java.math.BigDecimal
 
 @Entity
 @Table(name = "award")
@@ -21,8 +22,8 @@ class Award (
         @Convert(converter = AwardTypeConverter::class)
         var awardType: AwardType,
 
-        @Column(name="award_value", nullable = false)
-        var awardValue: Float,
+        @Column(name="award_value", nullable = false, precision = 10, scale = 2)
+        var awardValue: BigDecimal,
 
         @ManyToOne
         @JoinColumn(name = "category_id", referencedColumnName = "category_id")
@@ -44,7 +45,7 @@ class Award (
         constructor() : this(
                 awardName = "",
                 awardType = AwardType.ADDITIVE,
-                awardValue = 1.0f,
+                awardValue = BigDecimal.ONE,
                 category = Categories(),
                 maxUsages = 1,
                 label = ""

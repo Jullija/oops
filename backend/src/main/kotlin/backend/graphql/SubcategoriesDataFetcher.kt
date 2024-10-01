@@ -64,7 +64,7 @@ class SubcategoriesDataFetcher {
         for (i in 0..<subcategoryCount) {
             val subcategory = Subcategories(
                 subcategoryName = "${subcategoryPrefix}_$i",
-                maxPoints = maxPoints,
+                maxPoints = maxPoints.toBigDecimal(),
                 ordinalNumber = i,
                 category = category,
                 edition = edition,
@@ -112,7 +112,7 @@ class SubcategoriesDataFetcher {
         }
         val subcategories = Subcategories(
             subcategoryName = subcategoryName,
-            maxPoints = maxPoints,
+            maxPoints = maxPoints.toBigDecimal(),
             ordinalNumber = ordinalNumber,
             category = category,
             edition = edition,
@@ -155,7 +155,7 @@ class SubcategoriesDataFetcher {
             if (it < 0) {
                 throw IllegalArgumentException("Max points must be greater than or equal to 0")
             }
-            subcategory.maxPoints = it
+            subcategory.maxPoints = it.toBigDecimal()
         }
 
         ordinalNumber?.let {

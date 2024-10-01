@@ -1,5 +1,5 @@
 import { Styles } from "../../utils/Styles";
-import { Avatar } from "../Avatar";
+import { Avatar } from "../images/Avatar";
 import { EditableIndicator } from "../EditableIndicator";
 import { StudentFromList } from "./StudentsList";
 
@@ -46,10 +46,7 @@ export const StudentsListCard = ({
 }: StudentsListCardProps) => {
   return (
     <div style={styles.container} onClick={onClick}>
-      {/* TODO why need for div? */}
-      <div>
-        <Avatar id={student.avatarId} size={"sm"} />
-      </div>
+      <Avatar id={student.avatarId} size={"s"} />
       <div style={styles.textContainer}>
         <div style={styles.title}>{student.firstName}</div>
         <div style={styles.title}>{student.secondName}</div>

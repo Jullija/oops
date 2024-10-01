@@ -6,6 +6,7 @@ import backend.bonuses.BonusesRepository
 import backend.categories.CategoriesRepository
 import backend.chestAward.ChestAward
 import backend.chestAward.ChestAwardRepository
+import backend.chestHistory.ChestHistoryRepository
 import backend.chests.Chests
 import backend.chests.ChestsRepository
 import backend.edition.EditionRepository
@@ -19,6 +20,7 @@ import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 
 @DgsComponent
 class ChestsAwardDataFetcher {
@@ -58,14 +60,21 @@ class ChestsAwardDataFetcher {
     @Autowired
     lateinit var chestAwardRepository: ChestAwardRepository
 
+    @Autowired
+    lateinit var chestHistoryRepository: ChestHistoryRepository
+
     @DgsMutation
     @Transactional
     fun addAwardToChest(@InputArgument awardId: Long, @InputArgument chestId: Long): ChestAward {
         val award = awardRepository.findById(awardId).orElseThrow { throw IllegalArgumentException("Award not found") }
-        val chest = chestsRepository.findById(chestId).orElseThrow { throw IllegalArgumentException("Chest not found") }
+        var chest = chestsRepository.findById(chestId).orElseThrow { throw IllegalArgumentException("Chest not found") }
 
-        if (chest.edition.endDate.isBefore(java.time.LocalDate.now())){
+        if (chest.edition.endDate.isBefore(LocalDate.now())){
             throw IllegalArgumentException("Edition has already ended")
+        }
+
+        if (!chest.active){
+            throw IllegalArgumentException("Chest is not active")
         }
 
         if (award.awardEditions.none { it.edition == chest.edition }){
@@ -75,6 +84,33 @@ class ChestsAwardDataFetcher {
         if (chestAwardRepository.existsByAwardAndChest(award, chest)){
             throw IllegalArgumentException("Award already exists in this chest")
         }
+
+        if (chestHistoryRepository.findByChest(chest).any { it.opened }){
+            chest.active = false
+            chestsRepository.save(chest)
+            val newChest = Chests(
+                chestType = chest.chestType,
+                label = chest.label,
+                edition = chest.edition
+            )
+            newChest.imageFile = chest.imageFile
+            chestsRepository.save(newChest)
+            chestAwardRepository.findByChest(chest).forEach {
+                chestAwardRepository.save(
+                    ChestAward(
+                        award = it.award,
+                        chest = newChest,
+                        label = it.label
+                    )
+                )
+            }
+            chestHistoryRepository.findByChest(chest).filter { !it.opened }.forEach {
+                it.chest = newChest
+                chestHistoryRepository.save(it)
+            }
+            chest = newChest
+        }
+
 
         val chestAward = ChestAward(
             award = award,
@@ -88,20 +124,44 @@ class ChestsAwardDataFetcher {
     @Transactional
     fun removeAwardFromChest(@InputArgument awardId: Long, @InputArgument chestId: Long): Boolean {
         val award = awardRepository.findById(awardId).orElseThrow { throw IllegalArgumentException("Award not found") }
-        val chest = chestsRepository.findById(chestId).orElseThrow { throw IllegalArgumentException("Chest not found") }
+        var chest = chestsRepository.findById(chestId).orElseThrow { throw IllegalArgumentException("Chest not found") }
+
+        if (chest.edition.endDate.isBefore(LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
+
+        if (!chest.active){
+            throw IllegalArgumentException("Chest is not active")
+        }
 
         if (!chestAwardRepository.existsByAwardAndChest(award, chest)){
             throw IllegalArgumentException("This award does not exist in this chest")
         }
 
-        if (chest.edition.endDate.isBefore(java.time.LocalDate.now())){
-            throw IllegalArgumentException("Edition has already ended")
-        }
-
-        if (bonusesRepository.findAllByAward(award)
-                .map { it.points }
-                .filter { points -> points.subcategory.edition == chest.edition }.isNotEmpty()) {
-            throw IllegalArgumentException("Award has bonuses in this edition")
+        if (chestHistoryRepository.findByChest(chest).any { it.opened }){
+            chest.active = false
+            chestsRepository.save(chest)
+            val newChest = Chests(
+                chestType = chest.chestType,
+                label = chest.label,
+                edition = chest.edition
+            )
+            newChest.imageFile = chest.imageFile
+            chestsRepository.save(newChest)
+            chestAwardRepository.findByChest(chest).forEach {
+                chestAwardRepository.save(
+                    ChestAward(
+                        award = it.award,
+                        chest = newChest,
+                        label = it.label
+                    )
+                )
+            }
+            chestHistoryRepository.findByChest(chest).filter { !it.opened }.forEach {
+                it.chest = newChest
+                chestHistoryRepository.save(it)
+            }
+            chest = newChest
         }
 
         chestAwardRepository.deleteByAwardAndChest(award, chest)

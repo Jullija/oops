@@ -15,10 +15,13 @@ export type HallOfFameQuery = {
     levelId?: string | null;
     levelName?: string | null;
     nick?: string | null;
-    sumOfPoints?: number | null;
+    sumOfPoints?: string | null;
     userId?: string | null;
     groupsId?: string | null;
     groupName?: string | null;
+    generatedName?: string | null;
+    levelImageId?: string | null;
+    userImageId?: string | null;
   }>;
 };
 
@@ -36,6 +39,9 @@ export const HallOfFameDocument = gql`
       userId
       groupsId
       groupName
+      generatedName
+      levelImageId
+      userImageId
     }
   }
 `;

@@ -12,6 +12,8 @@ import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 @DgsComponent
 class PointsDataFetcher {
@@ -82,7 +84,7 @@ class PointsDataFetcher {
             throw IllegalArgumentException("This student already has points in this subcategory")
         }
         val studentPointsSum = studentPoints.sumOf { it.value.toDouble() }.toFloat()
-        if (studentPointsSum + value > subcategory.maxPoints) {
+        if ((studentPointsSum + value).toBigDecimal() > subcategory.maxPoints) {
             throw IllegalArgumentException("Student cannot have more than ${subcategory.maxPoints} points in this subcategory")
         }
 
@@ -90,7 +92,7 @@ class PointsDataFetcher {
             student = student,
             teacher = teacher,
             updatedBy = teacher,
-            value = value,
+            value = BigDecimal(value.toString()).setScale(2, RoundingMode.HALF_UP),
             subcategory = subcategory,
             label = ""
         )
@@ -134,11 +136,11 @@ class PointsDataFetcher {
             val studentPointsSum = points.student.getPointsBySubcategory(points.subcategory.subcategoryId, pointsRepository)
                 .sumOf { p -> p.value.toDouble() }.toFloat()
 
-            if (studentPointsSum - points.value + newValue > points.subcategory.maxPoints) {
+            if (studentPointsSum - points.value.toFloat() + newValue > points.subcategory.maxPoints.toFloat()) {
                 throw IllegalArgumentException("Student cannot have more than ${points.subcategory.maxPoints} points in this subcategory")
             }
 
-            points.value = newValue
+            points.value = newValue.toBigDecimal()
         }
 
         updatedById.let {
@@ -152,12 +154,15 @@ class PointsDataFetcher {
 
         val savedPoints = pointsRepository.save(points)
 
-        // Update bonuses if any
-        val bonuses = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.MULTIPLICATIVE, points.student)
+        val bonusesMultiplicative = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.MULTIPLICATIVE, points.student)
             .filter { bonus -> bonus.points.subcategory.edition == points.subcategory.edition }
-
-        bonuses.forEach { bonus ->
+        val bonusesAdditiveNext = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.ADDITIVE_NEXT, points.student)
+            .filter { bonus -> bonus.points.subcategory.edition == points.subcategory.edition }
+        bonusesMultiplicative.forEach { bonus ->
             bonus.updateMultiplicativePoints(bonusRepository, pointsRepository)
+        }
+        bonusesAdditiveNext.forEach { bonus ->
+            bonus.updateAdditiveNextPoints(bonusRepository, pointsRepository)
         }
 
         return savedPoints
@@ -173,10 +178,22 @@ class PointsDataFetcher {
             throw IllegalArgumentException("Subcategory's edition has already ended")
         }
         if (bonusRepository.findByPoints(points).isNotEmpty()) {
-            throw IllegalArgumentException("Points with bonuses cannot be deleted")
+            throw IllegalArgumentException("Points from bonuses cannot be deleted")
         }
 
+        val bonusesMultiplicative = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.MULTIPLICATIVE, points.student)
+            .filter { bonus -> bonus.points.subcategory.edition == points.subcategory.edition }
+        val bonusesAdditiveNext = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.ADDITIVE_NEXT, points.student)
+            .filter { bonus -> bonus.points.subcategory.edition == points.subcategory.edition }
+
         pointsRepository.delete(points)
+
+        bonusesMultiplicative.forEach { bonus ->
+            bonus.updateMultiplicativePoints(bonusRepository, pointsRepository)
+        }
+        bonusesAdditiveNext.forEach { bonus ->
+            bonus.updateAdditiveNextPoints(bonusRepository, pointsRepository)
+        }
         return true
     }
 }

@@ -43,6 +43,8 @@ type Mutation {
   addCategory(
     categoryName: String!
     canAddPoints: Boolean!
+    lightColor: String = "#FFFFFF"
+    darkColor: String = "#000000"
     label: String = ""
   ): CategoryType
   addCategoryToEdition(categoryId: Int!, editionId: Int!): CategoryEditionType
@@ -53,12 +55,13 @@ type Mutation {
   ): EditionType
   addGroup(
     editionId: Int!
-    groupName: String!
+    usosId: Int!
     weekdayId: Int!
     startTime: String!
     endTime: String!
     teacherId: Int!
     label: String = ""
+    groupName: String = ""
   ): GroupType
   addSubcategory(
     subcategoryName: String!
@@ -74,8 +77,16 @@ type Mutation {
     firstName: String!
     secondName: String!
     role: String!
+    email: String = "example@example.com"
     label: String = ""
+    createFirebaseUser: Boolean = false
+    sendEmail: Boolean = false
   ): UserType
+  addUsersFromCsv(
+    fileId: Int!,
+    editionId: Int!
+  ): [UserType]
+  resetPassword(userId: Int!): Boolean
   generateSubcategories(
     editionId: Int!
     categoryId: Int!
@@ -107,6 +118,8 @@ type Mutation {
     categoryId: Int!,
     categoryName: String,
     canAddPoints: Boolean,
+    lightColor: String,
+    darkColor: String,
     label: String
   ): CategoryType
 
@@ -163,6 +176,7 @@ type Mutation {
   editGroup(
     groupId: Int!,
     groupName: String,
+    usosId: Int,
     weekdayId: Int,
     startTime: String,
     endTime: String,
@@ -232,6 +246,10 @@ type Mutation {
   removeUser(
     userId: Int!
   ): Boolean
+  copyChest(
+    chestId: Int!,
+    editionId: Int!
+  ): ChestType
 }
 
 type Query {
@@ -246,6 +264,7 @@ type Query {
   getPossibleGroupDates(editionId: Int!): [GroupDateType!]!
   getNeighboringLevels(studentId: Int!, editionId: Int!): NeighboringLevelsType!
   getGroupsInEdition(editionId: Int!, teacherId: Int!): [GroupTeacherType!]!
+  getCurrentUser: UserType
 }
 
 type AwardType {
@@ -254,7 +273,7 @@ type AwardType {
   awardType: AwardTypeType!
   label: String!
   maxUsages: Int!
-  awardValue: Float!
+  awardValue: String!
   category: CategoryType
   imageFile: FileType
   awardEditions: [AwardEditionType]
@@ -280,6 +299,8 @@ type BonusType {
 type CategoryType {
   categoryId: ID!
   categoryName: String!
+  lightColor: String!
+  darkColor: String!
   canAddPoints: Boolean!
   categoryEdition: [CategoryEditionType]!
   label: String!
@@ -338,7 +359,9 @@ type FileType {
 
 type GroupType {
   groupsId: ID!
-  groupName: String!
+  groupName: String
+  generatedName: String!
+  usosId: Int!
   label: String
   teacher: UserType!
   weekday: WeekdayType!
@@ -352,9 +375,9 @@ type GroupType {
 type LevelType {
   levelId: ID!
   levelName: String!
-  minimumPoints: Float!
-  maximumPoints: Float!
-  grade: Float!
+  minimumPoints: String!
+  maximumPoints: String!
+  grade: String!
   ordinalNumber: Int!
   label: String!
   edition: EditionType!
@@ -368,7 +391,7 @@ type PointType {
   student: UserType!
   teacher: UserType!
   updatedBy: UserType!
-  value: Float!
+  value: String!
   subcategory: SubcategoryType!
   label: String!
   createdAt: String!
@@ -381,7 +404,7 @@ type PointsHistoryType {
   student: UserType!
   teacher: UserType!
   updatedBy: UserType!
-  value: Float!
+  value: String!
   subcategory: SubcategoryType!
   label: String!
   createdAt: String!
@@ -395,7 +418,7 @@ type SubcategoryType {
   category: CategoryType!
   label: String!
   edition: EditionType!
-  maxPoints: Float!
+  maxPoints: String!
   ordinalNumber: Int!
 }
 
@@ -420,7 +443,9 @@ type UserType {
   indexNumber: Int!
   firstName: String!
   secondName: String!
+  email: String!
   label: String!
+  firebaseUid: String
   imageFile: FileType
   userGroups: [UserGroupType]!
   userLevels: [UserLevelType]!

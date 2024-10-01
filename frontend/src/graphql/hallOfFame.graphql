@@ -11,5 +11,8 @@ query HallOfFame($editionId: bigint) {
     userId
     groupsId
     groupName
+    generatedName
+    levelImageId
+    userImageId
   }
 }

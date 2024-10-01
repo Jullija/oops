@@ -1,0 +1,224 @@
+{
+    "database": {
+        "dbname": "mydatabase",
+        "user": "postgres",
+        "password": "password",
+        "host": "localhost",
+        "port": "6543"
+    },
+    "hasura": {
+        "url": "http://localhost:9191/v1/graphql",
+        "headers": {
+            "Content-Type": "application/json",
+            "x-hasura-role": "admin",
+            "x-hasura-admin-secret": "admin_secret"
+        }
+    },
+    "base_url": "http://localhost:9090",
+    "style": {
+        "old_style": false
+    },
+    "data_insertion": {
+        "backend_resources_path": "../../../resources/",
+        "number_of_editions": 2,
+        "number_of_teachers": 7,
+        "max_points_in_level": {
+            "is_computed": false,
+            "if_not_computed": 100
+        },
+        "number_of_groups_per_year_bounds": [
+            18,
+            22
+        ],
+        "students_per_group_bounds": [
+            10,
+            15
+        ],
+        "levels_data": [
+            {
+                "name": "Jajo",
+                "filename": "owlbear1.png",
+                "grade": 2.0
+            },
+            {
+                "name": "Pisklak",
+                "filename": "owlbear2.png",
+                "grade": 2.0
+            },
+            {
+                "name": "Podlot",
+                "filename": "owlbear3.png",
+                "grade": 3.0
+            },
+            {
+                "name": "Żółtodziób",
+                "filename": "owlbear4.png",
+                "grade": 3.5
+            },
+            {
+                "name": "Nieopierzony odkrywca",
+                "filename": "owlbear5.png",
+                "grade": 4.0
+            },
+            {
+                "name": "Samodzielny Zwierzak",
+                "filename": "owlbear6.png",
+                "grade": 4.5
+            },
+            {
+                "name": "Majestatyczna Bestia",
+                "filename": "owlbear7.png",
+                "grade": 5.0
+            }
+        ],
+        "category_data": [
+            {
+                "name": "LABORATORIUM",
+                "number_of_subcategories": 8,
+                "subcategory_prefix": "lab_",
+                "max_points_per_subcategory": 4,
+                "can_add_points": true,
+                "light_color": "#a58bce",
+                "dark_color": "#242263",
+                "editions": "all"
+            },
+            {
+                "name": "KARTKÓWKA",
+                "number_of_subcategories": 8,
+                "subcategory_prefix": "test_",
+                "max_points_per_subcategory": 2,
+                "can_add_points": true,
+                "light_color": "#7cbcce",
+                "dark_color": "#223863",
+                "editions": "all"
+            },
+            {
+                "name": "PROJEKT",
+                "number_of_subcategories": 1,
+                "subcategory_prefix": "proj_",
+                "max_points_per_subcategory": 32,
+                "can_add_points": true,
+                "light_color": "#ceaa8b",
+                "dark_color": "#632222",
+                "editions": "all"
+            },
+            {
+                "name": "WYDARZENIE",
+                "number_of_subcategories": 5,
+                "subcategory_prefix": null,
+                "max_points_per_subcategory": null,
+                "can_add_points": false,
+                "light_color": "#8bcebb",
+                "dark_color": "#1c4b5c",
+                "editions": "all"
+            },
+            {
+                "name": "WYDARZENIE_Z_PUNKTAMI",
+                "number_of_subcategories": 10,
+                "subcategory_prefix": null,
+                "max_points_per_subcategory": null,
+                "can_add_points": true,
+                "light_color": "#8bffbb",
+                "dark_color": "#1cff5c",
+                "editions": "all"
+            },
+            {
+                "name": "JEDNORAZOWE",
+                "number_of_subcategories": 1,
+                "subcategory_prefix": null,
+                "max_points_per_subcategory": 4,
+                "can_add_points": true,
+                "light_color": "#1c4b5c",
+                "dark_color": "#8bcebb",
+                "editions": "all"
+            }
+        ],
+        "category_names_to_populate": [
+            "JEDNORAZOWE",
+            "LABORATORIUM",
+            "KARTKÓWKA",
+            "PROJEKT"
+        ],
+        "chests_data": [
+            {
+                "name": "Gold Chest",
+                "filename": "ZlotaSkrzynia.png",
+                "content_type": [
+                    "multiplicative",
+                    "additive"
+                ]
+            },
+            {
+                "name": "Silver Chest",
+                "filename": "SrebrnaSkrzynia.png",
+                "content_type": [
+                    "additive_next",
+                    "additive_prev"
+                ]
+            },
+            {
+                "name": "Bronze Chest",
+                "filename": "BrazowaSkrzynia.png",
+                "content_type": [
+                    "additive_prev"
+                ]
+            }
+        ],
+        "awards_data": [
+            {
+                "name": "Lekarstwo",
+                "filename": "Lekarstwo.png",
+                "award_type": "additive_prev",
+                "award_value": 2,
+                "category_id": 1,
+                "max_usages": -1,
+                "label": "",
+                "editions": "all"
+            },
+            {
+                "name": "Weterynarz",
+                "filename": "Weterynarz.png",
+                "award_type": "additive_prev",
+                "award_value": 2,
+                "category_id": 2,
+                "max_usages": -1,
+                "label": "",
+                "editions": "all"
+            },
+            {
+                "name": "Rabat na sianko",
+                "filename": "RabatNaSianko.png",
+                "award_type": "additive",
+                "award_value": 2,
+                "category_id": 2,
+                "max_usages": -1,
+                "label": "",
+                "editions": "all"
+            },
+            {
+                "name": "Marchewka laboratoryjna",
+                "filename": "MarchewkaLaboratoryjna.png",
+                "award_type": "multiplicative",
+                "award_value": 0.1,
+                "category_id": 1,
+                "max_usages": 3,
+                "label": "",
+                "editions": "all"
+            },
+            {
+                "name": "Marchewka projektowa",
+                "filename": "MarchewkaProjektowa.png",
+                "award_type": "multiplicative",
+                "award_value": 0.1,
+                "category_id": 3,
+                "max_usages": 4,
+                "label": "",
+                "editions": "all"
+            }
+        ],
+        "subcategories_percentage": 0.6,
+        "chest_percentage": 1,
+        "open_chest_percentage": 0.9,
+        "seed": 1234
+    }
+}

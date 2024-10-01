@@ -13,7 +13,8 @@ export type GroupsQuery = {
     __typename?: "Edition";
     groups: Array<{
       __typename?: "Groups";
-      groupName: string;
+      groupName?: string | null;
+      generatedName: string;
       groupsId: string;
       startTime: string;
       endTime: string;
@@ -22,13 +23,13 @@ export type GroupsQuery = {
         weekdayId: string;
         weekdayName: string;
       };
-      userByTeacherId?: {
+      teacher: {
         __typename?: "Users";
         fullName?: string | null;
         userId: string;
         secondName: string;
         firstName: string;
-      } | null;
+      };
       file?: { __typename?: "Files"; fileId: string } | null;
     }>;
   } | null;
@@ -39,6 +40,7 @@ export const GroupsDocument = gql`
     editionByPk(editionId: $editionId) {
       groups {
         groupName
+        generatedName
         groupsId
         startTime
         weekday {
@@ -46,7 +48,7 @@ export const GroupsDocument = gql`
           weekdayName
         }
         endTime
-        userByTeacherId {
+        teacher {
           fullName
           userId
           secondName
