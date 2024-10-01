@@ -14,6 +14,7 @@ import { CategoryTag } from "../../CategoryTag";
 import { Styles } from "../../../utils/Styles";
 import { AwardImage } from "../../images/AwardImage";
 import { ActionButton } from "./ActionButton";
+import { dateOptions } from "../../../utils/constants";
 
 type StudentTableProps = {
   points: Points[];
@@ -21,15 +22,6 @@ type StudentTableProps = {
   handleDeleteClick?: (pointsId: string) => void;
   showActionButtons: boolean;
   blockActionButtons: boolean;
-};
-
-const dateOptions: Intl.DateTimeFormatOptions = {
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
-  second: "2-digit",
 };
 
 const EMPTY_FIELD = "---";

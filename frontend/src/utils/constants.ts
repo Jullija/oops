@@ -10,3 +10,12 @@ export const groupsRadioButtonOptions: GroupRadioFilterItem[] = [
   { id: "yours", name: "twoje" },
   { id: "foreign", name: "obce" },
 ];
+
+export const dateOptions: Intl.DateTimeFormatOptions = {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+};
