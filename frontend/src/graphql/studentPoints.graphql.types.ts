@@ -62,9 +62,15 @@ export type StudentPointsQuery = {
           partialValue: number;
           bonuses: {
             __typename?: "BonusType";
+            createdAt: string;
+            updatedAt: string;
             award: {
               __typename?: "AwardType";
               awardName: string;
+              awardId: string;
+              awardType: Types.AwardTypeType;
+              awardValue: string;
+              description: string;
               imageFile?: { __typename?: "FileType"; fileId: string } | null;
             };
           };
@@ -138,7 +144,13 @@ export const StudentPointsDocument = gql`
                 imageFile {
                   fileId
                 }
+                awardId
+                awardType
+                awardValue
+                description
               }
+              createdAt
+              updatedAt
             }
           }
         }

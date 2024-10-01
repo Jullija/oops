@@ -1,4 +1,4 @@
-import { AwardImage } from "./AwardImage";
+import { AwardImage, AwardImageSize } from "./AwardImage";
 import { Bonus } from "../../hooks/StudentProfile/useBonusesCardData";
 import { TooltipWrapper } from "../TooltipWrapper";
 import { dateOptions } from "../../utils/constants";
@@ -6,9 +6,10 @@ import { Styles } from "../../utils/Styles";
 
 type AwardWithTooltipProps = {
   bonus: Bonus;
+  size: AwardImageSize;
 };
 
-export const AwardWithTooltip = ({ bonus }: AwardWithTooltipProps) => {
+export const AwardWithTooltip = ({ bonus, size }: AwardWithTooltipProps) => {
   const displayDate = new Date(bonus.updatedAt ?? bonus.createdAt);
 
   return (
@@ -22,7 +23,7 @@ export const AwardWithTooltip = ({ bonus }: AwardWithTooltipProps) => {
         </div>
       }
     >
-      <AwardImage id={bonus.award.imgId} size={"m"} />
+      <AwardImage id={bonus.award.imgId} size={size} />
     </TooltipWrapper>
   );
 };

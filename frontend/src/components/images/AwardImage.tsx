@@ -10,7 +10,7 @@ const sizeMap: Record<AwardImageSize, number> = {
   m: 48,
 };
 
-type AwardImageSize = "s" | "m";
+export type AwardImageSize = "s" | "m";
 
 export const AwardImage = ({ id, size }: AwardImageProps) => {
   return <Image id={id} size={sizeMap[size]} />;

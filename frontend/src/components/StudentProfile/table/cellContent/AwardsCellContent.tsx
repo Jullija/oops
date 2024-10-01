@@ -1,7 +1,7 @@
 import { Points } from "../../../../hooks/StudentProfile/useStudentData";
 import { EMPTY_FIELD_STRING } from "../../../../utils/constants";
 import { Styles } from "../../../../utils/Styles";
-import { AwardImage } from "../../../images/AwardImage";
+import { AwardWithTooltip } from "../../../images/AwardWithTooltip";
 
 type AwardsCellContentProps = {
   points: Points;
@@ -14,11 +14,25 @@ export const AwardsCellContent = ({ points }: AwardsCellContentProps) => {
     return <div>{EMPTY_FIELD_STRING}</div>;
   }
 
+  // TODO better map
   return (
     <div style={styles.awardsContainer}>
       {bonuses.map((bonus) => {
         return (
-          <AwardImage id={bonus?.bonuses.award.imageFile?.fileId} size="s" />
+          <AwardWithTooltip
+            bonus={{
+              award: {
+                id: bonus?.bonuses.award.awardId ?? "",
+                name: bonus?.bonuses.award.awardName ?? "",
+                description: bonus?.bonuses.award.description ?? "",
+                value: parseFloat(bonus?.bonuses.award.awardValue ?? "-1"),
+                imgId: bonus?.bonuses.award.imageFile?.fileId ?? "",
+              },
+              updatedAt: bonus?.bonuses.updatedAt ?? "",
+              createdAt: bonus?.bonuses.createdAt ?? "",
+            }}
+            size={"m"}
+          />
         );
       })}
     </div>
