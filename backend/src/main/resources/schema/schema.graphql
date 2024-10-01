@@ -30,6 +30,7 @@ type Mutation {
     awardValue: Float!
     categoryId: Int!
     maxUsages: Int = -1
+    description: String
     label: String = ""
   ): AwardType
   addAwardToEdition(awardId: Int!, editionId: Int!): AwardEditionType
@@ -107,6 +108,7 @@ type Mutation {
     awardValue: Float,
     categoryId: Int,
     maxUsages: Int,
+    description: String,
     label: String
   ): AwardType
 
@@ -271,6 +273,7 @@ type AwardType {
   awardId: ID!
   awardName: String!
   awardType: AwardTypeType!
+  description: String!
   label: String!
   maxUsages: Int!
   awardValue: String!

@@ -35,6 +35,9 @@ class Award (
         @OneToMany(mappedBy = "award", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
         val awardEditions: Set<AwardEdition> = HashSet(),
 
+        @Column(name = "description", nullable = false)
+        var description: String,
+
         @Column(name = "label", nullable = false, length = 256)
         var label: String,
 
@@ -48,6 +51,7 @@ class Award (
                 awardValue = BigDecimal.ONE,
                 category = Categories(),
                 maxUsages = 1,
+                description = "",
                 label = ""
         )
 }
