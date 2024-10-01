@@ -60,6 +60,7 @@ class AwardsDataFetcher {
     @Transactional
     fun addAward(@InputArgument awardName: String, @InputArgument awardType: String, @InputArgument awardValue: Float,
                  @InputArgument categoryId: Long, @InputArgument maxUsages: Int = -1,
+                 @InputArgument description: String,
                  @InputArgument label: String = ""): Award {
 
 
@@ -94,6 +95,7 @@ class AwardsDataFetcher {
             awardValue = awardValue.toBigDecimal(),
             category = category,
             maxUsages = maxUsages,
+            description = description,
             label = ""
         )
         awardRepository.save(award)
@@ -109,6 +111,7 @@ class AwardsDataFetcher {
         @InputArgument awardValue: Float?,
         @InputArgument categoryId: Long?,
         @InputArgument maxUsages: Int?,
+        @InputArgument description: String?,
         @InputArgument label: String?
     ): Award {
         val award = awardRepository.findById(awardId).orElseThrow { IllegalArgumentException("Invalid award ID") }
@@ -158,6 +161,10 @@ class AwardsDataFetcher {
 
         maxUsages?.let {
             award.maxUsages = it
+        }
+
+        description?.let {
+            award.description = it
         }
 
         label?.let {
