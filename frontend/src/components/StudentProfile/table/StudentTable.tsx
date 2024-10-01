@@ -15,6 +15,7 @@ import { Styles } from "../../../utils/Styles";
 import { AwardImage } from "../../images/AwardImage";
 import { ActionButton } from "./ActionButton";
 import { PointsCell } from "./PointsCell";
+import { dateOptions } from "../../../utils/constants";
 
 type StudentTableProps = {
   points: Points[];
@@ -159,6 +160,8 @@ const styles: Styles = {
     display: "flex",
     justifyContent: "center",
     gap: 8,
+    maxWidth: 240,
+    flexWrap: "wrap",
   },
   buttonsContainer: {
     display: "flex",
