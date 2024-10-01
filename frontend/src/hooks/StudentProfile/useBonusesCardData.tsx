@@ -29,7 +29,7 @@ export const useBonusesCardData = (
         award: {
           id: bonus.award.awardId,
           name: bonus.award.awardName,
-          value: bonus.award.awardValue,
+          value: parseFloat(bonus.award.awardValue),
           imgId: bonus.award.imageFileId ?? undefined,
         },
         updatedAt: bonus.updatedAt,

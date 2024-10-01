@@ -1,5 +1,6 @@
 import { Bonus } from "../../../hooks/StudentProfile/useBonusesCardData";
 import { Styles } from "../../../utils/Styles";
+import { AwardImage } from "../../images/AwardImage";
 
 const styles: Styles = {
   card: {
@@ -12,6 +13,11 @@ const styles: Styles = {
   title: {
     fontWeight: "bold",
   },
+  bonusesContainer: {
+    display: "flex",
+    gap: 12,
+    flexWrap: "wrap",
+  },
 };
 
 type BonusesCardProps = {
@@ -22,11 +28,11 @@ export const BonusesCard = ({ bonuses }: BonusesCardProps) => {
   return (
     <div style={styles.card}>
       <div style={styles.title}>Bonuses</div>
-      {bonuses.map((b) => (
-        <div>
-          {b.award.name} {b.createdAt}
-        </div>
-      ))}
+      <div style={styles.bonusesContainer}>
+        {bonuses.map((b) => (
+          <AwardImage id={b.award.imgId} size={"m"} />
+        ))}
+      </div>
     </div>
   );
 };

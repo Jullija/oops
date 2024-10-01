@@ -8076,9 +8076,9 @@ export type UserLevelBoolExp = {
 
 /** unique or primary key constraints on table "user_level" */
 export enum UserLevelConstraint {
-  /** unique or primary key constraint on columns "edition_id", "user_id" */
+  /** unique or primary key constraint on columns "user_id", "edition_id" */
   UniqueUserEdition = "unique_user_edition",
-  /** unique or primary key constraint on columns "level_id", "user_id" */
+  /** unique or primary key constraint on columns "user_id", "level_id" */
   UserLevelPkey = "user_level_pkey",
 }
 

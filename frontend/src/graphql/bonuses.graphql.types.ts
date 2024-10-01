@@ -19,7 +19,7 @@ export type BonusesQuery = {
       awardId: string;
       awardName: string;
       awardType: string;
-      awardValue: number;
+      awardValue: string;
       imageFileId?: string | null;
     };
   }>;
