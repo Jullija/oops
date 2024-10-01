@@ -7,6 +7,7 @@ export type Bonus = {
     value: number;
     imgId: string | undefined;
   };
+  // TODO convert to date?
   updatedAt: string;
   createdAt: string;
 };
@@ -15,7 +16,7 @@ export const useBonusesCardData = (
   editionId: string | undefined,
   studentId: string | undefined,
 ) => {
-  const { data, loading, error } = useBonusesQuery({
+  const { data, loading, error, refetch } = useBonusesQuery({
     variables: {
       editionId: editionId as string,
       studentId: studentId as string,
@@ -37,5 +38,10 @@ export const useBonusesCardData = (
       };
     }) ?? [];
 
-  return { bonuses, bonusesLoading: loading, bonusesError: error };
+  return {
+    bonuses,
+    bonusesLoading: loading,
+    bonusesError: error,
+    bonusesRefetch: refetch,
+  };
 };

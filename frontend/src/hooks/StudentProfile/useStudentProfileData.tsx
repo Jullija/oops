@@ -32,15 +32,14 @@ export const useStudentProfileData = (studentId?: string) => {
     animalDataRefetch,
   } = useAnimalData(editionId, studentId);
 
-  const { bonuses, bonusesLoading, bonusesError } = useBonusesCardData(
-    editionId,
-    studentId,
-  );
+  const { bonuses, bonusesLoading, bonusesError, bonusesRefetch } =
+    useBonusesCardData(editionId, studentId);
 
   const refetch = () => {
     categoriesRefetch();
     studentPointsRefetch();
     animalDataRefetch();
+    bonusesRefetch();
   };
 
   return {
