@@ -172,6 +172,7 @@
                 "award_value": 2,
                 "category_id": 1,
                 "max_usages": -1,
+                "description": "Lekarstwo na wszelkie dolegliwości",
                 "label": "",
                 "editions": "all"
             },
@@ -182,6 +183,7 @@
                 "award_value": 2,
                 "category_id": 2,
                 "max_usages": -1,
+                "description": "Sprawdź się w roli lekarza",
                 "label": "",
                 "editions": "all"
             },
@@ -192,6 +194,7 @@
                 "award_value": 2,
                 "category_id": 2,
                 "max_usages": -1,
+                "description": "Pomoc w zakupie sianka",
                 "label": "",
                 "editions": "all"
             },
@@ -202,6 +205,7 @@
                 "award_value": 0.1,
                 "category_id": 1,
                 "max_usages": 3,
+                "description": "Marchewka dla naukowców",
                 "label": "",
                 "editions": "all"
             },
@@ -212,6 +216,7 @@
                 "award_value": 0.1,
                 "category_id": 3,
                 "max_usages": 4,
+                "description": "Lubisz marchewki?",
                 "label": "",
                 "editions": "all"
             }
