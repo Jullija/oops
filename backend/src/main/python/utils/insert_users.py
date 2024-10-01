@@ -96,8 +96,8 @@ def insert_teachers_and_coordinator(hasura_url, headers, fake, random, number_of
         "firstName": first_name,
         "secondName": second_name,
         "email": "hot.mamusia.69.2137@gmail.com",
-        "createFirebaseUser": False,
-        "sendEmail": False,
+        "createFirebaseUser": True,
+        "sendEmail": True,
     })
 
     # Insert teachers

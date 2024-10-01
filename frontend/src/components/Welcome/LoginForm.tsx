@@ -17,7 +17,7 @@ export const LoginForm = () => {
       setLoginError("");
     } catch (error) {
       console.error("ERROR: ", error);
-      setLoginError("Invalid email or password");
+      setLoginError((error as Error).message);
     }
   };
 

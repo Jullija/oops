@@ -10,6 +10,7 @@ import { Roles } from "../utils/types";
 import { auth } from "../../firebaseConfig";
 import { GRAPHQL_URI } from "../utils/constants";
 import Cookies from "js-cookie";
+import { cookiesStrings } from "../hooks/auth/useLogin";
 
 const httpLink = createHttpLink({
   uri: GRAPHQL_URI,
@@ -17,9 +18,9 @@ const httpLink = createHttpLink({
 
 const createAuthLink = () =>
   setContext(async (_, { headers }) => {
-    let token = Cookies.get("token");
+    let token = Cookies.get(cookiesStrings.token);
     let roleHeader;
-    const userCookie = Cookies.get("user");
+    const userCookie = Cookies.get(cookiesStrings.user);
     if (userCookie) {
       const user = JSON.parse(userCookie);
       roleHeader = {
@@ -61,5 +62,6 @@ const initializeApolloClient = () => {
 
 export const ApolloClientProvider = ({ children }: { children: ReactNode }) => {
   const client = initializeApolloClient();
+
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };
