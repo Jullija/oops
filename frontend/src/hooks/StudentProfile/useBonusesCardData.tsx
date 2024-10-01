@@ -4,6 +4,7 @@ export type Bonus = {
   award: {
     id: string;
     name: string;
+    description: string;
     value: number;
     imgId: string | undefined;
   };
@@ -30,6 +31,7 @@ export const useBonusesCardData = (
         award: {
           id: bonus.award.awardId,
           name: bonus.award.awardName,
+          description: bonus.award.description,
           value: parseFloat(bonus.award.awardValue),
           imgId: bonus.award.imageFileId ?? undefined,
         },

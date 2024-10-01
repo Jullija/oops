@@ -21,6 +21,7 @@ export type BonusesQuery = {
       awardType: string;
       awardValue: string;
       imageFileId?: string | null;
+      description: string;
     };
   }>;
 };
@@ -41,6 +42,7 @@ export const BonusesDocument = gql`
         awardType
         awardValue
         imageFileId
+        description
       }
       updatedAt
       createdAt

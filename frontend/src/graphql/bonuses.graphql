@@ -13,6 +13,7 @@ query Bonuses($studentId: bigint!, $editionId: bigint!) {
       awardType
       awardValue
       imageFileId
+      description
     }
     updatedAt
     createdAt

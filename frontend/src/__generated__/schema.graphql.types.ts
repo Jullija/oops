@@ -60,6 +60,7 @@ export type Award = {
   chestAwards: Array<ChestAward>;
   /** An aggregate relationship */
   chestAwardsAggregate: ChestAwardAggregate;
+  description: Scalars["String"]["output"];
   /** An object relationship */
   file?: Maybe<Files>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
@@ -212,6 +213,7 @@ export type AwardBoolExp = {
   categoryId?: InputMaybe<BigintComparisonExp>;
   chestAwards?: InputMaybe<ChestAwardBoolExp>;
   chestAwardsAggregate?: InputMaybe<ChestAwardAggregateBoolExp>;
+  description?: InputMaybe<StringComparisonExp>;
   file?: InputMaybe<FilesBoolExp>;
   imageFileId?: InputMaybe<BigintComparisonExp>;
   label?: InputMaybe<StringComparisonExp>;
@@ -599,6 +601,7 @@ export type AwardInsertInput = {
   category?: InputMaybe<CategoriesObjRelInsertInput>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   chestAwards?: InputMaybe<ChestAwardArrRelInsertInput>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
   file?: InputMaybe<FilesObjRelInsertInput>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
@@ -613,6 +616,7 @@ export type AwardMaxFields = {
   awardType?: Maybe<Scalars["String"]["output"]>;
   awardValue?: Maybe<Scalars["numeric"]["output"]>;
   categoryId?: Maybe<Scalars["bigint"]["output"]>;
+  description?: Maybe<Scalars["String"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   maxUsages?: Maybe<Scalars["Int"]["output"]>;
@@ -625,6 +629,7 @@ export type AwardMaxOrderBy = {
   awardType?: InputMaybe<OrderBy>;
   awardValue?: InputMaybe<OrderBy>;
   categoryId?: InputMaybe<OrderBy>;
+  description?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   maxUsages?: InputMaybe<OrderBy>;
@@ -638,6 +643,7 @@ export type AwardMinFields = {
   awardType?: Maybe<Scalars["String"]["output"]>;
   awardValue?: Maybe<Scalars["numeric"]["output"]>;
   categoryId?: Maybe<Scalars["bigint"]["output"]>;
+  description?: Maybe<Scalars["String"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   maxUsages?: Maybe<Scalars["Int"]["output"]>;
@@ -650,6 +656,7 @@ export type AwardMinOrderBy = {
   awardType?: InputMaybe<OrderBy>;
   awardValue?: InputMaybe<OrderBy>;
   categoryId?: InputMaybe<OrderBy>;
+  description?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   maxUsages?: InputMaybe<OrderBy>;
@@ -689,6 +696,7 @@ export type AwardOrderBy = {
   category?: InputMaybe<CategoriesOrderBy>;
   categoryId?: InputMaybe<OrderBy>;
   chestAwardsAggregate?: InputMaybe<ChestAwardAggregateOrderBy>;
+  description?: InputMaybe<OrderBy>;
   file?: InputMaybe<FilesOrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
@@ -713,6 +721,8 @@ export enum AwardSelectColumn {
   /** column name */
   CategoryId = "categoryId",
   /** column name */
+  Description = "description",
+  /** column name */
   ImageFileId = "imageFileId",
   /** column name */
   Label = "label",
@@ -727,6 +737,7 @@ export type AwardSetInput = {
   awardType?: InputMaybe<Scalars["String"]["input"]>;
   awardValue?: InputMaybe<Scalars["numeric"]["input"]>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   maxUsages?: InputMaybe<Scalars["Int"]["input"]>;
@@ -804,6 +815,7 @@ export type AwardStreamCursorValueInput = {
   awardType?: InputMaybe<Scalars["String"]["input"]>;
   awardValue?: InputMaybe<Scalars["numeric"]["input"]>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   maxUsages?: InputMaybe<Scalars["Int"]["input"]>;
@@ -836,6 +848,7 @@ export type AwardType = {
   awardType: AwardTypeType;
   awardValue: Scalars["String"]["output"];
   category?: Maybe<CategoryType>;
+  description: Scalars["String"]["output"];
   imageFile?: Maybe<FileType>;
   label: Scalars["String"]["output"];
   maxUsages: Scalars["Int"]["output"];
@@ -860,6 +873,8 @@ export enum AwardUpdateColumn {
   AwardValue = "awardValue",
   /** column name */
   CategoryId = "categoryId",
+  /** column name */
+  Description = "description",
   /** column name */
   ImageFileId = "imageFileId",
   /** column name */
@@ -9832,6 +9847,7 @@ export type Mutation_RootAddAwardArgs = {
   awardType: Scalars["String"]["input"];
   awardValue: Scalars["Float"]["input"];
   categoryId: Scalars["Int"]["input"];
+  description?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   maxUsages?: InputMaybe<Scalars["Int"]["input"]>;
 };
@@ -10203,6 +10219,7 @@ export type Mutation_RootEditAwardArgs = {
   awardType?: InputMaybe<Scalars["String"]["input"]>;
   awardValue?: InputMaybe<Scalars["Float"]["input"]>;
   categoryId?: InputMaybe<Scalars["Int"]["input"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   maxUsages?: InputMaybe<Scalars["Int"]["input"]>;
 };

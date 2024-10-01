@@ -217,6 +217,7 @@ type Award {
     """
     where: ChestAwardBoolExp
   ): ChestAwardAggregate!
+  description: String!
 
   """
   An object relationship
@@ -326,6 +327,7 @@ input AwardBoolExp {
   categoryId: BigintComparisonExp
   chestAwards: ChestAwardBoolExp
   chestAwardsAggregate: ChestAwardAggregateBoolExp
+  description: StringComparisonExp
   file: FilesBoolExp
   imageFileId: BigintComparisonExp
   label: StringComparisonExp
@@ -826,6 +828,7 @@ input AwardInsertInput {
   category: CategoriesObjRelInsertInput
   categoryId: bigint
   chestAwards: ChestAwardArrRelInsertInput
+  description: String
   file: FilesObjRelInsertInput
   imageFileId: bigint
   label: String
@@ -841,6 +844,7 @@ type AwardMaxFields {
   awardType: String
   awardValue: numeric
   categoryId: bigint
+  description: String
   imageFileId: bigint
   label: String
   maxUsages: Int
@@ -855,6 +859,7 @@ input AwardMaxOrderBy {
   awardType: OrderBy
   awardValue: OrderBy
   categoryId: OrderBy
+  description: OrderBy
   imageFileId: OrderBy
   label: OrderBy
   maxUsages: OrderBy
@@ -869,6 +874,7 @@ type AwardMinFields {
   awardType: String
   awardValue: numeric
   categoryId: bigint
+  description: String
   imageFileId: bigint
   label: String
   maxUsages: Int
@@ -883,6 +889,7 @@ input AwardMinOrderBy {
   awardType: OrderBy
   awardValue: OrderBy
   categoryId: OrderBy
+  description: OrderBy
   imageFileId: OrderBy
   label: OrderBy
   maxUsages: OrderBy
@@ -937,6 +944,7 @@ input AwardOrderBy {
   category: CategoriesOrderBy
   categoryId: OrderBy
   chestAwardsAggregate: ChestAwardAggregateOrderBy
+  description: OrderBy
   file: FilesOrderBy
   imageFileId: OrderBy
   label: OrderBy
@@ -982,6 +990,11 @@ enum AwardSelectColumn {
   """
   column name
   """
+  description
+
+  """
+  column name
+  """
   imageFileId
 
   """
@@ -1004,6 +1017,7 @@ input AwardSetInput {
   awardType: String
   awardValue: numeric
   categoryId: bigint
+  description: String
   imageFileId: bigint
   label: String
   maxUsages: Int
@@ -1099,6 +1113,7 @@ input AwardStreamCursorValueInput {
   awardType: String
   awardValue: numeric
   categoryId: bigint
+  description: String
   imageFileId: bigint
   label: String
   maxUsages: Int
@@ -1133,6 +1148,7 @@ type AwardType {
   awardType: AwardTypeType!
   awardValue: String!
   category: CategoryType
+  description: String!
   imageFile: FileType
   label: String!
   maxUsages: Int!
@@ -1173,6 +1189,11 @@ enum AwardUpdateColumn {
   column name
   """
   categoryId
+
+  """
+  column name
+  """
+  description
 
   """
   column name
@@ -13447,6 +13468,7 @@ type mutation_root {
     awardType: String!
     awardValue: Float!
     categoryId: Int!
+    description: String
     label: String = ""
     maxUsages: Int = -1
   ): AwardType
@@ -13837,6 +13859,7 @@ type mutation_root {
     awardType: String
     awardValue: Float
     categoryId: Int
+    description: String
     label: String
     maxUsages: Int
   ): AwardType
