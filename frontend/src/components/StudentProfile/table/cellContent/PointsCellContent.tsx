@@ -8,12 +8,12 @@ type PointsCellProps = {
 
 export const PointsCellContent = ({ points }: PointsCellProps) => {
   const bonusesPoints =
-    points.points.partialBonusType.length === 0
-      ? undefined
-      : points.points.partialBonusType.reduce(
+    points.points.partialBonusType.length !== 0
+      ? points.points.partialBonusType.reduce(
           (total, bonus) => total + (bonus?.partialValue ?? 0),
           0,
-        );
+        )
+      : undefined;
 
   const purePoints = points.points.purePoints?.value
     ? parseFloat(points.points.purePoints?.value)
