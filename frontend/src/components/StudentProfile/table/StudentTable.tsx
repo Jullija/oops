@@ -12,8 +12,10 @@ import {
 import { Points } from "../../../hooks/StudentProfile/useStudentData";
 import { CategoryTag } from "../../CategoryTag";
 import { Styles } from "../../../utils/Styles";
-import { AwardImage } from "../../images/AwardImage";
 import { ActionButton } from "./ActionButton";
+import { PointsCellContent } from "./cellContent/PointsCellContent";
+import { AwardsCellContent } from "./cellContent/AwardsCellContent";
+import { DateCellContent } from "./cellContent/DateCellContent";
 
 type StudentTableProps = {
   points: Points[];
@@ -22,17 +24,6 @@ type StudentTableProps = {
   showActionButtons: boolean;
   blockActionButtons: boolean;
 };
-
-const dateOptions: Intl.DateTimeFormatOptions = {
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
-  second: "2-digit",
-};
-
-const EMPTY_FIELD = "---";
 
 type HeaderTitle = {
   name: string;
@@ -61,47 +52,6 @@ export const StudentTable = ({
       mode: "dark",
     },
   });
-
-  const getPointsValueString = (points: Points): string => {
-    const pure = points.points.purePoints?.value
-      ? parseFloat(points.points.purePoints?.value)
-      : 0;
-
-    let totalBonus = 0;
-    points.points.partialBonusType.forEach(
-      (bonus) => (totalBonus += bonus?.partialValue ?? 0),
-    );
-    if (totalBonus === 0 && pure === 0) {
-      return "0.00";
-    }
-    if (totalBonus === 0) {
-      return pure.toFixed(2);
-    }
-
-    return `${pure.toFixed(2)} + ${totalBonus.toFixed(2)} = ${(pure + totalBonus).toFixed(2)}`;
-  };
-
-  const getDisplayDateString = (points: Points): string => {
-    const date = new Date(points.updatedAt ?? points.createdAt);
-    return date.toLocaleDateString("pl-PL", dateOptions);
-  };
-
-  const getAwardsPhotos = (points: Points) => {
-    const bonuses = points.points.partialBonusType;
-    if (bonuses.length === 0) {
-      return EMPTY_FIELD;
-    }
-
-    return (
-      <div style={styles.awardsContainer}>
-        {bonuses.map((bonus) => {
-          return (
-            <AwardImage id={bonus?.bonuses.award.imageFile?.fileId} size="s" />
-          );
-        })}
-      </div>
-    );
-  };
 
   if (showActionButtons && (!handleEditClick || !handleDeleteClick)) {
     throw new Error(
@@ -153,16 +103,22 @@ export const StudentTable = ({
                 <TableCell align="center">
                   {p.subcategory.subcategoryName}
                 </TableCell>
-                <TableCell align="center">{getAwardsPhotos(p)}</TableCell>
+                <TableCell align="center">
+                  <AwardsCellContent points={p} />
+                </TableCell>
                 <TableCell align="center">
                   <CategoryTag
                     id={p.subcategory.category.categoryId}
                     name={p.subcategory.category.categoryName}
                   />
                 </TableCell>
-                <TableCell align="center">{getPointsValueString(p)}</TableCell>
+                <TableCell align="center">
+                  <PointsCellContent points={p} />
+                </TableCell>
                 <TableCell align="center">{p.subcategory.maxPoints}</TableCell>
-                <TableCell align="center">{getDisplayDateString(p)}</TableCell>
+                <TableCell align="center">
+                  <DateCellContent points={p} />
+                </TableCell>
                 <TableCell align="center">
                   {p.teacher.firstName} {p.teacher.secondName}
                 </TableCell>
@@ -179,11 +135,6 @@ const styles: Styles = {
   header: {
     fontWeight: "bold",
     fontSize: 16,
-  },
-  awardsContainer: {
-    display: "flex",
-    justifyContent: "center",
-    gap: 8,
   },
   buttonsContainer: {
     display: "flex",

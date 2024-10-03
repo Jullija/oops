@@ -21,6 +21,7 @@ export function StudentProfile() {
     prevLevel,
     currLevel,
     nextLevel,
+    bonuses,
     filterHeaderNames,
     loading,
     error,
@@ -41,6 +42,7 @@ export function StudentProfile() {
         prevLevel={prevLevel}
         currLevel={currLevel}
         nextLevel={nextLevel}
+        bonuses={bonuses}
       />
       <StudentTableWithFilters
         points={points}

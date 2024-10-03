@@ -45,7 +45,13 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
               imageFile {
                 fileId
               }
+              awardId
+              awardType
+              awardValue
+              description
             }
+            createdAt
+            updatedAt
           }
         }
       }
