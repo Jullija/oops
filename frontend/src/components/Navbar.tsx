@@ -4,6 +4,8 @@ import { Styles } from "../utils/Styles";
 import { useEditionSelection } from "../hooks/common/useEditionSelection";
 import { useUser } from "../hooks/common/useUser";
 import { hasRole, isEditionActive } from "../utils/utils";
+import { Roles } from "../utils/types";
+import { useLogin } from "../hooks/auth/useLogin";
 
 export const NAV_BAR_HEIGHT = 100;
 
@@ -30,6 +32,7 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const { selectedEdition } = useEditionSelection();
   const { user } = useUser();
+  const { logout } = useLogin();
 
   return (
     <div style={styles.container}>
@@ -44,6 +47,11 @@ export const Navbar = () => {
             {item.title}
           </div>
         ))}
+      {user.role !== Roles.UNAUTHENTICATED_USER && (
+        <div onClick={async () => await logout()} style={styles.navbarItem}>
+          Logout
+        </div>
+      )}
       {selectedEdition ? (
         <div style={styles.editionName}>
           edition: {selectedEdition.editionId},{" "}
