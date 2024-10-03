@@ -7,6 +7,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../firebaseConfig";
 import Cookies from "js-cookie";
 import { useUser } from "../common/useUser";
+import { useApolloClient } from "@apollo/client";
 
 export const cookiesStrings = {
   token: "token",
@@ -21,6 +22,7 @@ type LoginCredentials = {
 export const useLogin = () => {
   const navigate = useNavigate();
   const { setUser } = useUser();
+  const apolloClient = useApolloClient();
 
   const [fetchCurrentUser] = useCurrentUserLazyQuery();
 
@@ -50,9 +52,7 @@ export const useLogin = () => {
     Cookies.set(cookiesStrings.token, token);
 
     // fetch currently logged in user data
-    const { data, error } = await fetchCurrentUser({
-      fetchPolicy: "no-cache",
-    });
+    const { data, error } = await fetchCurrentUser();
     const user: User | undefined = data?.getCurrentUser
       ? {
           nick: data?.getCurrentUser.nick,
@@ -62,7 +62,7 @@ export const useLogin = () => {
       : undefined;
 
     if (error || !user) {
-      logout();
+      await logout();
       throw new Error(error?.message ?? "Fetched current user is undefined");
     }
 
@@ -101,9 +101,11 @@ export const useLogin = () => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
     Cookies.remove(cookiesStrings.token);
     Cookies.remove(cookiesStrings.user);
+
+    await apolloClient.clearStore();
 
     setUser(defaultUnauthenticatedUser);
     navigate(pathsGenerator.common.Default);

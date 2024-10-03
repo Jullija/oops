@@ -48,7 +48,7 @@ export const Navbar = () => {
           </div>
         ))}
       {user.role !== Roles.UNAUTHENTICATED_USER && (
-        <div onClick={logout} style={styles.navbarItem}>
+        <div onClick={async () => await logout()} style={styles.navbarItem}>
           Logout
         </div>
       )}
