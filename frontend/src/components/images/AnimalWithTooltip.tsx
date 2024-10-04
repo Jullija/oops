@@ -1,39 +1,32 @@
 import { TooltipWrapper } from "../TooltipWrapper";
 import { Styles } from "../../utils/Styles";
 import { Avatar, AvatarSize } from "./Avatar";
+import { Level } from "../../hooks/StudentProfile/useLevelsData";
 
 type AnimalWithTooltipProps = {
-  name: string;
-  ordinal: number;
-  max: number;
-  min: number;
-  imageId: string;
+  level: Level;
   size: AvatarSize;
   disabled: boolean;
 };
 
 export const AnimalWithTooltip = ({
-  name,
-  ordinal,
-  max,
-  min,
+  level,
   size,
-  imageId,
   disabled,
 }: AnimalWithTooltipProps) => {
   return (
     <TooltipWrapper
       tooltipContent={
         <div style={styles.container}>
-          <div style={styles.title}>{name}</div>
-          <div>lvl. {ordinal}</div>
+          <div style={styles.title}>{level.name}</div>
+          <div>lvl. {level.ordinalNumber + 1}</div>
           <div>
-            from {min} to {max} points
+            from {level.minimumPoints} to {level.maximumPoints} points
           </div>
         </div>
       }
     >
-      <Avatar id={imageId} size={size} disabled={disabled} />
+      <Avatar id={level.imageId} size={size} disabled={disabled} />
     </TooltipWrapper>
   );
 };

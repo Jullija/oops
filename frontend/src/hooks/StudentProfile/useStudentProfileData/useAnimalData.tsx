@@ -1,6 +1,6 @@
 import { ApolloError } from "@apollo/client";
-import { LevelType } from "../../__generated__/schema.graphql.types";
-import { useNeighboringLevelsQuery } from "../../graphql/neighbouringLevels.graphql.types";
+import { LevelType } from "../../../__generated__/schema.graphql.types";
+import { useNeighboringLevelsQuery } from "../../../graphql/neighbouringLevels.graphql.types";
 
 export type AnimalDataResult = {
   prevLevel: LevelType | undefined;

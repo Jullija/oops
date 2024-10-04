@@ -3,7 +3,7 @@ import { useCreatePointsMutation } from "../../graphql/createPoints.graphql.type
 import { useEditPointsMutation } from "../../graphql/editPoints.graphql.types";
 import { useRemovePointsMutation } from "../../graphql/removePoints.graphql.types";
 import { FormPoints } from "../../components/StudentProfile/PointsForm/types";
-import { Points } from "./useStudentData";
+import { Points } from "./useStudentProfileData/useStudentData";
 
 export const useTeacherActions = (
   refetchStudentScreenData: () => void,

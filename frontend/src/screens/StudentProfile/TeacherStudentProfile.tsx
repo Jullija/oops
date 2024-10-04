@@ -2,7 +2,7 @@ import { Styles } from "../../utils/Styles";
 import { useParams } from "react-router-dom";
 import { PointsForm } from "../../components/StudentProfile/PointsForm/PointsForm";
 import { useUser } from "../../hooks/common/useUser";
-import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
+import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData/useStudentProfileData";
 import { SideBar } from "../../components/StudentProfile/SideBar";
 import { useFormCategories } from "../../hooks/common/useFormCategories";
 import { Dialog } from "@mui/material";

@@ -1,7 +1,7 @@
 import { Styles } from "../../../utils/Styles";
 import FilterMenu from "./FilterMenu";
 import { useState } from "react";
-import { Points } from "../../../hooks/StudentProfile/useStudentData";
+import { Points } from "../../../hooks/StudentProfile/useStudentProfileData/useStudentData";
 import { FilterItem } from "../../Groups/FilterBar/FilterOptionsSection";
 import { StudentTable } from "./StudentTable";
 

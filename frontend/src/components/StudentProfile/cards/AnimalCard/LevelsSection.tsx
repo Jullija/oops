@@ -1,6 +1,5 @@
 import { LevelType } from "../../../../__generated__/schema.graphql.types";
-import { useLevelsQuery } from "../../../../graphql/levels.graphql.types";
-import { useEditionSelection } from "../../../../hooks/common/useEditionSelection";
+import { useLevelsData } from "../../../../hooks/StudentProfile/useLevelsData";
 import { Styles } from "../../../../utils/Styles";
 import { AnimalWithTooltip } from "../../../images/AnimalWithTooltip";
 
@@ -9,15 +8,7 @@ type LevelsSectionProps = {
 };
 
 export const LevelsSection = ({ studentLevel }: LevelsSectionProps) => {
-  const { selectedEdition } = useEditionSelection();
-  const editionId = selectedEdition?.editionId;
-
-  const { data, error, loading } = useLevelsQuery({
-    variables: { editionId: editionId },
-    skip: !editionId,
-  });
-
-  const levels = data?.levels;
+  const { levels, loading, error } = useLevelsData();
 
   if (loading) return <div>loading...</div>;
   if (error) return <div>ERROR: {error.message}</div>;
@@ -28,13 +19,9 @@ export const LevelsSection = ({ studentLevel }: LevelsSectionProps) => {
       <div style={styles.levelsContainer}>
         {levels?.map((level) => (
           <AnimalWithTooltip
-            name={level.name}
-            ordinal={level.ordinalNumber + 1}
-            max={parseInt(level.maximumPoints)}
-            min={parseInt(level.minimumPoints)}
-            imageId={level.imageFileId ?? "-1"}
+            level={level}
             size={"xs"}
-            disabled={level.ordinalNumber === studentLevel.ordinalNumber}
+            disabled={level.ordinalNumber > studentLevel.ordinalNumber}
           />
         ))}
       </div>

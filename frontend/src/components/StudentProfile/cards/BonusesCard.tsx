@@ -1,4 +1,4 @@
-import { Bonus } from "../../../hooks/StudentProfile/useBonusesCardData";
+import { Bonus } from "../../../hooks/StudentProfile/useStudentProfileData/useBonusesCardData";
 import { EMPTY_FIELD_STRING } from "../../../utils/constants";
 import { Styles } from "../../../utils/Styles";
 import { AwardWithTooltip } from "../../images/AwardWithTooltip";

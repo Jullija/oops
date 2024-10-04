@@ -1,4 +1,4 @@
-import { useBonusesQuery } from "../../graphql/bonuses.graphql.types";
+import { useBonusesQuery } from "../../../graphql/bonuses.graphql.types";
 
 export type Bonus = {
   award: {

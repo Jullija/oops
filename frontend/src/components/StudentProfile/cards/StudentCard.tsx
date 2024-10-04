@@ -1,5 +1,5 @@
 import { Styles } from "../../../utils/Styles";
-import { StudentCardData } from "../../../hooks/StudentProfile/useStudentData";
+import { StudentCardData } from "../../../hooks/StudentProfile/useStudentProfileData/useStudentData";
 import { Avatar } from "../../images/Avatar";
 
 const styles: Styles = {

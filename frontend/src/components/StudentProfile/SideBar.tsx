@@ -2,11 +2,11 @@ import { PointsBarProps } from "../PointsBar";
 import { StudentCard } from "./cards/StudentCard";
 import { CategoriesCard } from "./cards/CategoriesCard";
 import { Styles } from "../../utils/Styles";
-import { StudentCardData } from "../../hooks/StudentProfile/useStudentData";
+import { StudentCardData } from "../../hooks/StudentProfile/useStudentProfileData/useStudentData";
 import { AnimalCard } from "./cards/AnimalCard/AnimalCard";
 import { LevelType } from "../../__generated__/schema.graphql.types";
 import { BonusesCard } from "./cards/BonusesCard";
-import { Bonus } from "../../hooks/StudentProfile/useBonusesCardData";
+import { Bonus } from "../../hooks/StudentProfile/useStudentProfileData/useBonusesCardData";
 
 const styles: Styles = {
   container: {

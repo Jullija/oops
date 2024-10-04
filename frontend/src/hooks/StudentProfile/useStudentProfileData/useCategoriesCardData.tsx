@@ -1,5 +1,5 @@
-import { PointsBarProps } from "../../components/PointsBar";
-import { useCategoriesPointsQuery } from "../../graphql/categoriesPoints.graphql.types";
+import { PointsBarProps } from "../../../components/PointsBar";
+import { useCategoriesPointsQuery } from "../../../graphql/categoriesPoints.graphql.types";
 
 export const useCategoriesCardData = (props: {
   editionId: string | undefined;

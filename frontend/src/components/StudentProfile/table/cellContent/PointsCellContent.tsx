@@ -1,4 +1,4 @@
-import { Points } from "../../../../hooks/StudentProfile/useStudentData";
+import { Points } from "../../../../hooks/StudentProfile/useStudentProfileData/useStudentData";
 import { EMPTY_FIELD_STRING } from "../../../../utils/constants";
 import { Styles } from "../../../../utils/Styles";
 

@@ -1,4 +1,4 @@
-import { Points } from "../../../../hooks/StudentProfile/useStudentData";
+import { Points } from "../../../../hooks/StudentProfile/useStudentProfileData/useStudentData";
 import { dateOptions } from "../../../../utils/constants";
 
 type DateCellContentProps = {
