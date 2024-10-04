@@ -1,4 +1,4 @@
-import { PointsBarProps } from "../../../components/PointsBar";
+import { ProgressBarProps } from "../../../components/bars/ProgressBar";
 import { useCategoriesPointsQuery } from "../../../graphql/categoriesPoints.graphql.types";
 
 export const useCategoriesCardData = (props: {
@@ -15,11 +15,12 @@ export const useCategoriesCardData = (props: {
     skip: !editionId || !studentId,
   });
 
-  const categories: PointsBarProps[] =
+  const categories: ProgressBarProps[] =
     data?.getSumOfPointsForStudentByCategory.map((category) => {
       return {
         label: category.category.categoryName,
         bounds: {
+          lower: 0,
           upper: category.maxPoints,
         },
         points: category.sumOfAll,

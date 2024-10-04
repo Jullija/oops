@@ -1,4 +1,4 @@
-import { Styles } from "../utils/Styles";
+import { Styles } from "../../utils/Styles";
 
 const styles: Styles = {
   container: {
@@ -27,28 +27,28 @@ const styles: Styles = {
   },
 };
 
-export type PointsBarProps = {
+export type ProgressBarProps = {
   points: number;
-  bounds: { lower?: number; upper: number };
+  bounds: { lower: number; upper: number };
   showPoints?: boolean;
   label?: string;
 };
 
-export const PointsBar = ({
+export const ProgressBar = ({
   points,
   bounds,
   showPoints,
   label,
-}: PointsBarProps) => {
+}: ProgressBarProps) => {
   if (points < 0) {
     throw new Error("points cannot be negative number");
   }
 
-  if (bounds.lower && points < bounds.lower) {
+  if (points < bounds.lower) {
     throw new Error("points cannot be lower than lower bound");
   }
 
-  const diff = bounds.lower ?? 0;
+  const diff = bounds.lower;
   const filledPercent = Math.min(
     Math.round(((points - diff) / (bounds.upper - diff)) * 100),
     100,

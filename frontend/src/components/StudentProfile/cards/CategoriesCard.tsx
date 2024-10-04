@@ -1,4 +1,4 @@
-import { PointsBar, PointsBarProps } from "../../PointsBar";
+import { ProgressBar, ProgressBarProps } from "../../bars/ProgressBar";
 import { Styles } from "../../../utils/Styles";
 
 const styles: Styles = {
@@ -15,7 +15,7 @@ const styles: Styles = {
 };
 
 type CategoriesCardProps = {
-  categoriesBarProps: PointsBarProps[];
+  categoriesBarProps: ProgressBarProps[];
 };
 
 export const CategoriesCard = ({ categoriesBarProps }: CategoriesCardProps) => {
@@ -23,7 +23,7 @@ export const CategoriesCard = ({ categoriesBarProps }: CategoriesCardProps) => {
     <div style={styles.card}>
       <div style={styles.title}>Punkty</div>
       {categoriesBarProps.map((props, index) => (
-        <PointsBar key={index} {...props} showPoints />
+        <ProgressBar key={index} {...props} showPoints />
       ))}
     </div>
   );

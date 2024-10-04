@@ -1,4 +1,4 @@
-import { PointsBarProps } from "../PointsBar";
+import { ProgressBarProps } from "../bars/ProgressBar";
 import { StudentCard } from "./cards/StudentCard";
 import { CategoriesCard } from "./cards/CategoriesCard";
 import { Styles } from "../../utils/Styles";
@@ -20,7 +20,7 @@ const styles: Styles = {
 
 type SideBarProps = {
   student: StudentCardData;
-  categoriesBarProps: PointsBarProps[];
+  categoriesBarProps: ProgressBarProps[];
   prevLevel: Level | undefined;
   currLevel: Level;
   nextLevel: Level | undefined;

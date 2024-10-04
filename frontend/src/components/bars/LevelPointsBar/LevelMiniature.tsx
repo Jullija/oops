@@ -1,5 +1,5 @@
-import { Level } from "../../../../hooks/StudentProfile";
-import { Avatar } from "../../../images/Avatar";
+import { Level } from "../../../hooks/StudentProfile";
+import { Avatar } from "../../images/Avatar";
 
 type LevelMiniatureProps = {
   level: Level;
