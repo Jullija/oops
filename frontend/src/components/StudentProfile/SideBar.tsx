@@ -6,7 +6,7 @@ import { StudentCardData } from "../../hooks/StudentProfile/useStudentProfileDat
 import { AnimalCard } from "./cards/AnimalCard/AnimalCard";
 import { LevelType } from "../../__generated__/schema.graphql.types";
 import { BonusesCard } from "./cards/BonusesCard";
-import { Bonus } from "../../hooks/StudentProfile/useStudentProfileData/useBonusesCardData";
+import { Bonus } from "../../hooks/StudentProfile";
 
 const styles: Styles = {
   container: {

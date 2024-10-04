@@ -1,13 +1,6 @@
 import { useEditionSelection } from "../common/useEditionSelection";
 import { useLevelsQuery } from "../../graphql/levels.graphql.types";
-
-export type Level = {
-  name: string;
-  ordinalNumber: number;
-  imageId: string | undefined;
-  minimumPoints: number;
-  maximumPoints: number;
-};
+import { Level } from "./types";
 
 export const useLevelsData = () => {
   const { selectedEdition } = useEditionSelection();

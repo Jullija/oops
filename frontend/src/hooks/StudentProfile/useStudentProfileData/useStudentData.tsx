@@ -1,12 +1,7 @@
 import { FilterItem } from "../../../components/Groups/FilterBar/FilterOptionsSection";
-import {
-  StudentPointsQuery,
-  useStudentPointsQuery,
-} from "../../../graphql/studentPoints.graphql.types";
+import { useStudentPointsQuery } from "../../../graphql/studentPoints.graphql.types";
 import { Timestamp, Weekday } from "../../common/useGroupsData";
-
-export type Points =
-  StudentPointsQuery["getStudentPoints"]["subcategoryPoints"][number];
+import { Points } from "../types";
 
 export type StudentCardData = {
   id: string;

@@ -1,17 +1,5 @@
 import { useBonusesQuery } from "../../../graphql/bonuses.graphql.types";
-
-export type Bonus = {
-  award: {
-    id: string;
-    name: string;
-    description: string;
-    value: number;
-    imgId: string | undefined;
-  };
-  // TODO convert to date?
-  updatedAt: string;
-  createdAt: string;
-};
+import { Bonus } from "../types";
 
 export const useBonusesCardData = (
   editionId: string | undefined,

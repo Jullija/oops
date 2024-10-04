@@ -1,7 +1,7 @@
 import { TooltipWrapper } from "../TooltipWrapper";
 import { Styles } from "../../utils/Styles";
 import { Avatar, AvatarSize } from "./Avatar";
-import { Level } from "../../hooks/StudentProfile/useLevelsData";
+import { Level } from "../../hooks/StudentProfile";
 
 type AnimalWithTooltipProps = {
   level: Level;

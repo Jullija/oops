@@ -9,7 +9,7 @@ import {
   TableRow,
   ThemeProvider,
 } from "@mui/material";
-import { Points } from "../../../hooks/StudentProfile/useStudentProfileData/useStudentData";
+import { Points } from "../../../hooks/StudentProfile";
 import { CategoryTag } from "../../CategoryTag";
 import { Styles } from "../../../utils/Styles";
 import { ActionButton } from "./ActionButton";

@@ -1,6 +1,6 @@
 import { Styles } from "../../utils/Styles";
 import { useUser } from "../../hooks/common/useUser";
-import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData/useStudentProfileData";
+import { useStudentProfileData } from "../../hooks/StudentProfile";
 import { SideBar } from "../../components/StudentProfile/SideBar";
 import { StudentTableWithFilters } from "../../components/StudentProfile/table/StudentTableWithFilters";
 
