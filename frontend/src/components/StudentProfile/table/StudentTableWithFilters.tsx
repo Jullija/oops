@@ -5,15 +5,6 @@ import { Points } from "../../../hooks/StudentProfile/useStudentData";
 import { FilterItem } from "../../Groups/FilterBar/FilterOptionsSection";
 import { StudentTable } from "./StudentTable";
 
-const styles: Styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-    flex: 1,
-  },
-};
-
 type StudentTableWithFiltersProps = {
   points: Points[];
   filterHeaderNames: FilterItem[];
@@ -62,4 +53,13 @@ export const StudentTableWithFilters = ({
       />
     </div>
   );
+};
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+    flex: 1,
+  },
 };

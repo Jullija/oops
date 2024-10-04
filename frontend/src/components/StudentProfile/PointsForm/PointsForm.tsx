@@ -7,23 +7,6 @@ import { NumberInput } from "../../inputs/NumberInput";
 import { SelectInput } from "../../inputs/SelectInput";
 import { Category } from "../../../utils/utils";
 
-const styles: Styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-    padding: 12,
-    border: "1px solid black",
-    width: 500,
-  },
-  title: {
-    fontWeight: "bold",
-  },
-  error: {
-    color: "red",
-  },
-};
-
 type PointsFormValues = z.infer<typeof ValidationSchema>;
 
 const ValidationSchema = z.object({
@@ -159,4 +142,21 @@ export const PointsForm = ({
       {mutationError && <p style={styles.error}>Error: {mutationError}</p>}
     </div>
   );
+};
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+    padding: 12,
+    border: "1px solid black",
+    width: 500,
+  },
+  title: {
+    fontWeight: "bold",
+  },
+  error: {
+    color: "red",
+  },
 };

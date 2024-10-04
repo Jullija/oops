@@ -1,16 +1,5 @@
 import { Styles } from "../../utils/Styles";
 
-const styles: Styles = {
-  button: {
-    padding: 12,
-    backgroundColor: "lightgrey",
-  },
-  active: {
-    backgroundColor: "blue",
-    color: "white",
-  },
-};
-
 export type GroupRadioFilterItem =
   | {
       id: "all";
@@ -52,4 +41,15 @@ export const RadioFilterGroups = ({
       ))}
     </>
   );
+};
+
+const styles: Styles = {
+  button: {
+    padding: 12,
+    backgroundColor: "lightgrey",
+  },
+  active: {
+    backgroundColor: "blue",
+    color: "white",
+  },
 };

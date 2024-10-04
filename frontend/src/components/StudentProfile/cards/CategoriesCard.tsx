@@ -1,19 +1,6 @@
 import { PointsBar, PointsBarProps } from "../../PointsBar";
 import { Styles } from "../../../utils/Styles";
 
-const styles: Styles = {
-  card: {
-    display: "flex",
-    flexDirection: "column",
-    border: "1px solid blue",
-    gap: 12,
-    padding: 24,
-  },
-  title: {
-    fontWeight: "bold",
-  },
-};
-
 type CategoriesCardProps = {
   categoriesBarProps: PointsBarProps[];
 };
@@ -27,4 +14,17 @@ export const CategoriesCard = ({ categoriesBarProps }: CategoriesCardProps) => {
       ))}
     </div>
   );
+};
+
+const styles: Styles = {
+  card: {
+    display: "flex",
+    flexDirection: "column",
+    border: "1px solid blue",
+    gap: 12,
+    padding: 24,
+  },
+  title: {
+    fontWeight: "bold",
+  },
 };

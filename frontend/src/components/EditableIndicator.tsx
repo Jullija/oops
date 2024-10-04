@@ -1,5 +1,13 @@
 import { Styles } from "../utils/Styles";
 
+export const EditableIndicator = () => {
+  return (
+    <div style={styles.editable}>
+      <div style={styles.editIcon}>✎</div>
+    </div>
+  );
+};
+
 const styles: Styles = {
   editable: {
     borderRadius: "100%",
@@ -14,11 +22,4 @@ const styles: Styles = {
     fontSize: 22,
     color: "white",
   },
-};
-export const EditableIndicator = () => {
-  return (
-    <div style={styles.editable}>
-      <div style={styles.editIcon}>✎</div>
-    </div>
-  );
 };

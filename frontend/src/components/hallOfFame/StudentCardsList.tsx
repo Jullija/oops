@@ -4,18 +4,6 @@ import {
   HallOfFameStudentCard,
 } from "./HallOfFameStudentCard";
 
-const styles: Styles = {
-  cardsContainer: {
-    display: "flex",
-    flex: 1,
-    flexDirection: "column",
-    gap: 12,
-    width: 600,
-    overflowY: "scroll",
-    padding: 12,
-  },
-};
-
 type StudentCardsListProps = {
   students: HallOfFameStudentData[];
   highlightedStudent?: HallOfFameStudentData;
@@ -36,4 +24,16 @@ export const StudentCardsList = ({
       ))}
     </div>
   );
+};
+
+const styles: Styles = {
+  cardsContainer: {
+    display: "flex",
+    flex: 1,
+    flexDirection: "column",
+    gap: 12,
+    width: 600,
+    overflowY: "scroll",
+    padding: 12,
+  },
 };

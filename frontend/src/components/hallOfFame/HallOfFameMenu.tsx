@@ -3,15 +3,6 @@ import { HallOfFameStudentData } from "./HallOfFameStudentCard";
 import { HallOfFameStudentSearcher } from "./HallOfFameStudentSearcher";
 import { FilterButton } from "../FilterButton";
 
-const styles: Styles = {
-  container: {
-    display: "flex",
-    gap: 12,
-    padding: 12,
-    backgroundColor: "lightgrey",
-  },
-};
-
 type HallOfFameMenuProps = {
   students: HallOfFameStudentData[];
   showStudentsFromAllGroups: boolean;
@@ -50,4 +41,13 @@ export const HallOfFameMenu = ({
       )}
     </div>
   );
+};
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    gap: 12,
+    padding: 12,
+    backgroundColor: "lightgrey",
+  },
 };
