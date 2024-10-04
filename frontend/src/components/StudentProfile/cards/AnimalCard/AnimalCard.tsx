@@ -2,8 +2,8 @@ import { Styles } from "../../../../utils/Styles";
 import { PointsBar } from "../../../PointsBar";
 import { Avatar } from "../../../images/Avatar";
 import { LevelMiniature } from "./LevelMiniature";
-import { LevelType } from "../../../../__generated__/schema.graphql.types";
 import { LevelsSection } from "./LevelsSection";
+import { Level } from "../../../../hooks/StudentProfile";
 
 const styles: Styles = {
   card: {
@@ -26,9 +26,9 @@ const styles: Styles = {
 };
 
 type AnimalCardProps = {
-  prevLevel?: LevelType;
-  currLevel: LevelType;
-  nextLevel?: LevelType;
+  prevLevel: Level | undefined;
+  currLevel: Level;
+  nextLevel: Level | undefined;
   totalPoints: number;
 };
 
@@ -40,15 +40,15 @@ export const AnimalCard = ({
 }: AnimalCardProps) => {
   return (
     <div style={styles.card}>
-      <Avatar id={currLevel.imageFile?.fileId} size="l" />
+      <Avatar id={currLevel.imageId} size="l" />
       <div style={styles.title}>
-        obecny level: {currLevel.levelName} - lvl. {currLevel.ordinalNumber}
+        obecny level: {currLevel.name} - lvl. {currLevel.ordinalNumber}
       </div>
       <PointsBar
         points={totalPoints}
         bounds={{
-          lower: parseInt(currLevel.minimumPoints),
-          upper: parseInt(currLevel.maximumPoints),
+          lower: currLevel.minimumPoints,
+          upper: currLevel.maximumPoints,
         }}
         showPoints
       />

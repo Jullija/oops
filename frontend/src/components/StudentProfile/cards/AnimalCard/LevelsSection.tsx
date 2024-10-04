@@ -1,10 +1,10 @@
-import { LevelType } from "../../../../__generated__/schema.graphql.types";
+import { Level } from "../../../../hooks/StudentProfile";
 import { useLevelsData } from "../../../../hooks/StudentProfile/useLevelsData";
 import { Styles } from "../../../../utils/Styles";
 import { AnimalWithTooltip } from "../../../images/AnimalWithTooltip";
 
 type LevelsSectionProps = {
-  studentLevel: LevelType;
+  studentLevel: Level;
 };
 
 export const LevelsSection = ({ studentLevel }: LevelsSectionProps) => {

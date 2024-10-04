@@ -1,14 +1,29 @@
 import { ApolloError } from "@apollo/client";
 import { LevelType } from "../../../__generated__/schema.graphql.types";
 import { useNeighboringLevelsQuery } from "../../../graphql/neighbouringLevels.graphql.types";
+import { Level } from "../types";
 
 export type AnimalDataResult = {
-  prevLevel: LevelType | undefined;
-  currLevel: LevelType | undefined;
-  nextLevel: LevelType | undefined;
+  prevLevel: Level | undefined;
+  currLevel: Level | undefined;
+  nextLevel: Level | undefined;
   animalDataLoading: boolean;
   animalDataError: ApolloError | Error | undefined;
   animalDataRefetch: () => void;
+};
+
+const mapToLevel = (data: LevelType | undefined): Level | undefined => {
+  if (!data) {
+    return undefined;
+  }
+  return {
+    name: data.levelName,
+    ordinalNumber: data.ordinalNumber,
+    imageId: data.imageFile?.fileId ?? undefined,
+    // TODO should be int of float
+    minimumPoints: parseInt(data.minimumPoints),
+    maximumPoints: parseInt(data.maximumPoints),
+  };
 };
 
 export const useAnimalData = (
@@ -23,9 +38,15 @@ export const useAnimalData = (
     },
   });
 
-  const prevLevel = data?.getNeighboringLevels.prevLevel ?? undefined;
-  const currLevel = data?.getNeighboringLevels.currLevel ?? undefined;
-  const nextLevel = data?.getNeighboringLevels.nextLevel ?? undefined;
+  const prevLevel = mapToLevel(
+    data?.getNeighboringLevels.prevLevel ?? undefined,
+  );
+  const currLevel = mapToLevel(
+    data?.getNeighboringLevels.currLevel ?? undefined,
+  );
+  const nextLevel = mapToLevel(
+    data?.getNeighboringLevels.nextLevel ?? undefined,
+  );
 
   if (!currLevel) {
     return {
