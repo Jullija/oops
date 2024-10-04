@@ -45,10 +45,10 @@ export const AnimalCard = ({
         obecny level: {currLevel.name} - lvl. {currLevel.ordinalNumber}
       </div>
       <PointsBar
-        points={totalPoints}
+        points={totalPoints - currLevel.minimumPoints}
         bounds={{
-          lower: currLevel.minimumPoints,
-          upper: currLevel.maximumPoints,
+          lower: 0,
+          upper: currLevel.maximumPoints - currLevel.minimumPoints,
         }}
         showPoints
       />
