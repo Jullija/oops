@@ -3,6 +3,7 @@ import { PointsBar } from "../../../PointsBar";
 import { Avatar } from "../../../images/Avatar";
 import { LevelMiniature } from "./LevelMiniature";
 import { LevelType } from "../../../../__generated__/schema.graphql.types";
+import { LevelsSection } from "./LevelsSection";
 
 const styles: Styles = {
   card: {
@@ -58,9 +59,11 @@ export const AnimalCard = ({
           {prevLevel && <LevelMiniature level={prevLevel} />}
         </div>
         <div style={styles.levelMiniatureSpaceWrapper}>
-          {nextLevel && <LevelMiniature level={nextLevel} withOpacity />}
+          {nextLevel && <LevelMiniature level={nextLevel} disabled />}
         </div>
       </div>
+
+      <LevelsSection studentLevel={currLevel} />
     </div>
   );
 };

@@ -1,0 +1,14 @@
+query Levels($editionId: bigint) {
+  levels(where: { editionId: { _eq: 2 } }, orderBy: { ordinalNumber: ASC }) {
+    grade
+    imageFileId
+    levelId
+    maximumPoints
+    minimumPoints
+    name
+    ordinalNumber
+    label
+    highest
+    editionId
+  }
+}
