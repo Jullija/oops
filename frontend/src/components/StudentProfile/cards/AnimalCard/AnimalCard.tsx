@@ -2,7 +2,7 @@ import { Styles } from "../../../../utils/Styles";
 import { Avatar } from "../../../images/Avatar";
 import { LevelsSection } from "./LevelsSection";
 import { Level } from "../../../../hooks/StudentProfile";
-import { LevelPointsBar } from "../../../bars/LevelPointsBar/LevelPointsBar";
+import { LevelProgressBar } from "../../../bars/LevelProgressBar/LevelProgressBar";
 
 type AnimalCardProps = {
   prevLevel: Level | undefined;
@@ -23,7 +23,7 @@ export const AnimalCard = ({
       <div style={styles.title}>
         obecny level: {currLevel.name} - lvl. {currLevel.ordinalNumber + 1}
       </div>
-      <LevelPointsBar
+      <LevelProgressBar
         totalPoints={totalPoints + 10}
         prevLevel={prevLevel}
         currLevel={currLevel}

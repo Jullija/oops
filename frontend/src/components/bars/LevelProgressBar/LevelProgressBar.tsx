@@ -3,19 +3,22 @@ import { Styles } from "../../../utils/Styles";
 import { ProgressBar } from "../ProgressBar";
 import { LevelMiniature } from "./LevelMiniature";
 
-type LevelPointsBarProps = {
+type LevelProgressBarProps = {
   totalPoints: number;
   prevLevel: Level | undefined;
   currLevel: Level;
   nextLevel: Level | undefined;
 };
 
-export const LevelPointsBar = ({
+export const LevelProgressBar = ({
   totalPoints,
   prevLevel,
   currLevel,
   nextLevel,
-}: LevelPointsBarProps) => {
+}: LevelProgressBarProps) => {
+  const leftLevel = prevLevel ?? currLevel;
+  const rightLevel = nextLevel ?? currLevel;
+
   return (
     <div style={styles.container}>
       <ProgressBar
@@ -28,12 +31,11 @@ export const LevelPointsBar = ({
       />
 
       <div style={styles.levelMiniaturesContainer}>
-        <div style={styles.levelMiniatureSpaceWrapper}>
-          {prevLevel && <LevelMiniature level={prevLevel} />}
-        </div>
-        <div style={styles.levelMiniatureSpaceWrapper}>
-          {nextLevel && <LevelMiniature level={nextLevel} disabled />}
-        </div>
+        <LevelMiniature level={leftLevel} />
+        <LevelMiniature
+          level={rightLevel}
+          disabled={rightLevel !== currLevel}
+        />
       </div>
     </div>
   );
@@ -48,8 +50,6 @@ const styles: Styles = {
   levelMiniaturesContainer: {
     display: "flex",
     flexDirection: "row",
-  },
-  levelMiniatureSpaceWrapper: {
-    flex: 1,
+    justifyContent: "space-between",
   },
 };

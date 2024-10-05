@@ -13,8 +13,7 @@ export const LevelMiniature = ({
   return (
     <div>
       <Avatar id={level.imageId} size="s" disabled={disabled} />
-      <div>lvl. {level.ordinalNumber}</div>
-      <div>{level.name}</div>
+      <div>lvl. {level.ordinalNumber + 1}</div>
     </div>
   );
 };
