@@ -136,7 +136,7 @@ export const PointsForm = ({
           name="points"
           label="Points"
         />
-        <button type="submit">{variant === "edit" ? "edit" : "add"}</button>
+        <button type="submit">confirm</button>
       </form>
       {mutationError && <p style={styles.error}>Error: {mutationError}</p>}
     </div>

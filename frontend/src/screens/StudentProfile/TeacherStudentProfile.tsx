@@ -13,6 +13,8 @@ import { useEditionSelection } from "../../hooks/common/useEditionSelection";
 import { Roles } from "../../router/paths";
 import { isEditionActive } from "../../utils/utils";
 import { NotEditableInfo } from "../../components/StudentProfile/NotEditableInfo";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 export function TeacherStudentProfile() {
   const params = useParams();
@@ -95,18 +97,23 @@ export function TeacherStudentProfile() {
         )}
 
         <Dialog open={isAddDialogOpen}>
+          <IconButton onClick={closeAddDialog} style={styles.closeIcon}>
+            <CloseIcon />
+          </IconButton>
+
           <PointsForm
             categories={formCategories}
             handleConfirmClick={handleAddPointsConfirmation}
             mutationError={addPointsError?.message}
             variant="add"
           />
-          <Button onClick={closeAddDialog} color="lightblue">
-            close
-          </Button>
         </Dialog>
 
         <Dialog open={isEditDialogOpen}>
+          <IconButton onClick={closeEditDialog} style={styles.closeIcon}>
+            <CloseIcon />
+          </IconButton>
+
           <PointsForm
             categories={formCategories}
             handleConfirmClick={handleEditPointsConfirmation}
@@ -119,9 +126,6 @@ export function TeacherStudentProfile() {
             }}
             variant="edit"
           />
-          <Button onClick={closeEditDialog} color="lightblue">
-            close
-          </Button>
         </Dialog>
 
         <Button
@@ -129,7 +133,7 @@ export function TeacherStudentProfile() {
           color="lightblue"
           disabled={disableEditMode}
         >
-          add points
+          Add Points
         </Button>
 
         <StudentTableWithFilters
@@ -137,7 +141,6 @@ export function TeacherStudentProfile() {
           filterHeaderNames={filterHeaderNames}
           handleEditClick={openEditDialog}
           handleDeleteClick={handleDeletePointsClick}
-          // TODO it should be discussed when buttons should be displayed
           showActionButtons={true}
           blockActionButtons={disableEditMode}
         />
@@ -157,5 +160,10 @@ const styles: Styles = {
     display: "flex",
     flexDirection: "column",
     gap: 24,
+  },
+  closeIcon: {
+    position: "absolute",
+    right: 8,
+    top: 8,
   },
 };
