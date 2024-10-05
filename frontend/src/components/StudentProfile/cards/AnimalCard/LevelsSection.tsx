@@ -1,5 +1,6 @@
 import { Level } from "../../../../hooks/StudentProfile";
 import { useLevelsData } from "../../../../hooks/StudentProfile/useLevelsData";
+import { EMPTY_FIELD_STRING } from "../../../../utils/constants";
 import { Styles } from "../../../../utils/Styles";
 import { AnimalWithTooltip } from "../../../images/AnimalWithTooltip";
 
@@ -16,15 +17,19 @@ export const LevelsSection = ({ studentLevel }: LevelsSectionProps) => {
   return (
     <div style={styles.container}>
       <div style={styles.title}>All levels</div>
-      <div style={styles.levelsContainer}>
-        {levels?.map((level) => (
-          <AnimalWithTooltip
-            level={level}
-            size={"xs"}
-            disabled={level.ordinalNumber > studentLevel.ordinalNumber}
-          />
-        ))}
-      </div>
+      {levels.length > 0 ? (
+        <div style={styles.levelsContainer}>
+          {levels?.map((level) => (
+            <AnimalWithTooltip
+              level={level}
+              size={"xs"}
+              disabled={level.ordinalNumber > studentLevel.ordinalNumber}
+            />
+          ))}
+        </div>
+      ) : (
+        <div>{EMPTY_FIELD_STRING}</div>
+      )}
     </div>
   );
 };

@@ -17,7 +17,7 @@ export const LevelPointsBar = ({
   nextLevel,
 }: LevelPointsBarProps) => {
   return (
-    <div>
+    <div style={styles.container}>
       <ProgressBar
         points={totalPoints - currLevel.minimumPoints}
         bounds={{
@@ -40,6 +40,11 @@ export const LevelPointsBar = ({
 };
 
 const styles: Styles = {
+  container: {
+    display: "flex",
+    gap: 12,
+    flexDirection: "column",
+  },
   levelMiniaturesContainer: {
     display: "flex",
     flexDirection: "row",

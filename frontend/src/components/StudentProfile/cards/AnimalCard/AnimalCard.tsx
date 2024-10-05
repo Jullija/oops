@@ -24,7 +24,7 @@ export const AnimalCard = ({
         obecny level: {currLevel.name} - lvl. {currLevel.ordinalNumber + 1}
       </div>
       <LevelPointsBar
-        totalPoints={totalPoints}
+        totalPoints={totalPoints + 10}
         prevLevel={prevLevel}
         currLevel={currLevel}
         nextLevel={nextLevel}

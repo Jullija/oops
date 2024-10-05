@@ -1,7 +1,7 @@
 import { Styles } from "../../../utils/Styles";
 import { StudentCardData } from "../../../hooks/StudentProfile/useStudentProfileData/useStudentData";
 import { Avatar } from "../../images/Avatar";
-import { AllLevelsBar } from "../../bars/AllLevelsBar";
+import { CourseProgressBar } from "../../bars/CourseProgressBar";
 
 export function StudentCard({
   displayName,
@@ -24,7 +24,7 @@ export function StudentCard({
       <div>prowadzący: {group ? group.teacherDisplayName : "brak"}</div>
 
       <div style={styles.title}>Course progress</div>
-      <AllLevelsBar totalPoints={totalPoints} />
+      <CourseProgressBar totalPoints={totalPoints} />
     </div>
   );
 }
