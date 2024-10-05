@@ -28,18 +28,10 @@ export const ActionButton = ({
       };
     }
 
-    let typeStyles;
-    switch (type) {
-      case "edit":
-      case "add":
-        typeStyles = styles.edit;
-        break;
-      case "delete":
-        typeStyles = styles.delete;
-        break;
-    }
-
-    return { ...styles.button, ...typeStyles };
+    return {
+      ...styles.button,
+      ...(type === "delete" ? styles.red : styles.green),
+    };
   };
 
   switch (type) {
@@ -66,10 +58,10 @@ const styles: Styles = {
     backgroundColor: "grey",
     cursor: "auto",
   },
-  edit: {
+  green: {
     backgroundColor: "lightgreen",
   },
-  delete: {
+  red: {
     backgroundColor: "red",
   },
 };

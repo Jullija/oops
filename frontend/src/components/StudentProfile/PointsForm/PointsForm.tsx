@@ -32,7 +32,6 @@ export const PointsForm = ({
   variant,
   blockSubcategory,
 }: PointFormProps) => {
-  console.log("INITIAL: ", initialValues);
   const formik = useFormik({
     initialValues: initialValues,
     validate: (values: PointsFormValues) => {
@@ -71,8 +70,6 @@ export const PointsForm = ({
       handleConfirmClick(points);
     },
   });
-
-  console.log("form: ", formik.values);
 
   const [subcategories, setSubcategories] = useState(
     categories.find((c) => c.id === initialValues.categoryId)?.subcategories,

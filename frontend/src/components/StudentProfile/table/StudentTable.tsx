@@ -81,21 +81,15 @@ export const StudentTable = ({
                 {showActionButtons && (
                   <TableCell>
                     <div style={styles.buttonsContainer}>
-                      {p.points.purePoints ? (
-                        <ActionButton
-                          type="edit"
-                          onClick={() => handleEditClick?.(p)}
-                          // TODO maybe + should be displayed here
-                          isDisabled={blockActionButtons}
-                        />
-                      ) : (
-                        <ActionButton
-                          type="add"
-                          onClick={() => handleAddClick?.(p)}
-                          // TODO maybe + should be displayed here
-                          isDisabled={blockActionButtons}
-                        />
-                      )}
+                      <ActionButton
+                        type={p.points.purePoints ? "edit" : "add"}
+                        onClick={
+                          p.points.purePoints
+                            ? () => handleEditClick?.(p)
+                            : () => handleAddClick?.(p)
+                        }
+                        isDisabled={blockActionButtons}
+                      />
 
                       <ActionButton
                         type="delete"
@@ -104,7 +98,6 @@ export const StudentTable = ({
                             handleDeleteClick?.(p.points.purePoints?.pointsId);
                           }
                         }}
-                        // TODO disable if pure points is empty
                         isDisabled={
                           blockActionButtons || !p.points.purePoints?.pointsId
                         }
