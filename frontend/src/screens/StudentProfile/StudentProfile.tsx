@@ -4,14 +4,6 @@ import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProf
 import { SideBar } from "../../components/StudentProfile/SideBar";
 import { StudentTableWithFilters } from "../../components/StudentProfile/table/StudentTableWithFilters";
 
-const styles: Styles = {
-  container: {
-    display: "flex",
-    gap: 20,
-    margin: 12,
-  },
-};
-
 export function StudentProfile() {
   const { user } = useUser();
   const {
@@ -51,3 +43,11 @@ export function StudentProfile() {
     </div>
   );
 }
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    gap: 20,
+    margin: 12,
+  },
+};

@@ -8,17 +8,6 @@ import { LevelType } from "../../__generated__/schema.graphql.types";
 import { BonusesCard } from "./cards/BonusesCard";
 import { Bonus } from "../../hooks/StudentProfile/useBonusesCardData";
 
-const styles: Styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 20,
-    borderRight: "2px solid red",
-    paddingRight: 24,
-    width: 360,
-  },
-};
-
 type SideBarProps = {
   student: StudentCardData;
   categoriesBarProps: PointsBarProps[];
@@ -49,4 +38,15 @@ export const SideBar = ({
       <BonusesCard bonuses={bonuses} />
     </div>
   );
+};
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 20,
+    borderRight: "2px solid red",
+    paddingRight: 24,
+    width: 360,
+  },
 };
