@@ -82,7 +82,10 @@ export const StudentTable = ({
                       <ActionButton
                         type="edit"
                         onClick={() => handleEditClick?.(p)}
-                        isDisabled={blockActionButtons}
+                        // TODO maybe + should be displayed here
+                        isDisabled={
+                          blockActionButtons || !p.points.purePoints?.pointsId
+                        }
                       />
 
                       <ActionButton
