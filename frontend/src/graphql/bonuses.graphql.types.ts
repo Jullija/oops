@@ -12,6 +12,7 @@ export type BonusesQuery = {
   __typename?: "query_root";
   bonuses: Array<{
     __typename?: "Bonuses";
+    bonusId: string;
     updatedAt: string;
     createdAt: string;
     award: {
@@ -36,6 +37,7 @@ export const BonusesDocument = gql`
         }
       }
     ) {
+      bonusId
       award {
         awardId
         awardName

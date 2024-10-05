@@ -19,10 +19,15 @@ import { DateCellContent } from "./cellContent/DateCellContent";
 
 type StudentTableProps = {
   points: Points[];
-  handleEditClick?: (points: Points) => void;
-  handleDeleteClick?: (pointsId: string) => void;
+  editFunctions?: EditFunctions;
   showActionButtons: boolean;
   blockActionButtons: boolean;
+};
+
+export type EditFunctions = {
+  handleEditClick: (points: Points) => void;
+  handleDeleteClick: (pointsId: string) => void;
+  handleAddClick: (points: Points) => void;
 };
 
 type HeaderTitle = {
@@ -42,8 +47,7 @@ const headerTitles: HeaderTitle[] = [
 
 export const StudentTable = ({
   points,
-  handleEditClick,
-  handleDeleteClick,
+  editFunctions,
   showActionButtons,
   blockActionButtons,
 }: StudentTableProps) => {
@@ -53,7 +57,7 @@ export const StudentTable = ({
     },
   });
 
-  if (showActionButtons && (!handleEditClick || !handleDeleteClick)) {
+  if (showActionButtons && !editFunctions) {
     throw new Error(
       "Invalid arguments passed - handleEditClick or handleDeleteClick is undefined.",
     );
@@ -80,8 +84,12 @@ export const StudentTable = ({
                   <TableCell>
                     <div style={styles.buttonsContainer}>
                       <ActionButton
-                        type="edit"
-                        onClick={() => handleEditClick?.(p)}
+                        type={p.points.purePoints ? "edit" : "add"}
+                        onClick={
+                          p.points.purePoints
+                            ? () => editFunctions?.handleEditClick(p)
+                            : () => editFunctions?.handleAddClick(p)
+                        }
                         isDisabled={blockActionButtons}
                       />
 
@@ -89,10 +97,11 @@ export const StudentTable = ({
                         type="delete"
                         onClick={() => {
                           if (p.points.purePoints?.pointsId) {
-                            handleDeleteClick?.(p.points.purePoints?.pointsId);
+                            editFunctions?.handleDeleteClick(
+                              p.points.purePoints?.pointsId,
+                            );
                           }
                         }}
-                        // TODO disable if pure points is empty
                         isDisabled={
                           blockActionButtons || !p.points.purePoints?.pointsId
                         }

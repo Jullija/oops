@@ -9847,7 +9847,7 @@ export type Mutation_RootAddAwardArgs = {
   awardType: Scalars["String"]["input"];
   awardValue: Scalars["Float"]["input"];
   categoryId: Scalars["Int"]["input"];
-  description?: InputMaybe<Scalars["String"]["input"]>;
+  description: Scalars["String"]["input"];
   label?: InputMaybe<Scalars["String"]["input"]>;
   maxUsages?: InputMaybe<Scalars["Int"]["input"]>;
 };

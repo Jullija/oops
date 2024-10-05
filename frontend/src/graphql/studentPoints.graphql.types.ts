@@ -62,6 +62,7 @@ export type StudentPointsQuery = {
           partialValue: number;
           bonuses: {
             __typename?: "BonusType";
+            bonusId: string;
             createdAt: string;
             updatedAt: string;
             award: {
@@ -139,6 +140,7 @@ export const StudentPointsDocument = gql`
           partialBonusType {
             partialValue
             bonuses {
+              bonusId
               award {
                 awardName
                 imageFile {

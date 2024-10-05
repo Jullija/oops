@@ -21,6 +21,7 @@ export const AwardsCellContent = ({ points }: AwardsCellContentProps) => {
         return (
           <AwardWithTooltip
             bonus={{
+              id: bonus?.bonuses.bonusId ?? "",
               award: {
                 id: bonus?.bonuses.award.awardId ?? "",
                 name: bonus?.bonuses.award.awardName ?? "",
