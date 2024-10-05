@@ -13468,7 +13468,7 @@ type mutation_root {
     awardType: String!
     awardValue: Float!
     categoryId: Int!
-    description: String
+    description: String!
     label: String = ""
     maxUsages: Int = -1
   ): AwardType

@@ -36,7 +36,7 @@ export const HallOfFameStudentCard = ({
       <div>{student.nick}</div>
       <Avatar id={student.levelImgId} size={"xs"} />
       <div>{student.levelName}</div>
-      <div>{student.totalPoints} pkt</div>
+      <div>{student.totalPoints.toFixed(2)} pkt</div>
     </div>
   );
 };

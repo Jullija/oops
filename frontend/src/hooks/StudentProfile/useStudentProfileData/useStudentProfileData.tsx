@@ -1,4 +1,4 @@
-import { useEditionSelection } from "../common/useEditionSelection";
+import { useEditionSelection } from "../../common/useEditionSelection";
 import { useAnimalData } from "./useAnimalData";
 import { useBonusesCardData } from "./useBonusesCardData";
 import { useCategoriesCardData } from "./useCategoriesCardData";
