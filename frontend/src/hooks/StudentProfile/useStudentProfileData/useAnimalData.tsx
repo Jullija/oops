@@ -19,6 +19,7 @@ const mapToLevel = (data: LevelType | undefined): Level | undefined => {
   return {
     name: data.levelName,
     ordinalNumber: data.ordinalNumber,
+    realLevelNumber: data.ordinalNumber + 1,
     imageId: data.imageFile?.fileId ?? undefined,
     // TODO should be int of float
     minimumPoints: parseInt(data.minimumPoints),

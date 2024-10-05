@@ -19,7 +19,7 @@ export const AnimalWithTooltip = ({
       tooltipContent={
         <div style={styles.container}>
           <div style={styles.title}>{level.name}</div>
-          <div>lvl. {level.ordinalNumber + 1}</div>
+          <div>lvl. {level.realLevelNumber}</div>
           <div>
             from {level.minimumPoints} to {level.maximumPoints} points
           </div>

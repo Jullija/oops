@@ -16,6 +16,7 @@ export const useLevelsData = () => {
       return {
         name: level.name as string,
         ordinalNumber: level.ordinalNumber,
+        realLevelNumber: level.ordinalNumber + 1,
         imageId: level.imageFileId ?? undefined,
         minimumPoints: parseFloat(level.minimumPoints),
         maximumPoints: parseFloat(level.maximumPoints),

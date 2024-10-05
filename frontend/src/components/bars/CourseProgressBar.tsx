@@ -21,7 +21,7 @@ export const CourseProgressBar = ({ totalPoints }: CourseProgressBarProps) => {
       bounds={{ lower: 0, upper: upperBound }}
       thresholds={levels.slice(1).map((level) => {
         return {
-          //   label: `${level.ordinalNumber + 1}`,
+          label: level.realLevelNumber.toString(),
           points: level.minimumPoints,
         };
       })}

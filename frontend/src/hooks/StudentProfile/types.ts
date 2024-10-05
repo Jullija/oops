@@ -16,6 +16,7 @@ export type Bonus = {
 export type Level = {
   name: string;
   ordinalNumber: number;
+  realLevelNumber: number;
   imageId: string | undefined;
   minimumPoints: number;
   maximumPoints: number;

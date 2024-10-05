@@ -21,7 +21,7 @@ export const AnimalCard = ({
     <div style={styles.card}>
       <Avatar id={currLevel.imageId} size="l" />
       <div style={styles.title}>
-        obecny level: {currLevel.name} - lvl. {currLevel.ordinalNumber + 1}
+        obecny level: {currLevel.name} - lvl. {currLevel.realLevelNumber}
       </div>
       <LevelProgressBar
         totalPoints={totalPoints + 10}
