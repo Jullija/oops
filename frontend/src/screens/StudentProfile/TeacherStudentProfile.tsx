@@ -12,6 +12,7 @@ import { useTeacherActions } from "../../hooks/StudentProfile/useTeacherActions"
 import { useEditionSelection } from "../../hooks/common/useEditionSelection";
 import { Roles } from "../../router/paths";
 import { isEditionActive } from "../../utils/utils";
+import { NotEditableInfo } from "../../components/StudentProfile/NotEditableInfo";
 
 export function TeacherStudentProfile() {
   const params = useParams();
@@ -69,8 +70,9 @@ export function TeacherStudentProfile() {
   const hasEditableRights =
     studentData.group?.teacherId === userId || user.role === Roles.COORDINATOR;
 
-  const isSelectedEditionActive =
-    selectedEdition && isEditionActive(selectedEdition);
+  const isSelectedEditionActive = Boolean(
+    selectedEdition && isEditionActive(selectedEdition),
+  );
 
   const disableEditMode = !(isSelectedEditionActive && hasEditableRights);
 
@@ -85,6 +87,13 @@ export function TeacherStudentProfile() {
         bonuses={bonuses}
       />
       <div style={styles.rightContainer}>
+        {disableEditMode && (
+          <NotEditableInfo
+            hasEditableRights={hasEditableRights}
+            isSelectedEditionActive={isSelectedEditionActive}
+          />
+        )}
+
         <Dialog open={isAddDialogOpen}>
           <PointsForm
             categories={formCategories}
