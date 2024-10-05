@@ -24,7 +24,6 @@ export const AllLevelsBar = ({ totalPoints }: AllLevelsBarProps) => {
         };
       })}
       showPoints={true}
-      label="Course progress"
     />
   );
 };
