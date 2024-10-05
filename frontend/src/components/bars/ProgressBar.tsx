@@ -2,47 +2,6 @@ import { Styles } from "../../utils/Styles";
 
 const BAR_HEIGHT = 24;
 
-const styles: Styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 4,
-  },
-  empty: {
-    height: BAR_HEIGHT,
-    width: "100%",
-    backgroundColor: "lightgrey",
-    position: "relative",
-  },
-  filled: {
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
-    backgroundColor: "lightblue",
-  },
-  pointsContainer: {
-    position: "absolute",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-  thresholdLine: {
-    position: "absolute",
-    height: BAR_HEIGHT,
-    width: 2,
-    backgroundColor: "grey",
-    bottom: 0,
-  },
-  thresholdLabel: {
-    position: "absolute",
-    top: "100%",
-    transform: "translateX(-50%)",
-    whiteSpace: "nowrap",
-    marginTop: 4,
-  },
-};
-
 type BarThreshold = {
   label?: string;
   points: number;
@@ -112,4 +71,45 @@ export const ProgressBar = ({
       </div>
     </div>
   );
+};
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 4,
+  },
+  empty: {
+    height: BAR_HEIGHT,
+    width: "100%",
+    backgroundColor: "lightgrey",
+    position: "relative",
+  },
+  filled: {
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    backgroundColor: "lightblue",
+  },
+  pointsContainer: {
+    position: "absolute",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  thresholdLine: {
+    position: "absolute",
+    height: BAR_HEIGHT,
+    width: 2,
+    backgroundColor: "grey",
+    bottom: 0,
+  },
+  thresholdLabel: {
+    position: "absolute",
+    top: "100%",
+    transform: "translateX(-50%)",
+    whiteSpace: "nowrap",
+    marginTop: 4,
+  },
 };
