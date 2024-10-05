@@ -149,9 +149,11 @@ export function TeacherStudentProfile() {
         <StudentTableWithFilters
           points={points}
           filterHeaderNames={filterHeaderNames}
-          handleEditClick={openEditDialog}
-          handleDeleteClick={handleDeletePointsClick}
-          handleAddClick={openAddDialog}
+          editFunctions={{
+            handleDeleteClick: handleDeletePointsClick,
+            handleAddClick: openAddDialog,
+            handleEditClick: openEditDialog,
+          }}
           showActionButtons={true}
           blockActionButtons={disableEditMode}
         />
