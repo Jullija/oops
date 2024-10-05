@@ -3,6 +3,7 @@ import { Avatar } from "../../../images/Avatar";
 import { LevelsSection } from "./LevelsSection";
 import { Level } from "../../../../hooks/StudentProfile";
 import { LevelPointsBar } from "../../../bars/LevelPointsBar/LevelPointsBar";
+import { AllLevelsBar } from "../../../bars/AllLevelsBar";
 
 type AnimalCardProps = {
   prevLevel: Level | undefined;
@@ -30,6 +31,7 @@ export const AnimalCard = ({
         nextLevel={nextLevel}
       />
       <LevelsSection studentLevel={currLevel} />
+      <AllLevelsBar totalPoints={totalPoints} />
     </div>
   );
 };

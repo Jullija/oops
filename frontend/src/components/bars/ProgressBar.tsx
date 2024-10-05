@@ -1,5 +1,7 @@
 import { Styles } from "../../utils/Styles";
 
+const BAR_HEIGHT = 24;
+
 const styles: Styles = {
   container: {
     display: "flex",
@@ -7,7 +9,7 @@ const styles: Styles = {
     gap: 4,
   },
   empty: {
-    height: 24,
+    height: BAR_HEIGHT,
     width: "100%",
     backgroundColor: "lightgrey",
     position: "relative",
@@ -25,11 +27,31 @@ const styles: Styles = {
     flexDirection: "column",
     justifyContent: "center",
   },
+  thresholdLine: {
+    position: "absolute",
+    height: BAR_HEIGHT,
+    width: 2,
+    backgroundColor: "grey",
+    bottom: 0,
+  },
+  thresholdLabel: {
+    position: "absolute",
+    top: "100%",
+    transform: "translateX(-50%)",
+    whiteSpace: "nowrap",
+    marginTop: 4,
+  },
+};
+
+type BarThreshold = {
+  label?: string;
+  points: number;
 };
 
 export type ProgressBarProps = {
   points: number;
   bounds: { lower: number; upper: number };
+  thresholds?: BarThreshold[];
   showPoints?: boolean;
   label?: string;
 };
@@ -37,15 +59,16 @@ export type ProgressBarProps = {
 export const ProgressBar = ({
   points,
   bounds,
+  thresholds,
   showPoints,
   label,
 }: ProgressBarProps) => {
   if (points < 0) {
-    throw new Error("points cannot be negative number");
+    throw new Error("points cannot be a negative number");
   }
 
   if (points < bounds.lower) {
-    throw new Error("points cannot be lower than lower bound");
+    throw new Error("points cannot be lower than the lower bound");
   }
 
   const diff = bounds.lower;
@@ -53,6 +76,12 @@ export const ProgressBar = ({
     Math.round(((points - diff) / (bounds.upper - diff)) * 100),
     100,
   );
+
+  const getThresholdPosition = (threshold: number) => {
+    if (threshold <= bounds.lower) return 0;
+    if (threshold >= bounds.upper) return 100;
+    return ((threshold - bounds.lower) / (bounds.upper - bounds.lower)) * 100;
+  };
 
   return (
     <div style={styles.container}>
@@ -64,6 +93,22 @@ export const ProgressBar = ({
           </div>
         )}
         <div style={{ ...styles.filled, width: `${filledPercent}%` }} />
+
+        {thresholds &&
+          thresholds.length > 0 &&
+          thresholds.map((threshold, index) => {
+            return (
+              <div
+                key={index}
+                style={{
+                  ...styles.thresholdLine,
+                  left: `${getThresholdPosition(threshold.points)}%`,
+                }}
+              >
+                <div style={styles.thresholdLabel}>{threshold.label}</div>
+              </div>
+            );
+          })}
       </div>
     </div>
   );
