@@ -1,6 +1,7 @@
 import { useBonusesQuery } from "../../graphql/bonuses.graphql.types";
 
 export type Bonus = {
+  id: string;
   award: {
     id: string;
     name: string;
@@ -28,6 +29,7 @@ export const useBonusesCardData = (
   const bonuses: Bonus[] =
     data?.bonuses.map((bonus) => {
       return {
+        id: bonus.bonusId,
         award: {
           id: bonus.award.awardId,
           name: bonus.award.awardName,

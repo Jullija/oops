@@ -34,17 +34,15 @@ export const ActionButton = ({
     };
   };
 
+  const buttonStyles = getButtonStyles();
+
   switch (type) {
     case "edit":
-      return (
-        <ModeEditRoundedIcon onClick={handleClick} style={getButtonStyles()} />
-      );
+      return <ModeEditRoundedIcon onClick={handleClick} style={buttonStyles} />;
     case "delete":
-      return (
-        <DeleteRoundedIcon onClick={handleClick} style={getButtonStyles()} />
-      );
+      return <DeleteRoundedIcon onClick={handleClick} style={buttonStyles} />;
     case "add":
-      return <AddRoundedIcon onClick={handleClick} style={getButtonStyles()} />;
+      return <AddRoundedIcon onClick={handleClick} style={buttonStyles} />;
   }
 };
 

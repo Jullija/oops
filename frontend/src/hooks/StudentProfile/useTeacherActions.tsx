@@ -71,7 +71,6 @@ export const useTeacherActions = (
 
     const pointsId = selectedPoints?.points.purePoints?.pointsId;
     if (!pointsId) {
-      // TODO use create here
       throw new Error("Pure points are undefined - use create instead.");
     }
 

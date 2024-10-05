@@ -13,8 +13,8 @@ export const NotEditableInfo = ({
       <div style={styles.title}>
         You cannot manage this student points, because:
       </div>
-      <div style={styles.reasonContainer}>
-        {!hasEditableRights && <div>- you don't own student's group</div>}
+      <div style={styles.reasonsContainer}>
+        {!hasEditableRights && <div>- you don't own this student's group</div>}
         {!isSelectedEditionActive && (
           <div>- selected edition is not active</div>
         )}
@@ -34,7 +34,7 @@ const styles: Styles = {
   title: {
     fontWeight: "bold",
   },
-  reasonContainer: {
+  reasonsContainer: {
     display: "flex",
     flexDirection: "column",
     gap: 4,

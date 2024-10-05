@@ -42,13 +42,14 @@ export function TeacherStudentProfile() {
   } = useStudentProfileData(studentId);
 
   const {
-    categories: formCategories,
+    formCategories,
     formInitialValues,
     loading: formDataLoading,
     error: formDataError,
   } = useFormCategories();
 
   const {
+    selectedPoints,
     isAddDialogOpen,
     openAddDialog,
     closeAddDialog,
@@ -60,7 +61,6 @@ export function TeacherStudentProfile() {
     handleEditPointsConfirmation,
     editPointsError,
     handleDeletePointsClick,
-    selectedPoints,
   } = useTeacherActions(refetch, studentId as string, userId);
 
   if (!studentId) return <p>StudentId is undefined</p>;
@@ -119,7 +119,7 @@ export function TeacherStudentProfile() {
             mutationError={addPointsError?.message}
             variant="add"
             initialValues={initialValues}
-            blockSubcategory={!!selectedPoints}
+            disableCategoryAndSubcategory={!!selectedPoints}
           />
         </Dialog>
 
@@ -134,7 +134,7 @@ export function TeacherStudentProfile() {
             mutationError={editPointsError?.message}
             initialValues={initialValues}
             variant="edit"
-            blockSubcategory={true}
+            disableCategoryAndSubcategory={true}
           />
         </Dialog>
 

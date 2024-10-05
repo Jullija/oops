@@ -21,7 +21,7 @@ type PointFormProps = {
   mutationError?: string;
   initialValues: PointsFormValues;
   variant: "add" | "edit";
-  blockSubcategory?: boolean;
+  disableCategoryAndSubcategory?: boolean;
 };
 
 export const PointsForm = ({
@@ -30,7 +30,7 @@ export const PointsForm = ({
   mutationError,
   initialValues,
   variant,
-  blockSubcategory,
+  disableCategoryAndSubcategory,
 }: PointFormProps) => {
   const formik = useFormik({
     initialValues: initialValues,
@@ -38,6 +38,7 @@ export const PointsForm = ({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const errors: any = {};
 
+      // schema validation
       try {
         ValidationSchema.parse(values);
       } catch (error) {
@@ -46,6 +47,7 @@ export const PointsForm = ({
         }
       }
 
+      // custom validation
       const selectedCategory = categories.find(
         (cat) => cat.id === values.categoryId,
       );
@@ -77,6 +79,7 @@ export const PointsForm = ({
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const categoryId = e.target.value;
+    // TODO probably it should be handled somehow in the future
     const updatedSubcategories =
       categories.find((category) => category.id === categoryId)
         ?.subcategories ?? [];
@@ -104,7 +107,7 @@ export const PointsForm = ({
             title: category.name,
           }))}
           label="Category"
-          disabled={blockSubcategory}
+          disabled={disableCategoryAndSubcategory}
         />
         <SelectInput
           handleChange={formik.handleChange}
@@ -118,7 +121,7 @@ export const PointsForm = ({
             title: subcategory.name,
           }))}
           label="Subcategory"
-          disabled={blockSubcategory}
+          disabled={disableCategoryAndSubcategory}
         />
         <NumberInput
           handleChange={formik.handleChange}

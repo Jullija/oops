@@ -13,8 +13,8 @@ export const BonusesCard = ({ bonuses }: BonusesCardProps) => {
       <div style={styles.title}>Bonuses</div>
       <div style={styles.bonusesContainer}>
         {bonuses.length === 0 && <div>{EMPTY_FIELD_STRING}</div>}
-        {bonuses.map((bonus, index) => (
-          <AwardWithTooltip key={index} bonus={bonus} size="s" />
+        {bonuses.map((bonus) => (
+          <AwardWithTooltip key={bonus.id} bonus={bonus} size="s" />
         ))}
       </div>
     </div>

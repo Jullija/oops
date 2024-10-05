@@ -12,7 +12,7 @@ export const useFormCategories = () => {
     skip: !editionId,
   });
 
-  const categories: Category[] =
+  const formCategories: Category[] =
     data?.categories
       .filter((c) => c.canAddPoints)
       .map((c) => {
@@ -30,10 +30,10 @@ export const useFormCategories = () => {
       }) ?? [];
 
   const formInitialValues: PointsFormValues = {
-    categoryId: categories[0].id,
+    categoryId: formCategories[0]?.id,
     points: 0,
-    subcategoryId: categories[0].subcategories[0].id,
+    subcategoryId: formCategories[0]?.subcategories[0].id,
   };
 
-  return { categories, formInitialValues, loading, error };
+  return { formCategories, formInitialValues, loading, error };
 };
