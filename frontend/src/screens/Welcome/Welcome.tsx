@@ -12,39 +12,6 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../firebaseConfig";
 import { UsersRolesType } from "../../__generated__/schema.graphql.types";
 
-const styles: Styles = {
-  container: {
-    display: "flex",
-    flexDirection: "row",
-  },
-  userList: {
-    flex: 1,
-  },
-  searchInput: {
-    marginBottom: "10px",
-    padding: "8px",
-    width: "100%",
-    boxSizing: "border-box",
-  },
-  table: {
-    width: "100%",
-    borderCollapse: "collapse",
-  },
-  tableRow: {
-    cursor: "pointer",
-  },
-  selectedUser: {
-    flex: 1,
-    marginLeft: "20px",
-  },
-  loginForm: {
-    marginTop: "20px",
-    padding: "10px",
-    border: "1px solid #ddd",
-    borderRadius: "5px",
-  },
-};
-
 export const Welcome = () => {
   const { user: selectedUser, setUser } = useUser();
   const { loading, error, data } = useAllUsersQuery({
@@ -214,4 +181,37 @@ export const Welcome = () => {
       </div>
     </div>
   );
+};
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  userList: {
+    flex: 1,
+  },
+  searchInput: {
+    marginBottom: "10px",
+    padding: "8px",
+    width: "100%",
+    boxSizing: "border-box",
+  },
+  table: {
+    width: "100%",
+    borderCollapse: "collapse",
+  },
+  tableRow: {
+    cursor: "pointer",
+  },
+  selectedUser: {
+    flex: 1,
+    marginLeft: "20px",
+  },
+  loginForm: {
+    marginTop: "20px",
+    padding: "10px",
+    border: "1px solid #ddd",
+    borderRadius: "5px",
+  },
 };
