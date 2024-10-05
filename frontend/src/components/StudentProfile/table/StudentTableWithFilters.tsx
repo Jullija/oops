@@ -10,6 +10,7 @@ type StudentTableWithFiltersProps = {
   filterHeaderNames: FilterItem[];
   handleEditClick?: (points: Points) => void;
   handleDeleteClick?: (pointsId: string) => void;
+  handleAddClick?: (points: Points) => void;
   showActionButtons?: boolean;
   blockActionButtons?: boolean;
 };
@@ -19,6 +20,7 @@ export const StudentTableWithFilters = ({
   filterHeaderNames,
   handleEditClick,
   handleDeleteClick,
+  handleAddClick,
   showActionButtons = false,
   blockActionButtons = true,
 }: StudentTableWithFiltersProps) => {
@@ -48,6 +50,7 @@ export const StudentTableWithFilters = ({
         points={pointsToDisplay}
         handleEditClick={handleEditClick}
         handleDeleteClick={handleDeleteClick}
+        handleAddClick={handleAddClick}
         showActionButtons={showActionButtons}
         blockActionButtons={blockActionButtons}
       />

@@ -1,6 +1,9 @@
 import { Styles } from "../../utils/Styles";
 import { useParams } from "react-router-dom";
-import { PointsForm } from "../../components/StudentProfile/PointsForm/PointsForm";
+import {
+  PointsForm,
+  PointsFormValues,
+} from "../../components/StudentProfile/PointsForm/PointsForm";
 import { useUser } from "../../hooks/common/useUser";
 import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
 import { SideBar } from "../../components/StudentProfile/SideBar";
@@ -40,6 +43,7 @@ export function TeacherStudentProfile() {
 
   const {
     categories: formCategories,
+    formInitialValues,
     loading: formDataLoading,
     error: formDataError,
   } = useFormCategories();
@@ -51,12 +55,12 @@ export function TeacherStudentProfile() {
     isEditDialogOpen,
     openEditDialog,
     closeEditDialog,
-    pointsToEdit,
     handleAddPointsConfirmation,
     addPointsError,
     handleEditPointsConfirmation,
     editPointsError,
     handleDeletePointsClick,
+    selectedPoints,
   } = useTeacherActions(refetch, studentId as string, userId);
 
   if (!studentId) return <p>StudentId is undefined</p>;
@@ -77,6 +81,14 @@ export function TeacherStudentProfile() {
   );
 
   const disableEditMode = !(isSelectedEditionActive && hasEditableRights);
+
+  const initialValues: PointsFormValues = selectedPoints
+    ? {
+        categoryId: selectedPoints?.subcategory.category.categoryId,
+        points: parseFloat(selectedPoints.points.purePoints?.value ?? "0"),
+        subcategoryId: selectedPoints?.subcategory.subcategoryId,
+      }
+    : formInitialValues;
 
   return (
     <div style={styles.container}>
@@ -106,6 +118,8 @@ export function TeacherStudentProfile() {
             handleConfirmClick={handleAddPointsConfirmation}
             mutationError={addPointsError?.message}
             variant="add"
+            initialValues={initialValues}
+            blockSubcategory={!!selectedPoints}
           />
         </Dialog>
 
@@ -118,13 +132,9 @@ export function TeacherStudentProfile() {
             categories={formCategories}
             handleConfirmClick={handleEditPointsConfirmation}
             mutationError={editPointsError?.message}
-            initialValues={{
-              subcategoryId: pointsToEdit?.subcategory.subcategoryId as string,
-              points: parseFloat(pointsToEdit?.points.purePoints?.value ?? "0"),
-              categoryId: pointsToEdit?.subcategory.category
-                .categoryId as string,
-            }}
+            initialValues={initialValues}
             variant="edit"
+            blockSubcategory={true}
           />
         </Dialog>
 
@@ -141,6 +151,7 @@ export function TeacherStudentProfile() {
           filterHeaderNames={filterHeaderNames}
           handleEditClick={openEditDialog}
           handleDeleteClick={handleDeletePointsClick}
+          handleAddClick={openAddDialog}
           showActionButtons={true}
           blockActionButtons={disableEditMode}
         />

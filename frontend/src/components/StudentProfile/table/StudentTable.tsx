@@ -21,6 +21,7 @@ type StudentTableProps = {
   points: Points[];
   handleEditClick?: (points: Points) => void;
   handleDeleteClick?: (pointsId: string) => void;
+  handleAddClick?: (points: Points) => void;
   showActionButtons: boolean;
   blockActionButtons: boolean;
 };
@@ -44,6 +45,7 @@ export const StudentTable = ({
   points,
   handleEditClick,
   handleDeleteClick,
+  handleAddClick,
   showActionButtons,
   blockActionButtons,
 }: StudentTableProps) => {
@@ -79,14 +81,21 @@ export const StudentTable = ({
                 {showActionButtons && (
                   <TableCell>
                     <div style={styles.buttonsContainer}>
-                      <ActionButton
-                        type="edit"
-                        onClick={() => handleEditClick?.(p)}
-                        // TODO maybe + should be displayed here
-                        isDisabled={
-                          blockActionButtons || !p.points.purePoints?.pointsId
-                        }
-                      />
+                      {p.points.purePoints ? (
+                        <ActionButton
+                          type="edit"
+                          onClick={() => handleEditClick?.(p)}
+                          // TODO maybe + should be displayed here
+                          isDisabled={blockActionButtons}
+                        />
+                      ) : (
+                        <ActionButton
+                          type="add"
+                          onClick={() => handleAddClick?.(p)}
+                          // TODO maybe + should be displayed here
+                          isDisabled={blockActionButtons}
+                        />
+                      )}
 
                       <ActionButton
                         type="delete"

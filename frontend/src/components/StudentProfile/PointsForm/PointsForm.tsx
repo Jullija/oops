@@ -7,7 +7,7 @@ import { NumberInput } from "../../inputs/NumberInput";
 import { SelectInput } from "../../inputs/SelectInput";
 import { Category } from "../../../utils/utils";
 
-type PointsFormValues = z.infer<typeof ValidationSchema>;
+export type PointsFormValues = z.infer<typeof ValidationSchema>;
 
 const ValidationSchema = z.object({
   categoryId: z.string().min(1, "required"),
@@ -19,23 +19,20 @@ type PointFormProps = {
   categories: Category[];
   handleConfirmClick: (formPoints: FormPoints) => void;
   mutationError?: string;
-  initialValues?: PointsFormValues;
+  initialValues: PointsFormValues;
   variant: "add" | "edit";
-};
-
-const emptyValues = {
-  categoryId: "",
-  subcategoryId: "",
-  points: 0,
+  blockSubcategory?: boolean;
 };
 
 export const PointsForm = ({
   categories,
   handleConfirmClick,
   mutationError,
-  initialValues = emptyValues,
+  initialValues,
   variant,
+  blockSubcategory,
 }: PointFormProps) => {
+  console.log("INITIAL: ", initialValues);
   const formik = useFormik({
     initialValues: initialValues,
     validate: (values: PointsFormValues) => {
@@ -75,11 +72,10 @@ export const PointsForm = ({
     },
   });
 
+  console.log("form: ", formik.values);
+
   const [subcategories, setSubcategories] = useState(
-    (initialValues.subcategoryId === emptyValues.subcategoryId
-      ? categories[0]
-      : categories.find((c) => c.id === initialValues.categoryId)
-    )?.subcategories,
+    categories.find((c) => c.id === initialValues.categoryId)?.subcategories,
   );
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -111,7 +107,7 @@ export const PointsForm = ({
             title: category.name,
           }))}
           label="Category"
-          disabled={variant === "edit"}
+          disabled={blockSubcategory}
         />
         <SelectInput
           handleChange={formik.handleChange}
@@ -125,7 +121,7 @@ export const PointsForm = ({
             title: subcategory.name,
           }))}
           label="Subcategory"
-          disabled={variant === "edit"}
+          disabled={blockSubcategory}
         />
         <NumberInput
           handleChange={formik.handleChange}

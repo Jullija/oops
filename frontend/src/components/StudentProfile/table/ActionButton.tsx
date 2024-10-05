@@ -1,9 +1,10 @@
 import ModeEditRoundedIcon from "@mui/icons-material/ModeEditRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { Styles } from "../../../utils/Styles";
 
 type ActionButtonProps = {
-  type: "edit" | "delete";
+  type: "edit" | "delete" | "add";
   isDisabled?: boolean;
   onClick?: () => void;
 };
@@ -30,6 +31,7 @@ export const ActionButton = ({
     let typeStyles;
     switch (type) {
       case "edit":
+      case "add":
         typeStyles = styles.edit;
         break;
       case "delete":
@@ -49,6 +51,8 @@ export const ActionButton = ({
       return (
         <DeleteRoundedIcon onClick={handleClick} style={getButtonStyles()} />
       );
+    case "add":
+      return <AddRoundedIcon onClick={handleClick} style={getButtonStyles()} />;
   }
 };
 

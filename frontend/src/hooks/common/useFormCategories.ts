@@ -1,3 +1,4 @@
+import { PointsFormValues } from "../../components/StudentProfile/PointsForm/PointsForm";
 import { useFormCategoriesQuery } from "../../graphql/formCategories.graphql.types";
 import { Category } from "../../utils/utils";
 import { useEditionSelection } from "./useEditionSelection";
@@ -28,5 +29,11 @@ export const useFormCategories = () => {
         };
       }) ?? [];
 
-  return { categories, loading, error };
+  const formInitialValues: PointsFormValues = {
+    categoryId: categories[0].id,
+    points: 0,
+    subcategoryId: categories[0].subcategories[0].id,
+  };
+
+  return { categories, formInitialValues, loading, error };
 };
