@@ -12,6 +12,7 @@ import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 @DgsComponent
 class LevelsDataFetcher {
@@ -60,8 +61,8 @@ class LevelsDataFetcher {
             val level = Levels(
                 levelName = name,
                 minimumPoints = BigDecimal.ZERO,
-                maximumPoints = maximumPoints.toBigDecimal(),
-                grade = grade.toBigDecimal(),
+                maximumPoints = maximumPoints.toBigDecimal().setScale(2, RoundingMode.HALF_UP),
+                grade = grade.toBigDecimal().setScale(2, RoundingMode.HALF_UP),
                 label = "",
                 edition = edition
             )
@@ -88,8 +89,8 @@ class LevelsDataFetcher {
         val level = Levels(
             levelName = name,
             minimumPoints = highestLevel.maximumPoints,
-            maximumPoints = maximumPoints.toBigDecimal(),
-            grade = grade.toBigDecimal(),
+            maximumPoints = maximumPoints.toBigDecimal().setScale(2, RoundingMode.HALF_UP),
+            grade = grade.toBigDecimal().setScale(2, RoundingMode.HALF_UP),
             label = "",
             edition = edition
         )
@@ -145,7 +146,7 @@ class LevelsDataFetcher {
             if (nextLevel != null && nextLevel.maximumPoints <= it.toBigDecimal()){
                 throw IllegalArgumentException("Maximum points must be lower than the next level")
             }
-            level.maximumPoints = it.toBigDecimal()
+            level.maximumPoints = it.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
         }
 
         grade?.let {
@@ -158,7 +159,7 @@ class LevelsDataFetcher {
             if (nextLevel != null && nextLevel.grade < it.toBigDecimal()){
                 throw IllegalArgumentException("Grade must be lower or equal to the next level")
             }
-            level.grade = it.toBigDecimal()
+            level.grade = it.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
         }
 
         imageFileId?.let {
