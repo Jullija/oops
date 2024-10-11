@@ -37,8 +37,9 @@ export const ProgressBar = ({
   );
 
   const getThresholdPosition = (threshold: number) => {
-    if (threshold <= bounds.lower) return 0;
-    if (threshold >= bounds.upper) return 100;
+    if (threshold < bounds.lower || threshold > bounds.upper) {
+      throw new Error("threshold out of bounds.");
+    }
     return ((threshold - bounds.lower) / (bounds.upper - bounds.lower)) * 100;
   };
 
