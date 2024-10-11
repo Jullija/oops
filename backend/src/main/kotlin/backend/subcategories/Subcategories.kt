@@ -3,6 +3,7 @@ package backend.subcategories
 import backend.categories.Categories
 import backend.edition.Edition
 import jakarta.persistence.*
+import java.math.BigDecimal
 
 @Entity
 @Table(name = "subcategories")
@@ -15,8 +16,8 @@ class Subcategories(
     @Column(name = "subcategory_name", nullable = false)
     var subcategoryName: String,
 
-    @Column(name = "max_points", nullable = false)
-    var maxPoints: Float = 0f,
+    @Column(name = "max_points", nullable = false, precision = 10, scale = 2)
+    var maxPoints: BigDecimal = BigDecimal.ZERO,
 
     @Column(name = "ordinal_number", nullable = false)
     var ordinalNumber: Int = 1,
@@ -34,7 +35,7 @@ class Subcategories(
 ) {
     constructor() : this(
         subcategoryName = "",
-        maxPoints = 0f,
+        maxPoints = BigDecimal.ZERO,
         ordinalNumber = 1,
         category = Categories(),
         edition = Edition(),

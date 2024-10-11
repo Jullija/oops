@@ -12,22 +12,23 @@ import {
 import { Points } from "../../../hooks/StudentProfile/useStudentData";
 import { CategoryTag } from "../../CategoryTag";
 import { Styles } from "../../../utils/Styles";
-import { AwardImage } from "../../images/AwardImage";
+import { ActionButton } from "./ActionButton";
+import { PointsCellContent } from "./cellContent/PointsCellContent";
+import { AwardsCellContent } from "./cellContent/AwardsCellContent";
+import { DateCellContent } from "./cellContent/DateCellContent";
 
 type StudentTableProps = {
   points: Points[];
+  editFunctions?: EditFunctions;
+  showActionButtons: boolean;
+  blockActionButtons: boolean;
 };
 
-const dateOptions: Intl.DateTimeFormatOptions = {
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
-  second: "2-digit",
+export type EditFunctions = {
+  handleEditClick: (points: Points) => void;
+  handleDeleteClick: (pointsId: string) => void;
+  handleAddClick: (points: Points) => void;
 };
-
-const EMPTY_FIELD = "---";
 
 type HeaderTitle = {
   name: string;
@@ -44,50 +45,23 @@ const headerTitles: HeaderTitle[] = [
   { name: "prowadzący", align: "center" },
 ];
 
-export const StudentTable = ({ points }: StudentTableProps) => {
+export const StudentTable = ({
+  points,
+  editFunctions,
+  showActionButtons,
+  blockActionButtons,
+}: StudentTableProps) => {
   const darkTheme = createTheme({
     palette: {
       mode: "dark",
     },
   });
 
-  const getPointsValueString = (points: Points): string => {
-    const pure = points.points.purePoints?.value ?? 0;
-    let totalBonus = 0;
-    points.points.partialBonusType.forEach(
-      (bonus) => (totalBonus += bonus?.partialValue ?? 0),
+  if (showActionButtons && !editFunctions) {
+    throw new Error(
+      "Invalid arguments passed - handleEditClick or handleDeleteClick is undefined.",
     );
-    if (totalBonus === 0 && pure === 0) {
-      return "0.0";
-    }
-    if (totalBonus === 0) {
-      return pure.toFixed(1);
-    }
-    // TODO must be a better way than tofixed
-    return `${pure.toFixed(1)} + ${totalBonus.toFixed(1)} = ${(pure + totalBonus).toFixed(1)}`;
-  };
-
-  const getDisplayDateString = (points: Points): string => {
-    const date = new Date(points.updatedAt ?? points.createdAt);
-    return date.toLocaleDateString("pl-PL", dateOptions);
-  };
-
-  const getAwardsPhotos = (points: Points) => {
-    const bonuses = points.points.partialBonusType;
-    if (bonuses.length === 0) {
-      return EMPTY_FIELD;
-    }
-
-    return (
-      <div style={styles.awardsContainer}>
-        {bonuses.map((bonus) => {
-          return (
-            <AwardImage id={bonus?.bonuses.award.imageFile?.fileId} size="s" />
-          );
-        })}
-      </div>
-    );
-  };
+  }
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -95,6 +69,7 @@ export const StudentTable = ({ points }: StudentTableProps) => {
         <Table>
           <TableHead>
             <TableRow>
+              {showActionButtons && <TableCell />}
               {headerTitles.map((header) => (
                 <TableCell style={styles.header} align={header.align}>
                   {header.name}
@@ -105,19 +80,54 @@ export const StudentTable = ({ points }: StudentTableProps) => {
           <TableBody>
             {points.map((p, index) => (
               <TableRow key={index}>
+                {showActionButtons && (
+                  <TableCell>
+                    <div style={styles.buttonsContainer}>
+                      <ActionButton
+                        type={p.points.purePoints ? "edit" : "add"}
+                        onClick={
+                          p.points.purePoints
+                            ? () => editFunctions?.handleEditClick(p)
+                            : () => editFunctions?.handleAddClick(p)
+                        }
+                        isDisabled={blockActionButtons}
+                      />
+
+                      <ActionButton
+                        type="delete"
+                        onClick={() => {
+                          if (p.points.purePoints?.pointsId) {
+                            editFunctions?.handleDeleteClick(
+                              p.points.purePoints?.pointsId,
+                            );
+                          }
+                        }}
+                        isDisabled={
+                          blockActionButtons || !p.points.purePoints?.pointsId
+                        }
+                      />
+                    </div>
+                  </TableCell>
+                )}
                 <TableCell align="center">
                   {p.subcategory.subcategoryName}
                 </TableCell>
-                <TableCell align="center">{getAwardsPhotos(p)}</TableCell>
+                <TableCell align="center">
+                  <AwardsCellContent points={p} />
+                </TableCell>
                 <TableCell align="center">
                   <CategoryTag
                     id={p.subcategory.category.categoryId}
                     name={p.subcategory.category.categoryName}
                   />
                 </TableCell>
-                <TableCell align="center">{getPointsValueString(p)}</TableCell>
+                <TableCell align="center">
+                  <PointsCellContent points={p} />
+                </TableCell>
                 <TableCell align="center">{p.subcategory.maxPoints}</TableCell>
-                <TableCell align="center">{getDisplayDateString(p)}</TableCell>
+                <TableCell align="center">
+                  <DateCellContent points={p} />
+                </TableCell>
                 <TableCell align="center">
                   {p.teacher.firstName} {p.teacher.secondName}
                 </TableCell>
@@ -135,9 +145,9 @@ const styles: Styles = {
     fontWeight: "bold",
     fontSize: 16,
   },
-  awardsContainer: {
+  buttonsContainer: {
     display: "flex",
-    justifyContent: "center",
-    gap: 8,
+    flexDirection: "row",
+    gap: 4,
   },
 };

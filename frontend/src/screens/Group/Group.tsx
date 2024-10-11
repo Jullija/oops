@@ -4,20 +4,6 @@ import { pathsGenerator } from "../../router/paths";
 import { useGroupScreenData } from "../../hooks/Group/useGroupScreenData";
 import { GroupTableWithFilters } from "../../components/Group/table/GroupTableWithFilters";
 
-const styles: Styles = {
-  screenContainer: {
-    margin: 12,
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-  },
-  header: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 12,
-  },
-};
-
 export const Group = () => {
   const navigate = useNavigate();
   const params = useParams();
@@ -40,4 +26,18 @@ export const Group = () => {
       <GroupTableWithFilters rows={rows} categories={categories} />
     </div>
   );
+};
+
+const styles: Styles = {
+  screenContainer: {
+    margin: 12,
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+  },
+  header: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 12,
+  },
 };

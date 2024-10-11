@@ -14,24 +14,6 @@ import {
 import { useStudentsScreenData } from "../../hooks/Students/useStudentsScreenData";
 import { groupsRadioButtonOptions } from "../../utils/constants";
 
-const styles: Styles = {
-  container: {
-    display: "flex",
-    gap: 20,
-    margin: 12,
-  },
-  rightSide: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-  },
-  topBar: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 12,
-  },
-};
-
 export const StudentsScreen = () => {
   const { teacherId, groups, students, loading, error } =
     useStudentsScreenData();
@@ -114,4 +96,22 @@ export const StudentsScreen = () => {
       </div>
     </div>
   );
+};
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    gap: 20,
+    margin: 12,
+  },
+  rightSide: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+  },
+  topBar: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 12,
+  },
 };

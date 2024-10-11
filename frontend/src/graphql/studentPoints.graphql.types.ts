@@ -39,6 +39,7 @@ export type StudentPointsQuery = {
           };
           teacher: {
             __typename?: "UserType";
+            userId: string;
             firstName: string;
             secondName: string;
           };
@@ -51,15 +52,26 @@ export type StudentPointsQuery = {
       createdAt: string;
       points: {
         __typename?: "PurePointsType";
-        purePoints?: { __typename?: "PointType"; value: number } | null;
+        purePoints?: {
+          __typename?: "PointType";
+          pointsId: string;
+          value: string;
+        } | null;
         partialBonusType: Array<{
           __typename?: "PartialBonusType";
           partialValue: number;
           bonuses: {
             __typename?: "BonusType";
+            bonusId: string;
+            createdAt: string;
+            updatedAt: string;
             award: {
               __typename?: "AwardType";
               awardName: string;
+              awardId: string;
+              awardType: Types.AwardTypeType;
+              awardValue: string;
+              description: string;
               imageFile?: { __typename?: "FileType"; fileId: string } | null;
             };
           };
@@ -67,8 +79,9 @@ export type StudentPointsQuery = {
       };
       subcategory: {
         __typename?: "SubcategoryType";
+        subcategoryId: string;
         subcategoryName: string;
-        maxPoints: number;
+        maxPoints: string;
         category: {
           __typename?: "CategoryType";
           categoryId: string;
@@ -108,6 +121,7 @@ export const StudentPointsDocument = gql`
               weekdayName
             }
             teacher {
+              userId
               firstName
               secondName
             }
@@ -120,21 +134,30 @@ export const StudentPointsDocument = gql`
       subcategoryPoints {
         points {
           purePoints {
+            pointsId
             value
           }
           partialBonusType {
             partialValue
             bonuses {
+              bonusId
               award {
                 awardName
                 imageFile {
                   fileId
                 }
+                awardId
+                awardType
+                awardValue
+                description
               }
+              createdAt
+              updatedAt
             }
           }
         }
         subcategory {
+          subcategoryId
           subcategoryName
           category {
             categoryId

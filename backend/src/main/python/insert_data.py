@@ -161,6 +161,7 @@ def insert_data():
             award['award_value'],
             award['category_id'],
             award['max_usages'],
+            award['description'],
             award['label'],
             award['editions']
         )

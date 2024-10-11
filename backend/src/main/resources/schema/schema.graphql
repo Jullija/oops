@@ -30,6 +30,7 @@ type Mutation {
     awardValue: Float!
     categoryId: Int!
     maxUsages: Int = -1
+    description: String!
     label: String = ""
   ): AwardType
   addAwardToEdition(awardId: Int!, editionId: Int!): AwardEditionType
@@ -107,6 +108,7 @@ type Mutation {
     awardValue: Float,
     categoryId: Int,
     maxUsages: Int,
+    description: String,
     label: String
   ): AwardType
 
@@ -271,9 +273,10 @@ type AwardType {
   awardId: ID!
   awardName: String!
   awardType: AwardTypeType!
+  description: String!
   label: String!
   maxUsages: Int!
-  awardValue: Float!
+  awardValue: String!
   category: CategoryType
   imageFile: FileType
   awardEditions: [AwardEditionType]
@@ -375,9 +378,9 @@ type GroupType {
 type LevelType {
   levelId: ID!
   levelName: String!
-  minimumPoints: Float!
-  maximumPoints: Float!
-  grade: Float!
+  minimumPoints: String!
+  maximumPoints: String!
+  grade: String!
   ordinalNumber: Int!
   label: String!
   edition: EditionType!
@@ -391,7 +394,7 @@ type PointType {
   student: UserType!
   teacher: UserType!
   updatedBy: UserType!
-  value: Float!
+  value: String!
   subcategory: SubcategoryType!
   label: String!
   createdAt: String!
@@ -404,7 +407,7 @@ type PointsHistoryType {
   student: UserType!
   teacher: UserType!
   updatedBy: UserType!
-  value: Float!
+  value: String!
   subcategory: SubcategoryType!
   label: String!
   createdAt: String!
@@ -418,7 +421,7 @@ type SubcategoryType {
   category: CategoryType!
   label: String!
   edition: EditionType!
-  maxPoints: Float!
+  maxPoints: String!
   ordinalNumber: Int!
 }
 

@@ -6,16 +6,6 @@ import { StudentsListCard } from "./StudentsListCard";
 import { Group } from "../../hooks/common/useGroupsData";
 import { Roles } from "../../utils/types";
 
-const styles: Styles = {
-  studentsContainer: {
-    display: "flex",
-    justifyContent: "center",
-    gap: 12,
-    flexWrap: "wrap",
-    margin: 12,
-  },
-};
-
 // TODO name to clean up after group screen is ready
 export type StudentFromList = {
   id: string;
@@ -50,4 +40,14 @@ export const StudentsList = ({ students: groups }: StudentsListProps) => {
       ))}
     </div>
   );
+};
+
+const styles: Styles = {
+  studentsContainer: {
+    display: "flex",
+    justifyContent: "center",
+    gap: 12,
+    flexWrap: "wrap",
+    margin: 12,
+  },
 };

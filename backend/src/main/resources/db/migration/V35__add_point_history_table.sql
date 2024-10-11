@@ -8,7 +8,7 @@ CREATE TABLE points_history
     student_id     bigint    NOT NULL,
     teacher_id     bigint    NOT NULL,
     updated_by     bigint    NOT NULL,
-    value          double precision NOT NULL,
+    value          NUMERIC(10, 2) NOT NULL,
     subcategory_id bigint    NOT NULL,
     label          varchar(256) NOT NULL,
     created_at     timestamp NOT NULL,

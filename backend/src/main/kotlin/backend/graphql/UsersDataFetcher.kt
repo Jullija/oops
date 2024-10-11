@@ -26,6 +26,8 @@ import com.netflix.graphql.dgs.DgsQuery
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.LocalDateTime
 import kotlin.math.min
 
@@ -226,16 +228,16 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
                     PartialBonusType(
                         bonuses = bonus,
                         partialValue = if (bonus.award.awardType == AwardType.MULTIPLICATIVE) {
-                            purePoints?.value?.times(bonus.award.awardValue) ?: 0f
+                            purePoints?.value?.times(bonus.award.awardValue)?.toFloat() ?: 0f
                         } else if (bonus.award.awardType == AwardType.ADDITIVE_PREV) {
                             val contribution = min(
-                                additivePrevBonusesMap[bonus] ?: 0f,
-                                purePoints?.value?.let { (purePoints.subcategory.maxPoints).minus(it) } ?: 0f
+                                additivePrevBonusesMap[bonus]?.toFloat() ?: 0f,
+                                purePoints?.value?.let { (purePoints.subcategory.maxPoints.toFloat()).minus(it.toFloat()) } ?: 0f
                             )
-                            additivePrevBonusesMap[bonus] = (additivePrevBonusesMap[bonus] ?: 0f) - contribution
+                            additivePrevBonusesMap[bonus] = BigDecimal(((additivePrevBonusesMap[bonus]?.toFloat() ?: 0f) - contribution).toString()).setScale(2, RoundingMode.HALF_UP)
                             contribution
                         } else {
-                            bonus.points.value
+                            bonus.points.value.toFloat()
                         }
                     )
                 }
@@ -254,10 +256,11 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
                 )
             }
 
-        val sumOfPurePoints = subcategoryPoints.sumOf { it.points.purePoints?.value?.toDouble() ?: 0.0 }.toFloat()
-        val sumOfBonuses = subcategoryPoints.sumOf { it.points.partialBonusType.sumOf { it.partialValue.toDouble() } }
-            .toFloat()
-        val sumOfAll = sumOfPurePoints + sumOfBonuses
+        val sumOfPurePoints = BigDecimal(subcategoryPoints.sumOf { it.points.purePoints?.value?.toDouble() ?: 0.0 }.toString())
+            .setScale(2, RoundingMode.HALF_UP).toFloat()
+        val sumOfBonuses = BigDecimal(subcategoryPoints.sumOf { it.points.partialBonusType.sumOf { it.partialValue.toDouble() } })
+            .setScale(2, RoundingMode.HALF_UP).toFloat()
+        val sumOfAll = BigDecimal((sumOfPurePoints + sumOfBonuses).toString()).setScale(2, RoundingMode.HALF_UP).toFloat()
 
         return StudentPointsType(
             user = user,

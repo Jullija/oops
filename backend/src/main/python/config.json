@@ -161,6 +161,7 @@
                 "award_value": 10,
                 "category_id": 1,
                 "max_usages": 6,
+                "description": "Lekarstwo na wszelkie dolegliwości",
                 "label": "",
                 "editions": "all"
             },
@@ -171,6 +172,7 @@
                 "award_value": 20,
                 "category_id": 2,
                 "max_usages": 2,
+                "description": "Bardzo dobry weterynarz",
                 "label": "",
                 "editions": "all"
             },
@@ -181,6 +183,7 @@
                 "award_value": 12,
                 "category_id": 1,
                 "max_usages": 2,
+                "description": "Sianko dla zwierzaków",
                 "label": "",
                 "editions": "all"
             },
@@ -191,6 +194,7 @@
                 "award_value": 0.3,
                 "category_id": 1,
                 "max_usages": 2,
+                "description": "Niezbędna w laboratorium",
                 "label": "",
                 "editions": "all"
             },
@@ -201,6 +205,7 @@
                 "award_value": 0.6,
                 "category_id": 3,
                 "max_usages": 2,
+                "description": "Pomaga w projekcie",
                 "label": "",
                 "editions": "random"
             },
@@ -211,6 +216,7 @@
                 "award_value": 14,
                 "category_id": 1,
                 "max_usages": 2,
+                "description": "Gdy lekarstwo nie wystarczy",
                 "label": "",
                 "editions": "first"
             },
@@ -221,6 +227,7 @@
                 "award_value": 16,
                 "category_id": 2,
                 "max_usages": -1,
+                "description": "Gdy weterynarz nie wystarczy",
                 "label": "",
                 "editions": "last"
             }

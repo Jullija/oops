@@ -6,16 +6,6 @@ import { GroupCard } from "./GroupCard";
 import { Group } from "../../../hooks/common/useGroupsData";
 import { Roles } from "../../../utils/types";
 
-const styles: Styles = {
-  groupsContainer: {
-    display: "flex",
-    justifyContent: "center",
-    gap: 12,
-    flexWrap: "wrap",
-    margin: 12,
-  },
-};
-
 type GroupsProps = {
   groups: Group[];
 };
@@ -39,4 +29,14 @@ export const GroupsList = ({ groups }: GroupsProps) => {
       ))}
     </div>
   );
+};
+
+const styles: Styles = {
+  groupsContainer: {
+    display: "flex",
+    justifyContent: "center",
+    gap: 12,
+    flexWrap: "wrap",
+    margin: 12,
+  },
 };
