@@ -48,7 +48,7 @@ export const ProgressBar = ({
       <div style={styles.empty}>
         {showPoints && (
           <div style={styles.pointsContainer}>
-            {points.toFixed(2)}/{bounds.upper}
+            {points.toFixed(2)}/{bounds.upper.toFixed(2)}
           </div>
         )}
         <div style={{ ...styles.filled, width: `${filledPercent}%` }} />

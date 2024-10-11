@@ -21,8 +21,8 @@ const mapToLevel = (data: LevelType | undefined): Level | undefined => {
     ordinalNumber: data.ordinalNumber,
     realLevelNumber: data.ordinalNumber + 1,
     imageId: data.imageFile?.fileId ?? undefined,
-    minimumPoints: parseInt(data.minimumPoints),
-    maximumPoints: parseInt(data.maximumPoints),
+    minimumPoints: parseFloat(data.minimumPoints),
+    maximumPoints: parseFloat(data.maximumPoints),
   };
 };
 
