@@ -1,4 +1,5 @@
 import { useLevelsData } from "../../hooks/StudentProfile";
+import { EMPTY_FIELD_STRING } from "../../utils/constants";
 import { ProgressBar } from "./ProgressBar";
 
 type CourseProgressBarProps = {
@@ -11,7 +12,7 @@ export const CourseProgressBar = ({ totalPoints }: CourseProgressBarProps) => {
   if (loading) return <div>loading...</div>;
   if (error) return <div>ERROR: {error.message}</div>;
 
-  if (levels.length < 2) return <div>levels length is lower than 2...</div>;
+  if (levels.length < 2) return <div>{EMPTY_FIELD_STRING}</div>;
 
   const upperBound = levels[levels.length - 1].maximumPoints;
 
