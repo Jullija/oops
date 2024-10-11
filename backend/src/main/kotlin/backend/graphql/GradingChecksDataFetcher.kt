@@ -82,10 +82,10 @@ class GradingChecksDataFetcher {
             .orElseThrow { IllegalArgumentException("Invalid level ID") }
 
         val project = categoriesRepository.findById(projectId)
-            .orElseThrow { IllegalArgumentException("Invalid category ID") }
+            .orElseThrow { IllegalArgumentException("Invalid project ID") }
 
         if (categoryEditionRepository.findByCategoryAndEdition(project, edition).isEmpty()) {
-            throw IllegalArgumentException("Category ${project.categoryName} is not part of edition ${edition.editionName}")
+            throw IllegalArgumentException("Project ${project.categoryName} is not part of edition ${edition.editionName}")
         }
 
         if (projectPointsThreshold < 0) {
@@ -154,10 +154,10 @@ class GradingChecksDataFetcher {
 
         projectId?.let {
             val project = categoriesRepository.findById(it)
-                .orElseThrow { IllegalArgumentException("Invalid category ID") }
+                .orElseThrow { IllegalArgumentException("Invalid project ID") }
 
             if (categoryEditionRepository.findByCategoryAndEdition(project, gradingCheck.edition).isEmpty()) {
-                throw IllegalArgumentException("Category ${project.categoryName} is not part of edition ${gradingCheck.edition.editionName}")
+                throw IllegalArgumentException("Project ${project.categoryName} is not part of edition ${gradingCheck.edition.editionName}")
             }
 
             gradingCheck.project = project
