@@ -51,7 +51,7 @@ class Bonuses(
                 point -> bonusRepository.findByPoints(point).isEmpty()
         }
         val totalPointsValue = pointsInAwardCategory.sumOf { it.value.toDouble() }.toFloat()
-        points.value = (totalPointsValue * award.awardValue.toFloat()).toBigDecimal()
+        points.value = (totalPointsValue * award.awardValue.toFloat()).toBigDecimal().setScale(2, RoundingMode.HALF_UP)
         pointsRepository.save(points)
     }
 

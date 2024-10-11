@@ -83,10 +83,6 @@ class PointsDataFetcher {
         if (studentPointsWithoutBonuses.isNotEmpty()) {
             throw IllegalArgumentException("This student already has points in this subcategory")
         }
-        val studentPointsSum = studentPoints.sumOf { it.value.toDouble() }.toFloat()
-        if ((studentPointsSum + value).toBigDecimal() > subcategory.maxPoints) {
-            throw IllegalArgumentException("Student cannot have more than ${subcategory.maxPoints} points in this subcategory")
-        }
 
         val points = Points(
             student = student,
@@ -133,14 +129,11 @@ class PointsDataFetcher {
                 throw IllegalArgumentException("Value cannot be negative")
             }
 
-            val studentPointsSum = points.student.getPointsBySubcategory(points.subcategory.subcategoryId, pointsRepository)
-                .sumOf { p -> p.value.toDouble() }.toFloat()
-
-            if (studentPointsSum - points.value.toFloat() + newValue > points.subcategory.maxPoints.toFloat()) {
+            if (newValue > points.subcategory.maxPoints.toFloat()) {
                 throw IllegalArgumentException("Student cannot have more than ${points.subcategory.maxPoints} points in this subcategory")
             }
 
-            points.value = newValue.toBigDecimal()
+            points.value = newValue.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
         }
 
         updatedById.let {

@@ -16,6 +16,7 @@ import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.math.RoundingMode
 
 @DgsComponent
 class AwardsDataFetcher {
@@ -82,7 +83,7 @@ class AwardsDataFetcher {
         if (awardsWithSameName.any { it.awardType != awardType1 }) {
             throw IllegalArgumentException("Award with this name cannot be added with this type (already exists with different type)")
         }
-        if (awardsWithSameName.any { it.awardValue == awardValue.toBigDecimal()  }) {
+        if (awardsWithSameName.any { it.awardValue == awardValue.toBigDecimal().setScale(2, RoundingMode.HALF_UP)  }) {
             throw IllegalArgumentException("Award with this name and value already exists")
         }
         if (!category.canAddPoints) {
@@ -92,7 +93,7 @@ class AwardsDataFetcher {
         val award = Award(
             awardName = awardName,
             awardType = awardType1,
-            awardValue = awardValue.toBigDecimal(),
+            awardValue = awardValue.toBigDecimal().setScale(2, java.math.RoundingMode.HALF_UP),
             category = category,
             maxUsages = maxUsages,
             description = description,
@@ -148,7 +149,7 @@ class AwardsDataFetcher {
             if (award.awardType == AwardType.MULTIPLICATIVE && (it <= 0 || it > 1)) {
                 throw IllegalArgumentException("Multiplicative award value must be greater than 0 and less than or equal to 1")
             }
-            award.awardValue = it.toBigDecimal()
+            award.awardValue = it.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
         }
 
         categoryId?.let {

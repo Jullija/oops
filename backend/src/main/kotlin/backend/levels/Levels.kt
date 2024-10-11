@@ -52,7 +52,7 @@ class Levels(
         levelName = "",
         minimumPoints = BigDecimal.ZERO,
         maximumPoints = BigDecimal.ZERO,
-        grade = (2.0).toBigDecimal(),
+        grade = (2.0).toBigDecimal().setScale(1),
         label = "",
         edition = Edition()
     )
