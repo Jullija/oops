@@ -7,6 +7,7 @@ query Bonuses($studentId: bigint!, $editionId: bigint!) {
       }
     }
   ) {
+    bonusId
     award {
       awardId
       awardName

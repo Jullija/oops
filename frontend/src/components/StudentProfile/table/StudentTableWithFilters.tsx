@@ -3,13 +3,12 @@ import FilterMenu from "./FilterMenu";
 import { useState } from "react";
 import { Points } from "../../../hooks/StudentProfile/useStudentData";
 import { FilterItem } from "../../Groups/FilterBar/FilterOptionsSection";
-import { StudentTable } from "./StudentTable";
+import { EditFunctions, StudentTable } from "./StudentTable";
 
 type StudentTableWithFiltersProps = {
   points: Points[];
   filterHeaderNames: FilterItem[];
-  handleEditClick?: (points: Points) => void;
-  handleDeleteClick?: (pointsId: string) => void;
+  editFunctions?: EditFunctions;
   showActionButtons?: boolean;
   blockActionButtons?: boolean;
 };
@@ -17,8 +16,7 @@ type StudentTableWithFiltersProps = {
 export const StudentTableWithFilters = ({
   points,
   filterHeaderNames,
-  handleEditClick,
-  handleDeleteClick,
+  editFunctions,
   showActionButtons = false,
   blockActionButtons = true,
 }: StudentTableWithFiltersProps) => {
@@ -46,8 +44,7 @@ export const StudentTableWithFilters = ({
       />
       <StudentTable
         points={pointsToDisplay}
-        handleEditClick={handleEditClick}
-        handleDeleteClick={handleDeleteClick}
+        editFunctions={editFunctions}
         showActionButtons={showActionButtons}
         blockActionButtons={blockActionButtons}
       />

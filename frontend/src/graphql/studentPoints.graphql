@@ -40,6 +40,7 @@ query StudentPoints($editionId: Int!, $studentId: Int!) {
         partialBonusType {
           partialValue
           bonuses {
+            bonusId
             award {
               awardName
               imageFile {

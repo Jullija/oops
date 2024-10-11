@@ -1,6 +1,9 @@
 import { Styles } from "../../utils/Styles";
 import { useParams } from "react-router-dom";
-import { PointsForm } from "../../components/StudentProfile/PointsForm/PointsForm";
+import {
+  PointsForm,
+  PointsFormValues,
+} from "../../components/StudentProfile/PointsForm/PointsForm";
 import { useUser } from "../../hooks/common/useUser";
 import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
 import { SideBar } from "../../components/StudentProfile/SideBar";
@@ -12,6 +15,9 @@ import { useTeacherActions } from "../../hooks/StudentProfile/useTeacherActions"
 import { useEditionSelection } from "../../hooks/common/useEditionSelection";
 import { Roles } from "../../router/paths";
 import { isEditionActive } from "../../utils/utils";
+import { NotEditableInfo } from "../../components/StudentProfile/NotEditableInfo";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 export function TeacherStudentProfile() {
   const params = useParams();
@@ -36,19 +42,20 @@ export function TeacherStudentProfile() {
   } = useStudentProfileData(studentId);
 
   const {
-    categories: formCategories,
+    formCategories,
+    formInitialValues,
     loading: formDataLoading,
     error: formDataError,
   } = useFormCategories();
 
   const {
+    selectedPoints,
     isAddDialogOpen,
     openAddDialog,
     closeAddDialog,
     isEditDialogOpen,
     openEditDialog,
     closeEditDialog,
-    pointsToEdit,
     handleAddPointsConfirmation,
     addPointsError,
     handleEditPointsConfirmation,
@@ -69,10 +76,19 @@ export function TeacherStudentProfile() {
   const hasEditableRights =
     studentData.group?.teacherId === userId || user.role === Roles.COORDINATOR;
 
-  const isSelectedEditionActive =
-    selectedEdition && isEditionActive(selectedEdition);
+  const isSelectedEditionActive = Boolean(
+    selectedEdition && isEditionActive(selectedEdition),
+  );
 
   const disableEditMode = !(isSelectedEditionActive && hasEditableRights);
+
+  const initialValues: PointsFormValues = selectedPoints
+    ? {
+        categoryId: selectedPoints?.subcategory.category.categoryId,
+        points: parseFloat(selectedPoints.points.purePoints?.value ?? "0"),
+        subcategoryId: selectedPoints?.subcategory.subcategoryId,
+      }
+    : formInitialValues;
 
   return (
     <div style={styles.container}>
@@ -85,34 +101,41 @@ export function TeacherStudentProfile() {
         bonuses={bonuses}
       />
       <div style={styles.rightContainer}>
+        {disableEditMode && (
+          <NotEditableInfo
+            hasEditableRights={hasEditableRights}
+            isSelectedEditionActive={isSelectedEditionActive}
+          />
+        )}
+
         <Dialog open={isAddDialogOpen}>
+          <IconButton onClick={closeAddDialog} style={styles.closeIcon}>
+            <CloseIcon />
+          </IconButton>
+
           <PointsForm
             categories={formCategories}
             handleConfirmClick={handleAddPointsConfirmation}
             mutationError={addPointsError?.message}
             variant="add"
+            initialValues={initialValues}
+            disableCategoryAndSubcategory={!!selectedPoints}
           />
-          <Button onClick={closeAddDialog} color="lightblue">
-            close
-          </Button>
         </Dialog>
 
         <Dialog open={isEditDialogOpen}>
+          <IconButton onClick={closeEditDialog} style={styles.closeIcon}>
+            <CloseIcon />
+          </IconButton>
+
           <PointsForm
             categories={formCategories}
             handleConfirmClick={handleEditPointsConfirmation}
             mutationError={editPointsError?.message}
-            initialValues={{
-              subcategoryId: pointsToEdit?.subcategory.subcategoryId as string,
-              points: parseFloat(pointsToEdit?.points.purePoints?.value ?? "0"),
-              categoryId: pointsToEdit?.subcategory.category
-                .categoryId as string,
-            }}
+            initialValues={initialValues}
             variant="edit"
+            disableCategoryAndSubcategory={true}
           />
-          <Button onClick={closeEditDialog} color="lightblue">
-            close
-          </Button>
         </Dialog>
 
         <Button
@@ -120,15 +143,17 @@ export function TeacherStudentProfile() {
           color="lightblue"
           disabled={disableEditMode}
         >
-          add points
+          Add Points
         </Button>
 
         <StudentTableWithFilters
           points={points}
           filterHeaderNames={filterHeaderNames}
-          handleEditClick={openEditDialog}
-          handleDeleteClick={handleDeletePointsClick}
-          // TODO it should be discussed when buttons should be displayed
+          editFunctions={{
+            handleDeleteClick: handleDeletePointsClick,
+            handleAddClick: openAddDialog,
+            handleEditClick: openEditDialog,
+          }}
           showActionButtons={true}
           blockActionButtons={disableEditMode}
         />
@@ -148,5 +173,10 @@ const styles: Styles = {
     display: "flex",
     flexDirection: "column",
     gap: 24,
+  },
+  closeIcon: {
+    position: "absolute",
+    right: 8,
+    top: 8,
   },
 };
