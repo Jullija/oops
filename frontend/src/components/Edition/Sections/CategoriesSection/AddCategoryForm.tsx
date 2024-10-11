@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { Styles } from "../../../../utils/Styles";
 import { FormControlLabel, Switch, TextField } from "@mui/material";
 
-type CategoriesFormValues = z.infer<typeof ValidationSchema>;
+export type CategoriesFormValues = z.infer<typeof ValidationSchema>;
 
 const ValidationSchema = z.object({
   categoryName: z.string().min(1, "required"),
@@ -11,12 +11,12 @@ const ValidationSchema = z.object({
 });
 
 type AddCategoryFormProps = {
-  handleAddConfirmation: (values: CategoriesFormValues) => void;
+  handleAddCategory: (values: CategoriesFormValues) => void;
   createError?: string;
 };
 
 export const AddCategoryForm = ({
-  handleAddConfirmation,
+  handleAddCategory,
   createError,
 }: AddCategoryFormProps) => {
   const formik = useFormik({
@@ -34,7 +34,7 @@ export const AddCategoryForm = ({
       }
     },
     onSubmit: (values: CategoriesFormValues) => {
-      handleAddConfirmation(values);
+      handleAddCategory(values);
     },
   });
 
