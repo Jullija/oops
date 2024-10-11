@@ -16,6 +16,7 @@ export const useBonusesCardData = (
   const bonuses: Bonus[] =
     data?.bonuses.map((bonus) => {
       return {
+        id: bonus.bonusId,
         award: {
           id: bonus.award.awardId,
           name: bonus.award.awardName,
