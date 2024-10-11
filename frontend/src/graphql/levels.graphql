@@ -1,5 +1,8 @@
 query Levels($editionId: bigint) {
-  levels(where: { editionId: { _eq: 2 } }, orderBy: { ordinalNumber: ASC }) {
+  levels(
+    where: { editionId: { _eq: editionId } }
+    orderBy: { ordinalNumber: ASC }
+  ) {
     grade
     imageFileId
     levelId
