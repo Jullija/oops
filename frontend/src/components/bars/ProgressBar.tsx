@@ -31,17 +31,18 @@ export const ProgressBar = ({
   }
 
   const diff = bounds.lower;
-  const filledPercent = Math.min(
-    Math.round(((points - diff) / (bounds.upper - diff)) * 100),
-    100,
-  );
 
-  const getThresholdPosition = (threshold: number) => {
-    if (threshold < bounds.lower || threshold > bounds.upper) {
-      throw new Error("threshold out of bounds.");
+  const calculatePercent = (p: number) => {
+    if (p < bounds.lower) {
+      throw new Error("points out of bounds.");
     }
-    return ((threshold - bounds.lower) / (bounds.upper - bounds.lower)) * 100;
+    return Math.min(
+      Math.round(((p - diff) / (bounds.upper - diff)) * 100),
+      100,
+    );
   };
+
+  const filledPercent = calculatePercent(points);
 
   return (
     <div style={styles.container}>
@@ -62,7 +63,7 @@ export const ProgressBar = ({
                 key={index}
                 style={{
                   ...styles.thresholdLine,
-                  left: `${getThresholdPosition(threshold.points)}%`,
+                  left: `${calculatePercent(threshold.points)}%`,
                 }}
               >
                 <div style={styles.thresholdLabel}>{threshold.label}</div>
