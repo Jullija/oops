@@ -3,25 +3,22 @@ import FilterMenu from "./FilterMenu";
 import { useState } from "react";
 import { Points } from "../../../hooks/StudentProfile/useStudentData";
 import { FilterItem } from "../../Groups/FilterBar/FilterOptionsSection";
-import { StudentTable } from "./StudentTable";
-
-const styles: Styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-    flex: 1,
-  },
-};
+import { EditFunctions, StudentTable } from "./StudentTable";
 
 type StudentTableWithFiltersProps = {
   points: Points[];
   filterHeaderNames: FilterItem[];
+  editFunctions?: EditFunctions;
+  showActionButtons?: boolean;
+  blockActionButtons?: boolean;
 };
 
 export const StudentTableWithFilters = ({
   points,
   filterHeaderNames,
+  editFunctions,
+  showActionButtons = false,
+  blockActionButtons = true,
 }: StudentTableWithFiltersProps) => {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
 
@@ -45,7 +42,21 @@ export const StudentTableWithFilters = ({
         }}
         filterItems={filterHeaderNames}
       />
-      <StudentTable points={pointsToDisplay} />
+      <StudentTable
+        points={pointsToDisplay}
+        editFunctions={editFunctions}
+        showActionButtons={showActionButtons}
+        blockActionButtons={blockActionButtons}
+      />
     </div>
   );
+};
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+    flex: 1,
+  },
 };

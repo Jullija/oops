@@ -1,34 +1,6 @@
 import { useState } from "react";
 import { Styles } from "../../../utils/Styles";
 
-const styles: Styles = {
-  card: {
-    padding: 20,
-    gap: 12,
-    border: "1px solid black",
-    display: "flex",
-    flexDirection: "column",
-  },
-  optionContainer: {
-    padding: 4,
-    gap: 4,
-    display: "flex",
-    flexDirection: "row",
-    cursor: "pointer",
-  },
-  title: {
-    fontWeight: "bold",
-  },
-  radio: {
-    width: 16,
-    height: 16,
-    border: "1px solid black",
-  },
-  active: {
-    backgroundColor: "black",
-  },
-};
-
 export type FilterItem = {
   id: string;
   name: string;
@@ -76,4 +48,32 @@ export const FilterOptionsSection = ({
       ))}
     </div>
   );
+};
+
+const styles: Styles = {
+  card: {
+    padding: 20,
+    gap: 12,
+    border: "1px solid black",
+    display: "flex",
+    flexDirection: "column",
+  },
+  optionContainer: {
+    padding: 4,
+    gap: 4,
+    display: "flex",
+    flexDirection: "row",
+    cursor: "pointer",
+  },
+  title: {
+    fontWeight: "bold",
+  },
+  radio: {
+    width: 16,
+    height: 16,
+    border: "1px solid black",
+  },
+  active: {
+    backgroundColor: "black",
+  },
 };

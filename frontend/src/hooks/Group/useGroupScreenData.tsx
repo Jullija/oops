@@ -1,15 +1,5 @@
 import { useGroupPointsQuery } from "../../graphql/groupPoints.graphql.types";
-
-export type Category = {
-  id: string;
-  name: string;
-  subcategories: Subcategory[];
-};
-
-export type Subcategory = {
-  id: string;
-  name: string;
-};
+import { Category } from "../../utils/utils";
 
 export type GroupTableRow = {
   student: Student;
@@ -46,6 +36,7 @@ export const useGroupScreenData = (groupId: number | undefined) => {
             return {
               id: points.subcategory.subcategoryId,
               name: points.subcategory.subcategoryName,
+              maxPoints: parseFloat(points.subcategory.maxPoints),
             };
           }) ?? [],
       };
@@ -64,7 +55,9 @@ export const useGroupScreenData = (groupId: number | undefined) => {
           userPoints?.categoriesPoints.flatMap((catPoints) =>
             catPoints.subcategoryPoints.map((subPoints) => {
               return {
-                pure: subPoints.points.purePoints?.value,
+                pure: subPoints.points.purePoints?.value
+                  ? parseFloat(subPoints.points.purePoints?.value)
+                  : undefined,
                 subcategoryId: subPoints.subcategory.subcategoryId,
                 categoryId: catPoints.category.categoryId,
               };

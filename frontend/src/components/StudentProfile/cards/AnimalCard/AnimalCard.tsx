@@ -4,26 +4,6 @@ import { Avatar } from "../../../images/Avatar";
 import { LevelMiniature } from "./LevelMiniature";
 import { LevelType } from "../../../../__generated__/schema.graphql.types";
 
-const styles: Styles = {
-  card: {
-    display: "flex",
-    flexDirection: "column",
-    border: "1px solid blue",
-    gap: 12,
-    padding: 24,
-  },
-  title: {
-    fontWeight: "bold",
-  },
-  levelMiniaturesContainer: {
-    display: "flex",
-    flexDirection: "row",
-  },
-  levelMiniatureSpaceWrapper: {
-    flex: 1,
-  },
-};
-
 type AnimalCardProps = {
   prevLevel?: LevelType;
   currLevel: LevelType;
@@ -46,8 +26,8 @@ export const AnimalCard = ({
       <PointsBar
         points={totalPoints}
         bounds={{
-          lower: currLevel.minimumPoints,
-          upper: currLevel.maximumPoints,
+          lower: parseInt(currLevel.minimumPoints),
+          upper: parseInt(currLevel.maximumPoints),
         }}
         showPoints
       />
@@ -63,4 +43,24 @@ export const AnimalCard = ({
       </div>
     </div>
   );
+};
+
+const styles: Styles = {
+  card: {
+    display: "flex",
+    flexDirection: "column",
+    border: "1px solid blue",
+    gap: 12,
+    padding: 24,
+  },
+  title: {
+    fontWeight: "bold",
+  },
+  levelMiniaturesContainer: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  levelMiniatureSpaceWrapper: {
+    flex: 1,
+  },
 };

@@ -7,6 +7,8 @@ import backend.points.Points
 import backend.points.PointsRepository
 import backend.utils.TimestampModel
 import jakarta.persistence.*
+import java.math.BigDecimal
+import java.math.RoundingMode
 import kotlin.math.min
 
 @Entity
@@ -49,7 +51,7 @@ class Bonuses(
                 point -> bonusRepository.findByPoints(point).isEmpty()
         }
         val totalPointsValue = pointsInAwardCategory.sumOf { it.value.toDouble() }.toFloat()
-        points.value = (totalPointsValue * award.awardValue)
+        points.value = (totalPointsValue * award.awardValue.toFloat()).toBigDecimal().setScale(2, RoundingMode.HALF_UP)
         pointsRepository.save(points)
     }
 
@@ -68,14 +70,14 @@ class Bonuses(
 
         var sum = 0f
         var i = pointsInAwardCategory.size - 1
-        while (sum < award.awardValue || i >= 0) {
+        while (sum < award.awardValue.toFloat() || i >= 0) {
             val lastPoints = pointsInAwardCategory.getOrNull(i--)
                 ?: break
-            val pointsToAdd = min(award.awardValue - sum, lastPoints.subcategory.maxPoints - lastPoints.value)
+            val pointsToAdd = min(award.awardValue.toFloat() - sum, lastPoints.subcategory.maxPoints.toFloat() - lastPoints.value.toFloat())
             sum += pointsToAdd
         }
 
-        points.value = sum
+        points.value = BigDecimal(sum.toString()).setScale(2, RoundingMode.HALF_UP)
         pointsRepository.save(points)
     }
 }

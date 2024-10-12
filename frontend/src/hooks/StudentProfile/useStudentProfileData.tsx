@@ -1,5 +1,6 @@
 import { useEditionSelection } from "../common/useEditionSelection";
 import { useAnimalData } from "./useAnimalData";
+import { useBonusesCardData } from "./useBonusesCardData";
 import { useCategoriesCardData } from "./useCategoriesCardData";
 import { useStudentData } from "./useStudentData";
 
@@ -31,10 +32,14 @@ export const useStudentProfileData = (studentId?: string) => {
     animalDataRefetch,
   } = useAnimalData(editionId, studentId);
 
+  const { bonuses, bonusesLoading, bonusesError, bonusesRefetch } =
+    useBonusesCardData(editionId, studentId);
+
   const refetch = () => {
     categoriesRefetch();
     studentPointsRefetch();
     animalDataRefetch();
+    bonusesRefetch();
   };
 
   return {
@@ -45,9 +50,15 @@ export const useStudentProfileData = (studentId?: string) => {
     prevLevel,
     currLevel,
     nextLevel,
+    bonuses,
     // TODO loading and error probably should be separated to sidebar and table
-    loading: categoriesLoading || studentPointsLoading || animalDataLoading,
-    error: categoriesError || studentPointsError || animalDataError,
+    loading:
+      categoriesLoading ||
+      studentPointsLoading ||
+      animalDataLoading ||
+      bonusesLoading,
+    error:
+      categoriesError || studentPointsError || animalDataError || bonusesError,
     refetch,
   };
 };

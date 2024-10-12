@@ -1,17 +1,5 @@
 import { Styles } from "../../utils/Styles";
 
-const styles: Styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 2,
-    flex: 1,
-  },
-  input: {
-    flex: 1,
-  },
-};
-
 type TextInputProps = {
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
@@ -48,4 +36,16 @@ export const TextInput = ({
       {error && touched ? <div style={styles.error}>{error}</div> : null}
     </div>
   );
+};
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 2,
+    flex: 1,
+  },
+  input: {
+    flex: 1,
+  },
 };

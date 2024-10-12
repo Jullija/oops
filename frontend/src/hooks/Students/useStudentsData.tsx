@@ -32,10 +32,9 @@ export const useStudentsData = (editionId: string | undefined) => {
             start: group.startTime,
             end: group.endTime,
           },
-          // TODO it shouldn't be nullable?
           teacher: {
-            fullName: teacher?.fullName as string,
-            id: teacher?.userId as string,
+            fullName: teacher.fullName as string,
+            id: teacher.userId as string,
           },
         },
       };

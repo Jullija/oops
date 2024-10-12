@@ -12,6 +12,8 @@ import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 @DgsComponent
 class PointsDataFetcher {
@@ -81,16 +83,12 @@ class PointsDataFetcher {
         if (studentPointsWithoutBonuses.isNotEmpty()) {
             throw IllegalArgumentException("This student already has points in this subcategory")
         }
-        val studentPointsSum = studentPoints.sumOf { it.value.toDouble() }.toFloat()
-        if (studentPointsSum + value > subcategory.maxPoints) {
-            throw IllegalArgumentException("Student cannot have more than ${subcategory.maxPoints} points in this subcategory")
-        }
 
         val points = Points(
             student = student,
             teacher = teacher,
             updatedBy = teacher,
-            value = value,
+            value = BigDecimal(value.toString()).setScale(2, RoundingMode.HALF_UP),
             subcategory = subcategory,
             label = ""
         )
@@ -131,14 +129,11 @@ class PointsDataFetcher {
                 throw IllegalArgumentException("Value cannot be negative")
             }
 
-            val studentPointsSum = points.student.getPointsBySubcategory(points.subcategory.subcategoryId, pointsRepository)
-                .sumOf { p -> p.value.toDouble() }.toFloat()
-
-            if (studentPointsSum - points.value + newValue > points.subcategory.maxPoints) {
+            if (newValue > points.subcategory.maxPoints.toFloat()) {
                 throw IllegalArgumentException("Student cannot have more than ${points.subcategory.maxPoints} points in this subcategory")
             }
 
-            points.value = newValue
+            points.value = newValue.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
         }
 
         updatedById.let {

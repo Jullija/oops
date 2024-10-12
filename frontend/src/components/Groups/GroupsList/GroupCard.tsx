@@ -3,36 +3,6 @@ import { FILES_URL } from "../../../utils/constants";
 import { Styles } from "../../../utils/Styles";
 import { EditableIndicator } from "../../EditableIndicator";
 
-const styles: Styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    border: "1px solid black",
-    width: 240,
-    height: 240,
-    cursor: "pointer",
-    padding: 12,
-    gap: 12,
-    position: "relative",
-  },
-  img: {
-    width: "100%",
-    height: 150,
-    objectFit: "cover",
-    borderRadius: 8,
-    overflow: "hidden",
-  },
-  title: {
-    fontWeight: "bold",
-    fontSize: 18,
-  },
-  editableIndicatorWrapper: {
-    top: 140,
-    right: 32,
-    position: "absolute",
-  },
-};
-
 type GroupCardProps = {
   group: Group;
   onClick: () => void;
@@ -63,4 +33,34 @@ export const GroupCard = ({
       )}
     </div>
   );
+};
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    border: "1px solid black",
+    width: 240,
+    height: 240,
+    cursor: "pointer",
+    padding: 12,
+    gap: 12,
+    position: "relative",
+  },
+  img: {
+    width: "100%",
+    height: 150,
+    objectFit: "cover",
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+  title: {
+    fontWeight: "bold",
+    fontSize: 18,
+  },
+  editableIndicatorWrapper: {
+    top: 140,
+    right: 32,
+    position: "absolute",
+  },
 };

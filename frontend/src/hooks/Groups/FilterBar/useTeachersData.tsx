@@ -7,12 +7,11 @@ export const useTeachersData = (editionId: string | undefined) => {
     skip: !editionId,
   });
 
-  // TODO userByTeacherId - does it has to be nullable?
   const teachers: FilterItem[] =
     data?.groups.map((teacher) => {
       return {
-        name: teacher.teacher?.fullName ?? "-",
-        id: teacher.teacher?.userId ?? "-",
+        name: teacher.teacher.fullName ?? "-",
+        id: teacher.teacher.userId ?? "-",
       };
     }) ?? [];
 

@@ -3,9 +3,39 @@ import { navigationItems } from "../router/paths";
 import { Styles } from "../utils/Styles";
 import { useEditionSelection } from "../hooks/common/useEditionSelection";
 import { useUser } from "../hooks/common/useUser";
-import { hasRole } from "../utils/utils";
+import { hasRole, isEditionActive } from "../utils/utils";
 
 export const NAV_BAR_HEIGHT = 100;
+
+export const Navbar = () => {
+  const navigate = useNavigate();
+  const { selectedEdition } = useEditionSelection();
+  const { user } = useUser();
+
+  return (
+    <div style={styles.container}>
+      {navigationItems
+        .filter((item) => hasRole(user, item.allowedRoles))
+        .map((item, index) => (
+          <div
+            key={index}
+            onClick={() => navigate(item.path)}
+            style={styles.navbarItem}
+          >
+            {item.title}
+          </div>
+        ))}
+      {selectedEdition ? (
+        <div style={styles.editionName}>
+          edition: {selectedEdition.editionId},{" "}
+          {isEditionActive(selectedEdition) ? "active" : "not active"}
+        </div>
+      ) : (
+        <div>no edition selected</div>
+      )}
+    </div>
+  );
+};
 
 const styles: Styles = {
   container: {
@@ -24,31 +54,4 @@ const styles: Styles = {
     marginLeft: "auto",
     padding: 12,
   },
-};
-
-export const Navbar = () => {
-  const navigate = useNavigate();
-  const { editions } = useEditionSelection();
-  const { user } = useUser();
-
-  const showCurrentEdition = editions.length > 1;
-
-  return (
-    <div style={styles.container}>
-      {navigationItems
-        .filter((item) => hasRole(user, item.allowedRoles))
-        .map((item, index) => (
-          <div
-            key={index}
-            onClick={() => navigate(item.path)}
-            style={styles.navbarItem}
-          >
-            {item.title}
-          </div>
-        ))}
-      {!showCurrentEdition && (
-        <div style={styles.editionName}>{editions[0]?.name}</div>
-      )}
-    </div>
-  );
 };

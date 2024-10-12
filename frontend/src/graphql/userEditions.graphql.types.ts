@@ -13,6 +13,8 @@ export type UserEditionsQuery = {
     editionYear: number;
     label: string;
     name: string;
+    startDate: string;
+    endDate: string;
   }>;
 };
 
@@ -23,6 +25,8 @@ export const UserEditionsDocument = gql`
       editionYear
       label
       name
+      startDate
+      endDate
     }
   }
 `;

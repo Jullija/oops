@@ -26,6 +26,8 @@ import com.netflix.graphql.dgs.DgsQuery
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.sql.Time
 import java.time.LocalDateTime
 import kotlin.math.min
@@ -99,6 +101,9 @@ class GroupsDataFetcher {
         if (edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Edition has already ended")
         }
+        if (groupsRepository.existsByUsosIdAndEdition(usosId.toLong(), edition)) {
+            throw IllegalArgumentException("Group with USOS ID $usosId already exists for edition ${edition.editionId}")
+        }
         if (groupsRepository.findAllByGroupNameAndEdition(groupName, edition).any { it.groupName.isNotBlank() }) {
             throw IllegalArgumentException("Group with name $groupName already exists for edition ${edition.editionId}")
         }
@@ -142,6 +147,7 @@ class GroupsDataFetcher {
     fun editGroup(
         @InputArgument groupId: Long,
         @InputArgument groupName: String?,
+        @InputArgument usosId: Int?,
         @InputArgument weekdayId: Long?,
         @InputArgument startTime: Time?,
         @InputArgument endTime: Time?,
@@ -160,6 +166,13 @@ class GroupsDataFetcher {
                 throw IllegalArgumentException("Group with name $it already exists for edition ${group.edition.editionId}")
             }
             group.groupName = it
+        }
+
+        usosId?.let {
+            if (groupsRepository.existsByUsosIdAndEdition(it.toLong(), group.edition) && it != group.usosId) {
+                throw IllegalArgumentException("Group with USOS ID $it already exists for edition ${group.edition.editionId}")
+            }
+            group.usosId = it
         }
 
         weekdayId?.let {
@@ -286,16 +299,16 @@ class GroupsDataFetcher {
                         PartialBonusType(
                             bonuses = bonus,
                             partialValue = if (bonus.award.awardType == AwardType.MULTIPLICATIVE) {
-                                purePoints?.value?.times(bonus.award.awardValue) ?: 0f
+                                purePoints?.value?.times(bonus.award.awardValue)?.toFloat() ?: 0f
                             } else if (bonus.award.awardType == AwardType.ADDITIVE_PREV) {
                                 val contribution = min(
-                                    additivePrevBonusesMap[bonus] ?: 0f,
-                                    purePoints?.value?.let { (purePoints.subcategory.maxPoints).minus(it) } ?: 0f
+                                    additivePrevBonusesMap[bonus]?.toFloat() ?: 0f,
+                                    purePoints?.value?.let { (purePoints.subcategory.maxPoints.toFloat()).minus(it.toFloat()) } ?: 0f
                                 )
-                                additivePrevBonusesMap[bonus] = (additivePrevBonusesMap[bonus] ?: 0f) - contribution
+                                additivePrevBonusesMap[bonus] = BigDecimal(((additivePrevBonusesMap[bonus]?.toFloat() ?: 0f) - contribution).toString()).setScale(2, RoundingMode.HALF_UP)
                                 contribution
                             } else {
-                                bonus.points.value
+                                bonus.points.value.toFloat()
                             }
                         )
                     }
@@ -330,7 +343,7 @@ class GroupsDataFetcher {
     @Transactional
     fun getGroupsInEdition(@InputArgument editionId: Long, @InputArgument teacherId: Long): List<GroupTeacherType> {
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
-        val teacher = usersRepository.findById(teacherId).orElseThrow() { IllegalArgumentException("Invalid teacher ID") }
+        val teacher = usersRepository.findById(teacherId).orElseThrow { IllegalArgumentException("Invalid teacher ID") }
         if (teacher.role != UsersRoles.TEACHER && teacher.role != UsersRoles.COORDINATOR) {
             throw IllegalArgumentException("User with ID $teacherId is not a teacher nor a coordinator")
         }
@@ -389,11 +402,11 @@ class GroupsDataFetcher {
     private fun createCategoryPointsType(category: Categories, subcategoryPoints: List<SubcategoryPointsType>, subcategories: List<Subcategories>): CategoryPointsType{
         val subcategoryPointsWithDefaults = getSubcategoryPointsWithDefaults(subcategoryPoints, subcategories, category)
 
-        val sumOfPurePoints = subcategoryPointsWithDefaults.sumOf { it.points.purePoints?.value?.toDouble() ?: 0.0 }.toFloat()
-        val sumOfBonuses = subcategoryPointsWithDefaults.sumOf { subcategory ->
+        val sumOfPurePoints = BigDecimal(subcategoryPointsWithDefaults.sumOf { it.points.purePoints?.value?.toDouble() ?: 0.0 }.toString()).setScale(2, RoundingMode.HALF_UP).toFloat()
+        val sumOfBonuses = BigDecimal(subcategoryPointsWithDefaults.sumOf { subcategory ->
             subcategory.points.partialBonusType.sumOf { it.partialValue.toDouble() }
-        }.toFloat()
-        val sumOfAll = sumOfPurePoints + sumOfBonuses
+        }.toString()).setScale(2, RoundingMode.HALF_UP).toFloat()
+        val sumOfAll = BigDecimal((sumOfPurePoints + sumOfBonuses).toString()).setScale(2, RoundingMode.HALF_UP).toFloat()
 
         return CategoryPointsType(
             category = category,

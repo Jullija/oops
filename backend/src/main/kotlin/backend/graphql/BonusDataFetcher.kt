@@ -18,6 +18,8 @@ import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
+import java.math.RoundingMode
 import kotlin.math.min
 
 @DgsComponent
@@ -164,7 +166,7 @@ class BonusDataFetcher {
             student = chestHistory.user,
             teacher = chestHistory.teacher,
             updatedBy = chestHistory.teacher,
-            value = min(award.awardValue, nextSubcategory.maxPoints),
+            value = min(award.awardValue.toFloat(), nextSubcategory.maxPoints.toFloat()).toBigDecimal().setScale(2, RoundingMode.HALF_UP),
             subcategory = nextSubcategory,
             label = "Points awarded for ${award.awardName}"
         )
@@ -181,10 +183,10 @@ class BonusDataFetcher {
 
         var sum = 0f
         var i = pointsInAwardCategory.size - 1
-        while (sum < award.awardValue && i >= 0) {
+        while (sum < award.awardValue.toFloat() && i >= 0) {
             val lastPoints = pointsInAwardCategory.getOrNull(i--)
                 ?: break
-            val pointsToAdd = min(award.awardValue - sum, lastPoints.subcategory.maxPoints - lastPoints.value)
+            val pointsToAdd = min(award.awardValue.toFloat() - sum, lastPoints.subcategory.maxPoints.toFloat() - lastPoints.value.toFloat())
             sum += pointsToAdd
         }
 
@@ -192,7 +194,7 @@ class BonusDataFetcher {
             student = chestHistory.user,
             teacher = chestHistory.teacher,
             updatedBy = chestHistory.teacher,
-            value = sum,
+            value = BigDecimal(sum.toString()).setScale(2, RoundingMode.HALF_UP),
             subcategory = pointsInAwardCategory.last().subcategory,
             label = "Points awarded for ${award.awardName}"
         )
@@ -213,7 +215,7 @@ class BonusDataFetcher {
             student = chestHistory.user,
             teacher = chestHistory.teacher,
             updatedBy = chestHistory.teacher,
-            value = totalPointsValue * award.awardValue,
+            value = (totalPointsValue * award.awardValue.toFloat()).toBigDecimal().setScale(2, RoundingMode.HALF_UP),
             subcategory = subcategory,
             label = "Points awarded for ${award.awardName}"
         )

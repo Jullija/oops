@@ -2,12 +2,6 @@ import { LevelType } from "../../../../__generated__/schema.graphql.types";
 import { Styles } from "../../../../utils/Styles";
 import { Avatar } from "../../../images/Avatar";
 
-const styles: Styles = {
-  opacity: {
-    opacity: 0.6,
-  },
-};
-
 type LevelMiniatureProps = {
   level: LevelType;
   withOpacity?: boolean;
@@ -26,4 +20,10 @@ export const LevelMiniature = ({
       <div>{level.levelName}</div>
     </div>
   );
+};
+
+const styles: Styles = {
+  opacity: {
+    opacity: 0.6,
+  },
 };

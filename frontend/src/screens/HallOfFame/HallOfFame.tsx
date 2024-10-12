@@ -9,26 +9,6 @@ import { StudentCardsList } from "../../components/hallOfFame/StudentCardsList";
 import { isPartOfAString } from "../../utils/strings";
 import { HALL_OF_FAME_STUDENT_CARD_ID_PREFIX } from "../../components/hallOfFame/HallOfFameStudentCard";
 
-const styles: Styles = {
-  container: {
-    position: "relative",
-    display: "flex",
-    // TODO: I have no idea how to get rig of outer page scroll
-    height: `calc(100vh - ${NAV_BAR_HEIGHT + 1}px)`,
-  },
-  leftSide: {
-    flex: 1,
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-  },
-  sideBarContainer: {
-    display: "flex",
-    flexDirection: "column",
-    backgroundColor: "lightblue",
-  },
-};
-
 export default function HallOfFame() {
   const { isUserRoleStudent, students, highlightedStudent, loading, error } =
     useHallOfFameData();
@@ -94,3 +74,23 @@ export default function HallOfFame() {
     </div>
   );
 }
+
+const styles: Styles = {
+  container: {
+    position: "relative",
+    display: "flex",
+    // TODO: I have no idea how to get rig of outer page scroll
+    height: `calc(100vh - ${NAV_BAR_HEIGHT + 1}px)`,
+  },
+  leftSide: {
+    flex: 1,
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+  },
+  sideBarContainer: {
+    display: "flex",
+    flexDirection: "column",
+    backgroundColor: "lightblue",
+  },
+};

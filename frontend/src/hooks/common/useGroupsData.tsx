@@ -41,9 +41,8 @@ export const useGroupsData = (editionId: string | undefined) => {
         },
         time: { start: group.startTime, end: group.endTime },
         teacher: {
-          // TODO why userByTeacherId is null?
-          fullName: group.teacher?.fullName as string,
-          id: group.teacher?.userId as string,
+          fullName: group.teacher.fullName as string,
+          id: group.teacher.userId as string,
         },
         imageId: group.file?.fileId,
       };

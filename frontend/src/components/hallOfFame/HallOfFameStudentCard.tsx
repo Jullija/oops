@@ -3,18 +3,6 @@ import { Avatar } from "../images/Avatar";
 
 export const HALL_OF_FAME_STUDENT_CARD_ID_PREFIX = "student-";
 
-const styles: Styles = {
-  item: {
-    display: "grid",
-    gridTemplateColumns: "0.5fr 0.5fr 3fr 1fr 2fr 1fr",
-    alignItems: "center",
-    border: "1px solid black",
-    gap: 12,
-    padding: 12,
-    boxSizing: "border-box",
-  },
-};
-
 type HallOfFameStudentCardProps = {
   student: HallOfFameStudentData;
   isHighlighted?: boolean;
@@ -51,4 +39,16 @@ export const HallOfFameStudentCard = ({
       <div>{student.totalPoints} pkt</div>
     </div>
   );
+};
+
+const styles: Styles = {
+  item: {
+    display: "grid",
+    gridTemplateColumns: "0.5fr 0.5fr 3fr 1fr 2fr 1fr",
+    alignItems: "center",
+    border: "1px solid black",
+    gap: 12,
+    padding: 12,
+    boxSizing: "border-box",
+  },
 };
