@@ -30,4 +30,8 @@ class UserMapper(
             null
         }
     }
+
+    fun getCurrentUser(): Users {
+        return getUserFromToken() ?: throw IllegalArgumentException("User not authenticated")
+    }
 }

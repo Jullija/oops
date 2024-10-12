@@ -76,6 +76,9 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsMutation
     @Transactional
     fun assignPhotoToUser(@InputArgument userId: Long, @InputArgument fileId: Long?): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+
+
         return photoAssigner.assignPhotoToAssignee(usersRepository, "image/user", userId, fileId)
     }
 
@@ -92,6 +95,9 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsMutation
     @Transactional
     fun addUsersFromCsv(@InputArgument fileId: Long, @InputArgument editionId: Long): List<Users> {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val file = fileEntityRepository.findById(fileId).orElseThrow { IllegalArgumentException("File not found") }
         if (file.fileType != "text/csv") {
             throw IllegalArgumentException("Invalid file type")
@@ -131,6 +137,9 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
         @InputArgument role: String?,
         @InputArgument label: String?
     ): Users {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val user = usersRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("User not found") }
 
@@ -175,6 +184,9 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsMutation
     @Transactional
     fun removeUser(@InputArgument userId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val user = usersRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("User not found") }
 
@@ -193,6 +205,9 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsMutation
     @Transactional
     fun resetPassword(@InputArgument userId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val user = usersRepository.findByUserId(userId)
             .orElseThrow { IllegalArgumentException("User not found") }
         return firebaseUserService.resetPassword(user.email)
@@ -202,6 +217,9 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsQuery
     @Transactional
     fun getStudentPoints(@InputArgument studentId: Long, @InputArgument editionId: Long): StudentPointsType {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val user = usersRepository.findById(studentId).orElseThrow { IllegalArgumentException("Invalid student ID") }
         if (user.role != UsersRoles.STUDENT) {
             throw IllegalArgumentException("User is not a student")
@@ -276,6 +294,9 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsQuery
     @Transactional
     fun getSumOfPointsForStudentByCategory(@InputArgument studentId: Long, @InputArgument editionId: Long): List<CategoryPointsSumType> {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val user = usersRepository.findById(studentId).orElseThrow { IllegalArgumentException("Invalid student ID") }
         if (user.role != UsersRoles.STUDENT) {
             throw IllegalArgumentException("User is not a student")
@@ -311,8 +332,7 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsQuery
     @Transactional
     fun getCurrentUser(): Users {
-        val user = userMapper.getUserFromToken() ?: throw IllegalArgumentException("User not authenticated")
-        return user
+        return userMapper.getCurrentUser()
     }
 
     fun isValidEmail(email: String): Boolean {
@@ -325,6 +345,9 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
                                role: String,  email: String = "example@example.com",
                                label: String = "",  createFirebaseUser: Boolean = false,
                                sendEmail: Boolean = false): Users {
+        val currentUser = userMapper.getCurrentUser()
+
+
         if (usersRepository.existsByIndexNumber(indexNumber)) {
             throw IllegalArgumentException("User with index number $indexNumber already exists")
         }

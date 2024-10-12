@@ -6,6 +6,7 @@ import backend.awardEdition.AwardEditionRepository
 import backend.edition.EditionRepository
 import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -14,6 +15,9 @@ import org.springframework.transaction.annotation.Transactional
 
 @DgsComponent
 class AwardEditionDataFetcher {
+
+    @Autowired
+    private lateinit var userMapper: UserMapper
 
     @Autowired
     private lateinit var awardEditionRepository: AwardEditionRepository
@@ -33,6 +37,8 @@ class AwardEditionDataFetcher {
     @DgsMutation
     @Transactional
     fun addAwardToEdition(@InputArgument awardId: Long, @InputArgument editionId: Long): AwardEdition {
+        val currentUser = userMapper.getCurrentUser()
+
         val award = awardRepository.findById(awardId).orElseThrow { throw IllegalArgumentException("Award not found") }
         val edition = editionRepository.findById(editionId).orElseThrow { throw IllegalArgumentException("Edition not found") }
 
@@ -59,6 +65,8 @@ class AwardEditionDataFetcher {
     @DgsMutation
     @Transactional
     fun removeAwardFromEdition(@InputArgument awardId: Long, @InputArgument editionId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+
         val award = awardRepository.findById(awardId).orElseThrow { throw IllegalArgumentException("Award not found") }
         val edition = editionRepository.findById(editionId).orElseThrow { throw IllegalArgumentException("Edition not found") }
 

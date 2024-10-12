@@ -5,6 +5,7 @@ import backend.files.FileEntityRepository
 import backend.levels.Levels
 import backend.levels.LevelsRepository
 import backend.users.UsersRepository
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.DgsQuery
@@ -16,6 +17,8 @@ import java.math.RoundingMode
 
 @DgsComponent
 class LevelsDataFetcher {
+    @Autowired
+    private lateinit var userMapper: UserMapper
 
     @Autowired
     lateinit var editionRepository: EditionRepository
@@ -36,6 +39,9 @@ class LevelsDataFetcher {
     @Transactional
     fun addLevel(@InputArgument editionId: Long, @InputArgument name: String, @InputArgument maximumPoints: Double,
                     @InputArgument grade: Double, @InputArgument imageFileId: Long? = null): Levels {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
         if (edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Edition has already ended")
@@ -112,6 +118,9 @@ class LevelsDataFetcher {
         @InputArgument imageFileId: Long?,
         @InputArgument label: String?
     ): Levels {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val level = levelsRepository.findById(levelId)
             .orElseThrow { IllegalArgumentException("Invalid level ID") }
 
@@ -189,6 +198,9 @@ class LevelsDataFetcher {
     @DgsMutation
     @Transactional
     fun removeLevel(@InputArgument levelId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val level = levelsRepository.findById(levelId)
             .orElseThrow { IllegalArgumentException("Invalid level ID") }
 
@@ -214,6 +226,9 @@ class LevelsDataFetcher {
     @DgsMutation
     @Transactional
     fun assignPhotoToLevel(@InputArgument levelId: Long, @InputArgument fileId: Long?): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val level = levelsRepository.findById(levelId).orElseThrow { IllegalArgumentException("Invalid level ID") }
         if (level.edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Edition has already ended")
@@ -224,6 +239,9 @@ class LevelsDataFetcher {
     @DgsQuery
     @Transactional
     fun getNeighboringLevels(@InputArgument studentId: Long, @InputArgument editionId: Long): NeighboringLevelsType {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val edition = editionRepository.findById(editionId)
             .orElseThrow { IllegalArgumentException("Invalid edition ID") }
         val student = usersRepository.findById(studentId)

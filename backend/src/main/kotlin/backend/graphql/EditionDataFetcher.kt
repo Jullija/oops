@@ -10,6 +10,7 @@ import backend.groups.GroupsRepository
 import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -19,6 +20,8 @@ import java.time.LocalDate
 
 @DgsComponent
 class EditionDataFetcher {
+    @Autowired
+    private lateinit var userMapper: UserMapper
 
     @Autowired
     private lateinit var bonusesRepository: BonusesRepository
@@ -53,6 +56,9 @@ class EditionDataFetcher {
     @DgsMutation
     @Transactional
     fun addEdition(@InputArgument editionName: String, @InputArgument editionYear: Int, @InputArgument label: String = ""): Edition {
+        val currentUser = userMapper.getCurrentUser()
+
+
         if (editionRepository.existsByEditionName(editionName)) {
             throw IllegalArgumentException("Edition with name $editionName already exists")
         }
@@ -80,13 +86,15 @@ class EditionDataFetcher {
 
     @DgsMutation
     @Transactional
-
     fun editEdition(
         @InputArgument editionId: Long,
         @InputArgument editionName: String?,
         @InputArgument editionYear: Int?,
         @InputArgument label: String?
     ): Edition {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val edition = editionRepository.findById(editionId)
             .orElseThrow { IllegalArgumentException("Invalid edition ID") }
 
@@ -127,6 +135,9 @@ class EditionDataFetcher {
     @DgsMutation
     @Transactional
     fun removeEdition(@InputArgument editionId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val edition = editionRepository.findById(editionId)
             .orElseThrow { IllegalArgumentException("Invalid edition ID") }
 

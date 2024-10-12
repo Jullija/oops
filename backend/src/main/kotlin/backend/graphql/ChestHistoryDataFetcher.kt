@@ -13,6 +13,7 @@ import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
 import backend.users.UsersRoles
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -22,6 +23,9 @@ import java.time.LocalDate
 
 @DgsComponent
 class ChestHistoryDataFetcher {
+    @Autowired
+    private lateinit var userMapper: UserMapper
+
     @Autowired
     private lateinit var bonusesRepository: BonusesRepository
 
@@ -62,6 +66,8 @@ class ChestHistoryDataFetcher {
     @Transactional
     fun addChestToUser(@InputArgument userId: Long, @InputArgument chestId: Long, @InputArgument teacherId: Long,
                        @InputArgument subcategoryId: Long): ChestHistory {
+        val currentUser = userMapper.getCurrentUser()
+
         val user = usersRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("Invalid user ID") }
         if (user.userGroups.isEmpty()) {
@@ -130,6 +136,9 @@ class ChestHistoryDataFetcher {
         @InputArgument subcategoryId: Long?,
         @InputArgument label: String?
     ): ChestHistory {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val chestHistory = chestHistoryRepository.findById(chestHistoryId)
             .orElseThrow { IllegalArgumentException("Invalid chest history ID") }
 
@@ -220,6 +229,9 @@ class ChestHistoryDataFetcher {
     @DgsMutation
     @Transactional
     fun removeChestFromUser(@InputArgument chestHistoryId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val chestHistory = chestHistoryRepository.findById(chestHistoryId)
             .orElseThrow { IllegalArgumentException("Invalid chest history ID") }
 

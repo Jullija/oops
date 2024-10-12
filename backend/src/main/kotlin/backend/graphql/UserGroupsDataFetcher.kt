@@ -12,6 +12,7 @@ import backend.subcategories.SubcategoriesRepository
 import backend.userGroups.UserGroups
 import backend.userGroups.UserGroupsRepository
 import backend.users.UsersRepository
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -20,6 +21,9 @@ import org.springframework.transaction.annotation.Transactional
 
 @DgsComponent
 class UserGroupsDataFetcher {
+    @Autowired
+    private lateinit var userMapper: UserMapper
+
     @Autowired
     lateinit var usersRepository: UsersRepository
 
@@ -54,6 +58,9 @@ class UserGroupsDataFetcher {
     @DgsMutation
     @Transactional
     fun addUserToGroup(@InputArgument userId: Long, @InputArgument groupId: Long): UserGroups {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val user = usersRepository.findById(userId).orElseThrow { throw IllegalArgumentException("User not found") }
         val group = groupsRepository.findById(groupId).orElseThrow { throw IllegalArgumentException("Group not found") }
 
@@ -75,6 +82,9 @@ class UserGroupsDataFetcher {
     @DgsMutation
     @Transactional
     fun removeUserFromGroup(@InputArgument userId: Long, @InputArgument groupId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val user = usersRepository.findById(userId).orElseThrow { throw IllegalArgumentException("User not found") }
         val group = groupsRepository.findById(groupId).orElseThrow { throw IllegalArgumentException("Group not found") }
 

@@ -7,6 +7,7 @@ import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
 import backend.award.AwardType
 import backend.users.UsersRoles
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -17,6 +18,8 @@ import java.math.RoundingMode
 
 @DgsComponent
 class PointsDataFetcher {
+    @Autowired
+    private lateinit var userMapper: UserMapper
 
     @Autowired
     lateinit var pointsRepository: PointsRepository
@@ -34,6 +37,9 @@ class PointsDataFetcher {
     @Transactional
     fun addPointsMutation(@InputArgument studentId: Long, @InputArgument teacherId: Long, value: Float,
                           @InputArgument subcategoryId: Long, @InputArgument checkDates: Boolean = true): Points {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val student = usersRepository.findByUserId(studentId)
             .orElseThrow { IllegalArgumentException("Invalid user ID") }
 
@@ -113,6 +119,9 @@ class PointsDataFetcher {
         @InputArgument updatedById: Long,
         @InputArgument value: Float?
     ): Points {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val points = pointsRepository.findById(pointsId)
             .orElseThrow { IllegalArgumentException("Invalid points ID") }
 
@@ -164,6 +173,9 @@ class PointsDataFetcher {
     @DgsMutation
     @Transactional
     fun removePoints(@InputArgument pointsId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val points = pointsRepository.findById(pointsId)
             .orElseThrow { IllegalArgumentException("Invalid points ID") }
 

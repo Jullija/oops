@@ -11,6 +11,7 @@ import backend.groups.GroupsRepository
 import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -20,6 +21,9 @@ import java.math.RoundingMode
 
 @DgsComponent
 class AwardsDataFetcher {
+
+    @Autowired
+    private lateinit var userMapper: UserMapper
 
     @Autowired
     private lateinit var bonusesRepository: BonusesRepository
@@ -54,6 +58,8 @@ class AwardsDataFetcher {
     @DgsMutation
     @Transactional
     fun assignPhotoToAward(@InputArgument awardId: Long, @InputArgument fileId: Long?): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+
         return photoAssigner.assignPhotoToAssignee(awardRepository, "image/award", awardId, fileId)
     }
 
@@ -63,6 +69,7 @@ class AwardsDataFetcher {
                  @InputArgument categoryId: Long, @InputArgument maxUsages: Int = -1,
                  @InputArgument description: String,
                  @InputArgument label: String = ""): Award {
+        val currentUser = userMapper.getCurrentUser()
 
 
         val awardType1 = try {
@@ -115,6 +122,8 @@ class AwardsDataFetcher {
         @InputArgument description: String?,
         @InputArgument label: String?
     ): Award {
+        val currentUser = userMapper.getCurrentUser()
+
         val award = awardRepository.findById(awardId).orElseThrow { IllegalArgumentException("Invalid award ID") }
 
         if (award.awardEditions.map { it.edition }.any { it.endDate.isBefore(java.time.LocalDate.now()) }) {

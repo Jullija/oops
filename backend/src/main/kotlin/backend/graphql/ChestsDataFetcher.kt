@@ -13,6 +13,7 @@ import backend.groups.GroupsRepository
 import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -22,6 +23,9 @@ import java.time.LocalDate
 
 @DgsComponent
 class ChestsDataFetcher {
+    @Autowired
+    private lateinit var userMapper: UserMapper
+
     @Autowired
     private lateinit var chestAwardRepository: ChestAwardRepository
 
@@ -58,6 +62,9 @@ class ChestsDataFetcher {
     @DgsMutation
     @Transactional
     fun assignPhotoToChest(@InputArgument chestId: Long, @InputArgument fileId: Long?): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val chest = chestsRepository.findById(chestId).orElseThrow { IllegalArgumentException("Invalid chest ID") }
         if (chest.edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Edition has already ended")
@@ -68,6 +75,9 @@ class ChestsDataFetcher {
     @DgsMutation
     @Transactional
     fun addChest(@InputArgument chestType: String, @InputArgument editionId: Long, @InputArgument label: String = ""): Chests {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
         if (chestsRepository.existsByChestTypeAndEditionAndActive(chestType, edition, true)) {
             throw IllegalArgumentException("Chest with type $chestType already exists for edition ${edition.editionId}")
@@ -91,6 +101,9 @@ class ChestsDataFetcher {
         @InputArgument editionId: Long?,
         @InputArgument label: String?
     ): Chests {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val chest = chestsRepository.findById(chestId).orElseThrow { IllegalArgumentException("Invalid chest ID") }
 
         if (chest.edition.endDate.isBefore(LocalDate.now())) {
@@ -124,6 +137,9 @@ class ChestsDataFetcher {
     @DgsMutation
     @Transactional
     fun removeChest(@InputArgument chestId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val chest = chestsRepository.findById(chestId).orElseThrow { IllegalArgumentException("Invalid chest ID") }
         if (chest.edition.endDate.isBefore(LocalDate.now())) {
             throw IllegalArgumentException("Edition has already ended")
@@ -142,6 +158,9 @@ class ChestsDataFetcher {
     @DgsMutation
     @Transactional
     fun copyChest(@InputArgument chestId: Long, @InputArgument editionId: Long): Chests {
+        val currentUser = userMapper.getCurrentUser()
+
+
         val chest = chestsRepository.findById(chestId).orElseThrow { IllegalArgumentException("Invalid chest ID") }
         val edition =
             editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
