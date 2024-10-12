@@ -19,6 +19,7 @@ import org.springframework.context.annotation.PropertySource
 		"backend.edition",
 		"backend.files",
 		"backend.firebase",
+    "backend.gradingChecks",
 		"backend.graphql",
 		"backend.groups",
 		"backend.levels",
@@ -31,7 +32,6 @@ import org.springframework.context.annotation.PropertySource
 		"backend.weekdays"
 	]
 )
-
 @EnableJpaAuditing
 @PropertySource("classpath:application-secrets.properties")
 class BackendApplication

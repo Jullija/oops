@@ -54,6 +54,24 @@ type Mutation {
     editionYear: Int!
     label: String = ""
   ): EditionType
+  addGradingCheck(
+    editionId: Int!
+    endOfLabsDate: String!
+    endOfLabsLevelsThreshold: Int!
+    projectPointsThreshold: Float!
+    projectId: Int!
+    checkDates: Boolean = true
+  ): GradingChecksType
+  editGradingCheck(
+    gradingCheckId: Int!,
+    endOfLabsDate: String,
+    endOfLabsLevelsThreshold: Int,
+    projectPointsThreshold: Float,
+    projectId: Int
+  ): GradingChecksType
+  removeGradingCheck(
+    gradingCheckId: Int!
+  ): Boolean
   addGroup(
     editionId: Int!
     usosId: Int!
@@ -360,6 +378,15 @@ type FileType {
   label: String!
 }
 
+type GradingChecksType {
+  gradingCheckId: ID!
+  edition: EditionType!
+  endOfLabsDate: String!
+  endOfLabsLevelsThreshold: LevelType!
+  projectPointsThreshold: Float!
+  project: CategoryType!
+}
+
 type GroupType {
   groupsId: ID!
   groupName: String
@@ -435,6 +462,9 @@ type UserLevelType {
   user: UserType!
   level: LevelType!
   edition: EditionType!
+  end_of_labs_levels_reached: Boolean!,
+  project_points_threshold_reached: Boolean!,
+  computed_grade: Float!
   label: String!
   userLevelId: ID!
 }

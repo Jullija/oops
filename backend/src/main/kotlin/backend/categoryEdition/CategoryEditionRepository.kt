@@ -12,4 +12,6 @@ interface CategoryEditionRepository: JpaRepository<CategoryEdition, Long> {
     fun existsByCategoryAndEdition(category: Categories, edition: Edition): Boolean
 
     fun deleteByCategoryAndEdition(category: Categories, edition: Edition)
+
+    fun findByCategoryAndEdition(category: Categories, edition: Edition): List<CategoryEdition>
 }

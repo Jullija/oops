@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 import requests
 
 def insert_levels(hasura_url, headers, editions, random, max_points_in_level, levels_data):
@@ -14,9 +16,10 @@ def insert_levels(hasura_url, headers, editions, random, max_points_in_level, le
 
 
     random_levels = [[i*max_points_in_level/100 for i in [0, 25, 50, 60, 70, 80, 90, 100]]] + [generate_levels() for _ in range(len(editions.values()) - 1)]
-
+    inserted_levels = {}
     # Insert data into levels using the addLevel mutation
     for i, edition_id in enumerate(editions.values()):
+        inserted_levels[edition_id] = []
         print(f"Processing levels for edition ID: {edition_id}")
         levels_values = random_levels[i]
         levels = [
@@ -30,6 +33,7 @@ def insert_levels(hasura_url, headers, editions, random, max_points_in_level, le
                 addLevel(editionId: $editionId, name: $name, maximumPoints: $maximumPoints, grade: $grade) {
                     levelId
                     levelName
+                    ordinalNumber
                 }
             }
             """
@@ -52,6 +56,8 @@ def insert_levels(hasura_url, headers, editions, random, max_points_in_level, le
             else:
                 print(f"    Successfully inserted level '{name}' for edition {edition_id}")
                 level_id = data["data"]["addLevel"]["levelId"]
+                ordinal = data["data"]["addLevel"]["ordinalNumber"]
+                inserted_levels[edition_id].append((level_id, ordinal))
                 # Fetch file ID based on the filename
                 query_file_id = """
                                 query MyQuery($filename: String!) {
@@ -97,3 +103,4 @@ def insert_levels(hasura_url, headers, editions, random, max_points_in_level, le
                     print(f"Successfully assigned photo '{filename}' to award ID {level_id}.")
 
     print("All levels have been processed.")
+    return inserted_levels
