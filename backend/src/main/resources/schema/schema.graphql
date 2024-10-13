@@ -96,7 +96,7 @@ type Mutation {
     firstName: String!
     secondName: String!
     role: String!
-    email: String = "example@example.com"
+    email: String = ""
     label: String = ""
     createFirebaseUser: Boolean = false
     sendEmail: Boolean = false
