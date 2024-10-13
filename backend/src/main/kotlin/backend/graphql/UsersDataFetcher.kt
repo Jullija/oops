@@ -14,17 +14,21 @@ import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
 import backend.userGroups.UserGroups
 import backend.userGroups.UserGroupsRepository
+import backend.userLevel.UserLevelRepository
 import backend.users.FirebaseUserService
 import backend.users.UsersRepository
 import backend.users.Users
 import backend.users.UsersRoles
 import backend.utils.CsvReader
 import backend.utils.UserMapper
+import com.google.firebase.ErrorCode
+import com.google.firebase.auth.FirebaseAuthException
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.DgsQuery
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -33,6 +37,9 @@ import kotlin.math.min
 
 @DgsComponent
 class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
+
+    @Autowired
+    private lateinit var userLevelRepository: UserLevelRepository
 
     @Autowired
     private lateinit var groupsRepository: GroupsRepository
@@ -73,6 +80,9 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @Autowired
     lateinit var csvReader: CsvReader
 
+    @Value("\${constants.emailDomain}")
+    lateinit var emailDomain: String
+
     @DgsMutation
     @Transactional
     fun assignPhotoToUser(@InputArgument userId: Long, @InputArgument fileId: Long?): Boolean {
@@ -86,7 +96,7 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @Transactional
     fun addUser(@InputArgument indexNumber: Int, @InputArgument nick: String,
                 @InputArgument firstName: String, @InputArgument secondName: String,
-                @InputArgument role: String, @InputArgument email: String = "example@example.com",
+                @InputArgument role: String, @InputArgument email: String = "",
                 @InputArgument label: String = "", @InputArgument createFirebaseUser: Boolean = false,
                 @InputArgument sendEmail: Boolean = false): Users {
         return addUserHelper(indexNumber, nick, firstName, secondName, role, email, label, createFirebaseUser, sendEmail)
@@ -197,7 +207,15 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
         if (user.userGroups.isNotEmpty()){
             throw IllegalArgumentException("Cannot remove user that is in a group")
         }
-        user.firebaseUid?.let { firebaseUserService.deleteFirebaseUser(it) }
+
+        userLevelRepository.deleteAllByUser_UserId(userId)
+        try {
+            user.firebaseUid?.let { firebaseUserService.deleteFirebaseUser(it) }
+            } catch (e: FirebaseAuthException) {
+                if (e.errorCode != ErrorCode.NOT_FOUND) {
+                    throw e
+                }
+            }
         usersRepository.delete(user)
         return true
     }
@@ -342,7 +360,7 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     
     private fun addUserHelper(indexNumber: Int,  nick: String,
                                firstName: String,  secondName: String,
-                               role: String,  email: String = "example@example.com",
+                               role: String,  email: String,
                                label: String = "",  createFirebaseUser: Boolean = false,
                                sendEmail: Boolean = false): Users {
         val currentUser = userMapper.getCurrentUser()
@@ -359,8 +377,15 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Invalid role")
         }
-        if (!isValidEmail(email)) {
+        var userEmail = email
+        if (email.isEmpty()) {
+            userEmail = "$indexNumber@$emailDomain"
+        } else if (!isValidEmail(userEmail)) {
             throw IllegalArgumentException("Invalid email")
+        }
+
+        if (usersRepository.existsByEmail(userEmail)) {
+            throw IllegalArgumentException("User with email $userEmail already exists")
         }
         val user = Users(
             indexNumber = indexNumber,
@@ -368,12 +393,20 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
             firstName = firstName,
             secondName = secondName,
             role = userRole1,
-            email = email,
+            email = userEmail,
             label = label
         )
         usersRepository.save(user)
         if (createFirebaseUser) {
-            val firebaseUid = firebaseUserService.createFirebaseUser(user, sendEmail)
+            val firebaseUid = try {
+                firebaseUserService.createFirebaseUser(user, sendEmail)
+            } catch (e: FirebaseAuthException) {
+                if (e.errorCode == ErrorCode.ALREADY_EXISTS) {
+                    firebaseUserService.getUserByEmail(user.email).uid
+                } else {
+                    throw e
+                }
+            }
             user.firebaseUid = firebaseUid
         }
         return user
