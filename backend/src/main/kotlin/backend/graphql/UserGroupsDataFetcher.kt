@@ -11,7 +11,9 @@ import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
 import backend.userGroups.UserGroups
 import backend.userGroups.UserGroupsRepository
+import backend.users.Users
 import backend.users.UsersRepository
+import backend.users.UsersRoles
 import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
@@ -59,7 +61,15 @@ class UserGroupsDataFetcher {
     @Transactional
     fun addUserToGroup(@InputArgument userId: Long, @InputArgument groupId: Long): UserGroups {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role == UsersRoles.STUDENT){
+            throw IllegalArgumentException("Student cannot add users to groups")
+        }
+        if (currentUser.role == UsersRoles.TEACHER){
+            val group = groupsRepository.findById(groupId).orElseThrow { throw IllegalArgumentException("Group not found") }
+            if (group.teacher.userId != currentUser.userId){
+                throw IllegalArgumentException("Teacher can only add users to their groups")
+            }
+        }
 
         val user = usersRepository.findById(userId).orElseThrow { throw IllegalArgumentException("User not found") }
         val group = groupsRepository.findById(groupId).orElseThrow { throw IllegalArgumentException("Group not found") }
@@ -83,7 +93,15 @@ class UserGroupsDataFetcher {
     @Transactional
     fun removeUserFromGroup(@InputArgument userId: Long, @InputArgument groupId: Long): Boolean {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role == UsersRoles.STUDENT){
+            throw IllegalArgumentException("Student cannot remove users from groups")
+        }
+        if (currentUser.role == UsersRoles.TEACHER){
+            val group = groupsRepository.findById(groupId).orElseThrow { throw IllegalArgumentException("Group not found") }
+            if (group.teacher.userId != currentUser.userId){
+                throw IllegalArgumentException("Teacher can only remove users from their groups")
+            }
+        }
 
         val user = usersRepository.findById(userId).orElseThrow { throw IllegalArgumentException("User not found") }
         val group = groupsRepository.findById(groupId).orElseThrow { throw IllegalArgumentException("Group not found") }

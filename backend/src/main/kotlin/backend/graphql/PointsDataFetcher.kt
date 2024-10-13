@@ -38,10 +38,22 @@ class PointsDataFetcher {
     fun addPointsMutation(@InputArgument studentId: Long, @InputArgument teacherId: Long, value: Float,
                           @InputArgument subcategoryId: Long, @InputArgument checkDates: Boolean = true): Points {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role == UsersRoles.STUDENT){
+            throw IllegalArgumentException("Only teachers and coordinators can add points")
+        }
 
         val student = usersRepository.findByUserId(studentId)
             .orElseThrow { IllegalArgumentException("Invalid user ID") }
+
+        if (currentUser.role == UsersRoles.TEACHER){
+            if (teacherId != currentUser.userId){
+                throw IllegalArgumentException("Teacher can only add points as themselves")
+            }
+            val studentTeachers = student.userGroups.map { it.group.teacher }.distinct()
+            if (!studentTeachers.contains(currentUser)){
+                throw IllegalArgumentException("Teacher can only add points to students from their groups")
+            }
+        }
 
         val teacher = usersRepository.findByUserId(teacherId)
             .orElseThrow { IllegalArgumentException("Invalid user ID") }
@@ -116,14 +128,23 @@ class PointsDataFetcher {
     @Transactional
     fun editPoints(
         @InputArgument pointsId: Long,
-        @InputArgument updatedById: Long,
         @InputArgument value: Float?
     ): Points {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role == UsersRoles.STUDENT){
+            throw IllegalArgumentException("Only teachers and coordinators can edit points")
+        }
 
         val points = pointsRepository.findById(pointsId)
             .orElseThrow { IllegalArgumentException("Invalid points ID") }
+
+        if (currentUser.role == UsersRoles.TEACHER){
+            if (points.student.userGroups.none { it.group.teacher.userId == currentUser.userId }){
+                throw IllegalArgumentException("Teacher can only edit points for students from their groups")
+            }
+        }
+
+        val updatedById = currentUser.userId
 
         if (points.subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Subcategory's edition has already ended")
@@ -174,10 +195,18 @@ class PointsDataFetcher {
     @Transactional
     fun removePoints(@InputArgument pointsId: Long): Boolean {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role == UsersRoles.STUDENT){
+            throw IllegalArgumentException("Only teachers and coordinators can remove points")
+        }
 
         val points = pointsRepository.findById(pointsId)
             .orElseThrow { IllegalArgumentException("Invalid points ID") }
+
+        if (currentUser.role == UsersRoles.TEACHER){
+            if (points.student.userGroups.none { it.group.teacher.userId == currentUser.userId }){
+                throw IllegalArgumentException("Teacher can only remove points for students from their groups")
+            }
+        }
 
         if (points.subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Subcategory's edition has already ended")

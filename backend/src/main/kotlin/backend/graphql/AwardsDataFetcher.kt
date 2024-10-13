@@ -11,6 +11,7 @@ import backend.groups.GroupsRepository
 import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
+import backend.users.UsersRoles
 import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
@@ -59,6 +60,9 @@ class AwardsDataFetcher {
     @Transactional
     fun assignPhotoToAward(@InputArgument awardId: Long, @InputArgument fileId: Long?): Boolean {
         val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("Only coordinators can assign photos to awards")
+        }
 
         return photoAssigner.assignPhotoToAssignee(awardRepository, "image/award", awardId, fileId)
     }
@@ -70,7 +74,9 @@ class AwardsDataFetcher {
                  @InputArgument description: String,
                  @InputArgument label: String = ""): Award {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("Only coordinators can add awards")
+        }
 
         val awardType1 = try {
              AwardType.valueOf(awardType.uppercase())
@@ -123,6 +129,9 @@ class AwardsDataFetcher {
         @InputArgument label: String?
     ): Award {
         val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("Only coordinators can edit awards")
+        }
 
         val award = awardRepository.findById(awardId).orElseThrow { IllegalArgumentException("Invalid award ID") }
 

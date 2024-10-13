@@ -60,7 +60,9 @@ class GradingChecksDataFetcher {
                         @InputArgument endOfLabsLevelsThreshold: Long, @InputArgument projectPointsThreshold: Float,
                         @InputArgument projectId: Long, @InputArgument checkDates: Boolean = true): GradingChecks {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("User is not a coordinator")
+        }
 
         val edition = editionRepository.findById(editionId)
             .orElseThrow { IllegalArgumentException("Invalid edition ID") }
@@ -119,7 +121,9 @@ class GradingChecksDataFetcher {
         @InputArgument projectId: Long?
     ): GradingChecks {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("User is not a coordinator")
+        }
 
         val gradingCheck = gradingChecksRepository.findById(gradingCheckId)
             .orElseThrow { IllegalArgumentException("Grading check not found") }
@@ -179,7 +183,9 @@ class GradingChecksDataFetcher {
     @Transactional
     fun removeGradingCheck(@InputArgument gradingCheckId: Long): Boolean {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("User is not a coordinator")
+        }
 
         val gradingCheck = gradingChecksRepository.findById(gradingCheckId)
             .orElseThrow { IllegalArgumentException("Grading check not found") }

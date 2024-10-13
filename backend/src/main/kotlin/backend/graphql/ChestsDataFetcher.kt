@@ -13,6 +13,7 @@ import backend.groups.GroupsRepository
 import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
+import backend.users.UsersRoles
 import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
@@ -63,7 +64,9 @@ class ChestsDataFetcher {
     @Transactional
     fun assignPhotoToChest(@InputArgument chestId: Long, @InputArgument fileId: Long?): Boolean {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can assign photos to chests")
+        }
 
         val chest = chestsRepository.findById(chestId).orElseThrow { IllegalArgumentException("Invalid chest ID") }
         if (chest.edition.endDate.isBefore(java.time.LocalDate.now())){
@@ -76,7 +79,9 @@ class ChestsDataFetcher {
     @Transactional
     fun addChest(@InputArgument chestType: String, @InputArgument editionId: Long, @InputArgument label: String = ""): Chests {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can add chests")
+        }
 
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
         if (chestsRepository.existsByChestTypeAndEditionAndActive(chestType, edition, true)) {
@@ -102,7 +107,9 @@ class ChestsDataFetcher {
         @InputArgument label: String?
     ): Chests {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can edit chests")
+        }
 
         val chest = chestsRepository.findById(chestId).orElseThrow { IllegalArgumentException("Invalid chest ID") }
 
@@ -138,7 +145,9 @@ class ChestsDataFetcher {
     @Transactional
     fun removeChest(@InputArgument chestId: Long): Boolean {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can remove chests")
+        }
 
         val chest = chestsRepository.findById(chestId).orElseThrow { IllegalArgumentException("Invalid chest ID") }
         if (chest.edition.endDate.isBefore(LocalDate.now())) {
@@ -159,7 +168,9 @@ class ChestsDataFetcher {
     @Transactional
     fun copyChest(@InputArgument chestId: Long, @InputArgument editionId: Long): Chests {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can copy chests")
+        }
 
         val chest = chestsRepository.findById(chestId).orElseThrow { IllegalArgumentException("Invalid chest ID") }
         val edition =

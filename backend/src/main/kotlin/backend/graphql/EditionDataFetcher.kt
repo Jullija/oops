@@ -10,6 +10,7 @@ import backend.groups.GroupsRepository
 import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
+import backend.users.UsersRoles
 import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
@@ -57,7 +58,9 @@ class EditionDataFetcher {
     @Transactional
     fun addEdition(@InputArgument editionName: String, @InputArgument editionYear: Int, @InputArgument label: String = ""): Edition {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can add editions")
+        }
 
         if (editionRepository.existsByEditionName(editionName)) {
             throw IllegalArgumentException("Edition with name $editionName already exists")
@@ -93,7 +96,9 @@ class EditionDataFetcher {
         @InputArgument label: String?
     ): Edition {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("Only coordinators can edit editions")
+        }
 
         val edition = editionRepository.findById(editionId)
             .orElseThrow { IllegalArgumentException("Invalid edition ID") }
@@ -136,7 +141,9 @@ class EditionDataFetcher {
     @Transactional
     fun removeEdition(@InputArgument editionId: Long): Boolean {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("Only coordinators can remove editions")
+        }
 
         val edition = editionRepository.findById(editionId)
             .orElseThrow { IllegalArgumentException("Invalid edition ID") }

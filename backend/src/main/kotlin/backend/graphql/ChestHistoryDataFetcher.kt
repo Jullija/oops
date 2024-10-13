@@ -67,6 +67,9 @@ class ChestHistoryDataFetcher {
     fun addChestToUser(@InputArgument userId: Long, @InputArgument chestId: Long, @InputArgument teacherId: Long,
                        @InputArgument subcategoryId: Long): ChestHistory {
         val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role == UsersRoles.STUDENT) {
+            throw IllegalArgumentException("User must be a teacher or coordinator")
+        }
 
         val user = usersRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("Invalid user ID") }
@@ -76,6 +79,18 @@ class ChestHistoryDataFetcher {
         if (user.role != UsersRoles.STUDENT) {
             throw IllegalArgumentException("User must be a student")
         }
+
+        if (currentUser.role == UsersRoles.TEACHER){
+            if (currentUser.userId != teacherId){
+                throw IllegalArgumentException("Teacher must be the current user")
+            }
+            val studentGroups = user.userGroups.map { it.group }.filter { it.teacher == currentUser }
+            if (studentGroups.isEmpty()){
+                throw IllegalArgumentException("Student is not in a group of the current user")
+            }
+        }
+
+
         val userEditions = user.userGroups.map { it.group.edition }
         if (userEditions.isEmpty()) {
             throw IllegalArgumentException("User has no editions")
@@ -137,7 +152,9 @@ class ChestHistoryDataFetcher {
         @InputArgument label: String?
     ): ChestHistory {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role == UsersRoles.STUDENT) {
+            throw IllegalArgumentException("User must be a teacher or coordinator")
+        }
 
         val chestHistory = chestHistoryRepository.findById(chestHistoryId)
             .orElseThrow { IllegalArgumentException("Invalid chest history ID") }
@@ -150,8 +167,14 @@ class ChestHistoryDataFetcher {
             throw IllegalArgumentException("Chest has already been opened")
         }
 
-        userId?.let {
-            val user = usersRepository.findById(it)
+        if (currentUser.role == UsersRoles.TEACHER){
+            if (chestHistory.user.userGroups.map { it.group }.none { it.teacher == currentUser }){
+                throw IllegalArgumentException("Teacher is not a teacher of student's group")
+            }
+        }
+
+        userId?.let { id ->
+            val user = usersRepository.findById(id)
                 .orElseThrow { IllegalArgumentException("Invalid user ID") }
 
             if (user.userGroups.isEmpty()) {
@@ -159,6 +182,13 @@ class ChestHistoryDataFetcher {
             }
             if (user.role != UsersRoles.STUDENT) {
                 throw IllegalArgumentException("User must be a student")
+            }
+
+            if (currentUser.role == UsersRoles.TEACHER){
+                val studentGroups = user.userGroups.map { it.group }.filter { it.teacher == currentUser }
+                if (studentGroups.isEmpty()){
+                    throw IllegalArgumentException("Student is not in a group of the current user")
+                }
             }
 
             val userEditions = user.userGroups.map { group -> group.group.edition }
@@ -188,6 +218,12 @@ class ChestHistoryDataFetcher {
         }
 
         teacherId?.let {
+            if (currentUser.role == UsersRoles.TEACHER){
+                if (currentUser.userId != it){
+                    throw IllegalArgumentException("Teacher must be the current user")
+                }
+            }
+
             val teacher = usersRepository.findById(it)
                 .orElseThrow { IllegalArgumentException("Invalid teacher ID") }
 
@@ -230,13 +266,25 @@ class ChestHistoryDataFetcher {
     @Transactional
     fun removeChestFromUser(@InputArgument chestHistoryId: Long): Boolean {
         val currentUser = userMapper.getCurrentUser()
-
+        if (currentUser.role == UsersRoles.STUDENT) {
+            throw IllegalArgumentException("User must be a teacher or coordinator")
+        }
 
         val chestHistory = chestHistoryRepository.findById(chestHistoryId)
             .orElseThrow { IllegalArgumentException("Invalid chest history ID") }
 
         if (chestHistory.chest.edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Chest's edition has already ended")
+        }
+
+        if (chestHistory.opened){
+            throw IllegalArgumentException("Chest has already been opened")
+        }
+
+        if (currentUser.role == UsersRoles.TEACHER){
+            if (chestHistory.user.userGroups.map { it.group }.none { it.teacher == currentUser }){
+                throw IllegalArgumentException("Teacher is not a teacher of student's group")
+            }
         }
 
         val bonus = bonusesRepository.findByChestHistory(chestHistory).stream().findFirst().orElse(null)

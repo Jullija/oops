@@ -2,6 +2,7 @@ package backend.graphql
 
 import backend.categories.Categories
 import backend.categories.CategoriesRepository
+import backend.users.UsersRoles
 import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
@@ -24,6 +25,9 @@ class CategoriesDataFetcher {
                     @InputArgument lightColor: String = "#FFFFFF", @InputArgument darkColor: String = "#000000",
                  @InputArgument label: String = ""): Categories {
         val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can add categories")
+        }
 
         val categoriesWithSameName = categoriesRepository.findAllByCategoryName(categoryName)
         if (categoriesWithSameName.any { it.canAddPoints == canAddPoints }) {
@@ -49,6 +53,9 @@ class CategoriesDataFetcher {
     @Transactional
     fun removeCategory(@InputArgument categoryId: Long): Boolean {
         val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can remove categories")
+        }
 
         val category = categoriesRepository.findById(categoryId)
             .orElseThrow { IllegalArgumentException("Invalid category ID") }
@@ -73,6 +80,9 @@ class CategoriesDataFetcher {
         @InputArgument label: String?
     ): Categories {
         val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can edit categories")
+        }
 
         val category = categoriesRepository.findById(categoryId)
             .orElseThrow { IllegalArgumentException("Invalid category ID") }
