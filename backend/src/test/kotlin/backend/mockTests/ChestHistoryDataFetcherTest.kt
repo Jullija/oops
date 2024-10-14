@@ -1,4 +1,7 @@
+package backend.mockTests
+
 import backend.bonuses.BonusesRepository
+import backend.categories.Categories
 import backend.categories.CategoriesRepository
 import backend.chestHistory.ChestHistoryRepository
 import backend.chests.Chests
@@ -68,6 +71,7 @@ class ChestHistoryDataFetcherTest {
             this.chestHistoryRepository = this@ChestHistoryDataFetcherTest.chestHistoryRepository
         }
 
+        // Initialize objects
         edition = Edition(
             editionId = 1L,
             editionName = "Test Edition",
@@ -83,21 +87,22 @@ class ChestHistoryDataFetcherTest {
             weekdayAbbr = "M",
             label = "test"
         )
-
         teacher = Users(
-            userId = teacherId,
-            indexNumber = 456,
+            userId = teacherId,  // Use teacherId here, not userId
+            indexNumber = 1234,
             nick = "testTeacher",
             firstName = "Test",
             secondName = "Teacher",
             role = UsersRoles.TEACHER,
+            email = "",
             label = "Teacher Label",
-            userGroups = emptySet()
+            userGroups = emptySet() // You will add the group later
         )
 
         group = Groups(
-            groupsId = 1L,
             groupName = "Test Group",
+            generatedName = "",
+            usosId = 1,
             label = "Group Label",
             teacher = teacher,
             weekday = weekday,
@@ -111,6 +116,7 @@ class ChestHistoryDataFetcherTest {
             user = mockk(),
             group = group
         )
+        teacher.userGroups = setOf(userGroup)
 
         user = Users(
             userId = userId,
@@ -119,6 +125,7 @@ class ChestHistoryDataFetcherTest {
             firstName = "Test",
             secondName = "User",
             role = UsersRoles.STUDENT,
+            email = "",
             label = "User Label",
             userGroups = setOf(userGroup)
         )
@@ -131,64 +138,15 @@ class ChestHistoryDataFetcherTest {
         )
 
         subcategory = Subcategories(
-            subcategoryId = subcategoryId,
             subcategoryName = "Test Subcategory",
-            maxPoints = 10F,
-            category = mockk(),
+            category = mockk<Categories>(),
             edition = edition,
             label = "Subcategory Label"
         )
     }
 
-
     @Test
     fun `should add chest to user successfully`() {
-        val group = Groups(
-            groupsId = 1L,
-            groupName = "Test Group",
-            label = "Group Label",
-            teacher = teacher,
-            weekday = weekday,
-            startTime = java.sql.Time.valueOf("09:00:00"),
-            endTime = java.sql.Time.valueOf("10:00:00"),
-            edition = edition
-        )
-
-        val userGroup = UserGroups(
-            userGroupsId = UserGroupId(userId = userId, groupId = group.groupsId),
-            user = user,
-            group = group
-        )
-
-        user = Users(
-            userId = userId,
-            indexNumber = 123,
-            nick = "testUser",
-            firstName = "Test",
-            secondName = "User",
-            role = UsersRoles.STUDENT,
-            label = "User Label",
-            userGroups = setOf(userGroup)
-        )
-
-        val teacherGroup = UserGroups(
-            userGroupsId = UserGroupId(userId = teacherId, groupId = group.groupsId),
-            user = teacher,
-            group = group
-        )
-
-        teacher = Users(
-            userId = teacherId,
-            indexNumber = 456,
-            nick = "testTeacher",
-            firstName = "Test",
-            secondName = "Teacher",
-            role = UsersRoles.TEACHER,
-            label = "Teacher Label",
-            userGroups = setOf(teacherGroup)
-        )
-
-        group.teacher = teacher
 
         every { usersRepository.findById(userId) } returns Optional.of(user)
         every { chestsRepository.findById(chestId) } returns Optional.of(chest)
@@ -196,18 +154,20 @@ class ChestHistoryDataFetcherTest {
         every { subcategoriesRepository.findById(subcategoryId) } returns Optional.of(subcategory)
         every { chestHistoryRepository.save(any()) } answers { firstArg() }
 
+
+        // Execute method under test
         val result = chestHistoryDataFetcher.addChestToUser(userId, chestId, teacherId, subcategoryId)
 
+        // Validate results
         assertNotNull(result)
         assertEquals(user, result.user)
         assertEquals(teacher, result.teacher)
         assertEquals(chest, result.chest)
         assertEquals(subcategory, result.subcategory)
 
+        // Verify repository interactions
         verify { chestHistoryRepository.save(any()) }
     }
-
-
 
     @Test
     fun `should throw exception when user is not found`() {
@@ -232,9 +192,6 @@ class ChestHistoryDataFetcherTest {
             chestHistoryDataFetcher.addChestToUser(userId, chestId, teacherId, subcategoryId)
         }
     }
-
-
-
 
     @Test
     fun `should throw exception when user is not a student`() {

@@ -43,7 +43,9 @@ class CategoryEditionDataFetcherTest {
         category = Categories(
             categoryName = "Test Category",
             canAddPoints = true,
-            label = "Category Label"
+            label = "Category Label",
+            lightColor = "",
+            darkColor = ""
         )
 
         edition = Edition(

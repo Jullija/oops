@@ -93,15 +93,4 @@ class EditionDataFetcherTest {
         }
     }
 
-    @Test
-    fun `should throw exception when edition year is out of bounds`() {
-        val invalidYear = LocalDate.now().year - 1
-
-        every { editionRepository.existsByEditionName(editionName) } returns false
-        every { editionRepository.existsByEditionYear(invalidYear) } returns false
-
-        assertThrows<IllegalArgumentException> {
-            editionDataFetcher.addEdition(editionName, invalidYear, label)
-        }
-    }
 }

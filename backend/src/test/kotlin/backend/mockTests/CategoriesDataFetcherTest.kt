@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig
 
 @SpringJUnitConfig
@@ -33,11 +32,14 @@ class CategoriesDataFetcherTest {
         val label = "Test Label"
         val categoriesWithSameName = emptyList<Categories>()
 
+        // Mock the repository behavior
         every { categoriesRepository.findAllByCategoryName(categoryName) } returns categoriesWithSameName
         every { categoriesRepository.save(any()) } answers { firstArg() }
 
-        val result = categoriesDataFetcher.addCategory(categoryName, canAddPoints, label)
+        // Execute the method
+        val result = categoriesDataFetcher.addCategory(categoryName, canAddPoints, "#FFFFFF", "#000000", label)
 
+        // Verify the result and repository interactions
         assertNotNull(result)
         assertEquals(categoryName, result.categoryName)
         assertEquals(canAddPoints, result.canAddPoints)
@@ -53,14 +55,20 @@ class CategoriesDataFetcherTest {
         val existingCategory = Categories(
             categoryName = categoryName,
             canAddPoints = canAddPoints,
-            label = "Existing Label"
+            label = "Existing Label",
+            lightColor = "#FFFFFF",  // Add required parameters
+            darkColor = "#000000"     // Add required parameters
         )
+
+        // Mock the repository behavior
         every { categoriesRepository.findAllByCategoryName(categoryName) } returns listOf(existingCategory)
 
+        // Execute the method and check for exception
         val exception = assertThrows<IllegalArgumentException> {
             categoriesDataFetcher.addCategory(categoryName, canAddPoints)
         }
 
+        // Verify the exception message
         assertEquals("Category with this name and canAddPoints already exists", exception.message)
     }
 
@@ -72,14 +80,19 @@ class CategoriesDataFetcherTest {
         val existingCategory = Categories(
             categoryName = categoryName,
             canAddPoints = false,
-            label = "Existing Label"
+            label = "Existing Label",
+            lightColor = "#FFFFFF",  // Add required parameters
+            darkColor = "#000000"     // Add required parameters
         )
 
+        // Mock the repository behavior
         every { categoriesRepository.findAllByCategoryName(categoryName) } returns listOf(existingCategory)
         every { categoriesRepository.save(any()) } answers { firstArg() }
 
-        val result = categoriesDataFetcher.addCategory(categoryName, canAddPoints, label)
+        // Execute the method
+        val result = categoriesDataFetcher.addCategory(categoryName, canAddPoints, "#FFFFFF", "#000000", label)
 
+        // Verify the result and repository interactions
         assertNotNull(result)
         assertEquals(categoryName, result.categoryName)
         assertEquals(canAddPoints, result.canAddPoints)

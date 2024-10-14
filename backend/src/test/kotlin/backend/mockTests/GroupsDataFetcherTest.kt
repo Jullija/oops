@@ -4,7 +4,6 @@ import backend.groups.Groups
 import backend.groups.GroupsRepository
 import backend.edition.Edition
 import backend.edition.EditionRepository
-import backend.files.FileEntity
 import backend.files.FileEntityRepository
 import backend.graphql.GroupsDataFetcher
 import backend.userGroups.UserGroupsRepository
@@ -28,13 +27,14 @@ class GroupsDataFetcherTest {
 
     private lateinit var groupsDataFetcher: GroupsDataFetcher
     private val groupsRepository: GroupsRepository = mockk()
-    private val userGroupsRepository : UserGroupsRepository = mockk()
+    private val userGroupsRepository: UserGroupsRepository = mockk()
     private val editionRepository: EditionRepository = mockk()
     private val fileRepository: FileEntityRepository = mockk()
     private val usersRepository: UsersRepository = mockk()
     private val weekdaysRepository: WeekdaysRepository = mockk()
 
     private val editionId = 1L
+    private val usosId = 1
     private val groupName = "Test Group"
     private val weekdayId = 1L
     private val startTime = Time.valueOf("10:00:00")
@@ -81,6 +81,7 @@ class GroupsDataFetcherTest {
             nick = "teacher",
             firstName = "Test",
             secondName = "Teacher",
+            email = "",
             role = UsersRoles.TEACHER,
             label = "Teacher Label"
         )
@@ -88,6 +89,8 @@ class GroupsDataFetcherTest {
         group = Groups(
             groupsId = 1L,
             groupName = groupName,
+            generatedName = "",
+            usosId = usosId,
             label = label,
             teacher = teacher,
             weekday = weekday,
@@ -99,6 +102,7 @@ class GroupsDataFetcherTest {
 
     @Test
     fun `should add group successfully`() {
+        // Mock repository behaviors
         every { editionRepository.findById(editionId) } returns Optional.of(edition)
         every { groupsRepository.existsByGroupNameAndEdition(groupName, edition) } returns false
         every { groupsRepository.existsByTeacherAndWeekdayAndStartTimeAndEndTimeAndEdition(teacher, weekday, startTime, endTime, edition) } returns false
@@ -106,38 +110,47 @@ class GroupsDataFetcherTest {
         every { usersRepository.findById(teacherId) } returns Optional.of(teacher)
         every { groupsRepository.save(any()) } answers { firstArg() }
         every { userGroupsRepository.save(any()) } answers { firstArg() }
+        every {groupsRepository.existsByUsosIdAndEdition(any(), any())} returns false
+        every { groupsRepository.findAllByGroupNameAndEdition(any(), any()) } returns emptyList()
+        // Test the method
+        val result = groupsDataFetcher.addGroup(editionId, usosId, weekdayId, startTime, endTime, teacherId, label, groupName)
 
-        val result = groupsDataFetcher.addGroup(editionId, groupName, weekdayId, startTime, endTime, teacherId, label)
-
+        // Verify results
         assertNotNull(result)
         assertEquals(groupName, result.groupName)
         assertEquals(teacher, result.teacher)
         assertEquals(weekday, result.weekday)
 
+        // Verify repository interactions
         verify { groupsRepository.save(any()) }
         verify { userGroupsRepository.save(any()) }
     }
 
     @Test
     fun `should assign photos to groups successfully`() {
+        // Mock repository behaviors
         every { editionRepository.findById(editionId) } returns Optional.of(edition)
         every { groupsRepository.findByEdition(edition) } returns listOf(group)
         every { fileRepository.findAllByFileType("image/group") } returns listOf(mockk(), mockk())
         every { groupsRepository.save(any()) } answers { firstArg() }
 
+        // Test the method
         val result = groupsDataFetcher.assignPhotosToGroups(editionId)
 
+        // Verify results
         assertTrue(result)
         verify { groupsRepository.save(any()) }
     }
 
     @Test
     fun `should throw exception when edition has already ended while assigning photos`() {
+        // Mock repository behaviors for expired edition
         val expiredEdition = mockk<Edition> {
             every { endDate } returns LocalDate.now().minusDays(1)
         }
         every { editionRepository.findById(editionId) } returns Optional.of(expiredEdition)
 
+        // Test the method and verify exception
         assertThrows<IllegalArgumentException> {
             groupsDataFetcher.assignPhotosToGroups(editionId)
         }
@@ -145,33 +158,56 @@ class GroupsDataFetcherTest {
 
     @Test
     fun `should throw exception when group name already exists`() {
+        // Mock repository behaviors
         every { editionRepository.findById(editionId) } returns Optional.of(edition)
         every { groupsRepository.existsByGroupNameAndEdition(groupName, edition) } returns true
 
+        every { groupsRepository.existsByUsosIdAndEdition(any(), any()) } returns false
+        every { groupsRepository.findAllByGroupNameAndEdition(any(), any()) } returns emptyList()
+        every {weekdaysRepository.findById(any())} returns Optional.of(weekday)
+        every {usersRepository.findById(any())} returns Optional.of(teacher)
+        every {groupsRepository.existsByTeacherAndWeekdayAndStartTimeAndEndTimeAndEdition(any(), any(), any(), any(), any())} returns true
+
+        // Test the method and verify exception
         assertThrows<IllegalArgumentException> {
-            groupsDataFetcher.addGroup(editionId, groupName, weekdayId, startTime, endTime, teacherId, label)
+            groupsDataFetcher.addGroup(editionId, usosId, weekdayId, startTime, endTime, teacherId, label, groupName)
         }
     }
 
     @Test
     fun `should throw exception when start time is after end time`() {
+        // Mock repository behaviors
         every { editionRepository.findById(editionId) } returns Optional.of(edition)
-        every {groupsRepository.existsByGroupNameAndEdition(any(), any())} returns true
+        every { groupsRepository.existsByGroupNameAndEdition(groupName, edition) } returns false
 
+        every { groupsRepository.existsByUsosIdAndEdition(any(), any()) } returns false
+        every { groupsRepository.findAllByGroupNameAndEdition(any(), any()) } returns emptyList()
+
+        // Test the method and verify exception
         assertThrows<IllegalArgumentException> {
-            groupsDataFetcher.addGroup(editionId, groupName, weekdayId, Time.valueOf("12:00:00"), Time.valueOf("11:00:00"), teacherId, label)
+            groupsDataFetcher.addGroup(editionId, usosId, weekdayId, Time.valueOf("12:00:00"), Time.valueOf("11:00:00"), teacherId, label, groupName)
         }
     }
 
     @Test
     fun `should throw exception when teacher is not found`() {
+        // Mock repository behaviors
         every { editionRepository.findById(editionId) } returns Optional.of(edition)
         every { weekdaysRepository.findById(weekdayId) } returns Optional.of(weekday)
-        every { usersRepository.findById(teacherId) } returns Optional.empty()
-        every {groupsRepository.existsByGroupNameAndEdition(any(), any())} returns true
+        every { usersRepository.findById(teacherId) } returns Optional.empty()  // Ensure this returns Optional.empty()
 
-        assertThrows<IllegalArgumentException> {
-            groupsDataFetcher.addGroup(editionId, groupName, weekdayId, startTime, endTime, teacherId, label)
+        // Ensure this method is mocked as it's called in the addGroup method
+        every { groupsRepository.existsByUsosIdAndEdition(any(), any()) } returns false
+        every { groupsRepository.findAllByGroupNameAndEdition(any(), any()) } returns emptyList()
+
+        // Test the method and verify exception
+        val exception = assertThrows<IllegalArgumentException> {
+            groupsDataFetcher.addGroup(editionId, usosId, weekdayId, startTime, endTime, teacherId, label, groupName)
         }
+
+        assertEquals("Invalid teacher ID", exception.message)  // Ensure the exception message matches what your code throws
     }
+
+
+
 }

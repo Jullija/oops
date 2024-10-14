@@ -14,8 +14,8 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.*
 
@@ -50,16 +50,20 @@ class AwardEditionDataFetcherTest {
         // Initialize commonly used objects
         category = Categories(
             categoryName = "LABORATORY",
-            label = "Category Label"
+            canAddPoints = true,
+            label = "Category Label",
+            lightColor = "#000000",
+            darkColor = "#111111"
         )
 
         award = Award(
             awardId = awardId,
             awardName = "Test Award",
             awardType = AwardType.ADDITIVE,
-            awardValue = 10.0f,
+            awardValue = BigDecimal("10.00"), // Use BigDecimal for award value
             category = category,
             maxUsages = 5,
+            description = "Award description",
             label = "Award Label"
         )
 
@@ -102,14 +106,14 @@ class AwardEditionDataFetcherTest {
 
     @Test
     fun `should throw exception when edition has already ended`() {
-        val pastEdition = mockk<Edition>()
-
-        every { pastEdition.editionId } returns editionId
-        every { pastEdition.editionName } returns "Edition Name"
-        every { pastEdition.editionYear } returns 2023
-        every { pastEdition.label } returns "Edition Label"
-        every { pastEdition.startDate } returns LocalDate.now().minusDays(10)
-        every { pastEdition.endDate } returns LocalDate.now().minusDays(5)
+        val pastEdition = Edition(
+            editionId = editionId,
+            editionName = "Past Edition",
+            editionYear = 2022,
+            label = "Edition Label",
+            startDate = LocalDate.now().minusDays(10),
+            endDate = LocalDate.now().minusDays(5)
+        )
 
         every { awardRepository.findById(awardId) } returns Optional.of(award)
         every { editionRepository.findById(editionId) } returns Optional.of(pastEdition)
