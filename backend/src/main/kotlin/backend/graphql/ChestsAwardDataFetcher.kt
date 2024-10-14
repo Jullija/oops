@@ -15,6 +15,8 @@ import backend.groups.GroupsRepository
 import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
+import backend.users.UsersRoles
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -24,6 +26,9 @@ import java.time.LocalDate
 
 @DgsComponent
 class ChestsAwardDataFetcher {
+    @Autowired
+    private lateinit var userMapper: UserMapper
+
     @Autowired
     lateinit var usersRepository: UsersRepository
 
@@ -66,6 +71,11 @@ class ChestsAwardDataFetcher {
     @DgsMutation
     @Transactional
     fun addAwardToChest(@InputArgument awardId: Long, @InputArgument chestId: Long): ChestAward {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can add awards to chests")
+        }
+
         val award = awardRepository.findById(awardId).orElseThrow { throw IllegalArgumentException("Award not found") }
         var chest = chestsRepository.findById(chestId).orElseThrow { throw IllegalArgumentException("Chest not found") }
 
@@ -123,6 +133,11 @@ class ChestsAwardDataFetcher {
     @DgsMutation
     @Transactional
     fun removeAwardFromChest(@InputArgument awardId: Long, @InputArgument chestId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can remove awards from chests")
+        }
+
         val award = awardRepository.findById(awardId).orElseThrow { throw IllegalArgumentException("Award not found") }
         var chest = chestsRepository.findById(chestId).orElseThrow { throw IllegalArgumentException("Chest not found") }
 

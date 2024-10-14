@@ -17,7 +17,7 @@ from utils.insert_awards import insert_awards
 from utils.insert_award_editions import insert_award_editions
 from utils.insert_grading_checks import insert_grading_checks
 from utils.insert_groups import insert_groups
-from utils.insert_users import insert_students, insert_teachers_and_coordinator, assign_photos_to_users
+from utils.insert_users import insert_students, insert_teachers, insert_coordinator, assign_photos_to_users
 from utils.insert_user_groups import insert_user_groups
 from utils.insert_levels import insert_levels
 from utils.insert_subcategories import insert_subcategories
@@ -177,6 +177,7 @@ def insert_data():
         max_points = max_points_in_level['if_not_computed']
 
     insert_files(base_url + "/files/upload")
+    coordinator_id_and_role = insert_coordinator(hasura_url, headers, fake)
     editions = insert_editions(hasura_url, headers, number_of_editions)
     categories, category_editions_type_map = insert_categories(hasura_url, headers, category_data)
     insert_category_editions(hasura_url, headers, editions, category_editions_type_map, random)
@@ -185,7 +186,8 @@ def insert_data():
     chest_ids = insert_chests(hasura_url, headers, editions, chests_data)
     award_ids, award_editions_type_map = insert_awards(hasura_url, headers, awards_data)
     insert_award_editions(hasura_url, headers, editions, award_editions_type_map, random)
-    teachers_ids_and_roles = insert_teachers_and_coordinator(hasura_url, headers, fake, random, number_of_teachers)
+    teachers_ids_and_roles = insert_teachers(hasura_url, headers, fake, random, number_of_teachers)
+    teachers_ids_and_roles.append(coordinator_id_and_role)
     year_group_counts, groups = insert_groups(hasura_url, headers, editions, random, number_of_groups_per_year_bounds, teachers_ids_and_roles)
     students_ids, students_in_group_count = insert_students(hasura_url, headers, year_group_counts, fake, random, students_per_group_bounds)
     all_user_ids = students_ids + [user_id for user_id, role in teachers_ids_and_roles]

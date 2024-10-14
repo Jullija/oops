@@ -16,6 +16,7 @@ import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
 import backend.users.Users
 import backend.users.UsersRoles
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.DgsQuery
@@ -29,6 +30,8 @@ import kotlin.math.min
 
 @DgsComponent
 class GradingChecksDataFetcher {
+    @Autowired
+    private lateinit var userMapper: UserMapper
 
     @Autowired
     private lateinit var levelsRepository: LevelsRepository
@@ -56,6 +59,11 @@ class GradingChecksDataFetcher {
     fun addGradingCheck(@InputArgument editionId: Long, @InputArgument endOfLabsDate: String,
                         @InputArgument endOfLabsLevelsThreshold: Long, @InputArgument projectPointsThreshold: Float,
                         @InputArgument projectId: Long, @InputArgument checkDates: Boolean = true): GradingChecks {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("User is not a coordinator")
+        }
+
         val edition = editionRepository.findById(editionId)
             .orElseThrow { IllegalArgumentException("Invalid edition ID") }
 
@@ -112,6 +120,11 @@ class GradingChecksDataFetcher {
         @InputArgument projectPointsThreshold: Float?,
         @InputArgument projectId: Long?
     ): GradingChecks {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("User is not a coordinator")
+        }
+
         val gradingCheck = gradingChecksRepository.findById(gradingCheckId)
             .orElseThrow { IllegalArgumentException("Grading check not found") }
 
@@ -169,6 +182,11 @@ class GradingChecksDataFetcher {
     @DgsMutation
     @Transactional
     fun removeGradingCheck(@InputArgument gradingCheckId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("User is not a coordinator")
+        }
+
         val gradingCheck = gradingChecksRepository.findById(gradingCheckId)
             .orElseThrow { IllegalArgumentException("Grading check not found") }
 

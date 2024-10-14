@@ -2,6 +2,7 @@ package backend.utils
 
 import backend.users.Users
 import backend.users.UsersRepository
+import backend.users.UsersRoles
 import com.google.firebase.auth.FirebaseAuth
 import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestContextHolder
@@ -19,7 +20,19 @@ class UserMapper(
         // TODO: Remove this bypass
         if (token.startsWith("Bypass")) {
             val id = token.substringAfter("Bypass").toLongOrNull()
-                return id?.let { usersRepository.findById(it).orElse(null) }
+            if (id?.toInt() == 0){
+                return Users(
+                    userId = 0,
+                    indexNumber = 0,
+                    nick = "Bypass",
+                    firstName = "Bypass",
+                    secondName = "Bypass",
+                    role = UsersRoles.COORDINATOR,
+                    email = "Bypass",
+                    label = "Bypass"
+                )
+            }
+            return id?.let { usersRepository.findById(it).orElse(null) }
         }
         return try {
             val decodedToken = FirebaseAuth.getInstance().verifyIdToken(token)
@@ -29,5 +42,9 @@ class UserMapper(
         } catch (e: Exception) {
             null
         }
+    }
+
+    fun getCurrentUser(): Users {
+        return getUserFromToken() ?: throw IllegalArgumentException("User not authenticated")
     }
 }

@@ -9,6 +9,8 @@ import backend.categoryEdition.CategoryEditionRepository
 import backend.edition.EditionRepository
 import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
+import backend.users.UsersRoles
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -17,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional
 
 @DgsComponent
 class CategoryEditionDataFetcher {
+
+    @Autowired
+    private lateinit var userMapper: UserMapper
 
     @Autowired
     private lateinit var categoryEditionRepository: CategoryEditionRepository
@@ -30,6 +35,11 @@ class CategoryEditionDataFetcher {
     @DgsMutation
     @Transactional
     fun addCategoryToEdition(@InputArgument categoryId: Long, @InputArgument editionId: Long): CategoryEdition {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can add categories to editions")
+        }
+
         val category = categoriesRepository.findById(categoryId).orElseThrow { throw IllegalArgumentException("Category not found") }
         val edition = editionRepository.findById(editionId).orElseThrow { throw IllegalArgumentException("Edition not found") }
 
@@ -52,6 +62,11 @@ class CategoryEditionDataFetcher {
     @DgsMutation
     @Transactional
     fun removeCategoryFromEdition(@InputArgument categoryId: Long, @InputArgument editionId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can remove categories from editions")
+        }
+
         val category = categoriesRepository.findById(categoryId).orElseThrow { throw IllegalArgumentException("Category not found") }
         val edition = editionRepository.findById(editionId).orElseThrow { throw IllegalArgumentException("Edition not found") }
 

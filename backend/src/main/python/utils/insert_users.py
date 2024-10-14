@@ -75,21 +75,17 @@ def insert_students(hasura_url, headers, year_group_counts, fake, random, studen
     print("All students have been inserted.")
     return student_ids, students_in_group_count
 
+def insert_coordinator(hasura_url, headers, fake):
+    # Insert data into users (coordinator)
 
-def insert_teachers_and_coordinator(hasura_url, headers, fake, random, number_of_teachers):
-    # Insert data into users (teachers and coordinator)
-    existing_index_numbers = set()
-    user_objects = []
-
-    print("Preparing teachers and coordinator for insertion...")
+    print("Preparing coordinator for insertion...")
 
     # Insert coordinator
     nick = fake.user_name()
     first_name = fake.first_name()
     second_name = fake.last_name()
     index_number = 100000
-    existing_index_numbers.add(index_number)
-    user_objects.append({
+    user_object = {
         "nick": nick,
         "role": "coordinator",
         "indexNumber": index_number,
@@ -98,7 +94,53 @@ def insert_teachers_and_coordinator(hasura_url, headers, fake, random, number_of
         "email": "hot.mamusia.69.2137@gmail.com",
         "createFirebaseUser": True,
         "sendEmail": True,
-    })
+    }
+
+    print(f"Inserting coordinator...")
+
+    mutation = """
+        mutation addUser($indexNumber: Int!, $nick: String!, $firstName: String!, $secondName: String!, $role: String!, $email: String, $createFirebaseUser: Boolean, $sendEmail: Boolean) {
+            addUser(
+                indexNumber: $indexNumber
+                nick: $nick
+                firstName: $firstName
+                secondName: $secondName
+                role: $role
+                email: $email
+                createFirebaseUser: $createFirebaseUser
+                sendEmail: $sendEmail
+            ) {
+                userId
+            }
+        }
+        """
+    variables = user_object
+
+    admin_header = headers.copy()
+    admin_header["Authorization"] = "Bearer Bypass0"
+
+    response = requests.post(
+        hasura_url,
+        json={"query": mutation, "variables": variables},
+        headers=admin_header
+    )
+
+    data = response.json()
+    if "errors" in data:
+        print(f"Error during coordinator insertion: {data['errors']}")
+        raise Exception("Coordinator insertion failed.")
+    else:
+        coordinator_id_and_role = (data["data"]["addUser"]["userId"], user_object["role"])
+
+    print("Coordinator has been inserted.")
+    return coordinator_id_and_role
+
+def insert_teachers(hasura_url, headers, fake, random, number_of_teachers):
+    # Insert data into users (teachers and coordinator)
+    existing_index_numbers = set()
+    user_objects = []
+
+    print("Preparing teachers for insertion...")
 
     # Insert teachers
     i = 1
@@ -120,10 +162,10 @@ def insert_teachers_and_coordinator(hasura_url, headers, fake, random, number_of
             "sendEmail": False,
         })
 
-    print(f"Inserting {len(user_objects)} teachers and coordinator...")
+    print(f"Inserting {len(user_objects)} teachers...")
 
     teacher_ids = []
-    for user in tqdm(user_objects, desc="Inserting teachers and coordinator"):
+    for user in tqdm(user_objects, desc="Inserting teachers"):
         mutation = """
         mutation addUser($indexNumber: Int!, $nick: String!, $firstName: String!, $secondName: String!, $role: String!, $email: String, $createFirebaseUser: Boolean, $sendEmail: Boolean) {
             addUser(
@@ -154,7 +196,7 @@ def insert_teachers_and_coordinator(hasura_url, headers, fake, random, number_of
         else:
             teacher_ids.append((data["data"]["addUser"]["userId"], user["role"]))
 
-    print("All teachers and coordinator have been inserted.")
+    print("All teachers have been inserted.")
     return teacher_ids
 
 

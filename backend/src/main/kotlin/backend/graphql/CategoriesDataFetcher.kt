@@ -2,6 +2,8 @@ package backend.graphql
 
 import backend.categories.Categories
 import backend.categories.CategoriesRepository
+import backend.users.UsersRoles
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -12,6 +14,9 @@ import java.time.LocalDate
 @DgsComponent
 class CategoriesDataFetcher {
     @Autowired
+    private lateinit var userMapper: UserMapper
+
+    @Autowired
     lateinit var categoriesRepository: CategoriesRepository
 
     @DgsMutation
@@ -19,6 +24,11 @@ class CategoriesDataFetcher {
     fun addCategory(@InputArgument categoryName: String, @InputArgument canAddPoints: Boolean,
                     @InputArgument lightColor: String = "#FFFFFF", @InputArgument darkColor: String = "#000000",
                  @InputArgument label: String = ""): Categories {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can add categories")
+        }
+
         val categoriesWithSameName = categoriesRepository.findAllByCategoryName(categoryName)
         if (categoriesWithSameName.any { it.canAddPoints == canAddPoints }) {
             throw IllegalArgumentException("Category with this name and canAddPoints already exists")
@@ -42,6 +52,11 @@ class CategoriesDataFetcher {
     @DgsMutation
     @Transactional
     fun removeCategory(@InputArgument categoryId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can remove categories")
+        }
+
         val category = categoriesRepository.findById(categoryId)
             .orElseThrow { IllegalArgumentException("Invalid category ID") }
         if (category.categoryEdition.any { categoryEdition -> categoryEdition.edition.endDate.isBefore(LocalDate.now()) }) {
@@ -64,6 +79,11 @@ class CategoriesDataFetcher {
         @InputArgument darkColor: String?,
         @InputArgument label: String?
     ): Categories {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can edit categories")
+        }
+
         val category = categoriesRepository.findById(categoryId)
             .orElseThrow { IllegalArgumentException("Invalid category ID") }
 
