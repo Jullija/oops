@@ -1,6 +1,7 @@
-- name: 'Backend '
+- name: Backend
   definition:
     url: http://host.docker.internal:9090/graphql
     timeout_seconds: 60
     customization: {}
+    forward_client_headers: true
   comment: pls work

@@ -1,5 +1,47 @@
 import { Styles } from "../utils/Styles";
 
+export type PointsBarProps = {
+  points: number;
+  bounds: { lower?: number; upper: number };
+  showPoints?: boolean;
+  label?: string;
+};
+
+export const PointsBar = ({
+  points,
+  bounds,
+  showPoints,
+  label,
+}: PointsBarProps) => {
+  if (points < 0) {
+    throw new Error("points cannot be negative number");
+  }
+
+  if (bounds.lower && points < bounds.lower) {
+    throw new Error("points cannot be lower than lower bound");
+  }
+
+  const diff = bounds.lower ?? 0;
+  const filledPercent = Math.min(
+    Math.round(((points - diff) / (bounds.upper - diff)) * 100),
+    100,
+  );
+
+  return (
+    <div style={styles.container}>
+      {label && <div>{label}</div>}
+      <div style={styles.empty}>
+        {showPoints && (
+          <div style={styles.pointsContainer}>
+            {points}/{bounds.upper}
+          </div>
+        )}
+        <div style={{ ...styles.filled, width: `${filledPercent}%` }} />
+      </div>
+    </div>
+  );
+};
+
 const styles: Styles = {
   container: {
     display: "flex",
@@ -25,49 +67,4 @@ const styles: Styles = {
     flexDirection: "column",
     justifyContent: "center",
   },
-};
-
-export type PointsBarProps = {
-  points: number;
-  bounds: { lower?: number; upper: number };
-  showPoints?: boolean;
-  label?: string;
-};
-
-export const PointsBar = ({
-  points,
-  bounds,
-  showPoints,
-  label,
-}: PointsBarProps) => {
-  if (points < 0) {
-    throw new Error("points cannot be negative number");
-  }
-
-  // TODO we have a problem with backend data inconsistency
-  if (bounds.lower && points < bounds.lower) {
-    // console.log("LOWER BOUND: ", bounds.lower);
-    // console.log("POINTS: ", points);
-    throw new Error("points cannot be lower than lower bound");
-  }
-
-  const diff = bounds.lower ?? 0;
-  const filledPercent = Math.min(
-    Math.round(((points - diff) / (bounds.upper - diff)) * 100),
-    100,
-  );
-
-  return (
-    <div style={styles.container}>
-      {label && <div>{label}</div>}
-      <div style={styles.empty}>
-        {showPoints && (
-          <div style={styles.pointsContainer}>
-            {points}/{bounds.upper}
-          </div>
-        )}
-        <div style={{ ...styles.filled, width: `${filledPercent}%` }} />
-      </div>
-    </div>
-  );
 };

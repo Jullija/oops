@@ -28,6 +28,7 @@ export type Scalars = {
   bigint: { input: string; output: string };
   date: { input: string; output: string };
   float8: { input: number; output: number };
+  numeric: { input: string; output: string };
   time: { input: string; output: string };
   timestamp: { input: string; output: string };
 };
@@ -48,7 +49,7 @@ export type Award = {
   awardId: Scalars["bigint"]["output"];
   awardName: Scalars["String"]["output"];
   awardType: Scalars["String"]["output"];
-  awardValue: Scalars["float8"]["output"];
+  awardValue: Scalars["numeric"]["output"];
   /** An array relationship */
   bonuses: Array<Bonuses>;
   /** An aggregate relationship */
@@ -60,6 +61,7 @@ export type Award = {
   chestAwards: Array<ChestAward>;
   /** An aggregate relationship */
   chestAwardsAggregate: ChestAwardAggregate;
+  description: Scalars["String"]["output"];
   /** An object relationship */
   file?: Maybe<Files>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
@@ -129,15 +131,7 @@ export type AwardAggregate = {
 };
 
 export type AwardAggregateBoolExp = {
-  avg?: InputMaybe<AwardAggregateBoolExpAvg>;
-  corr?: InputMaybe<AwardAggregateBoolExpCorr>;
   count?: InputMaybe<AwardAggregateBoolExpCount>;
-  covar_samp?: InputMaybe<AwardAggregateBoolExpCovar_Samp>;
-  max?: InputMaybe<AwardAggregateBoolExpMax>;
-  min?: InputMaybe<AwardAggregateBoolExpMin>;
-  stddev_samp?: InputMaybe<AwardAggregateBoolExpStddev_Samp>;
-  sum?: InputMaybe<AwardAggregateBoolExpSum>;
-  var_samp?: InputMaybe<AwardAggregateBoolExpVar_Samp>;
 };
 
 /** aggregate fields of "award" */
@@ -213,13 +207,14 @@ export type AwardBoolExp = {
   awardId?: InputMaybe<BigintComparisonExp>;
   awardName?: InputMaybe<StringComparisonExp>;
   awardType?: InputMaybe<StringComparisonExp>;
-  awardValue?: InputMaybe<Float8ComparisonExp>;
+  awardValue?: InputMaybe<NumericComparisonExp>;
   bonuses?: InputMaybe<BonusesBoolExp>;
   bonusesAggregate?: InputMaybe<BonusesAggregateBoolExp>;
   category?: InputMaybe<CategoriesBoolExp>;
   categoryId?: InputMaybe<BigintComparisonExp>;
   chestAwards?: InputMaybe<ChestAwardBoolExp>;
   chestAwardsAggregate?: InputMaybe<ChestAwardAggregateBoolExp>;
+  description?: InputMaybe<StringComparisonExp>;
   file?: InputMaybe<FilesBoolExp>;
   imageFileId?: InputMaybe<BigintComparisonExp>;
   label?: InputMaybe<StringComparisonExp>;
@@ -590,7 +585,7 @@ export type AwardEditionVarianceOrderBy = {
 /** input type for incrementing numeric columns in table "award" */
 export type AwardIncInput = {
   awardId?: InputMaybe<Scalars["bigint"]["input"]>;
-  awardValue?: InputMaybe<Scalars["float8"]["input"]>;
+  awardValue?: InputMaybe<Scalars["numeric"]["input"]>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   maxUsages?: InputMaybe<Scalars["Int"]["input"]>;
@@ -602,11 +597,12 @@ export type AwardInsertInput = {
   awardId?: InputMaybe<Scalars["bigint"]["input"]>;
   awardName?: InputMaybe<Scalars["String"]["input"]>;
   awardType?: InputMaybe<Scalars["String"]["input"]>;
-  awardValue?: InputMaybe<Scalars["float8"]["input"]>;
+  awardValue?: InputMaybe<Scalars["numeric"]["input"]>;
   bonuses?: InputMaybe<BonusesArrRelInsertInput>;
   category?: InputMaybe<CategoriesObjRelInsertInput>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   chestAwards?: InputMaybe<ChestAwardArrRelInsertInput>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
   file?: InputMaybe<FilesObjRelInsertInput>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
@@ -619,8 +615,9 @@ export type AwardMaxFields = {
   awardId?: Maybe<Scalars["bigint"]["output"]>;
   awardName?: Maybe<Scalars["String"]["output"]>;
   awardType?: Maybe<Scalars["String"]["output"]>;
-  awardValue?: Maybe<Scalars["float8"]["output"]>;
+  awardValue?: Maybe<Scalars["numeric"]["output"]>;
   categoryId?: Maybe<Scalars["bigint"]["output"]>;
+  description?: Maybe<Scalars["String"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   maxUsages?: Maybe<Scalars["Int"]["output"]>;
@@ -633,6 +630,7 @@ export type AwardMaxOrderBy = {
   awardType?: InputMaybe<OrderBy>;
   awardValue?: InputMaybe<OrderBy>;
   categoryId?: InputMaybe<OrderBy>;
+  description?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   maxUsages?: InputMaybe<OrderBy>;
@@ -644,8 +642,9 @@ export type AwardMinFields = {
   awardId?: Maybe<Scalars["bigint"]["output"]>;
   awardName?: Maybe<Scalars["String"]["output"]>;
   awardType?: Maybe<Scalars["String"]["output"]>;
-  awardValue?: Maybe<Scalars["float8"]["output"]>;
+  awardValue?: Maybe<Scalars["numeric"]["output"]>;
   categoryId?: Maybe<Scalars["bigint"]["output"]>;
+  description?: Maybe<Scalars["String"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   maxUsages?: Maybe<Scalars["Int"]["output"]>;
@@ -658,6 +657,7 @@ export type AwardMinOrderBy = {
   awardType?: InputMaybe<OrderBy>;
   awardValue?: InputMaybe<OrderBy>;
   categoryId?: InputMaybe<OrderBy>;
+  description?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   maxUsages?: InputMaybe<OrderBy>;
@@ -697,6 +697,7 @@ export type AwardOrderBy = {
   category?: InputMaybe<CategoriesOrderBy>;
   categoryId?: InputMaybe<OrderBy>;
   chestAwardsAggregate?: InputMaybe<ChestAwardAggregateOrderBy>;
+  description?: InputMaybe<OrderBy>;
   file?: InputMaybe<FilesOrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
@@ -721,6 +722,8 @@ export enum AwardSelectColumn {
   /** column name */
   CategoryId = "categoryId",
   /** column name */
+  Description = "description",
+  /** column name */
   ImageFileId = "imageFileId",
   /** column name */
   Label = "label",
@@ -728,61 +731,14 @@ export enum AwardSelectColumn {
   MaxUsages = "maxUsages",
 }
 
-/** select "awardAggregateBoolExpAvgArgumentsColumns" columns of table "award" */
-export enum AwardSelectColumnAwardAggregateBoolExpAvgArgumentsColumns {
-  /** column name */
-  AwardValue = "awardValue",
-}
-
-/** select "awardAggregateBoolExpCorrArgumentsColumns" columns of table "award" */
-export enum AwardSelectColumnAwardAggregateBoolExpCorrArgumentsColumns {
-  /** column name */
-  AwardValue = "awardValue",
-}
-
-/** select "awardAggregateBoolExpCovar_sampArgumentsColumns" columns of table "award" */
-export enum AwardSelectColumnAwardAggregateBoolExpCovar_SampArgumentsColumns {
-  /** column name */
-  AwardValue = "awardValue",
-}
-
-/** select "awardAggregateBoolExpMaxArgumentsColumns" columns of table "award" */
-export enum AwardSelectColumnAwardAggregateBoolExpMaxArgumentsColumns {
-  /** column name */
-  AwardValue = "awardValue",
-}
-
-/** select "awardAggregateBoolExpMinArgumentsColumns" columns of table "award" */
-export enum AwardSelectColumnAwardAggregateBoolExpMinArgumentsColumns {
-  /** column name */
-  AwardValue = "awardValue",
-}
-
-/** select "awardAggregateBoolExpStddev_sampArgumentsColumns" columns of table "award" */
-export enum AwardSelectColumnAwardAggregateBoolExpStddev_SampArgumentsColumns {
-  /** column name */
-  AwardValue = "awardValue",
-}
-
-/** select "awardAggregateBoolExpSumArgumentsColumns" columns of table "award" */
-export enum AwardSelectColumnAwardAggregateBoolExpSumArgumentsColumns {
-  /** column name */
-  AwardValue = "awardValue",
-}
-
-/** select "awardAggregateBoolExpVar_sampArgumentsColumns" columns of table "award" */
-export enum AwardSelectColumnAwardAggregateBoolExpVar_SampArgumentsColumns {
-  /** column name */
-  AwardValue = "awardValue",
-}
-
 /** input type for updating data in table "award" */
 export type AwardSetInput = {
   awardId?: InputMaybe<Scalars["bigint"]["input"]>;
   awardName?: InputMaybe<Scalars["String"]["input"]>;
   awardType?: InputMaybe<Scalars["String"]["input"]>;
-  awardValue?: InputMaybe<Scalars["float8"]["input"]>;
+  awardValue?: InputMaybe<Scalars["numeric"]["input"]>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   maxUsages?: InputMaybe<Scalars["Int"]["input"]>;
@@ -858,8 +814,9 @@ export type AwardStreamCursorValueInput = {
   awardId?: InputMaybe<Scalars["bigint"]["input"]>;
   awardName?: InputMaybe<Scalars["String"]["input"]>;
   awardType?: InputMaybe<Scalars["String"]["input"]>;
-  awardValue?: InputMaybe<Scalars["float8"]["input"]>;
+  awardValue?: InputMaybe<Scalars["numeric"]["input"]>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   maxUsages?: InputMaybe<Scalars["Int"]["input"]>;
@@ -869,7 +826,7 @@ export type AwardStreamCursorValueInput = {
 export type AwardSumFields = {
   __typename?: "AwardSumFields";
   awardId?: Maybe<Scalars["bigint"]["output"]>;
-  awardValue?: Maybe<Scalars["float8"]["output"]>;
+  awardValue?: Maybe<Scalars["numeric"]["output"]>;
   categoryId?: Maybe<Scalars["bigint"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   maxUsages?: Maybe<Scalars["Int"]["output"]>;
@@ -890,8 +847,9 @@ export type AwardType = {
   awardId: Scalars["ID"]["output"];
   awardName: Scalars["String"]["output"];
   awardType: AwardTypeType;
-  awardValue: Scalars["Float"]["output"];
+  awardValue: Scalars["String"]["output"];
   category?: Maybe<CategoryType>;
+  description: Scalars["String"]["output"];
   imageFile?: Maybe<FileType>;
   label: Scalars["String"]["output"];
   maxUsages: Scalars["Int"]["output"];
@@ -916,6 +874,8 @@ export enum AwardUpdateColumn {
   AwardValue = "awardValue",
   /** column name */
   CategoryId = "categoryId",
+  /** column name */
+  Description = "description",
   /** column name */
   ImageFileId = "imageFileId",
   /** column name */
@@ -1460,7 +1420,13 @@ export type Categories = {
   categoryEditionsAggregate: CategoryEditionAggregate;
   categoryId: Scalars["bigint"]["output"];
   categoryName: Scalars["String"]["output"];
+  darkColor: Scalars["String"]["output"];
+  /** An array relationship */
+  gradingChecks: Array<GradingChecks>;
+  /** An aggregate relationship */
+  gradingChecksAggregate: GradingChecksAggregate;
   label: Scalars["String"]["output"];
+  lightColor: Scalars["String"]["output"];
   /** An array relationship */
   subcategories: Array<Subcategories>;
   /** An aggregate relationship */
@@ -1501,6 +1467,24 @@ export type CategoriesCategoryEditionsAggregateArgs = {
   offset?: InputMaybe<Scalars["Int"]["input"]>;
   orderBy?: InputMaybe<Array<CategoryEditionOrderBy>>;
   where?: InputMaybe<CategoryEditionBoolExp>;
+};
+
+/** columns and relationships of "categories" */
+export type CategoriesGradingChecksArgs = {
+  distinctOn?: InputMaybe<Array<GradingChecksSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<GradingChecksOrderBy>>;
+  where?: InputMaybe<GradingChecksBoolExp>;
+};
+
+/** columns and relationships of "categories" */
+export type CategoriesGradingChecksAggregateArgs = {
+  distinctOn?: InputMaybe<Array<GradingChecksSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<GradingChecksOrderBy>>;
+  where?: InputMaybe<GradingChecksBoolExp>;
 };
 
 /** columns and relationships of "categories" */
@@ -1568,7 +1552,11 @@ export type CategoriesBoolExp = {
   categoryEditionsAggregate?: InputMaybe<CategoryEditionAggregateBoolExp>;
   categoryId?: InputMaybe<BigintComparisonExp>;
   categoryName?: InputMaybe<StringComparisonExp>;
+  darkColor?: InputMaybe<StringComparisonExp>;
+  gradingChecks?: InputMaybe<GradingChecksBoolExp>;
+  gradingChecksAggregate?: InputMaybe<GradingChecksAggregateBoolExp>;
   label?: InputMaybe<StringComparisonExp>;
+  lightColor?: InputMaybe<StringComparisonExp>;
   subcategories?: InputMaybe<SubcategoriesBoolExp>;
   subcategoriesAggregate?: InputMaybe<SubcategoriesAggregateBoolExp>;
 };
@@ -1591,7 +1579,10 @@ export type CategoriesInsertInput = {
   categoryEditions?: InputMaybe<CategoryEditionArrRelInsertInput>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   categoryName?: InputMaybe<Scalars["String"]["input"]>;
+  darkColor?: InputMaybe<Scalars["String"]["input"]>;
+  gradingChecks?: InputMaybe<GradingChecksArrRelInsertInput>;
   label?: InputMaybe<Scalars["String"]["input"]>;
+  lightColor?: InputMaybe<Scalars["String"]["input"]>;
   subcategories?: InputMaybe<SubcategoriesArrRelInsertInput>;
 };
 
@@ -1600,7 +1591,9 @@ export type CategoriesMaxFields = {
   __typename?: "CategoriesMaxFields";
   categoryId?: Maybe<Scalars["bigint"]["output"]>;
   categoryName?: Maybe<Scalars["String"]["output"]>;
+  darkColor?: Maybe<Scalars["String"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
+  lightColor?: Maybe<Scalars["String"]["output"]>;
 };
 
 /** aggregate min on columns */
@@ -1608,7 +1601,9 @@ export type CategoriesMinFields = {
   __typename?: "CategoriesMinFields";
   categoryId?: Maybe<Scalars["bigint"]["output"]>;
   categoryName?: Maybe<Scalars["String"]["output"]>;
+  darkColor?: Maybe<Scalars["String"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
+  lightColor?: Maybe<Scalars["String"]["output"]>;
 };
 
 /** response of any mutation on the table "categories" */
@@ -1641,7 +1636,10 @@ export type CategoriesOrderBy = {
   categoryEditionsAggregate?: InputMaybe<CategoryEditionAggregateOrderBy>;
   categoryId?: InputMaybe<OrderBy>;
   categoryName?: InputMaybe<OrderBy>;
+  darkColor?: InputMaybe<OrderBy>;
+  gradingChecksAggregate?: InputMaybe<GradingChecksAggregateOrderBy>;
   label?: InputMaybe<OrderBy>;
+  lightColor?: InputMaybe<OrderBy>;
   subcategoriesAggregate?: InputMaybe<SubcategoriesAggregateOrderBy>;
 };
 
@@ -1659,7 +1657,11 @@ export enum CategoriesSelectColumn {
   /** column name */
   CategoryName = "categoryName",
   /** column name */
+  DarkColor = "darkColor",
+  /** column name */
   Label = "label",
+  /** column name */
+  LightColor = "lightColor",
 }
 
 /** input type for updating data in table "categories" */
@@ -1667,7 +1669,9 @@ export type CategoriesSetInput = {
   canAddPoints?: InputMaybe<Scalars["Boolean"]["input"]>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   categoryName?: InputMaybe<Scalars["String"]["input"]>;
+  darkColor?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
+  lightColor?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** aggregate stddev on columns */
@@ -1701,7 +1705,9 @@ export type CategoriesStreamCursorValueInput = {
   canAddPoints?: InputMaybe<Scalars["Boolean"]["input"]>;
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   categoryName?: InputMaybe<Scalars["String"]["input"]>;
+  darkColor?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
+  lightColor?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** aggregate sum on columns */
@@ -1719,7 +1725,11 @@ export enum CategoriesUpdateColumn {
   /** column name */
   CategoryName = "categoryName",
   /** column name */
+  DarkColor = "darkColor",
+  /** column name */
   Label = "label",
+  /** column name */
+  LightColor = "lightColor",
 }
 
 export type CategoriesUpdates = {
@@ -2136,7 +2146,9 @@ export type CategoryType = {
   categoryEdition: Array<Maybe<CategoryEditionType>>;
   categoryId: Scalars["ID"]["output"];
   categoryName: Scalars["String"]["output"];
+  darkColor: Scalars["String"]["output"];
   label: Scalars["String"]["output"];
+  lightColor: Scalars["String"]["output"];
 };
 
 /** columns and relationships of "chest_award" */
@@ -2417,6 +2429,14 @@ export type ChestAwardSumOrderBy = {
   awardId?: InputMaybe<OrderBy>;
   chestAwardId?: InputMaybe<OrderBy>;
   chestId?: InputMaybe<OrderBy>;
+};
+
+export type ChestAwardType = {
+  __typename?: "ChestAwardType";
+  award: AwardType;
+  chest: ChestType;
+  chestAwardId: Scalars["ID"]["output"];
+  label: Scalars["String"]["output"];
 };
 
 /** update columns of table "chest_award" */
@@ -2992,6 +3012,7 @@ export type ChestType = {
 /** columns and relationships of "chests" */
 export type Chests = {
   __typename?: "Chests";
+  active: Scalars["Boolean"]["output"];
   /** An array relationship */
   chestAwards: Array<ChestAward>;
   /** An aggregate relationship */
@@ -3055,6 +3076,8 @@ export type ChestsAggregate = {
 };
 
 export type ChestsAggregateBoolExp = {
+  bool_and?: InputMaybe<ChestsAggregateBoolExpBool_And>;
+  bool_or?: InputMaybe<ChestsAggregateBoolExpBool_Or>;
   count?: InputMaybe<ChestsAggregateBoolExpCount>;
 };
 
@@ -3122,6 +3145,7 @@ export type ChestsBoolExp = {
   _and?: InputMaybe<Array<ChestsBoolExp>>;
   _not?: InputMaybe<ChestsBoolExp>;
   _or?: InputMaybe<Array<ChestsBoolExp>>;
+  active?: InputMaybe<BooleanComparisonExp>;
   chestAwards?: InputMaybe<ChestAwardBoolExp>;
   chestAwardsAggregate?: InputMaybe<ChestAwardAggregateBoolExp>;
   chestHistories?: InputMaybe<ChestHistoryBoolExp>;
@@ -3150,6 +3174,7 @@ export type ChestsIncInput = {
 
 /** input type for inserting data into table "chests" */
 export type ChestsInsertInput = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
   chestAwards?: InputMaybe<ChestAwardArrRelInsertInput>;
   chestHistories?: InputMaybe<ChestHistoryArrRelInsertInput>;
   chestId?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -3224,6 +3249,7 @@ export type ChestsOnConflict = {
 
 /** Ordering options when selecting data from "chests". */
 export type ChestsOrderBy = {
+  active?: InputMaybe<OrderBy>;
   chestAwardsAggregate?: InputMaybe<ChestAwardAggregateOrderBy>;
   chestHistoriesAggregate?: InputMaybe<ChestHistoryAggregateOrderBy>;
   chestId?: InputMaybe<OrderBy>;
@@ -3243,6 +3269,8 @@ export type ChestsPkColumnsInput = {
 /** select columns of table "chests" */
 export enum ChestsSelectColumn {
   /** column name */
+  Active = "active",
+  /** column name */
   ChestId = "chestId",
   /** column name */
   EditionId = "editionId",
@@ -3254,8 +3282,21 @@ export enum ChestsSelectColumn {
   Type = "type",
 }
 
+/** select "chestsAggregateBoolExpBool_andArgumentsColumns" columns of table "chests" */
+export enum ChestsSelectColumnChestsAggregateBoolExpBool_AndArgumentsColumns {
+  /** column name */
+  Active = "active",
+}
+
+/** select "chestsAggregateBoolExpBool_orArgumentsColumns" columns of table "chests" */
+export enum ChestsSelectColumnChestsAggregateBoolExpBool_OrArgumentsColumns {
+  /** column name */
+  Active = "active",
+}
+
 /** input type for updating data in table "chests" */
 export type ChestsSetInput = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
   chestId?: InputMaybe<Scalars["bigint"]["input"]>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -3318,6 +3359,7 @@ export type ChestsStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type ChestsStreamCursorValueInput = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
   chestId?: InputMaybe<Scalars["bigint"]["input"]>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -3342,6 +3384,8 @@ export type ChestsSumOrderBy = {
 
 /** update columns of table "chests" */
 export enum ChestsUpdateColumn {
+  /** column name */
+  Active = "active",
   /** column name */
   ChestId = "chestId",
   /** column name */
@@ -3448,6 +3492,10 @@ export type Edition = {
   editionYear: Scalars["Int"]["output"];
   endDate: Scalars["date"]["output"];
   /** An array relationship */
+  gradingChecks: Array<GradingChecks>;
+  /** An aggregate relationship */
+  gradingChecksAggregate: GradingChecksAggregate;
+  /** An array relationship */
   groups: Array<Groups>;
   /** An aggregate relationship */
   groupsAggregate: GroupsAggregate;
@@ -3520,6 +3568,24 @@ export type EditionChestsAggregateArgs = {
   offset?: InputMaybe<Scalars["Int"]["input"]>;
   orderBy?: InputMaybe<Array<ChestsOrderBy>>;
   where?: InputMaybe<ChestsBoolExp>;
+};
+
+/** columns and relationships of "edition" */
+export type EditionGradingChecksArgs = {
+  distinctOn?: InputMaybe<Array<GradingChecksSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<GradingChecksOrderBy>>;
+  where?: InputMaybe<GradingChecksBoolExp>;
+};
+
+/** columns and relationships of "edition" */
+export type EditionGradingChecksAggregateArgs = {
+  distinctOn?: InputMaybe<Array<GradingChecksSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<GradingChecksOrderBy>>;
+  where?: InputMaybe<GradingChecksBoolExp>;
 };
 
 /** columns and relationships of "edition" */
@@ -3644,6 +3710,8 @@ export type EditionBoolExp = {
   editionId?: InputMaybe<BigintComparisonExp>;
   editionYear?: InputMaybe<IntComparisonExp>;
   endDate?: InputMaybe<DateComparisonExp>;
+  gradingChecks?: InputMaybe<GradingChecksBoolExp>;
+  gradingChecksAggregate?: InputMaybe<GradingChecksAggregateBoolExp>;
   groups?: InputMaybe<GroupsBoolExp>;
   groupsAggregate?: InputMaybe<GroupsAggregateBoolExp>;
   label?: InputMaybe<StringComparisonExp>;
@@ -3677,6 +3745,7 @@ export type EditionInsertInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   editionYear?: InputMaybe<Scalars["Int"]["input"]>;
   endDate?: InputMaybe<Scalars["date"]["input"]>;
+  gradingChecks?: InputMaybe<GradingChecksArrRelInsertInput>;
   groups?: InputMaybe<GroupsArrRelInsertInput>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   levels?: InputMaybe<LevelsArrRelInsertInput>;
@@ -3739,6 +3808,7 @@ export type EditionOrderBy = {
   editionId?: InputMaybe<OrderBy>;
   editionYear?: InputMaybe<OrderBy>;
   endDate?: InputMaybe<OrderBy>;
+  gradingChecksAggregate?: InputMaybe<GradingChecksAggregateOrderBy>;
   groupsAggregate?: InputMaybe<GroupsAggregateOrderBy>;
   label?: InputMaybe<OrderBy>;
   levelsAggregate?: InputMaybe<LevelsAggregateOrderBy>;
@@ -4272,6 +4342,19 @@ export type Float8ComparisonExp = {
   _nin?: InputMaybe<Array<Scalars["float8"]["input"]>>;
 };
 
+/** Boolean expression to compare columns of type "Float". All fields are combined with logical 'AND'. */
+export type FloatComparisonExp = {
+  _eq?: InputMaybe<Scalars["Float"]["input"]>;
+  _gt?: InputMaybe<Scalars["Float"]["input"]>;
+  _gte?: InputMaybe<Scalars["Float"]["input"]>;
+  _in?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+  _isNull?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _lt?: InputMaybe<Scalars["Float"]["input"]>;
+  _lte?: InputMaybe<Scalars["Float"]["input"]>;
+  _neq?: InputMaybe<Scalars["Float"]["input"]>;
+  _nin?: InputMaybe<Array<Scalars["Float"]["input"]>>;
+};
+
 /** columns and relationships of "flyway_schema_history" */
 export type FlywaySchemaHistory = {
   __typename?: "FlywaySchemaHistory";
@@ -4580,6 +4663,485 @@ export type FlywaySchemaHistoryVarianceFields = {
   installedRank?: Maybe<Scalars["Float"]["output"]>;
 };
 
+/** columns and relationships of "grading_checks" */
+export type GradingChecks = {
+  __typename?: "GradingChecks";
+  /** An object relationship */
+  category: Categories;
+  /** An object relationship */
+  edition: Edition;
+  editionId: Scalars["bigint"]["output"];
+  endOfLabsDate: Scalars["date"]["output"];
+  endOfLabsLevelsThreshold: Scalars["bigint"]["output"];
+  gradingCheckId: Scalars["bigint"]["output"];
+  /** An object relationship */
+  level: Levels;
+  projectId: Scalars["bigint"]["output"];
+  projectPointsThreshold: Scalars["float8"]["output"];
+};
+
+/** aggregated selection of "grading_checks" */
+export type GradingChecksAggregate = {
+  __typename?: "GradingChecksAggregate";
+  aggregate?: Maybe<GradingChecksAggregateFields>;
+  nodes: Array<GradingChecks>;
+};
+
+export type GradingChecksAggregateBoolExp = {
+  avg?: InputMaybe<GradingChecksAggregateBoolExpAvg>;
+  corr?: InputMaybe<GradingChecksAggregateBoolExpCorr>;
+  count?: InputMaybe<GradingChecksAggregateBoolExpCount>;
+  covar_samp?: InputMaybe<GradingChecksAggregateBoolExpCovar_Samp>;
+  max?: InputMaybe<GradingChecksAggregateBoolExpMax>;
+  min?: InputMaybe<GradingChecksAggregateBoolExpMin>;
+  stddev_samp?: InputMaybe<GradingChecksAggregateBoolExpStddev_Samp>;
+  sum?: InputMaybe<GradingChecksAggregateBoolExpSum>;
+  var_samp?: InputMaybe<GradingChecksAggregateBoolExpVar_Samp>;
+};
+
+/** aggregate fields of "grading_checks" */
+export type GradingChecksAggregateFields = {
+  __typename?: "GradingChecksAggregateFields";
+  avg?: Maybe<GradingChecksAvgFields>;
+  count: Scalars["Int"]["output"];
+  max?: Maybe<GradingChecksMaxFields>;
+  min?: Maybe<GradingChecksMinFields>;
+  stddev?: Maybe<GradingChecksStddevFields>;
+  stddevPop?: Maybe<GradingChecksStddevPopFields>;
+  stddevSamp?: Maybe<GradingChecksStddevSampFields>;
+  sum?: Maybe<GradingChecksSumFields>;
+  varPop?: Maybe<GradingChecksVarPopFields>;
+  varSamp?: Maybe<GradingChecksVarSampFields>;
+  variance?: Maybe<GradingChecksVarianceFields>;
+};
+
+/** aggregate fields of "grading_checks" */
+export type GradingChecksAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<GradingChecksSelectColumn>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "grading_checks" */
+export type GradingChecksAggregateOrderBy = {
+  avg?: InputMaybe<GradingChecksAvgOrderBy>;
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<GradingChecksMaxOrderBy>;
+  min?: InputMaybe<GradingChecksMinOrderBy>;
+  stddev?: InputMaybe<GradingChecksStddevOrderBy>;
+  stddevPop?: InputMaybe<GradingChecksStddevPopOrderBy>;
+  stddevSamp?: InputMaybe<GradingChecksStddevSampOrderBy>;
+  sum?: InputMaybe<GradingChecksSumOrderBy>;
+  varPop?: InputMaybe<GradingChecksVarPopOrderBy>;
+  varSamp?: InputMaybe<GradingChecksVarSampOrderBy>;
+  variance?: InputMaybe<GradingChecksVarianceOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "grading_checks" */
+export type GradingChecksArrRelInsertInput = {
+  data: Array<GradingChecksInsertInput>;
+  /** upsert condition */
+  onConflict?: InputMaybe<GradingChecksOnConflict>;
+};
+
+/** aggregate avg on columns */
+export type GradingChecksAvgFields = {
+  __typename?: "GradingChecksAvgFields";
+  editionId?: Maybe<Scalars["Float"]["output"]>;
+  endOfLabsLevelsThreshold?: Maybe<Scalars["Float"]["output"]>;
+  gradingCheckId?: Maybe<Scalars["Float"]["output"]>;
+  projectId?: Maybe<Scalars["Float"]["output"]>;
+  projectPointsThreshold?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by avg() on columns of table "grading_checks" */
+export type GradingChecksAvgOrderBy = {
+  editionId?: InputMaybe<OrderBy>;
+  endOfLabsLevelsThreshold?: InputMaybe<OrderBy>;
+  gradingCheckId?: InputMaybe<OrderBy>;
+  projectId?: InputMaybe<OrderBy>;
+  projectPointsThreshold?: InputMaybe<OrderBy>;
+};
+
+/** Boolean expression to filter rows from the table "grading_checks". All fields are combined with a logical 'AND'. */
+export type GradingChecksBoolExp = {
+  _and?: InputMaybe<Array<GradingChecksBoolExp>>;
+  _not?: InputMaybe<GradingChecksBoolExp>;
+  _or?: InputMaybe<Array<GradingChecksBoolExp>>;
+  category?: InputMaybe<CategoriesBoolExp>;
+  edition?: InputMaybe<EditionBoolExp>;
+  editionId?: InputMaybe<BigintComparisonExp>;
+  endOfLabsDate?: InputMaybe<DateComparisonExp>;
+  endOfLabsLevelsThreshold?: InputMaybe<BigintComparisonExp>;
+  gradingCheckId?: InputMaybe<BigintComparisonExp>;
+  level?: InputMaybe<LevelsBoolExp>;
+  projectId?: InputMaybe<BigintComparisonExp>;
+  projectPointsThreshold?: InputMaybe<Float8ComparisonExp>;
+};
+
+/** unique or primary key constraints on table "grading_checks" */
+export enum GradingChecksConstraint {
+  /** unique or primary key constraint on columns "grading_check_id" */
+  GradingChecksPkey = "grading_checks_pkey",
+}
+
+/** input type for incrementing numeric columns in table "grading_checks" */
+export type GradingChecksIncInput = {
+  editionId?: InputMaybe<Scalars["bigint"]["input"]>;
+  endOfLabsLevelsThreshold?: InputMaybe<Scalars["bigint"]["input"]>;
+  gradingCheckId?: InputMaybe<Scalars["bigint"]["input"]>;
+  projectId?: InputMaybe<Scalars["bigint"]["input"]>;
+  projectPointsThreshold?: InputMaybe<Scalars["float8"]["input"]>;
+};
+
+/** input type for inserting data into table "grading_checks" */
+export type GradingChecksInsertInput = {
+  category?: InputMaybe<CategoriesObjRelInsertInput>;
+  edition?: InputMaybe<EditionObjRelInsertInput>;
+  editionId?: InputMaybe<Scalars["bigint"]["input"]>;
+  endOfLabsDate?: InputMaybe<Scalars["date"]["input"]>;
+  endOfLabsLevelsThreshold?: InputMaybe<Scalars["bigint"]["input"]>;
+  gradingCheckId?: InputMaybe<Scalars["bigint"]["input"]>;
+  level?: InputMaybe<LevelsObjRelInsertInput>;
+  projectId?: InputMaybe<Scalars["bigint"]["input"]>;
+  projectPointsThreshold?: InputMaybe<Scalars["float8"]["input"]>;
+};
+
+/** aggregate max on columns */
+export type GradingChecksMaxFields = {
+  __typename?: "GradingChecksMaxFields";
+  editionId?: Maybe<Scalars["bigint"]["output"]>;
+  endOfLabsDate?: Maybe<Scalars["date"]["output"]>;
+  endOfLabsLevelsThreshold?: Maybe<Scalars["bigint"]["output"]>;
+  gradingCheckId?: Maybe<Scalars["bigint"]["output"]>;
+  projectId?: Maybe<Scalars["bigint"]["output"]>;
+  projectPointsThreshold?: Maybe<Scalars["float8"]["output"]>;
+};
+
+/** order by max() on columns of table "grading_checks" */
+export type GradingChecksMaxOrderBy = {
+  editionId?: InputMaybe<OrderBy>;
+  endOfLabsDate?: InputMaybe<OrderBy>;
+  endOfLabsLevelsThreshold?: InputMaybe<OrderBy>;
+  gradingCheckId?: InputMaybe<OrderBy>;
+  projectId?: InputMaybe<OrderBy>;
+  projectPointsThreshold?: InputMaybe<OrderBy>;
+};
+
+/** aggregate min on columns */
+export type GradingChecksMinFields = {
+  __typename?: "GradingChecksMinFields";
+  editionId?: Maybe<Scalars["bigint"]["output"]>;
+  endOfLabsDate?: Maybe<Scalars["date"]["output"]>;
+  endOfLabsLevelsThreshold?: Maybe<Scalars["bigint"]["output"]>;
+  gradingCheckId?: Maybe<Scalars["bigint"]["output"]>;
+  projectId?: Maybe<Scalars["bigint"]["output"]>;
+  projectPointsThreshold?: Maybe<Scalars["float8"]["output"]>;
+};
+
+/** order by min() on columns of table "grading_checks" */
+export type GradingChecksMinOrderBy = {
+  editionId?: InputMaybe<OrderBy>;
+  endOfLabsDate?: InputMaybe<OrderBy>;
+  endOfLabsLevelsThreshold?: InputMaybe<OrderBy>;
+  gradingCheckId?: InputMaybe<OrderBy>;
+  projectId?: InputMaybe<OrderBy>;
+  projectPointsThreshold?: InputMaybe<OrderBy>;
+};
+
+/** response of any mutation on the table "grading_checks" */
+export type GradingChecksMutationResponse = {
+  __typename?: "GradingChecksMutationResponse";
+  /** number of rows affected by the mutation */
+  affectedRows: Scalars["Int"]["output"];
+  /** data from the rows affected by the mutation */
+  returning: Array<GradingChecks>;
+};
+
+/** on_conflict condition type for table "grading_checks" */
+export type GradingChecksOnConflict = {
+  constraint: GradingChecksConstraint;
+  updateColumns?: Array<GradingChecksUpdateColumn>;
+  where?: InputMaybe<GradingChecksBoolExp>;
+};
+
+/** Ordering options when selecting data from "grading_checks". */
+export type GradingChecksOrderBy = {
+  category?: InputMaybe<CategoriesOrderBy>;
+  edition?: InputMaybe<EditionOrderBy>;
+  editionId?: InputMaybe<OrderBy>;
+  endOfLabsDate?: InputMaybe<OrderBy>;
+  endOfLabsLevelsThreshold?: InputMaybe<OrderBy>;
+  gradingCheckId?: InputMaybe<OrderBy>;
+  level?: InputMaybe<LevelsOrderBy>;
+  projectId?: InputMaybe<OrderBy>;
+  projectPointsThreshold?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: grading_checks */
+export type GradingChecksPkColumnsInput = {
+  gradingCheckId: Scalars["bigint"]["input"];
+};
+
+/** select columns of table "grading_checks" */
+export enum GradingChecksSelectColumn {
+  /** column name */
+  EditionId = "editionId",
+  /** column name */
+  EndOfLabsDate = "endOfLabsDate",
+  /** column name */
+  EndOfLabsLevelsThreshold = "endOfLabsLevelsThreshold",
+  /** column name */
+  GradingCheckId = "gradingCheckId",
+  /** column name */
+  ProjectId = "projectId",
+  /** column name */
+  ProjectPointsThreshold = "projectPointsThreshold",
+}
+
+/** select "gradingChecksAggregateBoolExpAvgArgumentsColumns" columns of table "grading_checks" */
+export enum GradingChecksSelectColumnGradingChecksAggregateBoolExpAvgArgumentsColumns {
+  /** column name */
+  ProjectPointsThreshold = "projectPointsThreshold",
+}
+
+/** select "gradingChecksAggregateBoolExpCorrArgumentsColumns" columns of table "grading_checks" */
+export enum GradingChecksSelectColumnGradingChecksAggregateBoolExpCorrArgumentsColumns {
+  /** column name */
+  ProjectPointsThreshold = "projectPointsThreshold",
+}
+
+/** select "gradingChecksAggregateBoolExpCovar_sampArgumentsColumns" columns of table "grading_checks" */
+export enum GradingChecksSelectColumnGradingChecksAggregateBoolExpCovar_SampArgumentsColumns {
+  /** column name */
+  ProjectPointsThreshold = "projectPointsThreshold",
+}
+
+/** select "gradingChecksAggregateBoolExpMaxArgumentsColumns" columns of table "grading_checks" */
+export enum GradingChecksSelectColumnGradingChecksAggregateBoolExpMaxArgumentsColumns {
+  /** column name */
+  ProjectPointsThreshold = "projectPointsThreshold",
+}
+
+/** select "gradingChecksAggregateBoolExpMinArgumentsColumns" columns of table "grading_checks" */
+export enum GradingChecksSelectColumnGradingChecksAggregateBoolExpMinArgumentsColumns {
+  /** column name */
+  ProjectPointsThreshold = "projectPointsThreshold",
+}
+
+/** select "gradingChecksAggregateBoolExpStddev_sampArgumentsColumns" columns of table "grading_checks" */
+export enum GradingChecksSelectColumnGradingChecksAggregateBoolExpStddev_SampArgumentsColumns {
+  /** column name */
+  ProjectPointsThreshold = "projectPointsThreshold",
+}
+
+/** select "gradingChecksAggregateBoolExpSumArgumentsColumns" columns of table "grading_checks" */
+export enum GradingChecksSelectColumnGradingChecksAggregateBoolExpSumArgumentsColumns {
+  /** column name */
+  ProjectPointsThreshold = "projectPointsThreshold",
+}
+
+/** select "gradingChecksAggregateBoolExpVar_sampArgumentsColumns" columns of table "grading_checks" */
+export enum GradingChecksSelectColumnGradingChecksAggregateBoolExpVar_SampArgumentsColumns {
+  /** column name */
+  ProjectPointsThreshold = "projectPointsThreshold",
+}
+
+/** input type for updating data in table "grading_checks" */
+export type GradingChecksSetInput = {
+  editionId?: InputMaybe<Scalars["bigint"]["input"]>;
+  endOfLabsDate?: InputMaybe<Scalars["date"]["input"]>;
+  endOfLabsLevelsThreshold?: InputMaybe<Scalars["bigint"]["input"]>;
+  gradingCheckId?: InputMaybe<Scalars["bigint"]["input"]>;
+  projectId?: InputMaybe<Scalars["bigint"]["input"]>;
+  projectPointsThreshold?: InputMaybe<Scalars["float8"]["input"]>;
+};
+
+/** aggregate stddev on columns */
+export type GradingChecksStddevFields = {
+  __typename?: "GradingChecksStddevFields";
+  editionId?: Maybe<Scalars["Float"]["output"]>;
+  endOfLabsLevelsThreshold?: Maybe<Scalars["Float"]["output"]>;
+  gradingCheckId?: Maybe<Scalars["Float"]["output"]>;
+  projectId?: Maybe<Scalars["Float"]["output"]>;
+  projectPointsThreshold?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddev() on columns of table "grading_checks" */
+export type GradingChecksStddevOrderBy = {
+  editionId?: InputMaybe<OrderBy>;
+  endOfLabsLevelsThreshold?: InputMaybe<OrderBy>;
+  gradingCheckId?: InputMaybe<OrderBy>;
+  projectId?: InputMaybe<OrderBy>;
+  projectPointsThreshold?: InputMaybe<OrderBy>;
+};
+
+/** aggregate stddevPop on columns */
+export type GradingChecksStddevPopFields = {
+  __typename?: "GradingChecksStddevPopFields";
+  editionId?: Maybe<Scalars["Float"]["output"]>;
+  endOfLabsLevelsThreshold?: Maybe<Scalars["Float"]["output"]>;
+  gradingCheckId?: Maybe<Scalars["Float"]["output"]>;
+  projectId?: Maybe<Scalars["Float"]["output"]>;
+  projectPointsThreshold?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddevPop() on columns of table "grading_checks" */
+export type GradingChecksStddevPopOrderBy = {
+  editionId?: InputMaybe<OrderBy>;
+  endOfLabsLevelsThreshold?: InputMaybe<OrderBy>;
+  gradingCheckId?: InputMaybe<OrderBy>;
+  projectId?: InputMaybe<OrderBy>;
+  projectPointsThreshold?: InputMaybe<OrderBy>;
+};
+
+/** aggregate stddevSamp on columns */
+export type GradingChecksStddevSampFields = {
+  __typename?: "GradingChecksStddevSampFields";
+  editionId?: Maybe<Scalars["Float"]["output"]>;
+  endOfLabsLevelsThreshold?: Maybe<Scalars["Float"]["output"]>;
+  gradingCheckId?: Maybe<Scalars["Float"]["output"]>;
+  projectId?: Maybe<Scalars["Float"]["output"]>;
+  projectPointsThreshold?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by stddevSamp() on columns of table "grading_checks" */
+export type GradingChecksStddevSampOrderBy = {
+  editionId?: InputMaybe<OrderBy>;
+  endOfLabsLevelsThreshold?: InputMaybe<OrderBy>;
+  gradingCheckId?: InputMaybe<OrderBy>;
+  projectId?: InputMaybe<OrderBy>;
+  projectPointsThreshold?: InputMaybe<OrderBy>;
+};
+
+/** Streaming cursor of the table "grading_checks" */
+export type GradingChecksStreamCursorInput = {
+  /** Stream column input with initial value */
+  initialValue: GradingChecksStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type GradingChecksStreamCursorValueInput = {
+  editionId?: InputMaybe<Scalars["bigint"]["input"]>;
+  endOfLabsDate?: InputMaybe<Scalars["date"]["input"]>;
+  endOfLabsLevelsThreshold?: InputMaybe<Scalars["bigint"]["input"]>;
+  gradingCheckId?: InputMaybe<Scalars["bigint"]["input"]>;
+  projectId?: InputMaybe<Scalars["bigint"]["input"]>;
+  projectPointsThreshold?: InputMaybe<Scalars["float8"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type GradingChecksSumFields = {
+  __typename?: "GradingChecksSumFields";
+  editionId?: Maybe<Scalars["bigint"]["output"]>;
+  endOfLabsLevelsThreshold?: Maybe<Scalars["bigint"]["output"]>;
+  gradingCheckId?: Maybe<Scalars["bigint"]["output"]>;
+  projectId?: Maybe<Scalars["bigint"]["output"]>;
+  projectPointsThreshold?: Maybe<Scalars["float8"]["output"]>;
+};
+
+/** order by sum() on columns of table "grading_checks" */
+export type GradingChecksSumOrderBy = {
+  editionId?: InputMaybe<OrderBy>;
+  endOfLabsLevelsThreshold?: InputMaybe<OrderBy>;
+  gradingCheckId?: InputMaybe<OrderBy>;
+  projectId?: InputMaybe<OrderBy>;
+  projectPointsThreshold?: InputMaybe<OrderBy>;
+};
+
+export type GradingChecksType = {
+  __typename?: "GradingChecksType";
+  edition: EditionType;
+  endOfLabsDate: Scalars["String"]["output"];
+  endOfLabsLevelsThreshold: LevelType;
+  gradingCheckId: Scalars["ID"]["output"];
+  project: CategoryType;
+  projectPointsThreshold: Scalars["Float"]["output"];
+};
+
+/** update columns of table "grading_checks" */
+export enum GradingChecksUpdateColumn {
+  /** column name */
+  EditionId = "editionId",
+  /** column name */
+  EndOfLabsDate = "endOfLabsDate",
+  /** column name */
+  EndOfLabsLevelsThreshold = "endOfLabsLevelsThreshold",
+  /** column name */
+  GradingCheckId = "gradingCheckId",
+  /** column name */
+  ProjectId = "projectId",
+  /** column name */
+  ProjectPointsThreshold = "projectPointsThreshold",
+}
+
+export type GradingChecksUpdates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<GradingChecksIncInput>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<GradingChecksSetInput>;
+  /** filter the rows which have to be updated */
+  where: GradingChecksBoolExp;
+};
+
+/** aggregate varPop on columns */
+export type GradingChecksVarPopFields = {
+  __typename?: "GradingChecksVarPopFields";
+  editionId?: Maybe<Scalars["Float"]["output"]>;
+  endOfLabsLevelsThreshold?: Maybe<Scalars["Float"]["output"]>;
+  gradingCheckId?: Maybe<Scalars["Float"]["output"]>;
+  projectId?: Maybe<Scalars["Float"]["output"]>;
+  projectPointsThreshold?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by varPop() on columns of table "grading_checks" */
+export type GradingChecksVarPopOrderBy = {
+  editionId?: InputMaybe<OrderBy>;
+  endOfLabsLevelsThreshold?: InputMaybe<OrderBy>;
+  gradingCheckId?: InputMaybe<OrderBy>;
+  projectId?: InputMaybe<OrderBy>;
+  projectPointsThreshold?: InputMaybe<OrderBy>;
+};
+
+/** aggregate varSamp on columns */
+export type GradingChecksVarSampFields = {
+  __typename?: "GradingChecksVarSampFields";
+  editionId?: Maybe<Scalars["Float"]["output"]>;
+  endOfLabsLevelsThreshold?: Maybe<Scalars["Float"]["output"]>;
+  gradingCheckId?: Maybe<Scalars["Float"]["output"]>;
+  projectId?: Maybe<Scalars["Float"]["output"]>;
+  projectPointsThreshold?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by varSamp() on columns of table "grading_checks" */
+export type GradingChecksVarSampOrderBy = {
+  editionId?: InputMaybe<OrderBy>;
+  endOfLabsLevelsThreshold?: InputMaybe<OrderBy>;
+  gradingCheckId?: InputMaybe<OrderBy>;
+  projectId?: InputMaybe<OrderBy>;
+  projectPointsThreshold?: InputMaybe<OrderBy>;
+};
+
+/** aggregate variance on columns */
+export type GradingChecksVarianceFields = {
+  __typename?: "GradingChecksVarianceFields";
+  editionId?: Maybe<Scalars["Float"]["output"]>;
+  endOfLabsLevelsThreshold?: Maybe<Scalars["Float"]["output"]>;
+  gradingCheckId?: Maybe<Scalars["Float"]["output"]>;
+  projectId?: Maybe<Scalars["Float"]["output"]>;
+  projectPointsThreshold?: Maybe<Scalars["Float"]["output"]>;
+};
+
+/** order by variance() on columns of table "grading_checks" */
+export type GradingChecksVarianceOrderBy = {
+  editionId?: InputMaybe<OrderBy>;
+  endOfLabsLevelsThreshold?: InputMaybe<OrderBy>;
+  gradingCheckId?: InputMaybe<OrderBy>;
+  projectId?: InputMaybe<OrderBy>;
+  projectPointsThreshold?: InputMaybe<OrderBy>;
+};
+
 export type GroupDateType = {
   __typename?: "GroupDateType";
   endTime: Scalars["String"]["output"];
@@ -4587,17 +5149,26 @@ export type GroupDateType = {
   weekday: WeekdayType;
 };
 
+export type GroupTeacherType = {
+  __typename?: "GroupTeacherType";
+  canEdit: Scalars["Boolean"]["output"];
+  group: GroupType;
+  owns: Scalars["Boolean"]["output"];
+};
+
 export type GroupType = {
   __typename?: "GroupType";
   edition: EditionType;
   endTime: Scalars["String"]["output"];
-  groupName: Scalars["String"]["output"];
+  generatedName: Scalars["String"]["output"];
+  groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId: Scalars["ID"]["output"];
   imageFile?: Maybe<FileType>;
   label?: Maybe<Scalars["String"]["output"]>;
   startTime: Scalars["String"]["output"];
-  teacher?: Maybe<UserType>;
+  teacher: UserType;
   userGroups: Array<Maybe<UserGroupType>>;
+  usosId: Scalars["Int"]["output"];
   weekday: WeekdayType;
 };
 
@@ -4610,20 +5181,20 @@ export type Groups = {
   endTime: Scalars["time"]["output"];
   /** An object relationship */
   file?: Maybe<Files>;
-  groupName: Scalars["String"]["output"];
+  generatedName: Scalars["String"]["output"];
+  groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId: Scalars["bigint"]["output"];
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   startTime: Scalars["time"]["output"];
-  teacherId?: Maybe<Scalars["bigint"]["output"]>;
   /** An object relationship */
-  user?: Maybe<Users>;
-  /** An object relationship */
-  userByTeacherId?: Maybe<Users>;
+  teacher: Users;
+  teacherId: Scalars["bigint"]["output"];
   /** An array relationship */
   userGroups: Array<UserGroups>;
   /** An aggregate relationship */
   userGroupsAggregate: UserGroupsAggregate;
+  usosId: Scalars["Int"]["output"];
   /** An object relationship */
   weekday: Weekdays;
   weekdayId: Scalars["bigint"]["output"];
@@ -4709,6 +5280,7 @@ export type GroupsAvgFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -4718,6 +5290,7 @@ export type GroupsAvgOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -4730,16 +5303,17 @@ export type GroupsBoolExp = {
   editionId?: InputMaybe<BigintComparisonExp>;
   endTime?: InputMaybe<TimeComparisonExp>;
   file?: InputMaybe<FilesBoolExp>;
+  generatedName?: InputMaybe<StringComparisonExp>;
   groupName?: InputMaybe<StringComparisonExp>;
   groupsId?: InputMaybe<BigintComparisonExp>;
   imageFileId?: InputMaybe<BigintComparisonExp>;
   label?: InputMaybe<StringComparisonExp>;
   startTime?: InputMaybe<TimeComparisonExp>;
+  teacher?: InputMaybe<UsersBoolExp>;
   teacherId?: InputMaybe<BigintComparisonExp>;
-  user?: InputMaybe<UsersBoolExp>;
-  userByTeacherId?: InputMaybe<UsersBoolExp>;
   userGroups?: InputMaybe<UserGroupsBoolExp>;
   userGroupsAggregate?: InputMaybe<UserGroupsAggregateBoolExp>;
+  usosId?: InputMaybe<IntComparisonExp>;
   weekday?: InputMaybe<WeekdaysBoolExp>;
   weekdayId?: InputMaybe<BigintComparisonExp>;
 };
@@ -4756,6 +5330,7 @@ export type GroupsIncInput = {
   groupsId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
+  usosId?: InputMaybe<Scalars["Int"]["input"]>;
   weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
 
@@ -4765,15 +5340,16 @@ export type GroupsInsertInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   endTime?: InputMaybe<Scalars["time"]["input"]>;
   file?: InputMaybe<FilesObjRelInsertInput>;
+  generatedName?: InputMaybe<Scalars["String"]["input"]>;
   groupName?: InputMaybe<Scalars["String"]["input"]>;
   groupsId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   startTime?: InputMaybe<Scalars["time"]["input"]>;
+  teacher?: InputMaybe<UsersObjRelInsertInput>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
-  user?: InputMaybe<UsersObjRelInsertInput>;
-  userByTeacherId?: InputMaybe<UsersObjRelInsertInput>;
   userGroups?: InputMaybe<UserGroupsArrRelInsertInput>;
+  usosId?: InputMaybe<Scalars["Int"]["input"]>;
   weekday?: InputMaybe<WeekdaysObjRelInsertInput>;
   weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
@@ -4782,22 +5358,26 @@ export type GroupsInsertInput = {
 export type GroupsMaxFields = {
   __typename?: "GroupsMaxFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  generatedName?: Maybe<Scalars["String"]["output"]>;
   groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
+  usosId?: Maybe<Scalars["Int"]["output"]>;
   weekdayId?: Maybe<Scalars["bigint"]["output"]>;
 };
 
 /** order by max() on columns of table "groups" */
 export type GroupsMaxOrderBy = {
   editionId?: InputMaybe<OrderBy>;
+  generatedName?: InputMaybe<OrderBy>;
   groupName?: InputMaybe<OrderBy>;
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -4805,22 +5385,26 @@ export type GroupsMaxOrderBy = {
 export type GroupsMinFields = {
   __typename?: "GroupsMinFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  generatedName?: Maybe<Scalars["String"]["output"]>;
   groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
+  usosId?: Maybe<Scalars["Int"]["output"]>;
   weekdayId?: Maybe<Scalars["bigint"]["output"]>;
 };
 
 /** order by min() on columns of table "groups" */
 export type GroupsMinOrderBy = {
   editionId?: InputMaybe<OrderBy>;
+  generatedName?: InputMaybe<OrderBy>;
   groupName?: InputMaybe<OrderBy>;
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -4853,15 +5437,16 @@ export type GroupsOrderBy = {
   editionId?: InputMaybe<OrderBy>;
   endTime?: InputMaybe<OrderBy>;
   file?: InputMaybe<FilesOrderBy>;
+  generatedName?: InputMaybe<OrderBy>;
   groupName?: InputMaybe<OrderBy>;
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   startTime?: InputMaybe<OrderBy>;
+  teacher?: InputMaybe<UsersOrderBy>;
   teacherId?: InputMaybe<OrderBy>;
-  user?: InputMaybe<UsersOrderBy>;
-  userByTeacherId?: InputMaybe<UsersOrderBy>;
   userGroupsAggregate?: InputMaybe<UserGroupsAggregateOrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekday?: InputMaybe<WeekdaysOrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
@@ -4878,6 +5463,8 @@ export enum GroupsSelectColumn {
   /** column name */
   EndTime = "endTime",
   /** column name */
+  GeneratedName = "generatedName",
+  /** column name */
   GroupName = "groupName",
   /** column name */
   GroupsId = "groupsId",
@@ -4890,6 +5477,8 @@ export enum GroupsSelectColumn {
   /** column name */
   TeacherId = "teacherId",
   /** column name */
+  UsosId = "usosId",
+  /** column name */
   WeekdayId = "weekdayId",
 }
 
@@ -4897,12 +5486,14 @@ export enum GroupsSelectColumn {
 export type GroupsSetInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   endTime?: InputMaybe<Scalars["time"]["input"]>;
+  generatedName?: InputMaybe<Scalars["String"]["input"]>;
   groupName?: InputMaybe<Scalars["String"]["input"]>;
   groupsId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   startTime?: InputMaybe<Scalars["time"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
+  usosId?: InputMaybe<Scalars["Int"]["input"]>;
   weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
 
@@ -4913,6 +5504,7 @@ export type GroupsStddevFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -4922,6 +5514,7 @@ export type GroupsStddevOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -4932,6 +5525,7 @@ export type GroupsStddevPopFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -4941,6 +5535,7 @@ export type GroupsStddevPopOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -4951,6 +5546,7 @@ export type GroupsStddevSampFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -4960,6 +5556,7 @@ export type GroupsStddevSampOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -4975,12 +5572,14 @@ export type GroupsStreamCursorInput = {
 export type GroupsStreamCursorValueInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   endTime?: InputMaybe<Scalars["time"]["input"]>;
+  generatedName?: InputMaybe<Scalars["String"]["input"]>;
   groupName?: InputMaybe<Scalars["String"]["input"]>;
   groupsId?: InputMaybe<Scalars["bigint"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   startTime?: InputMaybe<Scalars["time"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
+  usosId?: InputMaybe<Scalars["Int"]["input"]>;
   weekdayId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
 
@@ -4991,6 +5590,7 @@ export type GroupsSumFields = {
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
+  usosId?: Maybe<Scalars["Int"]["output"]>;
   weekdayId?: Maybe<Scalars["bigint"]["output"]>;
 };
 
@@ -5000,6 +5600,7 @@ export type GroupsSumOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -5009,6 +5610,8 @@ export enum GroupsUpdateColumn {
   EditionId = "editionId",
   /** column name */
   EndTime = "endTime",
+  /** column name */
+  GeneratedName = "generatedName",
   /** column name */
   GroupName = "groupName",
   /** column name */
@@ -5021,6 +5624,8 @@ export enum GroupsUpdateColumn {
   StartTime = "startTime",
   /** column name */
   TeacherId = "teacherId",
+  /** column name */
+  UsosId = "usosId",
   /** column name */
   WeekdayId = "weekdayId",
 }
@@ -5041,6 +5646,7 @@ export type GroupsVarPopFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -5050,6 +5656,7 @@ export type GroupsVarPopOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -5060,6 +5667,7 @@ export type GroupsVarSampFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -5069,6 +5677,7 @@ export type GroupsVarSampOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -5079,6 +5688,7 @@ export type GroupsVarianceFields = {
   groupsId?: Maybe<Scalars["Float"]["output"]>;
   imageFileId?: Maybe<Scalars["Float"]["output"]>;
   teacherId?: Maybe<Scalars["Float"]["output"]>;
+  usosId?: Maybe<Scalars["Float"]["output"]>;
   weekdayId?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -5088,6 +5698,7 @@ export type GroupsVarianceOrderBy = {
   groupsId?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   teacherId?: InputMaybe<OrderBy>;
+  usosId?: InputMaybe<OrderBy>;
   weekdayId?: InputMaybe<OrderBy>;
 };
 
@@ -5095,14 +5706,16 @@ export type GroupsVarianceOrderBy = {
 export type HallOfFame = {
   __typename?: "HallOfFame";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  generatedName?: Maybe<Scalars["String"]["output"]>;
   groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
-  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
+  levelImageId?: Maybe<Scalars["bigint"]["output"]>;
   levelName?: Maybe<Scalars["String"]["output"]>;
   nick?: Maybe<Scalars["String"]["output"]>;
-  sumOfPoints?: Maybe<Scalars["float8"]["output"]>;
+  sumOfPoints?: Maybe<Scalars["numeric"]["output"]>;
   userId?: Maybe<Scalars["bigint"]["output"]>;
+  userImageId?: Maybe<Scalars["bigint"]["output"]>;
 };
 
 /** aggregated selection of "hall_of_fame" */
@@ -5139,10 +5752,11 @@ export type HallOfFameAvgFields = {
   __typename?: "HallOfFameAvgFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
   groupsId?: Maybe<Scalars["Float"]["output"]>;
-  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
+  levelImageId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
+  userImageId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** Boolean expression to filter rows from the table "hall_of_fame". All fields are combined with a logical 'AND'. */
@@ -5151,55 +5765,63 @@ export type HallOfFameBoolExp = {
   _not?: InputMaybe<HallOfFameBoolExp>;
   _or?: InputMaybe<Array<HallOfFameBoolExp>>;
   editionId?: InputMaybe<BigintComparisonExp>;
+  generatedName?: InputMaybe<StringComparisonExp>;
   groupName?: InputMaybe<StringComparisonExp>;
   groupsId?: InputMaybe<BigintComparisonExp>;
-  imageFileId?: InputMaybe<BigintComparisonExp>;
   levelId?: InputMaybe<BigintComparisonExp>;
+  levelImageId?: InputMaybe<BigintComparisonExp>;
   levelName?: InputMaybe<StringComparisonExp>;
   nick?: InputMaybe<StringComparisonExp>;
-  sumOfPoints?: InputMaybe<Float8ComparisonExp>;
+  sumOfPoints?: InputMaybe<NumericComparisonExp>;
   userId?: InputMaybe<BigintComparisonExp>;
+  userImageId?: InputMaybe<BigintComparisonExp>;
 };
 
 /** aggregate max on columns */
 export type HallOfFameMaxFields = {
   __typename?: "HallOfFameMaxFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  generatedName?: Maybe<Scalars["String"]["output"]>;
   groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
-  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
+  levelImageId?: Maybe<Scalars["bigint"]["output"]>;
   levelName?: Maybe<Scalars["String"]["output"]>;
   nick?: Maybe<Scalars["String"]["output"]>;
-  sumOfPoints?: Maybe<Scalars["float8"]["output"]>;
+  sumOfPoints?: Maybe<Scalars["numeric"]["output"]>;
   userId?: Maybe<Scalars["bigint"]["output"]>;
+  userImageId?: Maybe<Scalars["bigint"]["output"]>;
 };
 
 /** aggregate min on columns */
 export type HallOfFameMinFields = {
   __typename?: "HallOfFameMinFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
+  generatedName?: Maybe<Scalars["String"]["output"]>;
   groupName?: Maybe<Scalars["String"]["output"]>;
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
-  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
+  levelImageId?: Maybe<Scalars["bigint"]["output"]>;
   levelName?: Maybe<Scalars["String"]["output"]>;
   nick?: Maybe<Scalars["String"]["output"]>;
-  sumOfPoints?: Maybe<Scalars["float8"]["output"]>;
+  sumOfPoints?: Maybe<Scalars["numeric"]["output"]>;
   userId?: Maybe<Scalars["bigint"]["output"]>;
+  userImageId?: Maybe<Scalars["bigint"]["output"]>;
 };
 
 /** Ordering options when selecting data from "hall_of_fame". */
 export type HallOfFameOrderBy = {
   editionId?: InputMaybe<OrderBy>;
+  generatedName?: InputMaybe<OrderBy>;
   groupName?: InputMaybe<OrderBy>;
   groupsId?: InputMaybe<OrderBy>;
-  imageFileId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
+  levelImageId?: InputMaybe<OrderBy>;
   levelName?: InputMaybe<OrderBy>;
   nick?: InputMaybe<OrderBy>;
   sumOfPoints?: InputMaybe<OrderBy>;
   userId?: InputMaybe<OrderBy>;
+  userImageId?: InputMaybe<OrderBy>;
 };
 
 /** select columns of table "hall_of_fame" */
@@ -5207,13 +5829,15 @@ export enum HallOfFameSelectColumn {
   /** column name */
   EditionId = "editionId",
   /** column name */
+  GeneratedName = "generatedName",
+  /** column name */
   GroupName = "groupName",
   /** column name */
   GroupsId = "groupsId",
   /** column name */
-  ImageFileId = "imageFileId",
-  /** column name */
   LevelId = "levelId",
+  /** column name */
+  LevelImageId = "levelImageId",
   /** column name */
   LevelName = "levelName",
   /** column name */
@@ -5222,6 +5846,8 @@ export enum HallOfFameSelectColumn {
   SumOfPoints = "sumOfPoints",
   /** column name */
   UserId = "userId",
+  /** column name */
+  UserImageId = "userImageId",
 }
 
 /** aggregate stddev on columns */
@@ -5229,10 +5855,11 @@ export type HallOfFameStddevFields = {
   __typename?: "HallOfFameStddevFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
   groupsId?: Maybe<Scalars["Float"]["output"]>;
-  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
+  levelImageId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
+  userImageId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** aggregate stddevPop on columns */
@@ -5240,10 +5867,11 @@ export type HallOfFameStddevPopFields = {
   __typename?: "HallOfFameStddevPopFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
   groupsId?: Maybe<Scalars["Float"]["output"]>;
-  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
+  levelImageId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
+  userImageId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** aggregate stddevSamp on columns */
@@ -5251,10 +5879,11 @@ export type HallOfFameStddevSampFields = {
   __typename?: "HallOfFameStddevSampFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
   groupsId?: Maybe<Scalars["Float"]["output"]>;
-  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
+  levelImageId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
+  userImageId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** Streaming cursor of the table "hall_of_fame" */
@@ -5268,14 +5897,16 @@ export type HallOfFameStreamCursorInput = {
 /** Initial value of the column from where the streaming should start */
 export type HallOfFameStreamCursorValueInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
+  generatedName?: InputMaybe<Scalars["String"]["input"]>;
   groupName?: InputMaybe<Scalars["String"]["input"]>;
   groupsId?: InputMaybe<Scalars["bigint"]["input"]>;
-  imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   levelId?: InputMaybe<Scalars["bigint"]["input"]>;
+  levelImageId?: InputMaybe<Scalars["bigint"]["input"]>;
   levelName?: InputMaybe<Scalars["String"]["input"]>;
   nick?: InputMaybe<Scalars["String"]["input"]>;
-  sumOfPoints?: InputMaybe<Scalars["float8"]["input"]>;
+  sumOfPoints?: InputMaybe<Scalars["numeric"]["input"]>;
   userId?: InputMaybe<Scalars["bigint"]["input"]>;
+  userImageId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
 
 /** aggregate sum on columns */
@@ -5283,10 +5914,11 @@ export type HallOfFameSumFields = {
   __typename?: "HallOfFameSumFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
   groupsId?: Maybe<Scalars["bigint"]["output"]>;
-  imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
-  sumOfPoints?: Maybe<Scalars["float8"]["output"]>;
+  levelImageId?: Maybe<Scalars["bigint"]["output"]>;
+  sumOfPoints?: Maybe<Scalars["numeric"]["output"]>;
   userId?: Maybe<Scalars["bigint"]["output"]>;
+  userImageId?: Maybe<Scalars["bigint"]["output"]>;
 };
 
 /** aggregate varPop on columns */
@@ -5294,10 +5926,11 @@ export type HallOfFameVarPopFields = {
   __typename?: "HallOfFameVarPopFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
   groupsId?: Maybe<Scalars["Float"]["output"]>;
-  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
+  levelImageId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
+  userImageId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** aggregate varSamp on columns */
@@ -5305,10 +5938,11 @@ export type HallOfFameVarSampFields = {
   __typename?: "HallOfFameVarSampFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
   groupsId?: Maybe<Scalars["Float"]["output"]>;
-  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
+  levelImageId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
+  userImageId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** aggregate variance on columns */
@@ -5316,10 +5950,11 @@ export type HallOfFameVarianceFields = {
   __typename?: "HallOfFameVarianceFields";
   editionId?: Maybe<Scalars["Float"]["output"]>;
   groupsId?: Maybe<Scalars["Float"]["output"]>;
-  imageFileId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
+  levelImageId?: Maybe<Scalars["Float"]["output"]>;
   sumOfPoints?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
+  userImageId?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
@@ -5338,14 +5973,14 @@ export type IntComparisonExp = {
 export type LevelType = {
   __typename?: "LevelType";
   edition: EditionType;
-  grade: Scalars["Float"]["output"];
+  grade: Scalars["String"]["output"];
   highest: Scalars["Boolean"]["output"];
   imageFile?: Maybe<FileType>;
   label: Scalars["String"]["output"];
   levelId: Scalars["ID"]["output"];
   levelName: Scalars["String"]["output"];
-  maximumPoints: Scalars["Float"]["output"];
-  minimumPoints: Scalars["Float"]["output"];
+  maximumPoints: Scalars["String"]["output"];
+  minimumPoints: Scalars["String"]["output"];
   ordinalNumber: Scalars["Int"]["output"];
   userLevels?: Maybe<Array<Maybe<UserLevelType>>>;
 };
@@ -5358,19 +5993,41 @@ export type Levels = {
   editionId: Scalars["bigint"]["output"];
   /** An object relationship */
   file?: Maybe<Files>;
-  grade: Scalars["float8"]["output"];
+  grade: Scalars["numeric"]["output"];
+  /** An array relationship */
+  gradingChecks: Array<GradingChecks>;
+  /** An aggregate relationship */
+  gradingChecksAggregate: GradingChecksAggregate;
   highest: Scalars["Boolean"]["output"];
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label: Scalars["String"]["output"];
   levelId: Scalars["bigint"]["output"];
-  maximumPoints: Scalars["float8"]["output"];
-  minimumPoints: Scalars["float8"]["output"];
+  maximumPoints: Scalars["numeric"]["output"];
+  minimumPoints: Scalars["numeric"]["output"];
   name: Scalars["String"]["output"];
   ordinalNumber: Scalars["Int"]["output"];
   /** An array relationship */
   userLevels: Array<UserLevel>;
   /** An aggregate relationship */
   userLevelsAggregate: UserLevelAggregate;
+};
+
+/** columns and relationships of "levels" */
+export type LevelsGradingChecksArgs = {
+  distinctOn?: InputMaybe<Array<GradingChecksSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<GradingChecksOrderBy>>;
+  where?: InputMaybe<GradingChecksBoolExp>;
+};
+
+/** columns and relationships of "levels" */
+export type LevelsGradingChecksAggregateArgs = {
+  distinctOn?: InputMaybe<Array<GradingChecksSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<GradingChecksOrderBy>>;
+  where?: InputMaybe<GradingChecksBoolExp>;
 };
 
 /** columns and relationships of "levels" */
@@ -5399,17 +6056,9 @@ export type LevelsAggregate = {
 };
 
 export type LevelsAggregateBoolExp = {
-  avg?: InputMaybe<LevelsAggregateBoolExpAvg>;
   bool_and?: InputMaybe<LevelsAggregateBoolExpBool_And>;
   bool_or?: InputMaybe<LevelsAggregateBoolExpBool_Or>;
-  corr?: InputMaybe<LevelsAggregateBoolExpCorr>;
   count?: InputMaybe<LevelsAggregateBoolExpCount>;
-  covar_samp?: InputMaybe<LevelsAggregateBoolExpCovar_Samp>;
-  max?: InputMaybe<LevelsAggregateBoolExpMax>;
-  min?: InputMaybe<LevelsAggregateBoolExpMin>;
-  stddev_samp?: InputMaybe<LevelsAggregateBoolExpStddev_Samp>;
-  sum?: InputMaybe<LevelsAggregateBoolExpSum>;
-  var_samp?: InputMaybe<LevelsAggregateBoolExpVar_Samp>;
 };
 
 /** aggregate fields of "levels" */
@@ -5487,13 +6136,15 @@ export type LevelsBoolExp = {
   edition?: InputMaybe<EditionBoolExp>;
   editionId?: InputMaybe<BigintComparisonExp>;
   file?: InputMaybe<FilesBoolExp>;
-  grade?: InputMaybe<Float8ComparisonExp>;
+  grade?: InputMaybe<NumericComparisonExp>;
+  gradingChecks?: InputMaybe<GradingChecksBoolExp>;
+  gradingChecksAggregate?: InputMaybe<GradingChecksAggregateBoolExp>;
   highest?: InputMaybe<BooleanComparisonExp>;
   imageFileId?: InputMaybe<BigintComparisonExp>;
   label?: InputMaybe<StringComparisonExp>;
   levelId?: InputMaybe<BigintComparisonExp>;
-  maximumPoints?: InputMaybe<Float8ComparisonExp>;
-  minimumPoints?: InputMaybe<Float8ComparisonExp>;
+  maximumPoints?: InputMaybe<NumericComparisonExp>;
+  minimumPoints?: InputMaybe<NumericComparisonExp>;
   name?: InputMaybe<StringComparisonExp>;
   ordinalNumber?: InputMaybe<IntComparisonExp>;
   userLevels?: InputMaybe<UserLevelBoolExp>;
@@ -5509,11 +6160,11 @@ export enum LevelsConstraint {
 /** input type for incrementing numeric columns in table "levels" */
 export type LevelsIncInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
-  grade?: InputMaybe<Scalars["float8"]["input"]>;
+  grade?: InputMaybe<Scalars["numeric"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   levelId?: InputMaybe<Scalars["bigint"]["input"]>;
-  maximumPoints?: InputMaybe<Scalars["float8"]["input"]>;
-  minimumPoints?: InputMaybe<Scalars["float8"]["input"]>;
+  maximumPoints?: InputMaybe<Scalars["numeric"]["input"]>;
+  minimumPoints?: InputMaybe<Scalars["numeric"]["input"]>;
   ordinalNumber?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -5522,13 +6173,14 @@ export type LevelsInsertInput = {
   edition?: InputMaybe<EditionObjRelInsertInput>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   file?: InputMaybe<FilesObjRelInsertInput>;
-  grade?: InputMaybe<Scalars["float8"]["input"]>;
+  grade?: InputMaybe<Scalars["numeric"]["input"]>;
+  gradingChecks?: InputMaybe<GradingChecksArrRelInsertInput>;
   highest?: InputMaybe<Scalars["Boolean"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   levelId?: InputMaybe<Scalars["bigint"]["input"]>;
-  maximumPoints?: InputMaybe<Scalars["float8"]["input"]>;
-  minimumPoints?: InputMaybe<Scalars["float8"]["input"]>;
+  maximumPoints?: InputMaybe<Scalars["numeric"]["input"]>;
+  minimumPoints?: InputMaybe<Scalars["numeric"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   ordinalNumber?: InputMaybe<Scalars["Int"]["input"]>;
   userLevels?: InputMaybe<UserLevelArrRelInsertInput>;
@@ -5538,12 +6190,12 @@ export type LevelsInsertInput = {
 export type LevelsMaxFields = {
   __typename?: "LevelsMaxFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
-  grade?: Maybe<Scalars["float8"]["output"]>;
+  grade?: Maybe<Scalars["numeric"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
-  maximumPoints?: Maybe<Scalars["float8"]["output"]>;
-  minimumPoints?: Maybe<Scalars["float8"]["output"]>;
+  maximumPoints?: Maybe<Scalars["numeric"]["output"]>;
+  minimumPoints?: Maybe<Scalars["numeric"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
   ordinalNumber?: Maybe<Scalars["Int"]["output"]>;
 };
@@ -5565,12 +6217,12 @@ export type LevelsMaxOrderBy = {
 export type LevelsMinFields = {
   __typename?: "LevelsMinFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
-  grade?: Maybe<Scalars["float8"]["output"]>;
+  grade?: Maybe<Scalars["numeric"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
-  maximumPoints?: Maybe<Scalars["float8"]["output"]>;
-  minimumPoints?: Maybe<Scalars["float8"]["output"]>;
+  maximumPoints?: Maybe<Scalars["numeric"]["output"]>;
+  minimumPoints?: Maybe<Scalars["numeric"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
   ordinalNumber?: Maybe<Scalars["Int"]["output"]>;
 };
@@ -5617,6 +6269,7 @@ export type LevelsOrderBy = {
   editionId?: InputMaybe<OrderBy>;
   file?: InputMaybe<FilesOrderBy>;
   grade?: InputMaybe<OrderBy>;
+  gradingChecksAggregate?: InputMaybe<GradingChecksAggregateOrderBy>;
   highest?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
@@ -5657,16 +6310,6 @@ export enum LevelsSelectColumn {
   OrdinalNumber = "ordinalNumber",
 }
 
-/** select "levelsAggregateBoolExpAvgArgumentsColumns" columns of table "levels" */
-export enum LevelsSelectColumnLevelsAggregateBoolExpAvgArgumentsColumns {
-  /** column name */
-  Grade = "grade",
-  /** column name */
-  MaximumPoints = "maximumPoints",
-  /** column name */
-  MinimumPoints = "minimumPoints",
-}
-
 /** select "levelsAggregateBoolExpBool_andArgumentsColumns" columns of table "levels" */
 export enum LevelsSelectColumnLevelsAggregateBoolExpBool_AndArgumentsColumns {
   /** column name */
@@ -5679,86 +6322,16 @@ export enum LevelsSelectColumnLevelsAggregateBoolExpBool_OrArgumentsColumns {
   Highest = "highest",
 }
 
-/** select "levelsAggregateBoolExpCorrArgumentsColumns" columns of table "levels" */
-export enum LevelsSelectColumnLevelsAggregateBoolExpCorrArgumentsColumns {
-  /** column name */
-  Grade = "grade",
-  /** column name */
-  MaximumPoints = "maximumPoints",
-  /** column name */
-  MinimumPoints = "minimumPoints",
-}
-
-/** select "levelsAggregateBoolExpCovar_sampArgumentsColumns" columns of table "levels" */
-export enum LevelsSelectColumnLevelsAggregateBoolExpCovar_SampArgumentsColumns {
-  /** column name */
-  Grade = "grade",
-  /** column name */
-  MaximumPoints = "maximumPoints",
-  /** column name */
-  MinimumPoints = "minimumPoints",
-}
-
-/** select "levelsAggregateBoolExpMaxArgumentsColumns" columns of table "levels" */
-export enum LevelsSelectColumnLevelsAggregateBoolExpMaxArgumentsColumns {
-  /** column name */
-  Grade = "grade",
-  /** column name */
-  MaximumPoints = "maximumPoints",
-  /** column name */
-  MinimumPoints = "minimumPoints",
-}
-
-/** select "levelsAggregateBoolExpMinArgumentsColumns" columns of table "levels" */
-export enum LevelsSelectColumnLevelsAggregateBoolExpMinArgumentsColumns {
-  /** column name */
-  Grade = "grade",
-  /** column name */
-  MaximumPoints = "maximumPoints",
-  /** column name */
-  MinimumPoints = "minimumPoints",
-}
-
-/** select "levelsAggregateBoolExpStddev_sampArgumentsColumns" columns of table "levels" */
-export enum LevelsSelectColumnLevelsAggregateBoolExpStddev_SampArgumentsColumns {
-  /** column name */
-  Grade = "grade",
-  /** column name */
-  MaximumPoints = "maximumPoints",
-  /** column name */
-  MinimumPoints = "minimumPoints",
-}
-
-/** select "levelsAggregateBoolExpSumArgumentsColumns" columns of table "levels" */
-export enum LevelsSelectColumnLevelsAggregateBoolExpSumArgumentsColumns {
-  /** column name */
-  Grade = "grade",
-  /** column name */
-  MaximumPoints = "maximumPoints",
-  /** column name */
-  MinimumPoints = "minimumPoints",
-}
-
-/** select "levelsAggregateBoolExpVar_sampArgumentsColumns" columns of table "levels" */
-export enum LevelsSelectColumnLevelsAggregateBoolExpVar_SampArgumentsColumns {
-  /** column name */
-  Grade = "grade",
-  /** column name */
-  MaximumPoints = "maximumPoints",
-  /** column name */
-  MinimumPoints = "minimumPoints",
-}
-
 /** input type for updating data in table "levels" */
 export type LevelsSetInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
-  grade?: InputMaybe<Scalars["float8"]["input"]>;
+  grade?: InputMaybe<Scalars["numeric"]["input"]>;
   highest?: InputMaybe<Scalars["Boolean"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   levelId?: InputMaybe<Scalars["bigint"]["input"]>;
-  maximumPoints?: InputMaybe<Scalars["float8"]["input"]>;
-  minimumPoints?: InputMaybe<Scalars["float8"]["input"]>;
+  maximumPoints?: InputMaybe<Scalars["numeric"]["input"]>;
+  minimumPoints?: InputMaybe<Scalars["numeric"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   ordinalNumber?: InputMaybe<Scalars["Int"]["input"]>;
 };
@@ -5843,13 +6416,13 @@ export type LevelsStreamCursorInput = {
 /** Initial value of the column from where the streaming should start */
 export type LevelsStreamCursorValueInput = {
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
-  grade?: InputMaybe<Scalars["float8"]["input"]>;
+  grade?: InputMaybe<Scalars["numeric"]["input"]>;
   highest?: InputMaybe<Scalars["Boolean"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   levelId?: InputMaybe<Scalars["bigint"]["input"]>;
-  maximumPoints?: InputMaybe<Scalars["float8"]["input"]>;
-  minimumPoints?: InputMaybe<Scalars["float8"]["input"]>;
+  maximumPoints?: InputMaybe<Scalars["numeric"]["input"]>;
+  minimumPoints?: InputMaybe<Scalars["numeric"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   ordinalNumber?: InputMaybe<Scalars["Int"]["input"]>;
 };
@@ -5858,11 +6431,11 @@ export type LevelsStreamCursorValueInput = {
 export type LevelsSumFields = {
   __typename?: "LevelsSumFields";
   editionId?: Maybe<Scalars["bigint"]["output"]>;
-  grade?: Maybe<Scalars["float8"]["output"]>;
+  grade?: Maybe<Scalars["numeric"]["output"]>;
   imageFileId?: Maybe<Scalars["bigint"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
-  maximumPoints?: Maybe<Scalars["float8"]["output"]>;
-  minimumPoints?: Maybe<Scalars["float8"]["output"]>;
+  maximumPoints?: Maybe<Scalars["numeric"]["output"]>;
+  minimumPoints?: Maybe<Scalars["numeric"]["output"]>;
   ordinalNumber?: Maybe<Scalars["Int"]["output"]>;
 };
 
@@ -5986,6 +6559,19 @@ export type NeighboringLevelsType = {
   prevLevel?: Maybe<LevelType>;
 };
 
+/** Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'. */
+export type NumericComparisonExp = {
+  _eq?: InputMaybe<Scalars["numeric"]["input"]>;
+  _gt?: InputMaybe<Scalars["numeric"]["input"]>;
+  _gte?: InputMaybe<Scalars["numeric"]["input"]>;
+  _in?: InputMaybe<Array<Scalars["numeric"]["input"]>>;
+  _isNull?: InputMaybe<Scalars["Boolean"]["input"]>;
+  _lt?: InputMaybe<Scalars["numeric"]["input"]>;
+  _lte?: InputMaybe<Scalars["numeric"]["input"]>;
+  _neq?: InputMaybe<Scalars["numeric"]["input"]>;
+  _nin?: InputMaybe<Array<Scalars["numeric"]["input"]>>;
+};
+
 /** column ordering options */
 export enum OrderBy {
   /** in ascending order, nulls last */
@@ -6018,7 +6604,7 @@ export type PointType = {
   teacher: UserType;
   updatedAt: Scalars["String"]["output"];
   updatedBy: UserType;
-  value: Scalars["Float"]["output"];
+  value: Scalars["String"]["output"];
 };
 
 /** columns and relationships of "points" */
@@ -6044,7 +6630,7 @@ export type Points = {
   userByTeacherId: Users;
   /** An object relationship */
   userByUpdatedBy: Users;
-  value: Scalars["float8"]["output"];
+  value: Scalars["numeric"]["output"];
 };
 
 /** columns and relationships of "points" */
@@ -6073,15 +6659,7 @@ export type PointsAggregate = {
 };
 
 export type PointsAggregateBoolExp = {
-  avg?: InputMaybe<PointsAggregateBoolExpAvg>;
-  corr?: InputMaybe<PointsAggregateBoolExpCorr>;
   count?: InputMaybe<PointsAggregateBoolExpCount>;
-  covar_samp?: InputMaybe<PointsAggregateBoolExpCovar_Samp>;
-  max?: InputMaybe<PointsAggregateBoolExpMax>;
-  min?: InputMaybe<PointsAggregateBoolExpMin>;
-  stddev_samp?: InputMaybe<PointsAggregateBoolExpStddev_Samp>;
-  sum?: InputMaybe<PointsAggregateBoolExpSum>;
-  var_samp?: InputMaybe<PointsAggregateBoolExpVar_Samp>;
 };
 
 /** aggregate fields of "points" */
@@ -6168,7 +6746,7 @@ export type PointsBoolExp = {
   user?: InputMaybe<UsersBoolExp>;
   userByTeacherId?: InputMaybe<UsersBoolExp>;
   userByUpdatedBy?: InputMaybe<UsersBoolExp>;
-  value?: InputMaybe<Float8ComparisonExp>;
+  value?: InputMaybe<NumericComparisonExp>;
 };
 
 /** unique or primary key constraints on table "points" */
@@ -6198,7 +6776,7 @@ export type PointsHistory = {
   user: Users;
   /** An object relationship */
   userByTeacherId: Users;
-  value: Scalars["float8"]["output"];
+  value: Scalars["Float"]["output"];
 };
 
 /** aggregated selection of "points_history" */
@@ -6209,15 +6787,7 @@ export type PointsHistoryAggregate = {
 };
 
 export type PointsHistoryAggregateBoolExp = {
-  avg?: InputMaybe<PointsHistoryAggregateBoolExpAvg>;
-  corr?: InputMaybe<PointsHistoryAggregateBoolExpCorr>;
   count?: InputMaybe<PointsHistoryAggregateBoolExpCount>;
-  covar_samp?: InputMaybe<PointsHistoryAggregateBoolExpCovar_Samp>;
-  max?: InputMaybe<PointsHistoryAggregateBoolExpMax>;
-  min?: InputMaybe<PointsHistoryAggregateBoolExpMin>;
-  stddev_samp?: InputMaybe<PointsHistoryAggregateBoolExpStddev_Samp>;
-  sum?: InputMaybe<PointsHistoryAggregateBoolExpSum>;
-  var_samp?: InputMaybe<PointsHistoryAggregateBoolExpVar_Samp>;
 };
 
 /** aggregate fields of "points_history" */
@@ -6306,7 +6876,7 @@ export type PointsHistoryBoolExp = {
   updatedBy?: InputMaybe<BigintComparisonExp>;
   user?: InputMaybe<UsersBoolExp>;
   userByTeacherId?: InputMaybe<UsersBoolExp>;
-  value?: InputMaybe<Float8ComparisonExp>;
+  value?: InputMaybe<FloatComparisonExp>;
 };
 
 /** unique or primary key constraints on table "points_history" */
@@ -6323,7 +6893,7 @@ export type PointsHistoryIncInput = {
   subcategoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
   updatedBy?: InputMaybe<Scalars["bigint"]["input"]>;
-  value?: InputMaybe<Scalars["float8"]["input"]>;
+  value?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
 /** input type for inserting data into table "points_history" */
@@ -6342,7 +6912,7 @@ export type PointsHistoryInsertInput = {
   updatedBy?: InputMaybe<Scalars["bigint"]["input"]>;
   user?: InputMaybe<UsersObjRelInsertInput>;
   userByTeacherId?: InputMaybe<UsersObjRelInsertInput>;
-  value?: InputMaybe<Scalars["float8"]["input"]>;
+  value?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
 /** aggregate max on columns */
@@ -6358,7 +6928,7 @@ export type PointsHistoryMaxFields = {
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
   updatedAt?: Maybe<Scalars["timestamp"]["output"]>;
   updatedBy?: Maybe<Scalars["bigint"]["output"]>;
-  value?: Maybe<Scalars["float8"]["output"]>;
+  value?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by max() on columns of table "points_history" */
@@ -6389,7 +6959,7 @@ export type PointsHistoryMinFields = {
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
   updatedAt?: Maybe<Scalars["timestamp"]["output"]>;
   updatedBy?: Maybe<Scalars["bigint"]["output"]>;
-  value?: Maybe<Scalars["float8"]["output"]>;
+  value?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by min() on columns of table "points_history" */
@@ -6473,54 +7043,6 @@ export enum PointsHistorySelectColumn {
   Value = "value",
 }
 
-/** select "pointsHistoryAggregateBoolExpAvgArgumentsColumns" columns of table "points_history" */
-export enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpAvgArgumentsColumns {
-  /** column name */
-  Value = "value",
-}
-
-/** select "pointsHistoryAggregateBoolExpCorrArgumentsColumns" columns of table "points_history" */
-export enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpCorrArgumentsColumns {
-  /** column name */
-  Value = "value",
-}
-
-/** select "pointsHistoryAggregateBoolExpCovar_sampArgumentsColumns" columns of table "points_history" */
-export enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpCovar_SampArgumentsColumns {
-  /** column name */
-  Value = "value",
-}
-
-/** select "pointsHistoryAggregateBoolExpMaxArgumentsColumns" columns of table "points_history" */
-export enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpMaxArgumentsColumns {
-  /** column name */
-  Value = "value",
-}
-
-/** select "pointsHistoryAggregateBoolExpMinArgumentsColumns" columns of table "points_history" */
-export enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpMinArgumentsColumns {
-  /** column name */
-  Value = "value",
-}
-
-/** select "pointsHistoryAggregateBoolExpStddev_sampArgumentsColumns" columns of table "points_history" */
-export enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpStddev_SampArgumentsColumns {
-  /** column name */
-  Value = "value",
-}
-
-/** select "pointsHistoryAggregateBoolExpSumArgumentsColumns" columns of table "points_history" */
-export enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpSumArgumentsColumns {
-  /** column name */
-  Value = "value",
-}
-
-/** select "pointsHistoryAggregateBoolExpVar_sampArgumentsColumns" columns of table "points_history" */
-export enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpVar_SampArgumentsColumns {
-  /** column name */
-  Value = "value",
-}
-
 /** input type for updating data in table "points_history" */
 export type PointsHistorySetInput = {
   copiedAt?: InputMaybe<Scalars["timestamp"]["input"]>;
@@ -6533,7 +7055,7 @@ export type PointsHistorySetInput = {
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
   updatedAt?: InputMaybe<Scalars["timestamp"]["input"]>;
   updatedBy?: InputMaybe<Scalars["bigint"]["input"]>;
-  value?: InputMaybe<Scalars["float8"]["input"]>;
+  value?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
 /** aggregate stddev on columns */
@@ -6625,7 +7147,7 @@ export type PointsHistoryStreamCursorValueInput = {
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
   updatedAt?: InputMaybe<Scalars["timestamp"]["input"]>;
   updatedBy?: InputMaybe<Scalars["bigint"]["input"]>;
-  value?: InputMaybe<Scalars["float8"]["input"]>;
+  value?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
 /** aggregate sum on columns */
@@ -6637,7 +7159,7 @@ export type PointsHistorySumFields = {
   subcategoryId?: Maybe<Scalars["bigint"]["output"]>;
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
   updatedBy?: Maybe<Scalars["bigint"]["output"]>;
-  value?: Maybe<Scalars["float8"]["output"]>;
+  value?: Maybe<Scalars["Float"]["output"]>;
 };
 
 /** order by sum() on columns of table "points_history" */
@@ -6762,7 +7284,7 @@ export type PointsIncInput = {
   subcategoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
   updatedBy?: InputMaybe<Scalars["bigint"]["input"]>;
-  value?: InputMaybe<Scalars["float8"]["input"]>;
+  value?: InputMaybe<Scalars["numeric"]["input"]>;
 };
 
 /** input type for inserting data into table "points" */
@@ -6780,7 +7302,7 @@ export type PointsInsertInput = {
   user?: InputMaybe<UsersObjRelInsertInput>;
   userByTeacherId?: InputMaybe<UsersObjRelInsertInput>;
   userByUpdatedBy?: InputMaybe<UsersObjRelInsertInput>;
-  value?: InputMaybe<Scalars["float8"]["input"]>;
+  value?: InputMaybe<Scalars["numeric"]["input"]>;
 };
 
 /** aggregate max on columns */
@@ -6794,7 +7316,7 @@ export type PointsMaxFields = {
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
   updatedAt?: Maybe<Scalars["timestamp"]["output"]>;
   updatedBy?: Maybe<Scalars["bigint"]["output"]>;
-  value?: Maybe<Scalars["float8"]["output"]>;
+  value?: Maybe<Scalars["numeric"]["output"]>;
 };
 
 /** order by max() on columns of table "points" */
@@ -6821,7 +7343,7 @@ export type PointsMinFields = {
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
   updatedAt?: Maybe<Scalars["timestamp"]["output"]>;
   updatedBy?: Maybe<Scalars["bigint"]["output"]>;
-  value?: Maybe<Scalars["float8"]["output"]>;
+  value?: Maybe<Scalars["numeric"]["output"]>;
 };
 
 /** order by min() on columns of table "points" */
@@ -6905,54 +7427,6 @@ export enum PointsSelectColumn {
   Value = "value",
 }
 
-/** select "pointsAggregateBoolExpAvgArgumentsColumns" columns of table "points" */
-export enum PointsSelectColumnPointsAggregateBoolExpAvgArgumentsColumns {
-  /** column name */
-  Value = "value",
-}
-
-/** select "pointsAggregateBoolExpCorrArgumentsColumns" columns of table "points" */
-export enum PointsSelectColumnPointsAggregateBoolExpCorrArgumentsColumns {
-  /** column name */
-  Value = "value",
-}
-
-/** select "pointsAggregateBoolExpCovar_sampArgumentsColumns" columns of table "points" */
-export enum PointsSelectColumnPointsAggregateBoolExpCovar_SampArgumentsColumns {
-  /** column name */
-  Value = "value",
-}
-
-/** select "pointsAggregateBoolExpMaxArgumentsColumns" columns of table "points" */
-export enum PointsSelectColumnPointsAggregateBoolExpMaxArgumentsColumns {
-  /** column name */
-  Value = "value",
-}
-
-/** select "pointsAggregateBoolExpMinArgumentsColumns" columns of table "points" */
-export enum PointsSelectColumnPointsAggregateBoolExpMinArgumentsColumns {
-  /** column name */
-  Value = "value",
-}
-
-/** select "pointsAggregateBoolExpStddev_sampArgumentsColumns" columns of table "points" */
-export enum PointsSelectColumnPointsAggregateBoolExpStddev_SampArgumentsColumns {
-  /** column name */
-  Value = "value",
-}
-
-/** select "pointsAggregateBoolExpSumArgumentsColumns" columns of table "points" */
-export enum PointsSelectColumnPointsAggregateBoolExpSumArgumentsColumns {
-  /** column name */
-  Value = "value",
-}
-
-/** select "pointsAggregateBoolExpVar_sampArgumentsColumns" columns of table "points" */
-export enum PointsSelectColumnPointsAggregateBoolExpVar_SampArgumentsColumns {
-  /** column name */
-  Value = "value",
-}
-
 /** input type for updating data in table "points" */
 export type PointsSetInput = {
   createdAt?: InputMaybe<Scalars["timestamp"]["input"]>;
@@ -6963,7 +7437,7 @@ export type PointsSetInput = {
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
   updatedAt?: InputMaybe<Scalars["timestamp"]["input"]>;
   updatedBy?: InputMaybe<Scalars["bigint"]["input"]>;
-  value?: InputMaybe<Scalars["float8"]["input"]>;
+  value?: InputMaybe<Scalars["numeric"]["input"]>;
 };
 
 /** aggregate stddev on columns */
@@ -7047,7 +7521,7 @@ export type PointsStreamCursorValueInput = {
   teacherId?: InputMaybe<Scalars["bigint"]["input"]>;
   updatedAt?: InputMaybe<Scalars["timestamp"]["input"]>;
   updatedBy?: InputMaybe<Scalars["bigint"]["input"]>;
-  value?: InputMaybe<Scalars["float8"]["input"]>;
+  value?: InputMaybe<Scalars["numeric"]["input"]>;
 };
 
 /** aggregate sum on columns */
@@ -7058,7 +7532,7 @@ export type PointsSumFields = {
   subcategoryId?: Maybe<Scalars["bigint"]["output"]>;
   teacherId?: Maybe<Scalars["bigint"]["output"]>;
   updatedBy?: Maybe<Scalars["bigint"]["output"]>;
-  value?: Maybe<Scalars["float8"]["output"]>;
+  value?: Maybe<Scalars["numeric"]["output"]>;
 };
 
 /** order by sum() on columns of table "points" */
@@ -7211,6 +7685,7 @@ export type StudentPointsType = {
   sumOfAll: Scalars["Float"]["output"];
   sumOfBonuses: Scalars["Float"]["output"];
   sumOfPurePoints: Scalars["Float"]["output"];
+  teacher: UserType;
   user: UserType;
 };
 
@@ -7228,7 +7703,7 @@ export type Subcategories = {
   edition: Edition;
   editionId: Scalars["bigint"]["output"];
   label: Scalars["String"]["output"];
-  maxPoints: Scalars["float8"]["output"];
+  maxPoints: Scalars["numeric"]["output"];
   ordinalNumber: Scalars["Int"]["output"];
   /** An array relationship */
   points: Array<Points>;
@@ -7304,15 +7779,7 @@ export type SubcategoriesAggregate = {
 };
 
 export type SubcategoriesAggregateBoolExp = {
-  avg?: InputMaybe<SubcategoriesAggregateBoolExpAvg>;
-  corr?: InputMaybe<SubcategoriesAggregateBoolExpCorr>;
   count?: InputMaybe<SubcategoriesAggregateBoolExpCount>;
-  covar_samp?: InputMaybe<SubcategoriesAggregateBoolExpCovar_Samp>;
-  max?: InputMaybe<SubcategoriesAggregateBoolExpMax>;
-  min?: InputMaybe<SubcategoriesAggregateBoolExpMin>;
-  stddev_samp?: InputMaybe<SubcategoriesAggregateBoolExpStddev_Samp>;
-  sum?: InputMaybe<SubcategoriesAggregateBoolExpSum>;
-  var_samp?: InputMaybe<SubcategoriesAggregateBoolExpVar_Samp>;
 };
 
 /** aggregate fields of "subcategories" */
@@ -7390,7 +7857,7 @@ export type SubcategoriesBoolExp = {
   edition?: InputMaybe<EditionBoolExp>;
   editionId?: InputMaybe<BigintComparisonExp>;
   label?: InputMaybe<StringComparisonExp>;
-  maxPoints?: InputMaybe<Float8ComparisonExp>;
+  maxPoints?: InputMaybe<NumericComparisonExp>;
   ordinalNumber?: InputMaybe<IntComparisonExp>;
   points?: InputMaybe<PointsBoolExp>;
   pointsAggregate?: InputMaybe<PointsAggregateBoolExp>;
@@ -7410,7 +7877,7 @@ export enum SubcategoriesConstraint {
 export type SubcategoriesIncInput = {
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
-  maxPoints?: InputMaybe<Scalars["float8"]["input"]>;
+  maxPoints?: InputMaybe<Scalars["numeric"]["input"]>;
   ordinalNumber?: InputMaybe<Scalars["Int"]["input"]>;
   subcategoryId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
@@ -7423,7 +7890,7 @@ export type SubcategoriesInsertInput = {
   edition?: InputMaybe<EditionObjRelInsertInput>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
-  maxPoints?: InputMaybe<Scalars["float8"]["input"]>;
+  maxPoints?: InputMaybe<Scalars["numeric"]["input"]>;
   ordinalNumber?: InputMaybe<Scalars["Int"]["input"]>;
   points?: InputMaybe<PointsArrRelInsertInput>;
   pointsHistories?: InputMaybe<PointsHistoryArrRelInsertInput>;
@@ -7437,7 +7904,7 @@ export type SubcategoriesMaxFields = {
   categoryId?: Maybe<Scalars["bigint"]["output"]>;
   editionId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
-  maxPoints?: Maybe<Scalars["float8"]["output"]>;
+  maxPoints?: Maybe<Scalars["numeric"]["output"]>;
   ordinalNumber?: Maybe<Scalars["Int"]["output"]>;
   subcategoryId?: Maybe<Scalars["bigint"]["output"]>;
   subcategoryName?: Maybe<Scalars["String"]["output"]>;
@@ -7460,7 +7927,7 @@ export type SubcategoriesMinFields = {
   categoryId?: Maybe<Scalars["bigint"]["output"]>;
   editionId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
-  maxPoints?: Maybe<Scalars["float8"]["output"]>;
+  maxPoints?: Maybe<Scalars["numeric"]["output"]>;
   ordinalNumber?: Maybe<Scalars["Int"]["output"]>;
   subcategoryId?: Maybe<Scalars["bigint"]["output"]>;
   subcategoryName?: Maybe<Scalars["String"]["output"]>;
@@ -7539,60 +8006,12 @@ export enum SubcategoriesSelectColumn {
   SubcategoryName = "subcategoryName",
 }
 
-/** select "subcategoriesAggregateBoolExpAvgArgumentsColumns" columns of table "subcategories" */
-export enum SubcategoriesSelectColumnSubcategoriesAggregateBoolExpAvgArgumentsColumns {
-  /** column name */
-  MaxPoints = "maxPoints",
-}
-
-/** select "subcategoriesAggregateBoolExpCorrArgumentsColumns" columns of table "subcategories" */
-export enum SubcategoriesSelectColumnSubcategoriesAggregateBoolExpCorrArgumentsColumns {
-  /** column name */
-  MaxPoints = "maxPoints",
-}
-
-/** select "subcategoriesAggregateBoolExpCovar_sampArgumentsColumns" columns of table "subcategories" */
-export enum SubcategoriesSelectColumnSubcategoriesAggregateBoolExpCovar_SampArgumentsColumns {
-  /** column name */
-  MaxPoints = "maxPoints",
-}
-
-/** select "subcategoriesAggregateBoolExpMaxArgumentsColumns" columns of table "subcategories" */
-export enum SubcategoriesSelectColumnSubcategoriesAggregateBoolExpMaxArgumentsColumns {
-  /** column name */
-  MaxPoints = "maxPoints",
-}
-
-/** select "subcategoriesAggregateBoolExpMinArgumentsColumns" columns of table "subcategories" */
-export enum SubcategoriesSelectColumnSubcategoriesAggregateBoolExpMinArgumentsColumns {
-  /** column name */
-  MaxPoints = "maxPoints",
-}
-
-/** select "subcategoriesAggregateBoolExpStddev_sampArgumentsColumns" columns of table "subcategories" */
-export enum SubcategoriesSelectColumnSubcategoriesAggregateBoolExpStddev_SampArgumentsColumns {
-  /** column name */
-  MaxPoints = "maxPoints",
-}
-
-/** select "subcategoriesAggregateBoolExpSumArgumentsColumns" columns of table "subcategories" */
-export enum SubcategoriesSelectColumnSubcategoriesAggregateBoolExpSumArgumentsColumns {
-  /** column name */
-  MaxPoints = "maxPoints",
-}
-
-/** select "subcategoriesAggregateBoolExpVar_sampArgumentsColumns" columns of table "subcategories" */
-export enum SubcategoriesSelectColumnSubcategoriesAggregateBoolExpVar_SampArgumentsColumns {
-  /** column name */
-  MaxPoints = "maxPoints",
-}
-
 /** input type for updating data in table "subcategories" */
 export type SubcategoriesSetInput = {
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
-  maxPoints?: InputMaybe<Scalars["float8"]["input"]>;
+  maxPoints?: InputMaybe<Scalars["numeric"]["input"]>;
   ordinalNumber?: InputMaybe<Scalars["Int"]["input"]>;
   subcategoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   subcategoryName?: InputMaybe<Scalars["String"]["input"]>;
@@ -7668,7 +8087,7 @@ export type SubcategoriesStreamCursorValueInput = {
   categoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
-  maxPoints?: InputMaybe<Scalars["float8"]["input"]>;
+  maxPoints?: InputMaybe<Scalars["numeric"]["input"]>;
   ordinalNumber?: InputMaybe<Scalars["Int"]["input"]>;
   subcategoryId?: InputMaybe<Scalars["bigint"]["input"]>;
   subcategoryName?: InputMaybe<Scalars["String"]["input"]>;
@@ -7679,7 +8098,7 @@ export type SubcategoriesSumFields = {
   __typename?: "SubcategoriesSumFields";
   categoryId?: Maybe<Scalars["bigint"]["output"]>;
   editionId?: Maybe<Scalars["bigint"]["output"]>;
-  maxPoints?: Maybe<Scalars["float8"]["output"]>;
+  maxPoints?: Maybe<Scalars["numeric"]["output"]>;
   ordinalNumber?: Maybe<Scalars["Int"]["output"]>;
   subcategoryId?: Maybe<Scalars["bigint"]["output"]>;
 };
@@ -7779,8 +8198,11 @@ export type SubcategoriesVarianceOrderBy = {
 
 export type SubcategoryPointsType = {
   __typename?: "SubcategoryPointsType";
+  createdAt: Scalars["String"]["output"];
   points: PurePointsType;
   subcategory: SubcategoryType;
+  teacher: UserType;
+  updatedAt: Scalars["String"]["output"];
 };
 
 export type SubcategoryType = {
@@ -7788,7 +8210,7 @@ export type SubcategoryType = {
   category: CategoryType;
   edition: EditionType;
   label: Scalars["String"]["output"];
-  maxPoints: Scalars["Float"]["output"];
+  maxPoints: Scalars["String"]["output"];
   ordinalNumber: Scalars["Int"]["output"];
   subcategoryId: Scalars["ID"]["output"];
   subcategoryName: Scalars["String"]["output"];
@@ -8138,13 +8560,16 @@ export type UserGroupsVarianceOrderBy = {
 /** columns and relationships of "user_level" */
 export type UserLevel = {
   __typename?: "UserLevel";
+  computedGrade: Scalars["float8"]["output"];
   /** An object relationship */
   edition: Edition;
   editionId: Scalars["bigint"]["output"];
+  endOfLabsLevelsReached: Scalars["Boolean"]["output"];
   label: Scalars["String"]["output"];
   /** An object relationship */
   level: Levels;
   levelId: Scalars["bigint"]["output"];
+  projectPointsThresholdReached: Scalars["Boolean"]["output"];
   /** An object relationship */
   user: Users;
   userId: Scalars["bigint"]["output"];
@@ -8159,7 +8584,17 @@ export type UserLevelAggregate = {
 };
 
 export type UserLevelAggregateBoolExp = {
+  avg?: InputMaybe<UserLevelAggregateBoolExpAvg>;
+  bool_and?: InputMaybe<UserLevelAggregateBoolExpBool_And>;
+  bool_or?: InputMaybe<UserLevelAggregateBoolExpBool_Or>;
+  corr?: InputMaybe<UserLevelAggregateBoolExpCorr>;
   count?: InputMaybe<UserLevelAggregateBoolExpCount>;
+  covar_samp?: InputMaybe<UserLevelAggregateBoolExpCovar_Samp>;
+  max?: InputMaybe<UserLevelAggregateBoolExpMax>;
+  min?: InputMaybe<UserLevelAggregateBoolExpMin>;
+  stddev_samp?: InputMaybe<UserLevelAggregateBoolExpStddev_Samp>;
+  sum?: InputMaybe<UserLevelAggregateBoolExpSum>;
+  var_samp?: InputMaybe<UserLevelAggregateBoolExpVar_Samp>;
 };
 
 /** aggregate fields of "user_level" */
@@ -8209,6 +8644,7 @@ export type UserLevelArrRelInsertInput = {
 /** aggregate avg on columns */
 export type UserLevelAvgFields = {
   __typename?: "UserLevelAvgFields";
+  computedGrade?: Maybe<Scalars["Float"]["output"]>;
   editionId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
@@ -8217,6 +8653,7 @@ export type UserLevelAvgFields = {
 
 /** order by avg() on columns of table "user_level" */
 export type UserLevelAvgOrderBy = {
+  computedGrade?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   userId?: InputMaybe<OrderBy>;
@@ -8228,11 +8665,14 @@ export type UserLevelBoolExp = {
   _and?: InputMaybe<Array<UserLevelBoolExp>>;
   _not?: InputMaybe<UserLevelBoolExp>;
   _or?: InputMaybe<Array<UserLevelBoolExp>>;
+  computedGrade?: InputMaybe<Float8ComparisonExp>;
   edition?: InputMaybe<EditionBoolExp>;
   editionId?: InputMaybe<BigintComparisonExp>;
+  endOfLabsLevelsReached?: InputMaybe<BooleanComparisonExp>;
   label?: InputMaybe<StringComparisonExp>;
   level?: InputMaybe<LevelsBoolExp>;
   levelId?: InputMaybe<BigintComparisonExp>;
+  projectPointsThresholdReached?: InputMaybe<BooleanComparisonExp>;
   user?: InputMaybe<UsersBoolExp>;
   userId?: InputMaybe<BigintComparisonExp>;
   userLevelId?: InputMaybe<BigintComparisonExp>;
@@ -8248,6 +8688,7 @@ export enum UserLevelConstraint {
 
 /** input type for incrementing numeric columns in table "user_level" */
 export type UserLevelIncInput = {
+  computedGrade?: InputMaybe<Scalars["float8"]["input"]>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
   levelId?: InputMaybe<Scalars["bigint"]["input"]>;
   userId?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -8256,11 +8697,14 @@ export type UserLevelIncInput = {
 
 /** input type for inserting data into table "user_level" */
 export type UserLevelInsertInput = {
+  computedGrade?: InputMaybe<Scalars["float8"]["input"]>;
   edition?: InputMaybe<EditionObjRelInsertInput>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
+  endOfLabsLevelsReached?: InputMaybe<Scalars["Boolean"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   level?: InputMaybe<LevelsObjRelInsertInput>;
   levelId?: InputMaybe<Scalars["bigint"]["input"]>;
+  projectPointsThresholdReached?: InputMaybe<Scalars["Boolean"]["input"]>;
   user?: InputMaybe<UsersObjRelInsertInput>;
   userId?: InputMaybe<Scalars["bigint"]["input"]>;
   userLevelId?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -8269,6 +8713,7 @@ export type UserLevelInsertInput = {
 /** aggregate max on columns */
 export type UserLevelMaxFields = {
   __typename?: "UserLevelMaxFields";
+  computedGrade?: Maybe<Scalars["float8"]["output"]>;
   editionId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
@@ -8278,6 +8723,7 @@ export type UserLevelMaxFields = {
 
 /** order by max() on columns of table "user_level" */
 export type UserLevelMaxOrderBy = {
+  computedGrade?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
@@ -8288,6 +8734,7 @@ export type UserLevelMaxOrderBy = {
 /** aggregate min on columns */
 export type UserLevelMinFields = {
   __typename?: "UserLevelMinFields";
+  computedGrade?: Maybe<Scalars["float8"]["output"]>;
   editionId?: Maybe<Scalars["bigint"]["output"]>;
   label?: Maybe<Scalars["String"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
@@ -8297,6 +8744,7 @@ export type UserLevelMinFields = {
 
 /** order by min() on columns of table "user_level" */
 export type UserLevelMinOrderBy = {
+  computedGrade?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
@@ -8322,11 +8770,14 @@ export type UserLevelOnConflict = {
 
 /** Ordering options when selecting data from "user_level". */
 export type UserLevelOrderBy = {
+  computedGrade?: InputMaybe<OrderBy>;
   edition?: InputMaybe<EditionOrderBy>;
   editionId?: InputMaybe<OrderBy>;
+  endOfLabsLevelsReached?: InputMaybe<OrderBy>;
   label?: InputMaybe<OrderBy>;
   level?: InputMaybe<LevelsOrderBy>;
   levelId?: InputMaybe<OrderBy>;
+  projectPointsThresholdReached?: InputMaybe<OrderBy>;
   user?: InputMaybe<UsersOrderBy>;
   userId?: InputMaybe<OrderBy>;
   userLevelId?: InputMaybe<OrderBy>;
@@ -8341,22 +8792,95 @@ export type UserLevelPkColumnsInput = {
 /** select columns of table "user_level" */
 export enum UserLevelSelectColumn {
   /** column name */
+  ComputedGrade = "computedGrade",
+  /** column name */
   EditionId = "editionId",
+  /** column name */
+  EndOfLabsLevelsReached = "endOfLabsLevelsReached",
   /** column name */
   Label = "label",
   /** column name */
   LevelId = "levelId",
+  /** column name */
+  ProjectPointsThresholdReached = "projectPointsThresholdReached",
   /** column name */
   UserId = "userId",
   /** column name */
   UserLevelId = "userLevelId",
 }
 
+/** select "userLevelAggregateBoolExpAvgArgumentsColumns" columns of table "user_level" */
+export enum UserLevelSelectColumnUserLevelAggregateBoolExpAvgArgumentsColumns {
+  /** column name */
+  ComputedGrade = "computedGrade",
+}
+
+/** select "userLevelAggregateBoolExpBool_andArgumentsColumns" columns of table "user_level" */
+export enum UserLevelSelectColumnUserLevelAggregateBoolExpBool_AndArgumentsColumns {
+  /** column name */
+  EndOfLabsLevelsReached = "endOfLabsLevelsReached",
+  /** column name */
+  ProjectPointsThresholdReached = "projectPointsThresholdReached",
+}
+
+/** select "userLevelAggregateBoolExpBool_orArgumentsColumns" columns of table "user_level" */
+export enum UserLevelSelectColumnUserLevelAggregateBoolExpBool_OrArgumentsColumns {
+  /** column name */
+  EndOfLabsLevelsReached = "endOfLabsLevelsReached",
+  /** column name */
+  ProjectPointsThresholdReached = "projectPointsThresholdReached",
+}
+
+/** select "userLevelAggregateBoolExpCorrArgumentsColumns" columns of table "user_level" */
+export enum UserLevelSelectColumnUserLevelAggregateBoolExpCorrArgumentsColumns {
+  /** column name */
+  ComputedGrade = "computedGrade",
+}
+
+/** select "userLevelAggregateBoolExpCovar_sampArgumentsColumns" columns of table "user_level" */
+export enum UserLevelSelectColumnUserLevelAggregateBoolExpCovar_SampArgumentsColumns {
+  /** column name */
+  ComputedGrade = "computedGrade",
+}
+
+/** select "userLevelAggregateBoolExpMaxArgumentsColumns" columns of table "user_level" */
+export enum UserLevelSelectColumnUserLevelAggregateBoolExpMaxArgumentsColumns {
+  /** column name */
+  ComputedGrade = "computedGrade",
+}
+
+/** select "userLevelAggregateBoolExpMinArgumentsColumns" columns of table "user_level" */
+export enum UserLevelSelectColumnUserLevelAggregateBoolExpMinArgumentsColumns {
+  /** column name */
+  ComputedGrade = "computedGrade",
+}
+
+/** select "userLevelAggregateBoolExpStddev_sampArgumentsColumns" columns of table "user_level" */
+export enum UserLevelSelectColumnUserLevelAggregateBoolExpStddev_SampArgumentsColumns {
+  /** column name */
+  ComputedGrade = "computedGrade",
+}
+
+/** select "userLevelAggregateBoolExpSumArgumentsColumns" columns of table "user_level" */
+export enum UserLevelSelectColumnUserLevelAggregateBoolExpSumArgumentsColumns {
+  /** column name */
+  ComputedGrade = "computedGrade",
+}
+
+/** select "userLevelAggregateBoolExpVar_sampArgumentsColumns" columns of table "user_level" */
+export enum UserLevelSelectColumnUserLevelAggregateBoolExpVar_SampArgumentsColumns {
+  /** column name */
+  ComputedGrade = "computedGrade",
+}
+
 /** input type for updating data in table "user_level" */
 export type UserLevelSetInput = {
+  computedGrade?: InputMaybe<Scalars["float8"]["input"]>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
+  endOfLabsLevelsReached?: InputMaybe<Scalars["Boolean"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   levelId?: InputMaybe<Scalars["bigint"]["input"]>;
+  projectPointsThresholdReached?: InputMaybe<Scalars["Boolean"]["input"]>;
   userId?: InputMaybe<Scalars["bigint"]["input"]>;
   userLevelId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
@@ -8364,6 +8888,7 @@ export type UserLevelSetInput = {
 /** aggregate stddev on columns */
 export type UserLevelStddevFields = {
   __typename?: "UserLevelStddevFields";
+  computedGrade?: Maybe<Scalars["Float"]["output"]>;
   editionId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
@@ -8372,6 +8897,7 @@ export type UserLevelStddevFields = {
 
 /** order by stddev() on columns of table "user_level" */
 export type UserLevelStddevOrderBy = {
+  computedGrade?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   userId?: InputMaybe<OrderBy>;
@@ -8381,6 +8907,7 @@ export type UserLevelStddevOrderBy = {
 /** aggregate stddevPop on columns */
 export type UserLevelStddevPopFields = {
   __typename?: "UserLevelStddevPopFields";
+  computedGrade?: Maybe<Scalars["Float"]["output"]>;
   editionId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
@@ -8389,6 +8916,7 @@ export type UserLevelStddevPopFields = {
 
 /** order by stddevPop() on columns of table "user_level" */
 export type UserLevelStddevPopOrderBy = {
+  computedGrade?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   userId?: InputMaybe<OrderBy>;
@@ -8398,6 +8926,7 @@ export type UserLevelStddevPopOrderBy = {
 /** aggregate stddevSamp on columns */
 export type UserLevelStddevSampFields = {
   __typename?: "UserLevelStddevSampFields";
+  computedGrade?: Maybe<Scalars["Float"]["output"]>;
   editionId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
@@ -8406,6 +8935,7 @@ export type UserLevelStddevSampFields = {
 
 /** order by stddevSamp() on columns of table "user_level" */
 export type UserLevelStddevSampOrderBy = {
+  computedGrade?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   userId?: InputMaybe<OrderBy>;
@@ -8422,9 +8952,12 @@ export type UserLevelStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type UserLevelStreamCursorValueInput = {
+  computedGrade?: InputMaybe<Scalars["float8"]["input"]>;
   editionId?: InputMaybe<Scalars["bigint"]["input"]>;
+  endOfLabsLevelsReached?: InputMaybe<Scalars["Boolean"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   levelId?: InputMaybe<Scalars["bigint"]["input"]>;
+  projectPointsThresholdReached?: InputMaybe<Scalars["Boolean"]["input"]>;
   userId?: InputMaybe<Scalars["bigint"]["input"]>;
   userLevelId?: InputMaybe<Scalars["bigint"]["input"]>;
 };
@@ -8432,6 +8965,7 @@ export type UserLevelStreamCursorValueInput = {
 /** aggregate sum on columns */
 export type UserLevelSumFields = {
   __typename?: "UserLevelSumFields";
+  computedGrade?: Maybe<Scalars["float8"]["output"]>;
   editionId?: Maybe<Scalars["bigint"]["output"]>;
   levelId?: Maybe<Scalars["bigint"]["output"]>;
   userId?: Maybe<Scalars["bigint"]["output"]>;
@@ -8440,6 +8974,7 @@ export type UserLevelSumFields = {
 
 /** order by sum() on columns of table "user_level" */
 export type UserLevelSumOrderBy = {
+  computedGrade?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   userId?: InputMaybe<OrderBy>;
@@ -8448,9 +8983,12 @@ export type UserLevelSumOrderBy = {
 
 export type UserLevelType = {
   __typename?: "UserLevelType";
+  computed_grade: Scalars["Float"]["output"];
   edition: EditionType;
+  end_of_labs_levels_reached: Scalars["Boolean"]["output"];
   label: Scalars["String"]["output"];
   level: LevelType;
+  project_points_threshold_reached: Scalars["Boolean"]["output"];
   user: UserType;
   userLevelId: Scalars["ID"]["output"];
 };
@@ -8458,11 +8996,17 @@ export type UserLevelType = {
 /** update columns of table "user_level" */
 export enum UserLevelUpdateColumn {
   /** column name */
+  ComputedGrade = "computedGrade",
+  /** column name */
   EditionId = "editionId",
+  /** column name */
+  EndOfLabsLevelsReached = "endOfLabsLevelsReached",
   /** column name */
   Label = "label",
   /** column name */
   LevelId = "levelId",
+  /** column name */
+  ProjectPointsThresholdReached = "projectPointsThresholdReached",
   /** column name */
   UserId = "userId",
   /** column name */
@@ -8481,6 +9025,7 @@ export type UserLevelUpdates = {
 /** aggregate varPop on columns */
 export type UserLevelVarPopFields = {
   __typename?: "UserLevelVarPopFields";
+  computedGrade?: Maybe<Scalars["Float"]["output"]>;
   editionId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
@@ -8489,6 +9034,7 @@ export type UserLevelVarPopFields = {
 
 /** order by varPop() on columns of table "user_level" */
 export type UserLevelVarPopOrderBy = {
+  computedGrade?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   userId?: InputMaybe<OrderBy>;
@@ -8498,6 +9044,7 @@ export type UserLevelVarPopOrderBy = {
 /** aggregate varSamp on columns */
 export type UserLevelVarSampFields = {
   __typename?: "UserLevelVarSampFields";
+  computedGrade?: Maybe<Scalars["Float"]["output"]>;
   editionId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
@@ -8506,6 +9053,7 @@ export type UserLevelVarSampFields = {
 
 /** order by varSamp() on columns of table "user_level" */
 export type UserLevelVarSampOrderBy = {
+  computedGrade?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   userId?: InputMaybe<OrderBy>;
@@ -8515,6 +9063,7 @@ export type UserLevelVarSampOrderBy = {
 /** aggregate variance on columns */
 export type UserLevelVarianceFields = {
   __typename?: "UserLevelVarianceFields";
+  computedGrade?: Maybe<Scalars["Float"]["output"]>;
   editionId?: Maybe<Scalars["Float"]["output"]>;
   levelId?: Maybe<Scalars["Float"]["output"]>;
   userId?: Maybe<Scalars["Float"]["output"]>;
@@ -8523,6 +9072,7 @@ export type UserLevelVarianceFields = {
 
 /** order by variance() on columns of table "user_level" */
 export type UserLevelVarianceOrderBy = {
+  computedGrade?: InputMaybe<OrderBy>;
   editionId?: InputMaybe<OrderBy>;
   levelId?: InputMaybe<OrderBy>;
   userId?: InputMaybe<OrderBy>;
@@ -8537,6 +9087,8 @@ export type UserPointsType = {
 
 export type UserType = {
   __typename?: "UserType";
+  email: Scalars["String"]["output"];
+  firebaseUid?: Maybe<Scalars["String"]["output"]>;
   firstName: Scalars["String"]["output"];
   imageFile?: Maybe<FileType>;
   indexNumber: Scalars["Int"]["output"];
@@ -8560,8 +9112,10 @@ export type Users = {
   chestHistoriesByTeacherId: Array<ChestHistory>;
   /** An aggregate relationship */
   chestHistoriesByTeacherIdAggregate: ChestHistoryAggregate;
+  email: Scalars["String"]["output"];
   /** An object relationship */
   file?: Maybe<Files>;
+  firebaseUid?: Maybe<Scalars["String"]["output"]>;
   firstName: Scalars["String"]["output"];
   /** A computed field, executes function "users_fullname" */
   fullName?: Maybe<Scalars["String"]["output"]>;
@@ -8865,7 +9419,9 @@ export type UsersBoolExp = {
   chestHistoriesAggregate?: InputMaybe<ChestHistoryAggregateBoolExp>;
   chestHistoriesByTeacherId?: InputMaybe<ChestHistoryBoolExp>;
   chestHistoriesByTeacherIdAggregate?: InputMaybe<ChestHistoryAggregateBoolExp>;
+  email?: InputMaybe<StringComparisonExp>;
   file?: InputMaybe<FilesBoolExp>;
+  firebaseUid?: InputMaybe<StringComparisonExp>;
   firstName?: InputMaybe<StringComparisonExp>;
   fullName?: InputMaybe<StringComparisonExp>;
   groups?: InputMaybe<GroupsBoolExp>;
@@ -8914,7 +9470,9 @@ export type UsersIncInput = {
 export type UsersInsertInput = {
   chestHistories?: InputMaybe<ChestHistoryArrRelInsertInput>;
   chestHistoriesByTeacherId?: InputMaybe<ChestHistoryArrRelInsertInput>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
   file?: InputMaybe<FilesObjRelInsertInput>;
+  firebaseUid?: InputMaybe<Scalars["String"]["input"]>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   groups?: InputMaybe<GroupsArrRelInsertInput>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
@@ -8936,6 +9494,8 @@ export type UsersInsertInput = {
 /** aggregate max on columns */
 export type UsersMaxFields = {
   __typename?: "UsersMaxFields";
+  email?: Maybe<Scalars["String"]["output"]>;
+  firebaseUid?: Maybe<Scalars["String"]["output"]>;
   firstName?: Maybe<Scalars["String"]["output"]>;
   /** A computed field, executes function "users_fullname" */
   fullName?: Maybe<Scalars["String"]["output"]>;
@@ -8950,6 +9510,8 @@ export type UsersMaxFields = {
 
 /** order by max() on columns of table "users" */
 export type UsersMaxOrderBy = {
+  email?: InputMaybe<OrderBy>;
+  firebaseUid?: InputMaybe<OrderBy>;
   firstName?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   indexNumber?: InputMaybe<OrderBy>;
@@ -8963,6 +9525,8 @@ export type UsersMaxOrderBy = {
 /** aggregate min on columns */
 export type UsersMinFields = {
   __typename?: "UsersMinFields";
+  email?: Maybe<Scalars["String"]["output"]>;
+  firebaseUid?: Maybe<Scalars["String"]["output"]>;
   firstName?: Maybe<Scalars["String"]["output"]>;
   /** A computed field, executes function "users_fullname" */
   fullName?: Maybe<Scalars["String"]["output"]>;
@@ -8977,6 +9541,8 @@ export type UsersMinFields = {
 
 /** order by min() on columns of table "users" */
 export type UsersMinOrderBy = {
+  email?: InputMaybe<OrderBy>;
+  firebaseUid?: InputMaybe<OrderBy>;
   firstName?: InputMaybe<OrderBy>;
   imageFileId?: InputMaybe<OrderBy>;
   indexNumber?: InputMaybe<OrderBy>;
@@ -9014,7 +9580,9 @@ export type UsersOnConflict = {
 export type UsersOrderBy = {
   chestHistoriesAggregate?: InputMaybe<ChestHistoryAggregateOrderBy>;
   chestHistoriesByTeacherIdAggregate?: InputMaybe<ChestHistoryAggregateOrderBy>;
+  email?: InputMaybe<OrderBy>;
   file?: InputMaybe<FilesOrderBy>;
+  firebaseUid?: InputMaybe<OrderBy>;
   firstName?: InputMaybe<OrderBy>;
   fullName?: InputMaybe<OrderBy>;
   groupsAggregate?: InputMaybe<GroupsAggregateOrderBy>;
@@ -9048,6 +9616,10 @@ export enum UsersRolesType {
 /** select columns of table "users" */
 export enum UsersSelectColumn {
   /** column name */
+  Email = "email",
+  /** column name */
+  FirebaseUid = "firebaseUid",
+  /** column name */
   FirstName = "firstName",
   /** column name */
   ImageFileId = "imageFileId",
@@ -9067,6 +9639,8 @@ export enum UsersSelectColumn {
 
 /** input type for updating data in table "users" */
 export type UsersSetInput = {
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  firebaseUid?: InputMaybe<Scalars["String"]["input"]>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   indexNumber?: InputMaybe<Scalars["Int"]["input"]>;
@@ -9132,6 +9706,8 @@ export type UsersStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type UsersStreamCursorValueInput = {
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  firebaseUid?: InputMaybe<Scalars["String"]["input"]>;
   firstName?: InputMaybe<Scalars["String"]["input"]>;
   imageFileId?: InputMaybe<Scalars["bigint"]["input"]>;
   indexNumber?: InputMaybe<Scalars["Int"]["input"]>;
@@ -9159,6 +9735,10 @@ export type UsersSumOrderBy = {
 
 /** update columns of table "users" */
 export enum UsersUpdateColumn {
+  /** column name */
+  Email = "email",
+  /** column name */
+  FirebaseUid = "firebaseUid",
   /** column name */
   FirstName = "firstName",
   /** column name */
@@ -9519,77 +10099,11 @@ export type _Service = {
   sdl: Scalars["String"]["output"];
 };
 
-export type AwardAggregateBoolExpAvg = {
-  arguments: AwardSelectColumnAwardAggregateBoolExpAvgArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<AwardBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type AwardAggregateBoolExpCorr = {
-  arguments: AwardAggregateBoolExpCorrArguments;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<AwardBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type AwardAggregateBoolExpCorrArguments = {
-  X: AwardSelectColumnAwardAggregateBoolExpCorrArgumentsColumns;
-  Y: AwardSelectColumnAwardAggregateBoolExpCorrArgumentsColumns;
-};
-
 export type AwardAggregateBoolExpCount = {
   arguments?: InputMaybe<Array<AwardSelectColumn>>;
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
   filter?: InputMaybe<AwardBoolExp>;
   predicate: IntComparisonExp;
-};
-
-export type AwardAggregateBoolExpCovar_Samp = {
-  arguments: AwardAggregateBoolExpCovar_SampArguments;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<AwardBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type AwardAggregateBoolExpCovar_SampArguments = {
-  X: AwardSelectColumnAwardAggregateBoolExpCovar_SampArgumentsColumns;
-  Y: AwardSelectColumnAwardAggregateBoolExpCovar_SampArgumentsColumns;
-};
-
-export type AwardAggregateBoolExpMax = {
-  arguments: AwardSelectColumnAwardAggregateBoolExpMaxArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<AwardBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type AwardAggregateBoolExpMin = {
-  arguments: AwardSelectColumnAwardAggregateBoolExpMinArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<AwardBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type AwardAggregateBoolExpStddev_Samp = {
-  arguments: AwardSelectColumnAwardAggregateBoolExpStddev_SampArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<AwardBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type AwardAggregateBoolExpSum = {
-  arguments: AwardSelectColumnAwardAggregateBoolExpSumArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<AwardBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type AwardAggregateBoolExpVar_Samp = {
-  arguments: AwardSelectColumnAwardAggregateBoolExpVar_SampArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<AwardBoolExp>;
-  predicate: Float8ComparisonExp;
 };
 
 export type AwardEditionAggregateBoolExpCount = {
@@ -9641,6 +10155,20 @@ export type ChestHistoryAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
+export type ChestsAggregateBoolExpBool_And = {
+  arguments: ChestsSelectColumnChestsAggregateBoolExpBool_AndArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<ChestsBoolExp>;
+  predicate: BooleanComparisonExp;
+};
+
+export type ChestsAggregateBoolExpBool_Or = {
+  arguments: ChestsSelectColumnChestsAggregateBoolExpBool_OrArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<ChestsBoolExp>;
+  predicate: BooleanComparisonExp;
+};
+
 export type ChestsAggregateBoolExpCount = {
   arguments?: InputMaybe<Array<ChestsSelectColumn>>;
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -9648,18 +10176,84 @@ export type ChestsAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
+export type GradingChecksAggregateBoolExpAvg = {
+  arguments: GradingChecksSelectColumnGradingChecksAggregateBoolExpAvgArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<GradingChecksBoolExp>;
+  predicate: Float8ComparisonExp;
+};
+
+export type GradingChecksAggregateBoolExpCorr = {
+  arguments: GradingChecksAggregateBoolExpCorrArguments;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<GradingChecksBoolExp>;
+  predicate: Float8ComparisonExp;
+};
+
+export type GradingChecksAggregateBoolExpCorrArguments = {
+  X: GradingChecksSelectColumnGradingChecksAggregateBoolExpCorrArgumentsColumns;
+  Y: GradingChecksSelectColumnGradingChecksAggregateBoolExpCorrArgumentsColumns;
+};
+
+export type GradingChecksAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<GradingChecksSelectColumn>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<GradingChecksBoolExp>;
+  predicate: IntComparisonExp;
+};
+
+export type GradingChecksAggregateBoolExpCovar_Samp = {
+  arguments: GradingChecksAggregateBoolExpCovar_SampArguments;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<GradingChecksBoolExp>;
+  predicate: Float8ComparisonExp;
+};
+
+export type GradingChecksAggregateBoolExpCovar_SampArguments = {
+  X: GradingChecksSelectColumnGradingChecksAggregateBoolExpCovar_SampArgumentsColumns;
+  Y: GradingChecksSelectColumnGradingChecksAggregateBoolExpCovar_SampArgumentsColumns;
+};
+
+export type GradingChecksAggregateBoolExpMax = {
+  arguments: GradingChecksSelectColumnGradingChecksAggregateBoolExpMaxArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<GradingChecksBoolExp>;
+  predicate: Float8ComparisonExp;
+};
+
+export type GradingChecksAggregateBoolExpMin = {
+  arguments: GradingChecksSelectColumnGradingChecksAggregateBoolExpMinArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<GradingChecksBoolExp>;
+  predicate: Float8ComparisonExp;
+};
+
+export type GradingChecksAggregateBoolExpStddev_Samp = {
+  arguments: GradingChecksSelectColumnGradingChecksAggregateBoolExpStddev_SampArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<GradingChecksBoolExp>;
+  predicate: Float8ComparisonExp;
+};
+
+export type GradingChecksAggregateBoolExpSum = {
+  arguments: GradingChecksSelectColumnGradingChecksAggregateBoolExpSumArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<GradingChecksBoolExp>;
+  predicate: Float8ComparisonExp;
+};
+
+export type GradingChecksAggregateBoolExpVar_Samp = {
+  arguments: GradingChecksSelectColumnGradingChecksAggregateBoolExpVar_SampArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<GradingChecksBoolExp>;
+  predicate: Float8ComparisonExp;
+};
+
 export type GroupsAggregateBoolExpCount = {
   arguments?: InputMaybe<Array<GroupsSelectColumn>>;
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
   filter?: InputMaybe<GroupsBoolExp>;
   predicate: IntComparisonExp;
-};
-
-export type LevelsAggregateBoolExpAvg = {
-  arguments: LevelsSelectColumnLevelsAggregateBoolExpAvgArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<LevelsBoolExp>;
-  predicate: Float8ComparisonExp;
 };
 
 export type LevelsAggregateBoolExpBool_And = {
@@ -9676,18 +10270,6 @@ export type LevelsAggregateBoolExpBool_Or = {
   predicate: BooleanComparisonExp;
 };
 
-export type LevelsAggregateBoolExpCorr = {
-  arguments: LevelsAggregateBoolExpCorrArguments;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<LevelsBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type LevelsAggregateBoolExpCorrArguments = {
-  X: LevelsSelectColumnLevelsAggregateBoolExpCorrArgumentsColumns;
-  Y: LevelsSelectColumnLevelsAggregateBoolExpCorrArgumentsColumns;
-};
-
 export type LevelsAggregateBoolExpCount = {
   arguments?: InputMaybe<Array<LevelsSelectColumn>>;
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -9695,57 +10277,11 @@ export type LevelsAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
-export type LevelsAggregateBoolExpCovar_Samp = {
-  arguments: LevelsAggregateBoolExpCovar_SampArguments;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<LevelsBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type LevelsAggregateBoolExpCovar_SampArguments = {
-  X: LevelsSelectColumnLevelsAggregateBoolExpCovar_SampArgumentsColumns;
-  Y: LevelsSelectColumnLevelsAggregateBoolExpCovar_SampArgumentsColumns;
-};
-
-export type LevelsAggregateBoolExpMax = {
-  arguments: LevelsSelectColumnLevelsAggregateBoolExpMaxArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<LevelsBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type LevelsAggregateBoolExpMin = {
-  arguments: LevelsSelectColumnLevelsAggregateBoolExpMinArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<LevelsBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type LevelsAggregateBoolExpStddev_Samp = {
-  arguments: LevelsSelectColumnLevelsAggregateBoolExpStddev_SampArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<LevelsBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type LevelsAggregateBoolExpSum = {
-  arguments: LevelsSelectColumnLevelsAggregateBoolExpSumArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<LevelsBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type LevelsAggregateBoolExpVar_Samp = {
-  arguments: LevelsSelectColumnLevelsAggregateBoolExpVar_SampArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<LevelsBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
 /** mutation root */
 export type Mutation_Root = {
   __typename?: "mutation_root";
   addAward?: Maybe<AwardType>;
+  addAwardToChest?: Maybe<ChestAwardType>;
   addAwardToEdition?: Maybe<AwardEditionType>;
   addBonusMutation?: Maybe<AddBonusReturnType>;
   addCategory?: Maybe<CategoryType>;
@@ -9753,16 +10289,20 @@ export type Mutation_Root = {
   addChest?: Maybe<ChestType>;
   addChestToUser?: Maybe<ChestHistoryType>;
   addEdition?: Maybe<EditionType>;
+  addGradingCheck?: Maybe<GradingChecksType>;
   addGroup?: Maybe<GroupType>;
   addLevel?: Maybe<LevelType>;
   addPointsMutation?: Maybe<PointType>;
   addSubcategory?: Maybe<SubcategoryType>;
   addUser?: Maybe<UserType>;
+  addUserToGroup?: Maybe<UserGroupType>;
+  addUsersFromCsv?: Maybe<Array<Maybe<UserType>>>;
   assignPhotoToAward?: Maybe<Scalars["Boolean"]["output"]>;
   assignPhotoToChest?: Maybe<Scalars["Boolean"]["output"]>;
   assignPhotoToLevel?: Maybe<Scalars["Boolean"]["output"]>;
   assignPhotoToUser?: Maybe<Scalars["Boolean"]["output"]>;
   assignPhotosToGroups?: Maybe<Scalars["Boolean"]["output"]>;
+  copyChest?: Maybe<ChestType>;
   /** delete data from the table: "award" */
   deleteAward?: Maybe<AwardMutationResponse>;
   /** delete single row from the table: "award" */
@@ -9807,6 +10347,10 @@ export type Mutation_Root = {
   deleteFlywaySchemaHistory?: Maybe<FlywaySchemaHistoryMutationResponse>;
   /** delete single row from the table: "flyway_schema_history" */
   deleteFlywaySchemaHistoryByPk?: Maybe<FlywaySchemaHistory>;
+  /** delete data from the table: "grading_checks" */
+  deleteGradingChecks?: Maybe<GradingChecksMutationResponse>;
+  /** delete single row from the table: "grading_checks" */
+  deleteGradingChecksByPk?: Maybe<GradingChecks>;
   /** delete data from the table: "groups" */
   deleteGroups?: Maybe<GroupsMutationResponse>;
   /** delete single row from the table: "groups" */
@@ -9843,6 +10387,17 @@ export type Mutation_Root = {
   deleteWeekdays?: Maybe<WeekdaysMutationResponse>;
   /** delete single row from the table: "weekdays" */
   deleteWeekdaysByPk?: Maybe<Weekdays>;
+  editAward?: Maybe<AwardType>;
+  editCategory?: Maybe<CategoryType>;
+  editChest?: Maybe<ChestType>;
+  editChestHistory?: Maybe<ChestHistoryType>;
+  editEdition?: Maybe<EditionType>;
+  editGradingCheck?: Maybe<GradingChecksType>;
+  editGroup?: Maybe<GroupType>;
+  editLevel?: Maybe<LevelType>;
+  editPoints?: Maybe<PointType>;
+  editSubcategory?: Maybe<SubcategoryType>;
+  editUser?: Maybe<UserType>;
   generateSubcategories?: Maybe<Array<Maybe<SubcategoryType>>>;
   /** insert data into the table: "award" */
   insertAward?: Maybe<AwardMutationResponse>;
@@ -9888,6 +10443,10 @@ export type Mutation_Root = {
   insertFlywaySchemaHistory?: Maybe<FlywaySchemaHistoryMutationResponse>;
   /** insert a single row into the table: "flyway_schema_history" */
   insertFlywaySchemaHistoryOne?: Maybe<FlywaySchemaHistory>;
+  /** insert data into the table: "grading_checks" */
+  insertGradingChecks?: Maybe<GradingChecksMutationResponse>;
+  /** insert a single row into the table: "grading_checks" */
+  insertGradingChecksOne?: Maybe<GradingChecks>;
   /** insert data into the table: "groups" */
   insertGroups?: Maybe<GroupsMutationResponse>;
   /** insert a single row into the table: "groups" */
@@ -9924,6 +10483,21 @@ export type Mutation_Root = {
   insertWeekdays?: Maybe<WeekdaysMutationResponse>;
   /** insert a single row into the table: "weekdays" */
   insertWeekdaysOne?: Maybe<Weekdays>;
+  removeAwardFromChest?: Maybe<Scalars["Boolean"]["output"]>;
+  removeAwardFromEdition?: Maybe<Scalars["Boolean"]["output"]>;
+  removeCategory?: Maybe<Scalars["Boolean"]["output"]>;
+  removeCategoryFromEdition?: Maybe<Scalars["Boolean"]["output"]>;
+  removeChest?: Maybe<Scalars["Boolean"]["output"]>;
+  removeChestFromUser?: Maybe<Scalars["Boolean"]["output"]>;
+  removeEdition?: Maybe<Scalars["Boolean"]["output"]>;
+  removeGradingCheck?: Maybe<Scalars["Boolean"]["output"]>;
+  removeGroup?: Maybe<Scalars["Boolean"]["output"]>;
+  removeLevel?: Maybe<Scalars["Boolean"]["output"]>;
+  removePoints?: Maybe<Scalars["Boolean"]["output"]>;
+  removeSubcategory?: Maybe<Scalars["Boolean"]["output"]>;
+  removeUser?: Maybe<Scalars["Boolean"]["output"]>;
+  removeUserFromGroup?: Maybe<Scalars["Boolean"]["output"]>;
+  resetPassword?: Maybe<Scalars["Boolean"]["output"]>;
   /** update data of the table: "award" */
   updateAward?: Maybe<AwardMutationResponse>;
   /** update single row of the table: "award" */
@@ -9994,6 +10568,12 @@ export type Mutation_Root = {
   updateFlywaySchemaHistoryMany?: Maybe<
     Array<Maybe<FlywaySchemaHistoryMutationResponse>>
   >;
+  /** update data of the table: "grading_checks" */
+  updateGradingChecks?: Maybe<GradingChecksMutationResponse>;
+  /** update single row of the table: "grading_checks" */
+  updateGradingChecksByPk?: Maybe<GradingChecks>;
+  /** update multiples rows of table: "grading_checks" */
+  updateGradingChecksMany?: Maybe<Array<Maybe<GradingChecksMutationResponse>>>;
   /** update data of the table: "groups" */
   updateGroups?: Maybe<GroupsMutationResponse>;
   /** update single row of the table: "groups" */
@@ -10056,8 +10636,15 @@ export type Mutation_RootAddAwardArgs = {
   awardType: Scalars["String"]["input"];
   awardValue: Scalars["Float"]["input"];
   categoryId: Scalars["Int"]["input"];
+  description: Scalars["String"]["input"];
   label?: InputMaybe<Scalars["String"]["input"]>;
   maxUsages?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** mutation root */
+export type Mutation_RootAddAwardToChestArgs = {
+  awardId: Scalars["Int"]["input"];
+  chestId: Scalars["Int"]["input"];
 };
 
 /** mutation root */
@@ -10077,7 +10664,9 @@ export type Mutation_RootAddBonusMutationArgs = {
 export type Mutation_RootAddCategoryArgs = {
   canAddPoints: Scalars["Boolean"]["input"];
   categoryName: Scalars["String"]["input"];
+  darkColor?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
+  lightColor?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 /** mutation root */
@@ -10109,13 +10698,24 @@ export type Mutation_RootAddEditionArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootAddGradingCheckArgs = {
+  checkDates?: InputMaybe<Scalars["Boolean"]["input"]>;
+  editionId: Scalars["Int"]["input"];
+  endOfLabsDate: Scalars["String"]["input"];
+  endOfLabsLevelsThreshold: Scalars["Int"]["input"];
+  projectId: Scalars["Int"]["input"];
+  projectPointsThreshold: Scalars["Float"]["input"];
+};
+
+/** mutation root */
 export type Mutation_RootAddGroupArgs = {
   editionId: Scalars["Int"]["input"];
   endTime: Scalars["String"]["input"];
-  groupName: Scalars["String"]["input"];
+  groupName?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   startTime: Scalars["String"]["input"];
   teacherId: Scalars["Int"]["input"];
+  usosId: Scalars["Int"]["input"];
   weekdayId: Scalars["Int"]["input"];
 };
 
@@ -10149,12 +10749,27 @@ export type Mutation_RootAddSubcategoryArgs = {
 
 /** mutation root */
 export type Mutation_RootAddUserArgs = {
+  createFirebaseUser?: InputMaybe<Scalars["Boolean"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
   firstName: Scalars["String"]["input"];
   indexNumber: Scalars["Int"]["input"];
   label?: InputMaybe<Scalars["String"]["input"]>;
   nick: Scalars["String"]["input"];
   role: Scalars["String"]["input"];
   secondName: Scalars["String"]["input"];
+  sendEmail?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** mutation root */
+export type Mutation_RootAddUserToGroupArgs = {
+  groupId: Scalars["Int"]["input"];
+  userId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootAddUsersFromCsvArgs = {
+  editionId: Scalars["Int"]["input"];
+  fileId: Scalars["Int"]["input"];
 };
 
 /** mutation root */
@@ -10183,6 +10798,12 @@ export type Mutation_RootAssignPhotoToUserArgs = {
 
 /** mutation root */
 export type Mutation_RootAssignPhotosToGroupsArgs = {
+  editionId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootCopyChestArgs = {
+  chestId: Scalars["Int"]["input"];
   editionId: Scalars["Int"]["input"];
 };
 
@@ -10299,6 +10920,16 @@ export type Mutation_RootDeleteFlywaySchemaHistoryByPkArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootDeleteGradingChecksArgs = {
+  where: GradingChecksBoolExp;
+};
+
+/** mutation root */
+export type Mutation_RootDeleteGradingChecksByPkArgs = {
+  gradingCheckId: Scalars["bigint"]["input"];
+};
+
+/** mutation root */
 export type Mutation_RootDeleteGroupsArgs = {
   where: GroupsBoolExp;
 };
@@ -10388,6 +11019,112 @@ export type Mutation_RootDeleteWeekdaysArgs = {
 /** mutation root */
 export type Mutation_RootDeleteWeekdaysByPkArgs = {
   weekdayId: Scalars["bigint"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootEditAwardArgs = {
+  awardId: Scalars["Int"]["input"];
+  awardName?: InputMaybe<Scalars["String"]["input"]>;
+  awardType?: InputMaybe<Scalars["String"]["input"]>;
+  awardValue?: InputMaybe<Scalars["Float"]["input"]>;
+  categoryId?: InputMaybe<Scalars["Int"]["input"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  label?: InputMaybe<Scalars["String"]["input"]>;
+  maxUsages?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** mutation root */
+export type Mutation_RootEditCategoryArgs = {
+  canAddPoints?: InputMaybe<Scalars["Boolean"]["input"]>;
+  categoryId: Scalars["Int"]["input"];
+  categoryName?: InputMaybe<Scalars["String"]["input"]>;
+  darkColor?: InputMaybe<Scalars["String"]["input"]>;
+  label?: InputMaybe<Scalars["String"]["input"]>;
+  lightColor?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** mutation root */
+export type Mutation_RootEditChestArgs = {
+  chestId: Scalars["Int"]["input"];
+  chestType?: InputMaybe<Scalars["String"]["input"]>;
+  editionId?: InputMaybe<Scalars["Int"]["input"]>;
+  label?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** mutation root */
+export type Mutation_RootEditChestHistoryArgs = {
+  chestHistoryId: Scalars["Int"]["input"];
+  chestId?: InputMaybe<Scalars["Int"]["input"]>;
+  label?: InputMaybe<Scalars["String"]["input"]>;
+  subcategoryId?: InputMaybe<Scalars["Int"]["input"]>;
+  teacherId?: InputMaybe<Scalars["Int"]["input"]>;
+  userId?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** mutation root */
+export type Mutation_RootEditEditionArgs = {
+  editionId: Scalars["Int"]["input"];
+  editionName?: InputMaybe<Scalars["String"]["input"]>;
+  editionYear?: InputMaybe<Scalars["Int"]["input"]>;
+  label?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** mutation root */
+export type Mutation_RootEditGradingCheckArgs = {
+  endOfLabsDate?: InputMaybe<Scalars["String"]["input"]>;
+  endOfLabsLevelsThreshold?: InputMaybe<Scalars["Int"]["input"]>;
+  gradingCheckId: Scalars["Int"]["input"];
+  projectId?: InputMaybe<Scalars["Int"]["input"]>;
+  projectPointsThreshold?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+/** mutation root */
+export type Mutation_RootEditGroupArgs = {
+  endTime?: InputMaybe<Scalars["String"]["input"]>;
+  groupId: Scalars["Int"]["input"];
+  groupName?: InputMaybe<Scalars["String"]["input"]>;
+  label?: InputMaybe<Scalars["String"]["input"]>;
+  startTime?: InputMaybe<Scalars["String"]["input"]>;
+  teacherId?: InputMaybe<Scalars["Int"]["input"]>;
+  usosId?: InputMaybe<Scalars["Int"]["input"]>;
+  weekdayId?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** mutation root */
+export type Mutation_RootEditLevelArgs = {
+  grade?: InputMaybe<Scalars["Float"]["input"]>;
+  imageFileId?: InputMaybe<Scalars["Int"]["input"]>;
+  label?: InputMaybe<Scalars["String"]["input"]>;
+  levelId: Scalars["Int"]["input"];
+  maximumPoints?: InputMaybe<Scalars["Float"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** mutation root */
+export type Mutation_RootEditPointsArgs = {
+  pointsId: Scalars["Int"]["input"];
+  updatedById: Scalars["Int"]["input"];
+  value?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+/** mutation root */
+export type Mutation_RootEditSubcategoryArgs = {
+  label?: InputMaybe<Scalars["String"]["input"]>;
+  maxPoints?: InputMaybe<Scalars["Float"]["input"]>;
+  ordinalNumber?: InputMaybe<Scalars["Int"]["input"]>;
+  subcategoryId: Scalars["Int"]["input"];
+  subcategoryName?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** mutation root */
+export type Mutation_RootEditUserArgs = {
+  firstName?: InputMaybe<Scalars["String"]["input"]>;
+  indexNumber?: InputMaybe<Scalars["Int"]["input"]>;
+  label?: InputMaybe<Scalars["String"]["input"]>;
+  nick?: InputMaybe<Scalars["String"]["input"]>;
+  role?: InputMaybe<Scalars["String"]["input"]>;
+  secondName?: InputMaybe<Scalars["String"]["input"]>;
+  userId: Scalars["Int"]["input"];
 };
 
 /** mutation root */
@@ -10532,6 +11269,18 @@ export type Mutation_RootInsertFlywaySchemaHistoryOneArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootInsertGradingChecksArgs = {
+  objects: Array<GradingChecksInsertInput>;
+  onConflict?: InputMaybe<GradingChecksOnConflict>;
+};
+
+/** mutation root */
+export type Mutation_RootInsertGradingChecksOneArgs = {
+  object: GradingChecksInsertInput;
+  onConflict?: InputMaybe<GradingChecksOnConflict>;
+};
+
+/** mutation root */
 export type Mutation_RootInsertGroupsArgs = {
   objects: Array<GroupsInsertInput>;
   onConflict?: InputMaybe<GroupsOnConflict>;
@@ -10637,6 +11386,85 @@ export type Mutation_RootInsertWeekdaysArgs = {
 export type Mutation_RootInsertWeekdaysOneArgs = {
   object: WeekdaysInsertInput;
   onConflict?: InputMaybe<WeekdaysOnConflict>;
+};
+
+/** mutation root */
+export type Mutation_RootRemoveAwardFromChestArgs = {
+  awardId: Scalars["Int"]["input"];
+  chestId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootRemoveAwardFromEditionArgs = {
+  awardId: Scalars["Int"]["input"];
+  editionId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootRemoveCategoryArgs = {
+  categoryId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootRemoveCategoryFromEditionArgs = {
+  categoryId: Scalars["Int"]["input"];
+  editionId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootRemoveChestArgs = {
+  chestId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootRemoveChestFromUserArgs = {
+  chestHistoryId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootRemoveEditionArgs = {
+  editionId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootRemoveGradingCheckArgs = {
+  gradingCheckId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootRemoveGroupArgs = {
+  groupId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootRemoveLevelArgs = {
+  levelId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootRemovePointsArgs = {
+  pointsId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootRemoveSubcategoryArgs = {
+  subcategoryId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootRemoveUserArgs = {
+  userId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootRemoveUserFromGroupArgs = {
+  groupId: Scalars["Int"]["input"];
+  userId: Scalars["Int"]["input"];
+};
+
+/** mutation root */
+export type Mutation_RootResetPasswordArgs = {
+  userId: Scalars["Int"]["input"];
 };
 
 /** mutation root */
@@ -10849,6 +11677,25 @@ export type Mutation_RootUpdateFlywaySchemaHistoryManyArgs = {
 };
 
 /** mutation root */
+export type Mutation_RootUpdateGradingChecksArgs = {
+  _inc?: InputMaybe<GradingChecksIncInput>;
+  _set?: InputMaybe<GradingChecksSetInput>;
+  where: GradingChecksBoolExp;
+};
+
+/** mutation root */
+export type Mutation_RootUpdateGradingChecksByPkArgs = {
+  _inc?: InputMaybe<GradingChecksIncInput>;
+  _set?: InputMaybe<GradingChecksSetInput>;
+  pkColumns: GradingChecksPkColumnsInput;
+};
+
+/** mutation root */
+export type Mutation_RootUpdateGradingChecksManyArgs = {
+  updates: Array<GradingChecksUpdates>;
+};
+
+/** mutation root */
 export type Mutation_RootUpdateGroupsArgs = {
   _inc?: InputMaybe<GroupsIncInput>;
   _set?: InputMaybe<GroupsSetInput>;
@@ -11019,25 +11866,6 @@ export type Mutation_RootUpdateWeekdaysManyArgs = {
   updates: Array<WeekdaysUpdates>;
 };
 
-export type PointsAggregateBoolExpAvg = {
-  arguments: PointsSelectColumnPointsAggregateBoolExpAvgArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<PointsBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type PointsAggregateBoolExpCorr = {
-  arguments: PointsAggregateBoolExpCorrArguments;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<PointsBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type PointsAggregateBoolExpCorrArguments = {
-  X: PointsSelectColumnPointsAggregateBoolExpCorrArgumentsColumns;
-  Y: PointsSelectColumnPointsAggregateBoolExpCorrArgumentsColumns;
-};
-
 export type PointsAggregateBoolExpCount = {
   arguments?: InputMaybe<Array<PointsSelectColumn>>;
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -11045,124 +11873,11 @@ export type PointsAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
-export type PointsAggregateBoolExpCovar_Samp = {
-  arguments: PointsAggregateBoolExpCovar_SampArguments;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<PointsBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type PointsAggregateBoolExpCovar_SampArguments = {
-  X: PointsSelectColumnPointsAggregateBoolExpCovar_SampArgumentsColumns;
-  Y: PointsSelectColumnPointsAggregateBoolExpCovar_SampArgumentsColumns;
-};
-
-export type PointsAggregateBoolExpMax = {
-  arguments: PointsSelectColumnPointsAggregateBoolExpMaxArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<PointsBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type PointsAggregateBoolExpMin = {
-  arguments: PointsSelectColumnPointsAggregateBoolExpMinArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<PointsBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type PointsAggregateBoolExpStddev_Samp = {
-  arguments: PointsSelectColumnPointsAggregateBoolExpStddev_SampArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<PointsBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type PointsAggregateBoolExpSum = {
-  arguments: PointsSelectColumnPointsAggregateBoolExpSumArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<PointsBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type PointsAggregateBoolExpVar_Samp = {
-  arguments: PointsSelectColumnPointsAggregateBoolExpVar_SampArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<PointsBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type PointsHistoryAggregateBoolExpAvg = {
-  arguments: PointsHistorySelectColumnPointsHistoryAggregateBoolExpAvgArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<PointsHistoryBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type PointsHistoryAggregateBoolExpCorr = {
-  arguments: PointsHistoryAggregateBoolExpCorrArguments;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<PointsHistoryBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type PointsHistoryAggregateBoolExpCorrArguments = {
-  X: PointsHistorySelectColumnPointsHistoryAggregateBoolExpCorrArgumentsColumns;
-  Y: PointsHistorySelectColumnPointsHistoryAggregateBoolExpCorrArgumentsColumns;
-};
-
 export type PointsHistoryAggregateBoolExpCount = {
   arguments?: InputMaybe<Array<PointsHistorySelectColumn>>;
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
   filter?: InputMaybe<PointsHistoryBoolExp>;
   predicate: IntComparisonExp;
-};
-
-export type PointsHistoryAggregateBoolExpCovar_Samp = {
-  arguments: PointsHistoryAggregateBoolExpCovar_SampArguments;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<PointsHistoryBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type PointsHistoryAggregateBoolExpCovar_SampArguments = {
-  X: PointsHistorySelectColumnPointsHistoryAggregateBoolExpCovar_SampArgumentsColumns;
-  Y: PointsHistorySelectColumnPointsHistoryAggregateBoolExpCovar_SampArgumentsColumns;
-};
-
-export type PointsHistoryAggregateBoolExpMax = {
-  arguments: PointsHistorySelectColumnPointsHistoryAggregateBoolExpMaxArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<PointsHistoryBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type PointsHistoryAggregateBoolExpMin = {
-  arguments: PointsHistorySelectColumnPointsHistoryAggregateBoolExpMinArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<PointsHistoryBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type PointsHistoryAggregateBoolExpStddev_Samp = {
-  arguments: PointsHistorySelectColumnPointsHistoryAggregateBoolExpStddev_SampArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<PointsHistoryBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type PointsHistoryAggregateBoolExpSum = {
-  arguments: PointsHistorySelectColumnPointsHistoryAggregateBoolExpSumArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<PointsHistoryBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type PointsHistoryAggregateBoolExpVar_Samp = {
-  arguments: PointsHistorySelectColumnPointsHistoryAggregateBoolExpVar_SampArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<PointsHistoryBoolExp>;
-  predicate: Float8ComparisonExp;
 };
 
 export type Query_Root = {
@@ -11234,6 +11949,8 @@ export type Query_Root = {
   flywaySchemaHistoryAggregate: FlywaySchemaHistoryAggregate;
   /** fetch data from the table: "flyway_schema_history" using primary key columns */
   flywaySchemaHistoryByPk?: Maybe<FlywaySchemaHistory>;
+  getCurrentUser?: Maybe<UserType>;
+  getGroupsInEdition: Array<GroupTeacherType>;
   getNeighboringLevels: NeighboringLevelsType;
   getPossibleGroupDates: Array<GroupDateType>;
   getPossibleGroupsTimeSpans: Array<TimeSpansType>;
@@ -11241,6 +11958,12 @@ export type Query_Root = {
   getStudentPoints: StudentPointsType;
   getSumOfPointsForStudentByCategory: Array<CategoryPointsSumType>;
   getUsersInGroupWithPoints: Array<Maybe<UserPointsType>>;
+  /** An array relationship */
+  gradingChecks: Array<GradingChecks>;
+  /** An aggregate relationship */
+  gradingChecksAggregate: GradingChecksAggregate;
+  /** fetch data from the table: "grading_checks" using primary key columns */
+  gradingChecksByPk?: Maybe<GradingChecks>;
   /** An array relationship */
   groups: Array<Groups>;
   /** An aggregate relationship */
@@ -11523,6 +12246,11 @@ export type Query_RootFlywaySchemaHistoryByPkArgs = {
   installedRank: Scalars["Int"]["input"];
 };
 
+export type Query_RootGetGroupsInEditionArgs = {
+  editionId: Scalars["Int"]["input"];
+  teacherId: Scalars["Int"]["input"];
+};
+
 export type Query_RootGetNeighboringLevelsArgs = {
   editionId: Scalars["Int"]["input"];
   studentId: Scalars["Int"]["input"];
@@ -11552,6 +12280,26 @@ export type Query_RootGetSumOfPointsForStudentByCategoryArgs = {
 
 export type Query_RootGetUsersInGroupWithPointsArgs = {
   groupId: Scalars["Int"]["input"];
+};
+
+export type Query_RootGradingChecksArgs = {
+  distinctOn?: InputMaybe<Array<GradingChecksSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<GradingChecksOrderBy>>;
+  where?: InputMaybe<GradingChecksBoolExp>;
+};
+
+export type Query_RootGradingChecksAggregateArgs = {
+  distinctOn?: InputMaybe<Array<GradingChecksSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<GradingChecksOrderBy>>;
+  where?: InputMaybe<GradingChecksBoolExp>;
+};
+
+export type Query_RootGradingChecksByPkArgs = {
+  gradingCheckId: Scalars["bigint"]["input"];
 };
 
 export type Query_RootGroupsArgs = {
@@ -11752,77 +12500,11 @@ export type Query_RootWeekdaysByPkArgs = {
   weekdayId: Scalars["bigint"]["input"];
 };
 
-export type SubcategoriesAggregateBoolExpAvg = {
-  arguments: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpAvgArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<SubcategoriesBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type SubcategoriesAggregateBoolExpCorr = {
-  arguments: SubcategoriesAggregateBoolExpCorrArguments;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<SubcategoriesBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type SubcategoriesAggregateBoolExpCorrArguments = {
-  X: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpCorrArgumentsColumns;
-  Y: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpCorrArgumentsColumns;
-};
-
 export type SubcategoriesAggregateBoolExpCount = {
   arguments?: InputMaybe<Array<SubcategoriesSelectColumn>>;
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
   filter?: InputMaybe<SubcategoriesBoolExp>;
   predicate: IntComparisonExp;
-};
-
-export type SubcategoriesAggregateBoolExpCovar_Samp = {
-  arguments: SubcategoriesAggregateBoolExpCovar_SampArguments;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<SubcategoriesBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type SubcategoriesAggregateBoolExpCovar_SampArguments = {
-  X: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpCovar_SampArgumentsColumns;
-  Y: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpCovar_SampArgumentsColumns;
-};
-
-export type SubcategoriesAggregateBoolExpMax = {
-  arguments: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpMaxArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<SubcategoriesBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type SubcategoriesAggregateBoolExpMin = {
-  arguments: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpMinArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<SubcategoriesBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type SubcategoriesAggregateBoolExpStddev_Samp = {
-  arguments: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpStddev_SampArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<SubcategoriesBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type SubcategoriesAggregateBoolExpSum = {
-  arguments: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpSumArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<SubcategoriesBoolExp>;
-  predicate: Float8ComparisonExp;
-};
-
-export type SubcategoriesAggregateBoolExpVar_Samp = {
-  arguments: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpVar_SampArgumentsColumns;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-  filter?: InputMaybe<SubcategoriesBoolExp>;
-  predicate: Float8ComparisonExp;
 };
 
 export type Subscription_Root = {
@@ -11915,6 +12597,14 @@ export type Subscription_Root = {
   flywaySchemaHistoryByPk?: Maybe<FlywaySchemaHistory>;
   /** fetch data from the table in a streaming manner: "flyway_schema_history" */
   flywaySchemaHistoryStream: Array<FlywaySchemaHistory>;
+  /** An array relationship */
+  gradingChecks: Array<GradingChecks>;
+  /** An aggregate relationship */
+  gradingChecksAggregate: GradingChecksAggregate;
+  /** fetch data from the table: "grading_checks" using primary key columns */
+  gradingChecksByPk?: Maybe<GradingChecks>;
+  /** fetch data from the table in a streaming manner: "grading_checks" */
+  gradingChecksStream: Array<GradingChecks>;
   /** An array relationship */
   groups: Array<Groups>;
   /** An aggregate relationship */
@@ -12283,6 +12973,32 @@ export type Subscription_RootFlywaySchemaHistoryStreamArgs = {
   where?: InputMaybe<FlywaySchemaHistoryBoolExp>;
 };
 
+export type Subscription_RootGradingChecksArgs = {
+  distinctOn?: InputMaybe<Array<GradingChecksSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<GradingChecksOrderBy>>;
+  where?: InputMaybe<GradingChecksBoolExp>;
+};
+
+export type Subscription_RootGradingChecksAggregateArgs = {
+  distinctOn?: InputMaybe<Array<GradingChecksSelectColumn>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Array<GradingChecksOrderBy>>;
+  where?: InputMaybe<GradingChecksBoolExp>;
+};
+
+export type Subscription_RootGradingChecksByPkArgs = {
+  gradingCheckId: Scalars["bigint"]["input"];
+};
+
+export type Subscription_RootGradingChecksStreamArgs = {
+  batchSize: Scalars["Int"]["input"];
+  cursor: Array<InputMaybe<GradingChecksStreamCursorInput>>;
+  where?: InputMaybe<GradingChecksBoolExp>;
+};
+
 export type Subscription_RootGroupsArgs = {
   distinctOn?: InputMaybe<Array<GroupsSelectColumn>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
@@ -12548,11 +13264,91 @@ export type UserGroupsAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
+export type UserLevelAggregateBoolExpAvg = {
+  arguments: UserLevelSelectColumnUserLevelAggregateBoolExpAvgArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<UserLevelBoolExp>;
+  predicate: Float8ComparisonExp;
+};
+
+export type UserLevelAggregateBoolExpBool_And = {
+  arguments: UserLevelSelectColumnUserLevelAggregateBoolExpBool_AndArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<UserLevelBoolExp>;
+  predicate: BooleanComparisonExp;
+};
+
+export type UserLevelAggregateBoolExpBool_Or = {
+  arguments: UserLevelSelectColumnUserLevelAggregateBoolExpBool_OrArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<UserLevelBoolExp>;
+  predicate: BooleanComparisonExp;
+};
+
+export type UserLevelAggregateBoolExpCorr = {
+  arguments: UserLevelAggregateBoolExpCorrArguments;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<UserLevelBoolExp>;
+  predicate: Float8ComparisonExp;
+};
+
+export type UserLevelAggregateBoolExpCorrArguments = {
+  X: UserLevelSelectColumnUserLevelAggregateBoolExpCorrArgumentsColumns;
+  Y: UserLevelSelectColumnUserLevelAggregateBoolExpCorrArgumentsColumns;
+};
+
 export type UserLevelAggregateBoolExpCount = {
   arguments?: InputMaybe<Array<UserLevelSelectColumn>>;
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
   filter?: InputMaybe<UserLevelBoolExp>;
   predicate: IntComparisonExp;
+};
+
+export type UserLevelAggregateBoolExpCovar_Samp = {
+  arguments: UserLevelAggregateBoolExpCovar_SampArguments;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<UserLevelBoolExp>;
+  predicate: Float8ComparisonExp;
+};
+
+export type UserLevelAggregateBoolExpCovar_SampArguments = {
+  X: UserLevelSelectColumnUserLevelAggregateBoolExpCovar_SampArgumentsColumns;
+  Y: UserLevelSelectColumnUserLevelAggregateBoolExpCovar_SampArgumentsColumns;
+};
+
+export type UserLevelAggregateBoolExpMax = {
+  arguments: UserLevelSelectColumnUserLevelAggregateBoolExpMaxArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<UserLevelBoolExp>;
+  predicate: Float8ComparisonExp;
+};
+
+export type UserLevelAggregateBoolExpMin = {
+  arguments: UserLevelSelectColumnUserLevelAggregateBoolExpMinArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<UserLevelBoolExp>;
+  predicate: Float8ComparisonExp;
+};
+
+export type UserLevelAggregateBoolExpStddev_Samp = {
+  arguments: UserLevelSelectColumnUserLevelAggregateBoolExpStddev_SampArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<UserLevelBoolExp>;
+  predicate: Float8ComparisonExp;
+};
+
+export type UserLevelAggregateBoolExpSum = {
+  arguments: UserLevelSelectColumnUserLevelAggregateBoolExpSumArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<UserLevelBoolExp>;
+  predicate: Float8ComparisonExp;
+};
+
+export type UserLevelAggregateBoolExpVar_Samp = {
+  arguments: UserLevelSelectColumnUserLevelAggregateBoolExpVar_SampArgumentsColumns;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<UserLevelBoolExp>;
+  predicate: Float8ComparisonExp;
 };
 
 export type UsersAggregateBoolExpCount = {

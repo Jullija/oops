@@ -5,19 +5,20 @@ def insert_awards(hasura_url, headers, awards):
     award_ids = []
     award_editions_type_map = {}
 
-    for name, filename, award_type, award_value, category_id, max_usages, label, editions_type in awards:
+    for name, filename, award_type, award_value, category_id, max_usages, description, label, editions_type in awards:
         print(
             f"Attempting to insert award: {name} (Type: {award_type}, Value: {award_value}, Category ID: {category_id}, Max Usages: {max_usages})")
 
         # Perform addAward mutation
         mutation = """
-        mutation addAward($awardName: String!, $awardType: String!, $awardValue: Float!, $categoryId: Int!, $maxUsages: Int = -1, $label: String = "") {
+        mutation addAward($awardName: String!, $awardType: String!, $awardValue: Float!, $categoryId: Int!, $maxUsages: Int = -1, $description: String!, $label: String = "") {
             addAward(
                 awardName: $awardName,
                 awardType: $awardType,
                 awardValue: $awardValue,
                 categoryId: $categoryId,
                 maxUsages: $maxUsages,
+                description: $description,
                 label: $label
             ) {
                 awardId
@@ -31,6 +32,7 @@ def insert_awards(hasura_url, headers, awards):
             "awardValue": award_value,
             "categoryId": category_id,
             "maxUsages": max_usages,
+            "description": description,
             "label": ""
         }
 

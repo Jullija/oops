@@ -1,36 +1,6 @@
 import { Styles } from "../../../utils/Styles";
+import { Avatar } from "../../images/Avatar";
 import { HallOfFameStudentData } from "../HallOfFameStudentCard";
-
-const styles: Styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-    width: 200,
-  },
-  studentContainer: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 8,
-    alignItems: "center",
-  },
-  imagePlaceholder: {
-    width: 64,
-    height: 64,
-    borderRadius: "100%",
-    backgroundColor: "violet",
-  },
-  box: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    paddingTop: 12,
-  },
-  place: {
-    backgroundColor: "white",
-    padding: 4,
-  },
-};
 
 type PodiumItemProps = {
   student: HallOfFameStudentData;
@@ -48,7 +18,7 @@ export const PodiumItem = ({ student, place }: PodiumItemProps) => {
   return (
     <div style={styles.container}>
       <div style={styles.studentContainer}>
-        <div style={styles.imagePlaceholder} />
+        <Avatar id={student.avatarImgId} size="m" />
         <div>{student.nick}</div>
       </div>
       <div
@@ -62,4 +32,29 @@ export const PodiumItem = ({ student, place }: PodiumItemProps) => {
       </div>
     </div>
   );
+};
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+    width: 200,
+  },
+  studentContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 8,
+    alignItems: "center",
+  },
+  box: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    paddingTop: 12,
+  },
+  place: {
+    backgroundColor: "white",
+    padding: 4,
+  },
 };

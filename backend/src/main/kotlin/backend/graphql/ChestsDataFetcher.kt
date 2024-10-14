@@ -1,6 +1,10 @@
 package backend.graphql
 
+import backend.awardEdition.AwardEdition
+import backend.awardEdition.AwardEditionRepository
 import backend.categories.CategoriesRepository
+import backend.chestAward.ChestAward
+import backend.chestAward.ChestAwardRepository
 import backend.chests.Chests
 import backend.chests.ChestsRepository
 import backend.edition.EditionRepository
@@ -14,9 +18,13 @@ import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 
 @DgsComponent
 class ChestsDataFetcher {
+    @Autowired
+    private lateinit var chestAwardRepository: ChestAwardRepository
+
     @Autowired
     lateinit var usersRepository: UsersRepository
 
@@ -42,6 +50,9 @@ class ChestsDataFetcher {
     lateinit var chestsRepository: ChestsRepository
 
     @Autowired
+    lateinit var awardEditionRepository: AwardEditionRepository
+
+    @Autowired
     lateinit var photoAssigner: PhotoAssigner
 
     @DgsMutation
@@ -58,10 +69,10 @@ class ChestsDataFetcher {
     @Transactional
     fun addChest(@InputArgument chestType: String, @InputArgument editionId: Long, @InputArgument label: String = ""): Chests {
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
-        if (chestsRepository.existsByChestTypeAndEdition(chestType, edition)) {
+        if (chestsRepository.existsByChestTypeAndEditionAndActive(chestType, edition, true)) {
             throw IllegalArgumentException("Chest with type $chestType already exists for edition ${edition.editionId}")
         }
-        if (edition.endDate.isBefore(java.time.LocalDate.now())){
+        if (edition.endDate.isBefore(LocalDate.now())){
             throw IllegalArgumentException("Edition has already ended")
         }
         val chest = Chests(
@@ -70,5 +81,99 @@ class ChestsDataFetcher {
             edition = edition
         )
         return chestsRepository.save(chest)
+    }
+
+    @DgsMutation
+    @Transactional
+    fun editChest(
+        @InputArgument chestId: Long,
+        @InputArgument chestType: String?,
+        @InputArgument editionId: Long?,
+        @InputArgument label: String?
+    ): Chests {
+        val chest = chestsRepository.findById(chestId).orElseThrow { IllegalArgumentException("Invalid chest ID") }
+
+        if (chest.edition.endDate.isBefore(LocalDate.now())) {
+            throw IllegalArgumentException("Edition has already ended")
+        }
+        chestType?.let {
+            if (chest.edition.startDate.isBefore(LocalDate.now())) {
+                throw IllegalArgumentException("Edition has already started")
+            }
+            if (chestsRepository.existsByChestTypeAndEditionAndActive(it, chest.edition, true) && it != chest.chestType) {
+                throw IllegalArgumentException("Chest with type $it already exists for edition ${chest.edition.editionId}")
+            }
+            chest.chestType = it
+        }
+
+        editionId?.let {
+            if (chest.edition.startDate.isBefore(LocalDate.now())) {
+                throw IllegalArgumentException("Edition has already started")
+            }
+            val edition = editionRepository.findById(it).orElseThrow { IllegalArgumentException("Invalid edition ID") }
+            chest.edition = edition
+        }
+
+        label?.let {
+            chest.label = it
+        }
+
+        return chestsRepository.save(chest)
+    }
+
+    @DgsMutation
+    @Transactional
+    fun removeChest(@InputArgument chestId: Long): Boolean {
+        val chest = chestsRepository.findById(chestId).orElseThrow { IllegalArgumentException("Invalid chest ID") }
+        if (chest.edition.endDate.isBefore(LocalDate.now())) {
+            throw IllegalArgumentException("Edition has already ended")
+        }
+        if (chest.edition.startDate.isBefore(LocalDate.now())) {
+            throw IllegalArgumentException("Edition has already started")
+        }
+        chestAwardRepository.findByChest(chest).forEach {
+            chestAwardRepository.delete(it)
+        }
+
+        chestsRepository.delete(chest)
+        return true
+    }
+
+    @DgsMutation
+    @Transactional
+    fun copyChest(@InputArgument chestId: Long, @InputArgument editionId: Long): Chests {
+        val chest = chestsRepository.findById(chestId).orElseThrow { IllegalArgumentException("Invalid chest ID") }
+        val edition =
+            editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
+        if (chestsRepository.existsByChestTypeAndEditionAndActive(chest.chestType, edition, true)) {
+            throw IllegalArgumentException("Chest with type ${chest.chestType} already exists for edition ${edition.editionId}")
+        }
+        if (edition.endDate.isBefore(LocalDate.now())) {
+            throw IllegalArgumentException("Edition has already ended")
+        }
+        val newChest = Chests(
+            chestType = chest.chestType,
+            label = chest.label,
+            edition = edition
+        )
+        newChest.imageFile = chest.imageFile
+        chestsRepository.save(newChest)
+        chestAwardRepository.findByChest(chest).forEach { chestAward ->
+            if (chestAward.award.awardEditions.none { it.edition.editionId == editionId }) {
+                val awardEdition = AwardEdition(
+                    edition = edition,
+                    award = chestAward.award,
+                    label = ""
+                )
+                awardEditionRepository.save(awardEdition)
+            }
+            val newChestAward = ChestAward(
+                chest = newChest,
+                award = chestAward.award,
+                label = ""
+            )
+            chestAwardRepository.save(newChestAward)
+        }
+        return chestsRepository.save(newChest)
     }
 }

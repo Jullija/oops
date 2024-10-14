@@ -16,6 +16,7 @@ import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.math.RoundingMode
 
 @DgsComponent
 class AwardsDataFetcher {
@@ -60,6 +61,7 @@ class AwardsDataFetcher {
     @Transactional
     fun addAward(@InputArgument awardName: String, @InputArgument awardType: String, @InputArgument awardValue: Float,
                  @InputArgument categoryId: Long, @InputArgument maxUsages: Int = -1,
+                 @InputArgument description: String,
                  @InputArgument label: String = ""): Award {
 
 
@@ -81,7 +83,7 @@ class AwardsDataFetcher {
         if (awardsWithSameName.any { it.awardType != awardType1 }) {
             throw IllegalArgumentException("Award with this name cannot be added with this type (already exists with different type)")
         }
-        if (awardsWithSameName.any { it.awardValue == awardValue  }) {
+        if (awardsWithSameName.any { it.awardValue == awardValue.toBigDecimal().setScale(2, RoundingMode.HALF_UP)  }) {
             throw IllegalArgumentException("Award with this name and value already exists")
         }
         if (!category.canAddPoints) {
@@ -91,12 +93,87 @@ class AwardsDataFetcher {
         val award = Award(
             awardName = awardName,
             awardType = awardType1,
-            awardValue = awardValue,
+            awardValue = awardValue.toBigDecimal().setScale(2, java.math.RoundingMode.HALF_UP),
             category = category,
             maxUsages = maxUsages,
+            description = description,
             label = ""
         )
         awardRepository.save(award)
         return award
     }
+
+    @DgsMutation
+    @Transactional
+    fun editAward(
+        @InputArgument awardId: Long,
+        @InputArgument awardName: String?,
+        @InputArgument awardType: String?,
+        @InputArgument awardValue: Float?,
+        @InputArgument categoryId: Long?,
+        @InputArgument maxUsages: Int?,
+        @InputArgument description: String?,
+        @InputArgument label: String?
+    ): Award {
+        val award = awardRepository.findById(awardId).orElseThrow { IllegalArgumentException("Invalid award ID") }
+
+        if (award.awardEditions.map { it.edition }.any { it.endDate.isBefore(java.time.LocalDate.now()) }) {
+            throw IllegalArgumentException("Edition with this award has already ended")
+        }
+
+        if (award.awardEditions.map { it.edition }.any { it.startDate.isBefore(java.time.LocalDate.now()) }) {
+            throw IllegalArgumentException("Edition with this award has already started")
+        }
+
+        awardName?.let {
+            val awardsWithSameName = awardRepository.findAllByAwardName(it)
+            if (awardsWithSameName.any { existing -> existing.awardType != award.awardType }) {
+                throw IllegalArgumentException("Award with this name cannot be updated with this type (already exists with different type)")
+            }
+            award.awardName = it
+        }
+
+        awardType?.let {
+            val parsedType = try {
+                AwardType.valueOf(it.uppercase())
+            } catch (e: IllegalArgumentException) {
+                throw IllegalArgumentException("Invalid award type")
+            }
+            award.awardType = parsedType
+        }
+
+        awardValue?.let {
+            if ((award.awardType == AwardType.ADDITIVE || award.awardType == AwardType.ADDITIVE_NEXT || award.awardType == AwardType.ADDITIVE_PREV) && it < 0) {
+                throw IllegalArgumentException("Additive award value must be greater than or equal to 0")
+            }
+            if (award.awardType == AwardType.MULTIPLICATIVE && (it <= 0 || it > 1)) {
+                throw IllegalArgumentException("Multiplicative award value must be greater than 0 and less than or equal to 1")
+            }
+            award.awardValue = it.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
+        }
+
+        categoryId?.let {
+            val category = categoriesRepository.findById(it).orElseThrow { IllegalArgumentException("Invalid category ID") }
+            if (!category.canAddPoints) {
+                throw IllegalArgumentException("This category does not allow adding points from awards")
+            }
+            award.category = category
+        }
+
+        maxUsages?.let {
+            award.maxUsages = it
+        }
+
+        description?.let {
+            award.description = it
+        }
+
+        label?.let {
+            award.label = it
+        }
+
+        awardRepository.save(award)
+        return award
+    }
+
 }

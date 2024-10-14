@@ -2,15 +2,7 @@ import { Styles } from "../../utils/Styles";
 import { useUser } from "../../hooks/common/useUser";
 import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
 import { SideBar } from "../../components/StudentProfile/SideBar";
-import { PointsTableWithFilter } from "../../components/StudentProfile/table/PointsTableWithFilter";
-
-const styles: Styles = {
-  container: {
-    display: "flex",
-    gap: 20,
-    margin: 12,
-  },
-};
+import { StudentTableWithFilters } from "../../components/StudentProfile/table/StudentTableWithFilters";
 
 export function StudentProfile() {
   const { user } = useUser();
@@ -21,6 +13,7 @@ export function StudentProfile() {
     prevLevel,
     currLevel,
     nextLevel,
+    bonuses,
     filterHeaderNames,
     loading,
     error,
@@ -41,11 +34,20 @@ export function StudentProfile() {
         prevLevel={prevLevel}
         currLevel={currLevel}
         nextLevel={nextLevel}
+        bonuses={bonuses}
       />
-      <PointsTableWithFilter
+      <StudentTableWithFilters
         points={points}
         filterHeaderNames={filterHeaderNames}
       />
     </div>
   );
 }
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    gap: 20,
+    margin: 12,
+  },
+};

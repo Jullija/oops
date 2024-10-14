@@ -2,15 +2,15 @@ import { PointsBarProps } from "../../components/PointsBar";
 import { useCategoriesPointsQuery } from "../../graphql/categoriesPoints.graphql.types";
 
 export const useCategoriesCardData = (props: {
-  editionId?: string;
-  studentId?: string;
+  editionId: string | undefined;
+  studentId: string | undefined;
 }) => {
   const { editionId, studentId } = props;
 
   const { data, loading, error, refetch } = useCategoriesPointsQuery({
     variables: {
-      editionId: parseInt(editionId ?? "-1"),
-      studentId: parseInt(studentId ?? "-1"),
+      editionId: parseInt(editionId as string),
+      studentId: parseInt(studentId as string),
     },
     skip: !editionId || !studentId,
   });

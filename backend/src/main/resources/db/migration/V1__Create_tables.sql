@@ -20,8 +20,8 @@ CREATE TABLE groups (
 CREATE TABLE levels (
                         level_id SERIAL PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
-                        minimum_points DOUBLE PRECISION NOT NULL,
-                        maximum_points DOUBLE PRECISION NOT NULL,
+                        minimum_points NUMERIC(10, 2) NOT NULL,
+                        maximum_points NUMERIC(10, 2) NOT NULL,
                         avatar VARCHAR(255)
 );
 

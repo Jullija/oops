@@ -7,7 +7,7 @@ def insert_editions(hasura_url, headers, number_of_editions=6):
     current_year = int(datetime.datetime.now().year)
     print(f"Attempting to insert {number_of_editions} editions starting from {current_year}")
     for year in range(current_year, current_year + number_of_editions):
-        name = f"Edition {year}"
+        name = f"Edition {year}/{year+1}"
         print(f"Attempting to insert edition: {name}")
 
         mutation = """

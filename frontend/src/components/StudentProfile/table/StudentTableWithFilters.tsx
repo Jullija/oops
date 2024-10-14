@@ -1,27 +1,25 @@
 import { Styles } from "../../../utils/Styles";
 import FilterMenu from "./FilterMenu";
 import { useState } from "react";
-import PointsTable from "./PointsTable";
 import { Points } from "../../../hooks/StudentProfile/useStudentData";
 import { FilterItem } from "../../Groups/FilterBar/FilterOptionsSection";
+import { EditFunctions, StudentTable } from "./StudentTable";
 
-const styles: Styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-  },
-};
-
-type PointsTableProps = {
+type StudentTableWithFiltersProps = {
   points: Points[];
   filterHeaderNames: FilterItem[];
+  editFunctions?: EditFunctions;
+  showActionButtons?: boolean;
+  blockActionButtons?: boolean;
 };
 
-export const PointsTableWithFilter = ({
+export const StudentTableWithFilters = ({
   points,
   filterHeaderNames,
-}: PointsTableProps) => {
+  editFunctions,
+  showActionButtons = false,
+  blockActionButtons = true,
+}: StudentTableWithFiltersProps) => {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
 
   const isInSelectedCategoryIds = (points: Points) => {
@@ -44,7 +42,21 @@ export const PointsTableWithFilter = ({
         }}
         filterItems={filterHeaderNames}
       />
-      <PointsTable points={pointsToDisplay} />
+      <StudentTable
+        points={pointsToDisplay}
+        editFunctions={editFunctions}
+        showActionButtons={showActionButtons}
+        blockActionButtons={blockActionButtons}
+      />
     </div>
   );
+};
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+    flex: 1,
+  },
 };

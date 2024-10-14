@@ -6,14 +6,16 @@ select_permissions:
     permission:
       columns:
         - edition_id
+        - generated_name
         - group_name
         - groups_id
-        - image_file_id
         - level_id
+        - level_image_id
         - level_name
         - nick
         - sum_of_points
         - user_id
+        - user_image_id
       filter: {}
       allow_aggregations: true
     comment: ""
@@ -21,14 +23,17 @@ select_permissions:
     permission:
       columns:
         - edition_id
-        - group_name
+
         - groups_id
-        - image_file_id
         - level_id
+        - level_image_id
+        - user_id
+        - user_image_id
+        - generated_name
+        - group_name
         - level_name
         - nick
         - sum_of_points
-        - user_id
       filter: {}
       allow_aggregations: true
     comment: ""
@@ -36,21 +41,24 @@ select_permissions:
     permission:
       columns:
         - edition_id
+        - generated_name
         - group_name
         - groups_id
-        - image_file_id
         - level_id
+        - level_image_id
         - level_name
         - nick
         - sum_of_points
         - user_id
+        - user_image_id
       filter: {}
       allow_aggregations: true
     comment: ""
   - role: unauthenticated_user
     permission:
       columns:
-        - image_file_id
+        - level_image_id
+        - user_image_id
         - edition_id
         - level_id
         - level_name

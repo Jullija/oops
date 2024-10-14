@@ -4,6 +4,7 @@ import backend.subcategories.Subcategories
 import backend.users.Users
 import backend.utils.TimestampModel
 import jakarta.persistence.*
+import java.math.BigDecimal
 
 @Entity
 @Table(name = "points")
@@ -25,8 +26,8 @@ class Points(
     @JoinColumn(name = "updated_by", referencedColumnName = "user_id")
     var updatedBy: Users,
 
-    @Column(name = "value", nullable = false)
-    var value: Float,
+    @Column(name = "value", nullable = false, precision = 10, scale = 2)
+    var value: BigDecimal,
 
     @ManyToOne
     @JoinColumn(name = "subcategory_id", referencedColumnName = "subcategory_id")
@@ -39,7 +40,7 @@ class Points(
         student = Users(),
         teacher = Users(),
         updatedBy = Users(),
-        value = 0f,
+        value = BigDecimal.ZERO,
         subcategory = Subcategories(),
         label = ""
     )

@@ -6,6 +6,7 @@ import backend.userGroups.UserGroups
 import backend.userLevel.UserLevel
 import backend.utils.HasImageFile
 import jakarta.persistence.*
+import java.math.BigDecimal
 
 @Entity
 @Table(name = "levels")
@@ -18,14 +19,14 @@ class Levels(
     @Column(name = "name", nullable = false)
     var levelName: String,
 
-    @Column(name = "minimum_points", nullable = false)
-    var minimumPoints: Double,
+    @Column(name = "minimum_points", nullable = false, precision = 10, scale = 2)
+    var minimumPoints: BigDecimal,
 
-    @Column(name = "maximum_points", nullable = false)
-    var maximumPoints: Double,
+    @Column(name = "maximum_points", nullable = false, precision = 10, scale = 2)
+    var maximumPoints: BigDecimal,
 
-    @Column(name = "grade", nullable = false)
-    var grade: Double,
+    @Column(name = "grade", nullable = false, precision = 10, scale = 1)
+    var grade: BigDecimal,
 
     @Column(name = "ordinal_number", nullable = false)
     var ordinalNumber: Int = 0,
@@ -49,14 +50,14 @@ class Levels(
 ) : HasImageFile {
     constructor() : this(
         levelName = "",
-        minimumPoints = 0.0,
-        maximumPoints = 0.0,
-        grade = 2.0,
+        minimumPoints = BigDecimal.ZERO,
+        maximumPoints = BigDecimal.ZERO,
+        grade = (2.0).toBigDecimal().setScale(1),
         label = "",
         edition = Edition()
     )
 
-    constructor(name: String, minimumPoints: Double, maximumPoints: Double, grade: Double) : this(
+    constructor(name: String, minimumPoints: BigDecimal, maximumPoints: BigDecimal, grade: BigDecimal) : this(
         levelName = name,
         minimumPoints = minimumPoints,
         maximumPoints = maximumPoints,

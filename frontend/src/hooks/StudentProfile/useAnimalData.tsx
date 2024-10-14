@@ -12,14 +12,14 @@ export type AnimalDataResult = {
 };
 
 export const useAnimalData = (
-  editionId?: string,
-  studentId?: string,
+  editionId: string | undefined,
+  studentId: string | undefined,
 ): AnimalDataResult => {
   const { data, loading, error, refetch } = useNeighboringLevelsQuery({
     skip: !editionId || !studentId,
     variables: {
-      editionId: parseInt(editionId ?? "-1"),
-      studentId: parseInt(studentId ?? "-1"),
+      editionId: parseInt(editionId as string),
+      studentId: parseInt(studentId as string),
     },
   });
 

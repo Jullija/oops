@@ -12,14 +12,16 @@ export type HallOfFameQuery = {
   hallOfFame: Array<{
     __typename?: "HallOfFame";
     editionId?: string | null;
-    imageFileId?: string | null;
     levelId?: string | null;
     levelName?: string | null;
     nick?: string | null;
-    sumOfPoints?: number | null;
+    sumOfPoints?: string | null;
     userId?: string | null;
     groupsId?: string | null;
     groupName?: string | null;
+    generatedName?: string | null;
+    levelImageId?: string | null;
+    userImageId?: string | null;
   }>;
 };
 
@@ -30,7 +32,6 @@ export const HallOfFameDocument = gql`
       orderBy: [{ sumOfPoints: DESC }, { nick: ASC }]
     ) {
       editionId
-      imageFileId
       levelId
       levelName
       nick
@@ -38,6 +39,9 @@ export const HallOfFameDocument = gql`
       userId
       groupsId
       groupName
+      generatedName
+      levelImageId
+      userImageId
     }
   }
 `;

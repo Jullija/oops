@@ -11,6 +11,8 @@ import com.netflix.graphql.dgs.DgsQuery
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 @DgsComponent
 class LevelsDataFetcher {
@@ -43,7 +45,12 @@ class LevelsDataFetcher {
         val levelImage = if (imageFileId == null){
             fileEntityRepository.findAllByFileType("image/level/sample").firstOrNull()
         } else {
-            val levelsWithSameImage = levelsRepository.findByImageFile_FileId(imageFileId).filter { it.edition == edition }
+            val imageFile = fileEntityRepository.findById(imageFileId)
+                .orElseThrow { IllegalArgumentException("Invalid image file ID") }
+            require(imageFile.fileType == "image/level") {
+                "Wrong fileType of file $imageFileId. Please upload a file with fileType = image/level and try again."
+            }
+            val levelsWithSameImage = levelsRepository.findByImageFile(imageFile).filter { it.edition == edition }
             if (levelsWithSameImage.isNotEmpty()){
                 throw IllegalArgumentException("Image is already used by another level")
             }
@@ -53,9 +60,9 @@ class LevelsDataFetcher {
         if (levelsInEdition.isEmpty()){
             val level = Levels(
                 levelName = name,
-                minimumPoints = 0.0,
-                maximumPoints = maximumPoints,
-                grade = grade,
+                minimumPoints = BigDecimal.ZERO,
+                maximumPoints = maximumPoints.toBigDecimal().setScale(2, RoundingMode.HALF_UP),
+                grade = grade.toBigDecimal().setScale(2, RoundingMode.HALF_UP),
                 label = "",
                 edition = edition
             )
@@ -68,10 +75,10 @@ class LevelsDataFetcher {
 
         val highestLevel = levelsInEdition.maxByOrNull { it.ordinalNumber }!!
 
-        if (highestLevel.maximumPoints >= maximumPoints){
+        if (highestLevel.maximumPoints >= maximumPoints.toBigDecimal()){
             throw IllegalArgumentException("Maximum points must be higher than the highest level in the edition")
         }
-        if (highestLevel.grade > grade){
+        if (highestLevel.grade > grade.toBigDecimal()){
             throw IllegalArgumentException("Grade must be higher or equal to the highest level in the edition")
         }
         if (levelsInEdition.any { it.levelName == name }){
@@ -82,8 +89,8 @@ class LevelsDataFetcher {
         val level = Levels(
             levelName = name,
             minimumPoints = highestLevel.maximumPoints,
-            maximumPoints = maximumPoints,
-            grade = grade,
+            maximumPoints = maximumPoints.toBigDecimal().setScale(2, RoundingMode.HALF_UP),
+            grade = grade.toBigDecimal().setScale(2, RoundingMode.HALF_UP),
             label = "",
             edition = edition
         )
@@ -93,6 +100,115 @@ class LevelsDataFetcher {
         level.imageFile = levelImage
         levelsRepository.save(level)
         return level
+    }
+
+    @DgsMutation
+    @Transactional
+    fun editLevel(
+        @InputArgument levelId: Long,
+        @InputArgument name: String?,
+        @InputArgument maximumPoints: Double?,
+        @InputArgument grade: Double?,
+        @InputArgument imageFileId: Long?,
+        @InputArgument label: String?
+    ): Levels {
+        val level = levelsRepository.findById(levelId)
+            .orElseThrow { IllegalArgumentException("Invalid level ID") }
+
+        if (level.edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
+        if (level.edition.startDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already started")
+        }
+
+        name?.let { newName ->
+            if (levelsRepository.findByEdition(level.edition).any { level -> level.levelName == newName && level.levelId != levelId }) {
+                throw IllegalArgumentException("Level with the same name already exists in the edition")
+            }
+            level.levelName = newName
+        }
+
+        val previousLevel =
+            levelsRepository.findByEdition(level.edition)
+                .firstOrNull { it.ordinalNumber == level.ordinalNumber - 1 }
+        val nextLevel =
+            levelsRepository.findByEdition(level.edition)
+                .firstOrNull { it.ordinalNumber == level.ordinalNumber + 1 }
+
+        maximumPoints?.let {
+            if (it <= 0) {
+                throw IllegalArgumentException("Maximum points must be a positive value")
+            }
+            if (previousLevel != null && previousLevel.maximumPoints >= it.toBigDecimal()){
+                throw IllegalArgumentException("Maximum points must be higher than the previous level")
+            }
+            if (nextLevel != null && nextLevel.maximumPoints <= it.toBigDecimal()){
+                throw IllegalArgumentException("Maximum points must be lower than the next level")
+            }
+            level.maximumPoints = it.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
+        }
+
+        grade?.let {
+            if (it < 0) {
+                throw IllegalArgumentException("Grade must be a non-negative value")
+            }
+            if (previousLevel != null && previousLevel.grade > it.toBigDecimal()){
+                throw IllegalArgumentException("Grade must be higher or equal to the previous level")
+            }
+            if (nextLevel != null && nextLevel.grade < it.toBigDecimal()){
+                throw IllegalArgumentException("Grade must be lower or equal to the next level")
+            }
+            level.grade = it.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
+        }
+
+        imageFileId?.let {
+            val imageFile = fileEntityRepository.findById(imageFileId)
+                .orElseThrow { IllegalArgumentException("Invalid image file ID") }
+            require(imageFile.fileType == "image/level") {
+                "Wrong fileType of file $imageFileId. Please upload a file with fileType = image/level and try again."
+            }
+            if (levelsRepository.findByImageFile_FileId(it).any { l -> l.edition == level.edition && l.levelId != levelId }) {
+                throw IllegalArgumentException("Image is already used by another level in the edition")
+            }
+            level.imageFile = imageFile
+        }
+
+        label?.let {
+            level.label = it
+        }
+
+        nextLevel?.let {
+            nextLevel.minimumPoints = level.maximumPoints
+            levelsRepository.save(nextLevel)
+        }
+
+        return levelsRepository.save(level)
+    }
+
+    @DgsMutation
+    @Transactional
+    fun removeLevel(@InputArgument levelId: Long): Boolean {
+        val level = levelsRepository.findById(levelId)
+            .orElseThrow { IllegalArgumentException("Invalid level ID") }
+
+        if (level.edition.endDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already ended")
+        }
+        if (level.edition.startDate.isBefore(java.time.LocalDate.now())){
+            throw IllegalArgumentException("Edition has already started")
+        }
+
+        if (level.highest) {
+            val prevLevel = levelsRepository.findByEdition(level.edition)
+                .firstOrNull { it.ordinalNumber == level.ordinalNumber - 1 }
+
+            prevLevel?.highest = true
+            levelsRepository.save(prevLevel!!)
+        }
+
+        levelsRepository.delete(level)
+        return true
     }
 
     @DgsMutation

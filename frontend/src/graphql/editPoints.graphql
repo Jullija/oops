@@ -1,0 +1,5 @@
+mutation EditPoints($pointsId: Int!, $teacherId: Int!, $value: Float!) {
+  editPoints(pointsId: $pointsId, updatedById: $teacherId, value: $value) {
+    value
+  }
+}

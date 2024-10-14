@@ -14,7 +14,7 @@ export type CreatePointsMutation = {
   __typename?: "mutation_root";
   addPointsMutation?: {
     __typename?: "PointType";
-    value: number;
+    value: string;
     updatedAt: string;
     createdAt: string;
     pointsId: string;

@@ -15,6 +15,7 @@ from utils.insert_editions import insert_editions
 from utils.insert_chests import insert_chests
 from utils.insert_awards import insert_awards
 from utils.insert_award_editions import insert_award_editions
+from utils.insert_grading_checks import insert_grading_checks
 from utils.insert_groups import insert_groups
 from utils.insert_users import insert_students, insert_teachers_and_coordinator, assign_photos_to_users
 from utils.insert_user_groups import insert_user_groups
@@ -145,6 +146,8 @@ def insert_data():
             category['subcategory_prefix'],
             category['max_points_per_subcategory'],
             category["can_add_points"],
+            category["light_color"],
+            category["dark_color"],
             category["editions"]
         )
         for category in category_data_struct
@@ -159,6 +162,7 @@ def insert_data():
             award['award_value'],
             award['category_id'],
             award['max_usages'],
+            award['description'],
             award['label'],
             award['editions']
         )
@@ -176,7 +180,8 @@ def insert_data():
     editions = insert_editions(hasura_url, headers, number_of_editions)
     categories, category_editions_type_map = insert_categories(hasura_url, headers, category_data)
     insert_category_editions(hasura_url, headers, editions, category_editions_type_map, random)
-    insert_levels(hasura_url, headers, editions, random, max_points, levels_data)
+    inserted_levels = insert_levels(hasura_url, headers, editions, random, max_points, levels_data)
+    insert_grading_checks(hasura_url, headers, editions, inserted_levels)
     chest_ids = insert_chests(hasura_url, headers, editions, chests_data)
     award_ids, award_editions_type_map = insert_awards(hasura_url, headers, awards_data)
     insert_award_editions(hasura_url, headers, editions, award_editions_type_map, random)

@@ -90,7 +90,7 @@ type Award {
   awardId: bigint!
   awardName: String!
   awardType: String!
-  awardValue: float8!
+  awardValue: numeric!
 
   """
   An array relationship
@@ -217,6 +217,7 @@ type Award {
     """
     where: ChestAwardBoolExp
   ): ChestAwardAggregate!
+  description: String!
 
   """
   An object relationship
@@ -236,15 +237,7 @@ type AwardAggregate {
 }
 
 input AwardAggregateBoolExp {
-  avg: awardAggregateBoolExpAvg
-  corr: awardAggregateBoolExpCorr
   count: awardAggregateBoolExpCount
-  covar_samp: awardAggregateBoolExpCovar_samp
-  max: awardAggregateBoolExpMax
-  min: awardAggregateBoolExpMin
-  stddev_samp: awardAggregateBoolExpStddev_samp
-  sum: awardAggregateBoolExpSum
-  var_samp: awardAggregateBoolExpVar_samp
 }
 
 """
@@ -327,13 +320,14 @@ input AwardBoolExp {
   awardId: BigintComparisonExp
   awardName: StringComparisonExp
   awardType: StringComparisonExp
-  awardValue: Float8ComparisonExp
+  awardValue: NumericComparisonExp
   bonuses: BonusesBoolExp
   bonusesAggregate: BonusesAggregateBoolExp
   category: CategoriesBoolExp
   categoryId: BigintComparisonExp
   chestAwards: ChestAwardBoolExp
   chestAwardsAggregate: ChestAwardAggregateBoolExp
+  description: StringComparisonExp
   file: FilesBoolExp
   imageFileId: BigintComparisonExp
   label: StringComparisonExp
@@ -815,7 +809,7 @@ input type for incrementing numeric columns in table "award"
 """
 input AwardIncInput {
   awardId: bigint
-  awardValue: float8
+  awardValue: numeric
   categoryId: bigint
   imageFileId: bigint
   maxUsages: Int
@@ -829,11 +823,12 @@ input AwardInsertInput {
   awardId: bigint
   awardName: String
   awardType: String
-  awardValue: float8
+  awardValue: numeric
   bonuses: BonusesArrRelInsertInput
   category: CategoriesObjRelInsertInput
   categoryId: bigint
   chestAwards: ChestAwardArrRelInsertInput
+  description: String
   file: FilesObjRelInsertInput
   imageFileId: bigint
   label: String
@@ -847,8 +842,9 @@ type AwardMaxFields {
   awardId: bigint
   awardName: String
   awardType: String
-  awardValue: float8
+  awardValue: numeric
   categoryId: bigint
+  description: String
   imageFileId: bigint
   label: String
   maxUsages: Int
@@ -863,6 +859,7 @@ input AwardMaxOrderBy {
   awardType: OrderBy
   awardValue: OrderBy
   categoryId: OrderBy
+  description: OrderBy
   imageFileId: OrderBy
   label: OrderBy
   maxUsages: OrderBy
@@ -875,8 +872,9 @@ type AwardMinFields {
   awardId: bigint
   awardName: String
   awardType: String
-  awardValue: float8
+  awardValue: numeric
   categoryId: bigint
+  description: String
   imageFileId: bigint
   label: String
   maxUsages: Int
@@ -891,6 +889,7 @@ input AwardMinOrderBy {
   awardType: OrderBy
   awardValue: OrderBy
   categoryId: OrderBy
+  description: OrderBy
   imageFileId: OrderBy
   label: OrderBy
   maxUsages: OrderBy
@@ -945,6 +944,7 @@ input AwardOrderBy {
   category: CategoriesOrderBy
   categoryId: OrderBy
   chestAwardsAggregate: ChestAwardAggregateOrderBy
+  description: OrderBy
   file: FilesOrderBy
   imageFileId: OrderBy
   label: OrderBy
@@ -990,6 +990,11 @@ enum AwardSelectColumn {
   """
   column name
   """
+  description
+
+  """
+  column name
+  """
   imageFileId
 
   """
@@ -1004,94 +1009,15 @@ enum AwardSelectColumn {
 }
 
 """
-select "awardAggregateBoolExpAvgArgumentsColumns" columns of table "award"
-"""
-enum AwardSelectColumnAwardAggregateBoolExpAvgArgumentsColumns {
-  """
-  column name
-  """
-  awardValue
-}
-
-"""
-select "awardAggregateBoolExpCorrArgumentsColumns" columns of table "award"
-"""
-enum AwardSelectColumnAwardAggregateBoolExpCorrArgumentsColumns {
-  """
-  column name
-  """
-  awardValue
-}
-
-"""
-select "awardAggregateBoolExpCovar_sampArgumentsColumns" columns of table "award"
-"""
-enum AwardSelectColumnAwardAggregateBoolExpCovar_sampArgumentsColumns {
-  """
-  column name
-  """
-  awardValue
-}
-
-"""
-select "awardAggregateBoolExpMaxArgumentsColumns" columns of table "award"
-"""
-enum AwardSelectColumnAwardAggregateBoolExpMaxArgumentsColumns {
-  """
-  column name
-  """
-  awardValue
-}
-
-"""
-select "awardAggregateBoolExpMinArgumentsColumns" columns of table "award"
-"""
-enum AwardSelectColumnAwardAggregateBoolExpMinArgumentsColumns {
-  """
-  column name
-  """
-  awardValue
-}
-
-"""
-select "awardAggregateBoolExpStddev_sampArgumentsColumns" columns of table "award"
-"""
-enum AwardSelectColumnAwardAggregateBoolExpStddev_sampArgumentsColumns {
-  """
-  column name
-  """
-  awardValue
-}
-
-"""
-select "awardAggregateBoolExpSumArgumentsColumns" columns of table "award"
-"""
-enum AwardSelectColumnAwardAggregateBoolExpSumArgumentsColumns {
-  """
-  column name
-  """
-  awardValue
-}
-
-"""
-select "awardAggregateBoolExpVar_sampArgumentsColumns" columns of table "award"
-"""
-enum AwardSelectColumnAwardAggregateBoolExpVar_sampArgumentsColumns {
-  """
-  column name
-  """
-  awardValue
-}
-
-"""
 input type for updating data in table "award"
 """
 input AwardSetInput {
   awardId: bigint
   awardName: String
   awardType: String
-  awardValue: float8
+  awardValue: numeric
   categoryId: bigint
+  description: String
   imageFileId: bigint
   label: String
   maxUsages: Int
@@ -1185,8 +1111,9 @@ input AwardStreamCursorValueInput {
   awardId: bigint
   awardName: String
   awardType: String
-  awardValue: float8
+  awardValue: numeric
   categoryId: bigint
+  description: String
   imageFileId: bigint
   label: String
   maxUsages: Int
@@ -1197,7 +1124,7 @@ aggregate sum on columns
 """
 type AwardSumFields {
   awardId: bigint
-  awardValue: float8
+  awardValue: numeric
   categoryId: bigint
   imageFileId: bigint
   maxUsages: Int
@@ -1219,8 +1146,9 @@ type AwardType {
   awardId: ID!
   awardName: String!
   awardType: AwardTypeType!
-  awardValue: Float!
+  awardValue: String!
   category: CategoryType
+  description: String!
   imageFile: FileType
   label: String!
   maxUsages: Int!
@@ -1261,6 +1189,11 @@ enum AwardUpdateColumn {
   column name
   """
   categoryId
+
+  """
+  column name
+  """
+  description
 
   """
   column name
@@ -2081,7 +2014,69 @@ type Categories {
   ): CategoryEditionAggregate!
   categoryId: bigint!
   categoryName: String!
+  darkColor: String!
+
+  """
+  An array relationship
+  """
+  gradingChecks(
+    """
+    distinct select on columns
+    """
+    distinctOn: [GradingChecksSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [GradingChecksOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: GradingChecksBoolExp
+  ): [GradingChecks!]!
+
+  """
+  An aggregate relationship
+  """
+  gradingChecksAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [GradingChecksSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [GradingChecksOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: GradingChecksBoolExp
+  ): GradingChecksAggregate!
   label: String!
+  lightColor: String!
 
   """
   An array relationship
@@ -2190,7 +2185,11 @@ input CategoriesBoolExp {
   categoryEditionsAggregate: CategoryEditionAggregateBoolExp
   categoryId: BigintComparisonExp
   categoryName: StringComparisonExp
+  darkColor: StringComparisonExp
+  gradingChecks: GradingChecksBoolExp
+  gradingChecksAggregate: GradingChecksAggregateBoolExp
   label: StringComparisonExp
+  lightColor: StringComparisonExp
   subcategories: SubcategoriesBoolExp
   subcategoriesAggregate: SubcategoriesAggregateBoolExp
 }
@@ -2221,7 +2220,10 @@ input CategoriesInsertInput {
   categoryEditions: CategoryEditionArrRelInsertInput
   categoryId: bigint
   categoryName: String
+  darkColor: String
+  gradingChecks: GradingChecksArrRelInsertInput
   label: String
+  lightColor: String
   subcategories: SubcategoriesArrRelInsertInput
 }
 
@@ -2231,7 +2233,9 @@ aggregate max on columns
 type CategoriesMaxFields {
   categoryId: bigint
   categoryName: String
+  darkColor: String
   label: String
+  lightColor: String
 }
 
 """
@@ -2240,7 +2244,9 @@ aggregate min on columns
 type CategoriesMinFields {
   categoryId: bigint
   categoryName: String
+  darkColor: String
   label: String
+  lightColor: String
 }
 
 """
@@ -2288,7 +2294,10 @@ input CategoriesOrderBy {
   categoryEditionsAggregate: CategoryEditionAggregateOrderBy
   categoryId: OrderBy
   categoryName: OrderBy
+  darkColor: OrderBy
+  gradingChecksAggregate: GradingChecksAggregateOrderBy
   label: OrderBy
+  lightColor: OrderBy
   subcategoriesAggregate: SubcategoriesAggregateOrderBy
 }
 
@@ -2321,7 +2330,17 @@ enum CategoriesSelectColumn {
   """
   column name
   """
+  darkColor
+
+  """
+  column name
+  """
   label
+
+  """
+  column name
+  """
+  lightColor
 }
 
 """
@@ -2331,7 +2350,9 @@ input CategoriesSetInput {
   canAddPoints: Boolean
   categoryId: bigint
   categoryName: String
+  darkColor: String
   label: String
+  lightColor: String
 }
 
 """
@@ -2377,7 +2398,9 @@ input CategoriesStreamCursorValueInput {
   canAddPoints: Boolean
   categoryId: bigint
   categoryName: String
+  darkColor: String
   label: String
+  lightColor: String
 }
 
 """
@@ -2409,7 +2432,17 @@ enum CategoriesUpdateColumn {
   """
   column name
   """
+  darkColor
+
+  """
+  column name
+  """
   label
+
+  """
+  column name
+  """
+  lightColor
 }
 
 input CategoriesUpdates {
@@ -2941,7 +2974,9 @@ type CategoryType {
   categoryEdition: [CategoryEditionType]!
   categoryId: ID!
   categoryName: String!
+  darkColor: String!
   label: String!
+  lightColor: String!
 }
 
 """
@@ -3298,6 +3333,13 @@ input ChestAwardSumOrderBy {
   awardId: OrderBy
   chestAwardId: OrderBy
   chestId: OrderBy
+}
+
+type ChestAwardType {
+  award: AwardType!
+  chest: ChestType!
+  chestAwardId: ID!
+  label: String!
 }
 
 """
@@ -4060,6 +4102,8 @@ type ChestType {
 columns and relationships of "chests"
 """
 type Chests {
+  active: Boolean!
+
   """
   An array relationship
   """
@@ -4205,6 +4249,8 @@ type ChestsAggregate {
 }
 
 input ChestsAggregateBoolExp {
+  bool_and: chestsAggregateBoolExpBool_and
+  bool_or: chestsAggregateBoolExpBool_or
   count: chestsAggregateBoolExpCount
 }
 
@@ -4279,6 +4325,7 @@ input ChestsBoolExp {
   _and: [ChestsBoolExp!]
   _not: ChestsBoolExp
   _or: [ChestsBoolExp!]
+  active: BooleanComparisonExp
   chestAwards: ChestAwardBoolExp
   chestAwardsAggregate: ChestAwardAggregateBoolExp
   chestHistories: ChestHistoryBoolExp
@@ -4315,6 +4362,7 @@ input ChestsIncInput {
 input type for inserting data into table "chests"
 """
 input ChestsInsertInput {
+  active: Boolean
   chestAwards: ChestAwardArrRelInsertInput
   chestHistories: ChestHistoryArrRelInsertInput
   chestId: bigint
@@ -4410,6 +4458,7 @@ input ChestsOnConflict {
 Ordering options when selecting data from "chests".
 """
 input ChestsOrderBy {
+  active: OrderBy
   chestAwardsAggregate: ChestAwardAggregateOrderBy
   chestHistoriesAggregate: ChestHistoryAggregateOrderBy
   chestId: OrderBy
@@ -4432,6 +4481,11 @@ input ChestsPkColumnsInput {
 select columns of table "chests"
 """
 enum ChestsSelectColumn {
+  """
+  column name
+  """
+  active
+
   """
   column name
   """
@@ -4459,9 +4513,30 @@ enum ChestsSelectColumn {
 }
 
 """
+select "chestsAggregateBoolExpBool_andArgumentsColumns" columns of table "chests"
+"""
+enum ChestsSelectColumnChestsAggregateBoolExpBool_andArgumentsColumns {
+  """
+  column name
+  """
+  active
+}
+
+"""
+select "chestsAggregateBoolExpBool_orArgumentsColumns" columns of table "chests"
+"""
+enum ChestsSelectColumnChestsAggregateBoolExpBool_orArgumentsColumns {
+  """
+  column name
+  """
+  active
+}
+
+"""
 input type for updating data in table "chests"
 """
 input ChestsSetInput {
+  active: Boolean
   chestId: bigint
   editionId: bigint
   imageFileId: bigint
@@ -4542,6 +4617,7 @@ input ChestsStreamCursorInput {
 Initial value of the column from where the streaming should start
 """
 input ChestsStreamCursorValueInput {
+  active: Boolean
   chestId: bigint
   editionId: bigint
   imageFileId: bigint
@@ -4571,6 +4647,11 @@ input ChestsSumOrderBy {
 update columns of table "chests"
 """
 enum ChestsUpdateColumn {
+  """
+  column name
+  """
+  active
+
   """
   column name
   """
@@ -4888,6 +4969,66 @@ type Edition {
   """
   An array relationship
   """
+  gradingChecks(
+    """
+    distinct select on columns
+    """
+    distinctOn: [GradingChecksSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [GradingChecksOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: GradingChecksBoolExp
+  ): [GradingChecks!]!
+
+  """
+  An aggregate relationship
+  """
+  gradingChecksAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [GradingChecksSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [GradingChecksOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: GradingChecksBoolExp
+  ): GradingChecksAggregate!
+
+  """
+  An array relationship
+  """
   groups(
     """
     distinct select on columns
@@ -5178,6 +5319,8 @@ input EditionBoolExp {
   editionId: BigintComparisonExp
   editionYear: IntComparisonExp
   endDate: DateComparisonExp
+  gradingChecks: GradingChecksBoolExp
+  gradingChecksAggregate: GradingChecksAggregateBoolExp
   groups: GroupsBoolExp
   groupsAggregate: GroupsAggregateBoolExp
   label: StringComparisonExp
@@ -5219,6 +5362,7 @@ input EditionInsertInput {
   editionId: bigint
   editionYear: Int
   endDate: date
+  gradingChecks: GradingChecksArrRelInsertInput
   groups: GroupsArrRelInsertInput
   label: String
   levels: LevelsArrRelInsertInput
@@ -5298,6 +5442,7 @@ input EditionOrderBy {
   editionId: OrderBy
   editionYear: OrderBy
   endDate: OrderBy
+  gradingChecksAggregate: GradingChecksAggregateOrderBy
   groupsAggregate: GroupsAggregateOrderBy
   label: OrderBy
   levelsAggregate: LevelsAggregateOrderBy
@@ -6172,6 +6317,21 @@ input Float8ComparisonExp {
 }
 
 """
+Boolean expression to compare columns of type "Float". All fields are combined with logical 'AND'.
+"""
+input FloatComparisonExp {
+  _eq: Float
+  _gt: Float
+  _gte: Float
+  _in: [Float!]
+  _isNull: Boolean
+  _lt: Float
+  _lte: Float
+  _neq: Float
+  _nin: [Float!]
+}
+
+"""
 columns and relationships of "flyway_schema_history"
 """
 type FlywaySchemaHistory {
@@ -6589,22 +6749,661 @@ type FlywaySchemaHistoryVarianceFields {
   installedRank: Float
 }
 
+"""
+columns and relationships of "grading_checks"
+"""
+type GradingChecks {
+  """
+  An object relationship
+  """
+  category: Categories!
+
+  """
+  An object relationship
+  """
+  edition: Edition!
+  editionId: bigint!
+  endOfLabsDate: date!
+  endOfLabsLevelsThreshold: bigint!
+  gradingCheckId: bigint!
+
+  """
+  An object relationship
+  """
+  level: Levels!
+  projectId: bigint!
+  projectPointsThreshold: float8!
+}
+
+"""
+aggregated selection of "grading_checks"
+"""
+type GradingChecksAggregate {
+  aggregate: GradingChecksAggregateFields
+  nodes: [GradingChecks!]!
+}
+
+input GradingChecksAggregateBoolExp {
+  avg: gradingChecksAggregateBoolExpAvg
+  corr: gradingChecksAggregateBoolExpCorr
+  count: gradingChecksAggregateBoolExpCount
+  covar_samp: gradingChecksAggregateBoolExpCovar_samp
+  max: gradingChecksAggregateBoolExpMax
+  min: gradingChecksAggregateBoolExpMin
+  stddev_samp: gradingChecksAggregateBoolExpStddev_samp
+  sum: gradingChecksAggregateBoolExpSum
+  var_samp: gradingChecksAggregateBoolExpVar_samp
+}
+
+"""
+aggregate fields of "grading_checks"
+"""
+type GradingChecksAggregateFields {
+  avg: GradingChecksAvgFields
+  count(columns: [GradingChecksSelectColumn!], distinct: Boolean): Int!
+  max: GradingChecksMaxFields
+  min: GradingChecksMinFields
+  stddev: GradingChecksStddevFields
+  stddevPop: GradingChecksStddevPopFields
+  stddevSamp: GradingChecksStddevSampFields
+  sum: GradingChecksSumFields
+  varPop: GradingChecksVarPopFields
+  varSamp: GradingChecksVarSampFields
+  variance: GradingChecksVarianceFields
+}
+
+"""
+order by aggregate values of table "grading_checks"
+"""
+input GradingChecksAggregateOrderBy {
+  avg: GradingChecksAvgOrderBy
+  count: OrderBy
+  max: GradingChecksMaxOrderBy
+  min: GradingChecksMinOrderBy
+  stddev: GradingChecksStddevOrderBy
+  stddevPop: GradingChecksStddevPopOrderBy
+  stddevSamp: GradingChecksStddevSampOrderBy
+  sum: GradingChecksSumOrderBy
+  varPop: GradingChecksVarPopOrderBy
+  varSamp: GradingChecksVarSampOrderBy
+  variance: GradingChecksVarianceOrderBy
+}
+
+"""
+input type for inserting array relation for remote table "grading_checks"
+"""
+input GradingChecksArrRelInsertInput {
+  data: [GradingChecksInsertInput!]!
+
+  """
+  upsert condition
+  """
+  onConflict: GradingChecksOnConflict
+}
+
+"""
+aggregate avg on columns
+"""
+type GradingChecksAvgFields {
+  editionId: Float
+  endOfLabsLevelsThreshold: Float
+  gradingCheckId: Float
+  projectId: Float
+  projectPointsThreshold: Float
+}
+
+"""
+order by avg() on columns of table "grading_checks"
+"""
+input GradingChecksAvgOrderBy {
+  editionId: OrderBy
+  endOfLabsLevelsThreshold: OrderBy
+  gradingCheckId: OrderBy
+  projectId: OrderBy
+  projectPointsThreshold: OrderBy
+}
+
+"""
+Boolean expression to filter rows from the table "grading_checks". All fields are combined with a logical 'AND'.
+"""
+input GradingChecksBoolExp {
+  _and: [GradingChecksBoolExp!]
+  _not: GradingChecksBoolExp
+  _or: [GradingChecksBoolExp!]
+  category: CategoriesBoolExp
+  edition: EditionBoolExp
+  editionId: BigintComparisonExp
+  endOfLabsDate: DateComparisonExp
+  endOfLabsLevelsThreshold: BigintComparisonExp
+  gradingCheckId: BigintComparisonExp
+  level: LevelsBoolExp
+  projectId: BigintComparisonExp
+  projectPointsThreshold: Float8ComparisonExp
+}
+
+"""
+unique or primary key constraints on table "grading_checks"
+"""
+enum GradingChecksConstraint {
+  """
+  unique or primary key constraint on columns "grading_check_id"
+  """
+  grading_checks_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "grading_checks"
+"""
+input GradingChecksIncInput {
+  editionId: bigint
+  endOfLabsLevelsThreshold: bigint
+  gradingCheckId: bigint
+  projectId: bigint
+  projectPointsThreshold: float8
+}
+
+"""
+input type for inserting data into table "grading_checks"
+"""
+input GradingChecksInsertInput {
+  category: CategoriesObjRelInsertInput
+  edition: EditionObjRelInsertInput
+  editionId: bigint
+  endOfLabsDate: date
+  endOfLabsLevelsThreshold: bigint
+  gradingCheckId: bigint
+  level: LevelsObjRelInsertInput
+  projectId: bigint
+  projectPointsThreshold: float8
+}
+
+"""
+aggregate max on columns
+"""
+type GradingChecksMaxFields {
+  editionId: bigint
+  endOfLabsDate: date
+  endOfLabsLevelsThreshold: bigint
+  gradingCheckId: bigint
+  projectId: bigint
+  projectPointsThreshold: float8
+}
+
+"""
+order by max() on columns of table "grading_checks"
+"""
+input GradingChecksMaxOrderBy {
+  editionId: OrderBy
+  endOfLabsDate: OrderBy
+  endOfLabsLevelsThreshold: OrderBy
+  gradingCheckId: OrderBy
+  projectId: OrderBy
+  projectPointsThreshold: OrderBy
+}
+
+"""
+aggregate min on columns
+"""
+type GradingChecksMinFields {
+  editionId: bigint
+  endOfLabsDate: date
+  endOfLabsLevelsThreshold: bigint
+  gradingCheckId: bigint
+  projectId: bigint
+  projectPointsThreshold: float8
+}
+
+"""
+order by min() on columns of table "grading_checks"
+"""
+input GradingChecksMinOrderBy {
+  editionId: OrderBy
+  endOfLabsDate: OrderBy
+  endOfLabsLevelsThreshold: OrderBy
+  gradingCheckId: OrderBy
+  projectId: OrderBy
+  projectPointsThreshold: OrderBy
+}
+
+"""
+response of any mutation on the table "grading_checks"
+"""
+type GradingChecksMutationResponse {
+  """
+  number of rows affected by the mutation
+  """
+  affectedRows: Int!
+
+  """
+  data from the rows affected by the mutation
+  """
+  returning: [GradingChecks!]!
+}
+
+"""
+on_conflict condition type for table "grading_checks"
+"""
+input GradingChecksOnConflict {
+  constraint: GradingChecksConstraint!
+  updateColumns: [GradingChecksUpdateColumn!]! = []
+  where: GradingChecksBoolExp
+}
+
+"""
+Ordering options when selecting data from "grading_checks".
+"""
+input GradingChecksOrderBy {
+  category: CategoriesOrderBy
+  edition: EditionOrderBy
+  editionId: OrderBy
+  endOfLabsDate: OrderBy
+  endOfLabsLevelsThreshold: OrderBy
+  gradingCheckId: OrderBy
+  level: LevelsOrderBy
+  projectId: OrderBy
+  projectPointsThreshold: OrderBy
+}
+
+"""
+primary key columns input for table: grading_checks
+"""
+input GradingChecksPkColumnsInput {
+  gradingCheckId: bigint!
+}
+
+"""
+select columns of table "grading_checks"
+"""
+enum GradingChecksSelectColumn {
+  """
+  column name
+  """
+  editionId
+
+  """
+  column name
+  """
+  endOfLabsDate
+
+  """
+  column name
+  """
+  endOfLabsLevelsThreshold
+
+  """
+  column name
+  """
+  gradingCheckId
+
+  """
+  column name
+  """
+  projectId
+
+  """
+  column name
+  """
+  projectPointsThreshold
+}
+
+"""
+select "gradingChecksAggregateBoolExpAvgArgumentsColumns" columns of table "grading_checks"
+"""
+enum GradingChecksSelectColumnGradingChecksAggregateBoolExpAvgArgumentsColumns {
+  """
+  column name
+  """
+  projectPointsThreshold
+}
+
+"""
+select "gradingChecksAggregateBoolExpCorrArgumentsColumns" columns of table "grading_checks"
+"""
+enum GradingChecksSelectColumnGradingChecksAggregateBoolExpCorrArgumentsColumns {
+  """
+  column name
+  """
+  projectPointsThreshold
+}
+
+"""
+select "gradingChecksAggregateBoolExpCovar_sampArgumentsColumns" columns of table "grading_checks"
+"""
+enum GradingChecksSelectColumnGradingChecksAggregateBoolExpCovar_sampArgumentsColumns {
+  """
+  column name
+  """
+  projectPointsThreshold
+}
+
+"""
+select "gradingChecksAggregateBoolExpMaxArgumentsColumns" columns of table "grading_checks"
+"""
+enum GradingChecksSelectColumnGradingChecksAggregateBoolExpMaxArgumentsColumns {
+  """
+  column name
+  """
+  projectPointsThreshold
+}
+
+"""
+select "gradingChecksAggregateBoolExpMinArgumentsColumns" columns of table "grading_checks"
+"""
+enum GradingChecksSelectColumnGradingChecksAggregateBoolExpMinArgumentsColumns {
+  """
+  column name
+  """
+  projectPointsThreshold
+}
+
+"""
+select "gradingChecksAggregateBoolExpStddev_sampArgumentsColumns" columns of table "grading_checks"
+"""
+enum GradingChecksSelectColumnGradingChecksAggregateBoolExpStddev_sampArgumentsColumns {
+  """
+  column name
+  """
+  projectPointsThreshold
+}
+
+"""
+select "gradingChecksAggregateBoolExpSumArgumentsColumns" columns of table "grading_checks"
+"""
+enum GradingChecksSelectColumnGradingChecksAggregateBoolExpSumArgumentsColumns {
+  """
+  column name
+  """
+  projectPointsThreshold
+}
+
+"""
+select "gradingChecksAggregateBoolExpVar_sampArgumentsColumns" columns of table "grading_checks"
+"""
+enum GradingChecksSelectColumnGradingChecksAggregateBoolExpVar_sampArgumentsColumns {
+  """
+  column name
+  """
+  projectPointsThreshold
+}
+
+"""
+input type for updating data in table "grading_checks"
+"""
+input GradingChecksSetInput {
+  editionId: bigint
+  endOfLabsDate: date
+  endOfLabsLevelsThreshold: bigint
+  gradingCheckId: bigint
+  projectId: bigint
+  projectPointsThreshold: float8
+}
+
+"""
+aggregate stddev on columns
+"""
+type GradingChecksStddevFields {
+  editionId: Float
+  endOfLabsLevelsThreshold: Float
+  gradingCheckId: Float
+  projectId: Float
+  projectPointsThreshold: Float
+}
+
+"""
+order by stddev() on columns of table "grading_checks"
+"""
+input GradingChecksStddevOrderBy {
+  editionId: OrderBy
+  endOfLabsLevelsThreshold: OrderBy
+  gradingCheckId: OrderBy
+  projectId: OrderBy
+  projectPointsThreshold: OrderBy
+}
+
+"""
+aggregate stddevPop on columns
+"""
+type GradingChecksStddevPopFields {
+  editionId: Float
+  endOfLabsLevelsThreshold: Float
+  gradingCheckId: Float
+  projectId: Float
+  projectPointsThreshold: Float
+}
+
+"""
+order by stddevPop() on columns of table "grading_checks"
+"""
+input GradingChecksStddevPopOrderBy {
+  editionId: OrderBy
+  endOfLabsLevelsThreshold: OrderBy
+  gradingCheckId: OrderBy
+  projectId: OrderBy
+  projectPointsThreshold: OrderBy
+}
+
+"""
+aggregate stddevSamp on columns
+"""
+type GradingChecksStddevSampFields {
+  editionId: Float
+  endOfLabsLevelsThreshold: Float
+  gradingCheckId: Float
+  projectId: Float
+  projectPointsThreshold: Float
+}
+
+"""
+order by stddevSamp() on columns of table "grading_checks"
+"""
+input GradingChecksStddevSampOrderBy {
+  editionId: OrderBy
+  endOfLabsLevelsThreshold: OrderBy
+  gradingCheckId: OrderBy
+  projectId: OrderBy
+  projectPointsThreshold: OrderBy
+}
+
+"""
+Streaming cursor of the table "grading_checks"
+"""
+input GradingChecksStreamCursorInput {
+  """
+  Stream column input with initial value
+  """
+  initialValue: GradingChecksStreamCursorValueInput!
+
+  """
+  cursor ordering
+  """
+  ordering: CursorOrdering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input GradingChecksStreamCursorValueInput {
+  editionId: bigint
+  endOfLabsDate: date
+  endOfLabsLevelsThreshold: bigint
+  gradingCheckId: bigint
+  projectId: bigint
+  projectPointsThreshold: float8
+}
+
+"""
+aggregate sum on columns
+"""
+type GradingChecksSumFields {
+  editionId: bigint
+  endOfLabsLevelsThreshold: bigint
+  gradingCheckId: bigint
+  projectId: bigint
+  projectPointsThreshold: float8
+}
+
+"""
+order by sum() on columns of table "grading_checks"
+"""
+input GradingChecksSumOrderBy {
+  editionId: OrderBy
+  endOfLabsLevelsThreshold: OrderBy
+  gradingCheckId: OrderBy
+  projectId: OrderBy
+  projectPointsThreshold: OrderBy
+}
+
+type GradingChecksType {
+  edition: EditionType!
+  endOfLabsDate: String!
+  endOfLabsLevelsThreshold: LevelType!
+  gradingCheckId: ID!
+  project: CategoryType!
+  projectPointsThreshold: Float!
+}
+
+"""
+update columns of table "grading_checks"
+"""
+enum GradingChecksUpdateColumn {
+  """
+  column name
+  """
+  editionId
+
+  """
+  column name
+  """
+  endOfLabsDate
+
+  """
+  column name
+  """
+  endOfLabsLevelsThreshold
+
+  """
+  column name
+  """
+  gradingCheckId
+
+  """
+  column name
+  """
+  projectId
+
+  """
+  column name
+  """
+  projectPointsThreshold
+}
+
+input GradingChecksUpdates {
+  """
+  increments the numeric columns with given value of the filtered values
+  """
+  _inc: GradingChecksIncInput
+
+  """
+  sets the columns of the filtered rows to the given values
+  """
+  _set: GradingChecksSetInput
+
+  """
+  filter the rows which have to be updated
+  """
+  where: GradingChecksBoolExp!
+}
+
+"""
+aggregate varPop on columns
+"""
+type GradingChecksVarPopFields {
+  editionId: Float
+  endOfLabsLevelsThreshold: Float
+  gradingCheckId: Float
+  projectId: Float
+  projectPointsThreshold: Float
+}
+
+"""
+order by varPop() on columns of table "grading_checks"
+"""
+input GradingChecksVarPopOrderBy {
+  editionId: OrderBy
+  endOfLabsLevelsThreshold: OrderBy
+  gradingCheckId: OrderBy
+  projectId: OrderBy
+  projectPointsThreshold: OrderBy
+}
+
+"""
+aggregate varSamp on columns
+"""
+type GradingChecksVarSampFields {
+  editionId: Float
+  endOfLabsLevelsThreshold: Float
+  gradingCheckId: Float
+  projectId: Float
+  projectPointsThreshold: Float
+}
+
+"""
+order by varSamp() on columns of table "grading_checks"
+"""
+input GradingChecksVarSampOrderBy {
+  editionId: OrderBy
+  endOfLabsLevelsThreshold: OrderBy
+  gradingCheckId: OrderBy
+  projectId: OrderBy
+  projectPointsThreshold: OrderBy
+}
+
+"""
+aggregate variance on columns
+"""
+type GradingChecksVarianceFields {
+  editionId: Float
+  endOfLabsLevelsThreshold: Float
+  gradingCheckId: Float
+  projectId: Float
+  projectPointsThreshold: Float
+}
+
+"""
+order by variance() on columns of table "grading_checks"
+"""
+input GradingChecksVarianceOrderBy {
+  editionId: OrderBy
+  endOfLabsLevelsThreshold: OrderBy
+  gradingCheckId: OrderBy
+  projectId: OrderBy
+  projectPointsThreshold: OrderBy
+}
+
 type GroupDateType {
   endTime: String!
   startTime: String!
   weekday: WeekdayType!
 }
 
+type GroupTeacherType {
+  canEdit: Boolean!
+  group: GroupType!
+  owns: Boolean!
+}
+
 type GroupType {
   edition: EditionType!
   endTime: String!
-  groupName: String!
+  generatedName: String!
+  groupName: String
   groupsId: ID!
   imageFile: FileType
   label: String
   startTime: String!
-  teacher: UserType
+  teacher: UserType!
   userGroups: [UserGroupType]!
+  usosId: Int!
   weekday: WeekdayType!
 }
 
@@ -6623,22 +7422,18 @@ type Groups {
   An object relationship
   """
   file: Files
-  groupName: String!
+  generatedName: String!
+  groupName: String
   groupsId: bigint!
   imageFileId: bigint
   label: String
   startTime: time!
-  teacherId: bigint
 
   """
   An object relationship
   """
-  user: Users
-
-  """
-  An object relationship
-  """
-  userByTeacherId: Users
+  teacher: Users!
+  teacherId: bigint!
 
   """
   An array relationship
@@ -6699,6 +7494,7 @@ type Groups {
     """
     where: UserGroupsBoolExp
   ): UserGroupsAggregate!
+  usosId: Int!
 
   """
   An object relationship
@@ -6773,6 +7569,7 @@ type GroupsAvgFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  usosId: Float
   weekdayId: Float
 }
 
@@ -6784,6 +7581,7 @@ input GroupsAvgOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -6798,16 +7596,17 @@ input GroupsBoolExp {
   editionId: BigintComparisonExp
   endTime: TimeComparisonExp
   file: FilesBoolExp
+  generatedName: StringComparisonExp
   groupName: StringComparisonExp
   groupsId: BigintComparisonExp
   imageFileId: BigintComparisonExp
   label: StringComparisonExp
   startTime: TimeComparisonExp
+  teacher: UsersBoolExp
   teacherId: BigintComparisonExp
-  user: UsersBoolExp
-  userByTeacherId: UsersBoolExp
   userGroups: UserGroupsBoolExp
   userGroupsAggregate: UserGroupsAggregateBoolExp
+  usosId: IntComparisonExp
   weekday: WeekdaysBoolExp
   weekdayId: BigintComparisonExp
 }
@@ -6830,6 +7629,7 @@ input GroupsIncInput {
   groupsId: bigint
   imageFileId: bigint
   teacherId: bigint
+  usosId: Int
   weekdayId: bigint
 }
 
@@ -6841,15 +7641,16 @@ input GroupsInsertInput {
   editionId: bigint
   endTime: time
   file: FilesObjRelInsertInput
+  generatedName: String
   groupName: String
   groupsId: bigint
   imageFileId: bigint
   label: String
   startTime: time
+  teacher: UsersObjRelInsertInput
   teacherId: bigint
-  user: UsersObjRelInsertInput
-  userByTeacherId: UsersObjRelInsertInput
   userGroups: UserGroupsArrRelInsertInput
+  usosId: Int
   weekday: WeekdaysObjRelInsertInput
   weekdayId: bigint
 }
@@ -6859,11 +7660,13 @@ aggregate max on columns
 """
 type GroupsMaxFields {
   editionId: bigint
+  generatedName: String
   groupName: String
   groupsId: bigint
   imageFileId: bigint
   label: String
   teacherId: bigint
+  usosId: Int
   weekdayId: bigint
 }
 
@@ -6872,11 +7675,13 @@ order by max() on columns of table "groups"
 """
 input GroupsMaxOrderBy {
   editionId: OrderBy
+  generatedName: OrderBy
   groupName: OrderBy
   groupsId: OrderBy
   imageFileId: OrderBy
   label: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -6885,11 +7690,13 @@ aggregate min on columns
 """
 type GroupsMinFields {
   editionId: bigint
+  generatedName: String
   groupName: String
   groupsId: bigint
   imageFileId: bigint
   label: String
   teacherId: bigint
+  usosId: Int
   weekdayId: bigint
 }
 
@@ -6898,11 +7705,13 @@ order by min() on columns of table "groups"
 """
 input GroupsMinOrderBy {
   editionId: OrderBy
+  generatedName: OrderBy
   groupName: OrderBy
   groupsId: OrderBy
   imageFileId: OrderBy
   label: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -6950,15 +7759,16 @@ input GroupsOrderBy {
   editionId: OrderBy
   endTime: OrderBy
   file: FilesOrderBy
+  generatedName: OrderBy
   groupName: OrderBy
   groupsId: OrderBy
   imageFileId: OrderBy
   label: OrderBy
   startTime: OrderBy
+  teacher: UsersOrderBy
   teacherId: OrderBy
-  user: UsersOrderBy
-  userByTeacherId: UsersOrderBy
   userGroupsAggregate: UserGroupsAggregateOrderBy
+  usosId: OrderBy
   weekday: WeekdaysOrderBy
   weekdayId: OrderBy
 }
@@ -6987,6 +7797,11 @@ enum GroupsSelectColumn {
   """
   column name
   """
+  generatedName
+
+  """
+  column name
+  """
   groupName
 
   """
@@ -7017,6 +7832,11 @@ enum GroupsSelectColumn {
   """
   column name
   """
+  usosId
+
+  """
+  column name
+  """
   weekdayId
 }
 
@@ -7026,12 +7846,14 @@ input type for updating data in table "groups"
 input GroupsSetInput {
   editionId: bigint
   endTime: time
+  generatedName: String
   groupName: String
   groupsId: bigint
   imageFileId: bigint
   label: String
   startTime: time
   teacherId: bigint
+  usosId: Int
   weekdayId: bigint
 }
 
@@ -7043,6 +7865,7 @@ type GroupsStddevFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  usosId: Float
   weekdayId: Float
 }
 
@@ -7054,6 +7877,7 @@ input GroupsStddevOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -7065,6 +7889,7 @@ type GroupsStddevPopFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  usosId: Float
   weekdayId: Float
 }
 
@@ -7076,6 +7901,7 @@ input GroupsStddevPopOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -7087,6 +7913,7 @@ type GroupsStddevSampFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  usosId: Float
   weekdayId: Float
 }
 
@@ -7098,6 +7925,7 @@ input GroupsStddevSampOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -7122,12 +7950,14 @@ Initial value of the column from where the streaming should start
 input GroupsStreamCursorValueInput {
   editionId: bigint
   endTime: time
+  generatedName: String
   groupName: String
   groupsId: bigint
   imageFileId: bigint
   label: String
   startTime: time
   teacherId: bigint
+  usosId: Int
   weekdayId: bigint
 }
 
@@ -7139,6 +7969,7 @@ type GroupsSumFields {
   groupsId: bigint
   imageFileId: bigint
   teacherId: bigint
+  usosId: Int
   weekdayId: bigint
 }
 
@@ -7150,6 +7981,7 @@ input GroupsSumOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -7166,6 +7998,11 @@ enum GroupsUpdateColumn {
   column name
   """
   endTime
+
+  """
+  column name
+  """
+  generatedName
 
   """
   column name
@@ -7196,6 +8033,11 @@ enum GroupsUpdateColumn {
   column name
   """
   teacherId
+
+  """
+  column name
+  """
+  usosId
 
   """
   column name
@@ -7228,6 +8070,7 @@ type GroupsVarPopFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  usosId: Float
   weekdayId: Float
 }
 
@@ -7239,6 +8082,7 @@ input GroupsVarPopOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -7250,6 +8094,7 @@ type GroupsVarSampFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  usosId: Float
   weekdayId: Float
 }
 
@@ -7261,6 +8106,7 @@ input GroupsVarSampOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -7272,6 +8118,7 @@ type GroupsVarianceFields {
   groupsId: Float
   imageFileId: Float
   teacherId: Float
+  usosId: Float
   weekdayId: Float
 }
 
@@ -7283,6 +8130,7 @@ input GroupsVarianceOrderBy {
   groupsId: OrderBy
   imageFileId: OrderBy
   teacherId: OrderBy
+  usosId: OrderBy
   weekdayId: OrderBy
 }
 
@@ -7291,14 +8139,16 @@ columns and relationships of "hall_of_fame"
 """
 type HallOfFame {
   editionId: bigint
+  generatedName: String
   groupName: String
   groupsId: bigint
-  imageFileId: bigint
   levelId: bigint
+  levelImageId: bigint
   levelName: String
   nick: String
-  sumOfPoints: float8
+  sumOfPoints: numeric
   userId: bigint
+  userImageId: bigint
 }
 
 """
@@ -7332,10 +8182,11 @@ aggregate avg on columns
 type HallOfFameAvgFields {
   editionId: Float
   groupsId: Float
-  imageFileId: Float
   levelId: Float
+  levelImageId: Float
   sumOfPoints: Float
   userId: Float
+  userImageId: Float
 }
 
 """
@@ -7346,14 +8197,16 @@ input HallOfFameBoolExp {
   _not: HallOfFameBoolExp
   _or: [HallOfFameBoolExp!]
   editionId: BigintComparisonExp
+  generatedName: StringComparisonExp
   groupName: StringComparisonExp
   groupsId: BigintComparisonExp
-  imageFileId: BigintComparisonExp
   levelId: BigintComparisonExp
+  levelImageId: BigintComparisonExp
   levelName: StringComparisonExp
   nick: StringComparisonExp
-  sumOfPoints: Float8ComparisonExp
+  sumOfPoints: NumericComparisonExp
   userId: BigintComparisonExp
+  userImageId: BigintComparisonExp
 }
 
 """
@@ -7361,14 +8214,16 @@ aggregate max on columns
 """
 type HallOfFameMaxFields {
   editionId: bigint
+  generatedName: String
   groupName: String
   groupsId: bigint
-  imageFileId: bigint
   levelId: bigint
+  levelImageId: bigint
   levelName: String
   nick: String
-  sumOfPoints: float8
+  sumOfPoints: numeric
   userId: bigint
+  userImageId: bigint
 }
 
 """
@@ -7376,14 +8231,16 @@ aggregate min on columns
 """
 type HallOfFameMinFields {
   editionId: bigint
+  generatedName: String
   groupName: String
   groupsId: bigint
-  imageFileId: bigint
   levelId: bigint
+  levelImageId: bigint
   levelName: String
   nick: String
-  sumOfPoints: float8
+  sumOfPoints: numeric
   userId: bigint
+  userImageId: bigint
 }
 
 """
@@ -7391,14 +8248,16 @@ Ordering options when selecting data from "hall_of_fame".
 """
 input HallOfFameOrderBy {
   editionId: OrderBy
+  generatedName: OrderBy
   groupName: OrderBy
   groupsId: OrderBy
-  imageFileId: OrderBy
   levelId: OrderBy
+  levelImageId: OrderBy
   levelName: OrderBy
   nick: OrderBy
   sumOfPoints: OrderBy
   userId: OrderBy
+  userImageId: OrderBy
 }
 
 """
@@ -7413,6 +8272,11 @@ enum HallOfFameSelectColumn {
   """
   column name
   """
+  generatedName
+
+  """
+  column name
+  """
   groupName
 
   """
@@ -7423,12 +8287,12 @@ enum HallOfFameSelectColumn {
   """
   column name
   """
-  imageFileId
+  levelId
 
   """
   column name
   """
-  levelId
+  levelImageId
 
   """
   column name
@@ -7449,6 +8313,11 @@ enum HallOfFameSelectColumn {
   column name
   """
   userId
+
+  """
+  column name
+  """
+  userImageId
 }
 
 """
@@ -7457,10 +8326,11 @@ aggregate stddev on columns
 type HallOfFameStddevFields {
   editionId: Float
   groupsId: Float
-  imageFileId: Float
   levelId: Float
+  levelImageId: Float
   sumOfPoints: Float
   userId: Float
+  userImageId: Float
 }
 
 """
@@ -7469,10 +8339,11 @@ aggregate stddevPop on columns
 type HallOfFameStddevPopFields {
   editionId: Float
   groupsId: Float
-  imageFileId: Float
   levelId: Float
+  levelImageId: Float
   sumOfPoints: Float
   userId: Float
+  userImageId: Float
 }
 
 """
@@ -7481,10 +8352,11 @@ aggregate stddevSamp on columns
 type HallOfFameStddevSampFields {
   editionId: Float
   groupsId: Float
-  imageFileId: Float
   levelId: Float
+  levelImageId: Float
   sumOfPoints: Float
   userId: Float
+  userImageId: Float
 }
 
 """
@@ -7507,14 +8379,16 @@ Initial value of the column from where the streaming should start
 """
 input HallOfFameStreamCursorValueInput {
   editionId: bigint
+  generatedName: String
   groupName: String
   groupsId: bigint
-  imageFileId: bigint
   levelId: bigint
+  levelImageId: bigint
   levelName: String
   nick: String
-  sumOfPoints: float8
+  sumOfPoints: numeric
   userId: bigint
+  userImageId: bigint
 }
 
 """
@@ -7523,10 +8397,11 @@ aggregate sum on columns
 type HallOfFameSumFields {
   editionId: bigint
   groupsId: bigint
-  imageFileId: bigint
   levelId: bigint
-  sumOfPoints: float8
+  levelImageId: bigint
+  sumOfPoints: numeric
   userId: bigint
+  userImageId: bigint
 }
 
 """
@@ -7535,10 +8410,11 @@ aggregate varPop on columns
 type HallOfFameVarPopFields {
   editionId: Float
   groupsId: Float
-  imageFileId: Float
   levelId: Float
+  levelImageId: Float
   sumOfPoints: Float
   userId: Float
+  userImageId: Float
 }
 
 """
@@ -7547,10 +8423,11 @@ aggregate varSamp on columns
 type HallOfFameVarSampFields {
   editionId: Float
   groupsId: Float
-  imageFileId: Float
   levelId: Float
+  levelImageId: Float
   sumOfPoints: Float
   userId: Float
+  userImageId: Float
 }
 
 """
@@ -7559,10 +8436,11 @@ aggregate variance on columns
 type HallOfFameVarianceFields {
   editionId: Float
   groupsId: Float
-  imageFileId: Float
   levelId: Float
+  levelImageId: Float
   sumOfPoints: Float
   userId: Float
+  userImageId: Float
 }
 
 """
@@ -7582,14 +8460,14 @@ input IntComparisonExp {
 
 type LevelType {
   edition: EditionType!
-  grade: Float!
+  grade: String!
   highest: Boolean!
   imageFile: FileType
   label: String!
   levelId: ID!
   levelName: String!
-  maximumPoints: Float!
-  minimumPoints: Float!
+  maximumPoints: String!
+  minimumPoints: String!
   ordinalNumber: Int!
   userLevels: [UserLevelType]
 }
@@ -7608,13 +8486,73 @@ type Levels {
   An object relationship
   """
   file: Files
-  grade: float8!
+  grade: numeric!
+
+  """
+  An array relationship
+  """
+  gradingChecks(
+    """
+    distinct select on columns
+    """
+    distinctOn: [GradingChecksSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [GradingChecksOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: GradingChecksBoolExp
+  ): [GradingChecks!]!
+
+  """
+  An aggregate relationship
+  """
+  gradingChecksAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [GradingChecksSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [GradingChecksOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: GradingChecksBoolExp
+  ): GradingChecksAggregate!
   highest: Boolean!
   imageFileId: bigint
   label: String!
   levelId: bigint!
-  maximumPoints: float8!
-  minimumPoints: float8!
+  maximumPoints: numeric!
+  minimumPoints: numeric!
   name: String!
   ordinalNumber: Int!
 
@@ -7688,17 +8626,9 @@ type LevelsAggregate {
 }
 
 input LevelsAggregateBoolExp {
-  avg: levelsAggregateBoolExpAvg
   bool_and: levelsAggregateBoolExpBool_and
   bool_or: levelsAggregateBoolExpBool_or
-  corr: levelsAggregateBoolExpCorr
   count: levelsAggregateBoolExpCount
-  covar_samp: levelsAggregateBoolExpCovar_samp
-  max: levelsAggregateBoolExpMax
-  min: levelsAggregateBoolExpMin
-  stddev_samp: levelsAggregateBoolExpStddev_samp
-  sum: levelsAggregateBoolExpSum
-  var_samp: levelsAggregateBoolExpVar_samp
 }
 
 """
@@ -7783,13 +8713,15 @@ input LevelsBoolExp {
   edition: EditionBoolExp
   editionId: BigintComparisonExp
   file: FilesBoolExp
-  grade: Float8ComparisonExp
+  grade: NumericComparisonExp
+  gradingChecks: GradingChecksBoolExp
+  gradingChecksAggregate: GradingChecksAggregateBoolExp
   highest: BooleanComparisonExp
   imageFileId: BigintComparisonExp
   label: StringComparisonExp
   levelId: BigintComparisonExp
-  maximumPoints: Float8ComparisonExp
-  minimumPoints: Float8ComparisonExp
+  maximumPoints: NumericComparisonExp
+  minimumPoints: NumericComparisonExp
   name: StringComparisonExp
   ordinalNumber: IntComparisonExp
   userLevels: UserLevelBoolExp
@@ -7811,11 +8743,11 @@ input type for incrementing numeric columns in table "levels"
 """
 input LevelsIncInput {
   editionId: bigint
-  grade: float8
+  grade: numeric
   imageFileId: bigint
   levelId: bigint
-  maximumPoints: float8
-  minimumPoints: float8
+  maximumPoints: numeric
+  minimumPoints: numeric
   ordinalNumber: Int
 }
 
@@ -7826,13 +8758,14 @@ input LevelsInsertInput {
   edition: EditionObjRelInsertInput
   editionId: bigint
   file: FilesObjRelInsertInput
-  grade: float8
+  grade: numeric
+  gradingChecks: GradingChecksArrRelInsertInput
   highest: Boolean
   imageFileId: bigint
   label: String
   levelId: bigint
-  maximumPoints: float8
-  minimumPoints: float8
+  maximumPoints: numeric
+  minimumPoints: numeric
   name: String
   ordinalNumber: Int
   userLevels: UserLevelArrRelInsertInput
@@ -7843,12 +8776,12 @@ aggregate max on columns
 """
 type LevelsMaxFields {
   editionId: bigint
-  grade: float8
+  grade: numeric
   imageFileId: bigint
   label: String
   levelId: bigint
-  maximumPoints: float8
-  minimumPoints: float8
+  maximumPoints: numeric
+  minimumPoints: numeric
   name: String
   ordinalNumber: Int
 }
@@ -7873,12 +8806,12 @@ aggregate min on columns
 """
 type LevelsMinFields {
   editionId: bigint
-  grade: float8
+  grade: numeric
   imageFileId: bigint
   label: String
   levelId: bigint
-  maximumPoints: float8
-  minimumPoints: float8
+  maximumPoints: numeric
+  minimumPoints: numeric
   name: String
   ordinalNumber: Int
 }
@@ -7942,6 +8875,7 @@ input LevelsOrderBy {
   editionId: OrderBy
   file: FilesOrderBy
   grade: OrderBy
+  gradingChecksAggregate: GradingChecksAggregateOrderBy
   highest: OrderBy
   imageFileId: OrderBy
   label: OrderBy
@@ -8016,26 +8950,6 @@ enum LevelsSelectColumn {
 }
 
 """
-select "levelsAggregateBoolExpAvgArgumentsColumns" columns of table "levels"
-"""
-enum LevelsSelectColumnLevelsAggregateBoolExpAvgArgumentsColumns {
-  """
-  column name
-  """
-  grade
-
-  """
-  column name
-  """
-  maximumPoints
-
-  """
-  column name
-  """
-  minimumPoints
-}
-
-"""
 select "levelsAggregateBoolExpBool_andArgumentsColumns" columns of table "levels"
 """
 enum LevelsSelectColumnLevelsAggregateBoolExpBool_andArgumentsColumns {
@@ -8056,157 +8970,17 @@ enum LevelsSelectColumnLevelsAggregateBoolExpBool_orArgumentsColumns {
 }
 
 """
-select "levelsAggregateBoolExpCorrArgumentsColumns" columns of table "levels"
-"""
-enum LevelsSelectColumnLevelsAggregateBoolExpCorrArgumentsColumns {
-  """
-  column name
-  """
-  grade
-
-  """
-  column name
-  """
-  maximumPoints
-
-  """
-  column name
-  """
-  minimumPoints
-}
-
-"""
-select "levelsAggregateBoolExpCovar_sampArgumentsColumns" columns of table "levels"
-"""
-enum LevelsSelectColumnLevelsAggregateBoolExpCovar_sampArgumentsColumns {
-  """
-  column name
-  """
-  grade
-
-  """
-  column name
-  """
-  maximumPoints
-
-  """
-  column name
-  """
-  minimumPoints
-}
-
-"""
-select "levelsAggregateBoolExpMaxArgumentsColumns" columns of table "levels"
-"""
-enum LevelsSelectColumnLevelsAggregateBoolExpMaxArgumentsColumns {
-  """
-  column name
-  """
-  grade
-
-  """
-  column name
-  """
-  maximumPoints
-
-  """
-  column name
-  """
-  minimumPoints
-}
-
-"""
-select "levelsAggregateBoolExpMinArgumentsColumns" columns of table "levels"
-"""
-enum LevelsSelectColumnLevelsAggregateBoolExpMinArgumentsColumns {
-  """
-  column name
-  """
-  grade
-
-  """
-  column name
-  """
-  maximumPoints
-
-  """
-  column name
-  """
-  minimumPoints
-}
-
-"""
-select "levelsAggregateBoolExpStddev_sampArgumentsColumns" columns of table "levels"
-"""
-enum LevelsSelectColumnLevelsAggregateBoolExpStddev_sampArgumentsColumns {
-  """
-  column name
-  """
-  grade
-
-  """
-  column name
-  """
-  maximumPoints
-
-  """
-  column name
-  """
-  minimumPoints
-}
-
-"""
-select "levelsAggregateBoolExpSumArgumentsColumns" columns of table "levels"
-"""
-enum LevelsSelectColumnLevelsAggregateBoolExpSumArgumentsColumns {
-  """
-  column name
-  """
-  grade
-
-  """
-  column name
-  """
-  maximumPoints
-
-  """
-  column name
-  """
-  minimumPoints
-}
-
-"""
-select "levelsAggregateBoolExpVar_sampArgumentsColumns" columns of table "levels"
-"""
-enum LevelsSelectColumnLevelsAggregateBoolExpVar_sampArgumentsColumns {
-  """
-  column name
-  """
-  grade
-
-  """
-  column name
-  """
-  maximumPoints
-
-  """
-  column name
-  """
-  minimumPoints
-}
-
-"""
 input type for updating data in table "levels"
 """
 input LevelsSetInput {
   editionId: bigint
-  grade: float8
+  grade: numeric
   highest: Boolean
   imageFileId: bigint
   label: String
   levelId: bigint
-  maximumPoints: float8
-  minimumPoints: float8
+  maximumPoints: numeric
+  minimumPoints: numeric
   name: String
   ordinalNumber: Int
 }
@@ -8309,13 +9083,13 @@ Initial value of the column from where the streaming should start
 """
 input LevelsStreamCursorValueInput {
   editionId: bigint
-  grade: float8
+  grade: numeric
   highest: Boolean
   imageFileId: bigint
   label: String
   levelId: bigint
-  maximumPoints: float8
-  minimumPoints: float8
+  maximumPoints: numeric
+  minimumPoints: numeric
   name: String
   ordinalNumber: Int
 }
@@ -8325,11 +9099,11 @@ aggregate sum on columns
 """
 type LevelsSumFields {
   editionId: bigint
-  grade: float8
+  grade: numeric
   imageFileId: bigint
   levelId: bigint
-  maximumPoints: float8
-  minimumPoints: float8
+  maximumPoints: numeric
+  minimumPoints: numeric
   ordinalNumber: Int
 }
 
@@ -8503,6 +9277,21 @@ type NeighboringLevelsType {
 }
 
 """
+Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'.
+"""
+input NumericComparisonExp {
+  _eq: numeric
+  _gt: numeric
+  _gte: numeric
+  _in: [numeric!]
+  _isNull: Boolean
+  _lt: numeric
+  _lte: numeric
+  _neq: numeric
+  _nin: [numeric!]
+}
+
+"""
 column ordering options
 """
 enum OrderBy {
@@ -8551,7 +9340,7 @@ type PointType {
   teacher: UserType!
   updatedAt: String!
   updatedBy: UserType!
-  value: Float!
+  value: String!
 }
 
 """
@@ -8645,7 +9434,7 @@ type Points {
   An object relationship
   """
   userByUpdatedBy: Users!
-  value: float8!
+  value: numeric!
 }
 
 """
@@ -8657,15 +9446,7 @@ type PointsAggregate {
 }
 
 input PointsAggregateBoolExp {
-  avg: pointsAggregateBoolExpAvg
-  corr: pointsAggregateBoolExpCorr
   count: pointsAggregateBoolExpCount
-  covar_samp: pointsAggregateBoolExpCovar_samp
-  max: pointsAggregateBoolExpMax
-  min: pointsAggregateBoolExpMin
-  stddev_samp: pointsAggregateBoolExpStddev_samp
-  sum: pointsAggregateBoolExpSum
-  var_samp: pointsAggregateBoolExpVar_samp
 }
 
 """
@@ -8759,7 +9540,7 @@ input PointsBoolExp {
   user: UsersBoolExp
   userByTeacherId: UsersBoolExp
   userByUpdatedBy: UsersBoolExp
-  value: Float8ComparisonExp
+  value: NumericComparisonExp
 }
 
 """
@@ -8806,7 +9587,7 @@ type PointsHistory {
   An object relationship
   """
   userByTeacherId: Users!
-  value: float8!
+  value: Float!
 }
 
 """
@@ -8818,15 +9599,7 @@ type PointsHistoryAggregate {
 }
 
 input PointsHistoryAggregateBoolExp {
-  avg: pointsHistoryAggregateBoolExpAvg
-  corr: pointsHistoryAggregateBoolExpCorr
   count: pointsHistoryAggregateBoolExpCount
-  covar_samp: pointsHistoryAggregateBoolExpCovar_samp
-  max: pointsHistoryAggregateBoolExpMax
-  min: pointsHistoryAggregateBoolExpMin
-  stddev_samp: pointsHistoryAggregateBoolExpStddev_samp
-  sum: pointsHistoryAggregateBoolExpSum
-  var_samp: pointsHistoryAggregateBoolExpVar_samp
 }
 
 """
@@ -8922,7 +9695,7 @@ input PointsHistoryBoolExp {
   updatedBy: BigintComparisonExp
   user: UsersBoolExp
   userByTeacherId: UsersBoolExp
-  value: Float8ComparisonExp
+  value: FloatComparisonExp
 }
 
 """
@@ -8945,7 +9718,7 @@ input PointsHistoryIncInput {
   subcategoryId: bigint
   teacherId: bigint
   updatedBy: bigint
-  value: float8
+  value: Float
 }
 
 """
@@ -8966,7 +9739,7 @@ input PointsHistoryInsertInput {
   updatedBy: bigint
   user: UsersObjRelInsertInput
   userByTeacherId: UsersObjRelInsertInput
-  value: float8
+  value: Float
 }
 
 """
@@ -8983,7 +9756,7 @@ type PointsHistoryMaxFields {
   teacherId: bigint
   updatedAt: timestamp
   updatedBy: bigint
-  value: float8
+  value: Float
 }
 
 """
@@ -9017,7 +9790,7 @@ type PointsHistoryMinFields {
   teacherId: bigint
   updatedAt: timestamp
   updatedBy: bigint
-  value: float8
+  value: Float
 }
 
 """
@@ -9150,86 +9923,6 @@ enum PointsHistorySelectColumn {
 }
 
 """
-select "pointsHistoryAggregateBoolExpAvgArgumentsColumns" columns of table "points_history"
-"""
-enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpAvgArgumentsColumns {
-  """
-  column name
-  """
-  value
-}
-
-"""
-select "pointsHistoryAggregateBoolExpCorrArgumentsColumns" columns of table "points_history"
-"""
-enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpCorrArgumentsColumns {
-  """
-  column name
-  """
-  value
-}
-
-"""
-select "pointsHistoryAggregateBoolExpCovar_sampArgumentsColumns" columns of table "points_history"
-"""
-enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpCovar_sampArgumentsColumns {
-  """
-  column name
-  """
-  value
-}
-
-"""
-select "pointsHistoryAggregateBoolExpMaxArgumentsColumns" columns of table "points_history"
-"""
-enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpMaxArgumentsColumns {
-  """
-  column name
-  """
-  value
-}
-
-"""
-select "pointsHistoryAggregateBoolExpMinArgumentsColumns" columns of table "points_history"
-"""
-enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpMinArgumentsColumns {
-  """
-  column name
-  """
-  value
-}
-
-"""
-select "pointsHistoryAggregateBoolExpStddev_sampArgumentsColumns" columns of table "points_history"
-"""
-enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpStddev_sampArgumentsColumns {
-  """
-  column name
-  """
-  value
-}
-
-"""
-select "pointsHistoryAggregateBoolExpSumArgumentsColumns" columns of table "points_history"
-"""
-enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpSumArgumentsColumns {
-  """
-  column name
-  """
-  value
-}
-
-"""
-select "pointsHistoryAggregateBoolExpVar_sampArgumentsColumns" columns of table "points_history"
-"""
-enum PointsHistorySelectColumnPointsHistoryAggregateBoolExpVar_sampArgumentsColumns {
-  """
-  column name
-  """
-  value
-}
-
-"""
 input type for updating data in table "points_history"
 """
 input PointsHistorySetInput {
@@ -9243,7 +9936,7 @@ input PointsHistorySetInput {
   teacherId: bigint
   updatedAt: timestamp
   updatedBy: bigint
-  value: float8
+  value: Float
 }
 
 """
@@ -9353,7 +10046,7 @@ input PointsHistoryStreamCursorValueInput {
   teacherId: bigint
   updatedAt: timestamp
   updatedBy: bigint
-  value: float8
+  value: Float
 }
 
 """
@@ -9366,7 +10059,7 @@ type PointsHistorySumFields {
   subcategoryId: bigint
   teacherId: bigint
   updatedBy: bigint
-  value: float8
+  value: Float
 }
 
 """
@@ -9546,7 +10239,7 @@ input PointsIncInput {
   subcategoryId: bigint
   teacherId: bigint
   updatedBy: bigint
-  value: float8
+  value: numeric
 }
 
 """
@@ -9566,7 +10259,7 @@ input PointsInsertInput {
   user: UsersObjRelInsertInput
   userByTeacherId: UsersObjRelInsertInput
   userByUpdatedBy: UsersObjRelInsertInput
-  value: float8
+  value: numeric
 }
 
 """
@@ -9581,7 +10274,7 @@ type PointsMaxFields {
   teacherId: bigint
   updatedAt: timestamp
   updatedBy: bigint
-  value: float8
+  value: numeric
 }
 
 """
@@ -9611,7 +10304,7 @@ type PointsMinFields {
   teacherId: bigint
   updatedAt: timestamp
   updatedBy: bigint
-  value: float8
+  value: numeric
 }
 
 """
@@ -9743,86 +10436,6 @@ enum PointsSelectColumn {
 }
 
 """
-select "pointsAggregateBoolExpAvgArgumentsColumns" columns of table "points"
-"""
-enum PointsSelectColumnPointsAggregateBoolExpAvgArgumentsColumns {
-  """
-  column name
-  """
-  value
-}
-
-"""
-select "pointsAggregateBoolExpCorrArgumentsColumns" columns of table "points"
-"""
-enum PointsSelectColumnPointsAggregateBoolExpCorrArgumentsColumns {
-  """
-  column name
-  """
-  value
-}
-
-"""
-select "pointsAggregateBoolExpCovar_sampArgumentsColumns" columns of table "points"
-"""
-enum PointsSelectColumnPointsAggregateBoolExpCovar_sampArgumentsColumns {
-  """
-  column name
-  """
-  value
-}
-
-"""
-select "pointsAggregateBoolExpMaxArgumentsColumns" columns of table "points"
-"""
-enum PointsSelectColumnPointsAggregateBoolExpMaxArgumentsColumns {
-  """
-  column name
-  """
-  value
-}
-
-"""
-select "pointsAggregateBoolExpMinArgumentsColumns" columns of table "points"
-"""
-enum PointsSelectColumnPointsAggregateBoolExpMinArgumentsColumns {
-  """
-  column name
-  """
-  value
-}
-
-"""
-select "pointsAggregateBoolExpStddev_sampArgumentsColumns" columns of table "points"
-"""
-enum PointsSelectColumnPointsAggregateBoolExpStddev_sampArgumentsColumns {
-  """
-  column name
-  """
-  value
-}
-
-"""
-select "pointsAggregateBoolExpSumArgumentsColumns" columns of table "points"
-"""
-enum PointsSelectColumnPointsAggregateBoolExpSumArgumentsColumns {
-  """
-  column name
-  """
-  value
-}
-
-"""
-select "pointsAggregateBoolExpVar_sampArgumentsColumns" columns of table "points"
-"""
-enum PointsSelectColumnPointsAggregateBoolExpVar_sampArgumentsColumns {
-  """
-  column name
-  """
-  value
-}
-
-"""
 input type for updating data in table "points"
 """
 input PointsSetInput {
@@ -9834,7 +10447,7 @@ input PointsSetInput {
   teacherId: bigint
   updatedAt: timestamp
   updatedBy: bigint
-  value: float8
+  value: numeric
 }
 
 """
@@ -9936,7 +10549,7 @@ input PointsStreamCursorValueInput {
   teacherId: bigint
   updatedAt: timestamp
   updatedBy: bigint
-  value: float8
+  value: numeric
 }
 
 """
@@ -9948,7 +10561,7 @@ type PointsSumFields {
   subcategoryId: bigint
   teacherId: bigint
   updatedBy: bigint
-  value: float8
+  value: numeric
 }
 
 """
@@ -10178,6 +10791,7 @@ type StudentPointsType {
   sumOfAll: Float!
   sumOfBonuses: Float!
   sumOfPurePoints: Float!
+  teacher: UserType!
   user: UserType!
 }
 
@@ -10257,7 +10871,7 @@ type Subcategories {
   edition: Edition!
   editionId: bigint!
   label: String!
-  maxPoints: float8!
+  maxPoints: numeric!
   ordinalNumber: Int!
 
   """
@@ -10392,15 +11006,7 @@ type SubcategoriesAggregate {
 }
 
 input SubcategoriesAggregateBoolExp {
-  avg: subcategoriesAggregateBoolExpAvg
-  corr: subcategoriesAggregateBoolExpCorr
   count: subcategoriesAggregateBoolExpCount
-  covar_samp: subcategoriesAggregateBoolExpCovar_samp
-  max: subcategoriesAggregateBoolExpMax
-  min: subcategoriesAggregateBoolExpMin
-  stddev_samp: subcategoriesAggregateBoolExpStddev_samp
-  sum: subcategoriesAggregateBoolExpSum
-  var_samp: subcategoriesAggregateBoolExpVar_samp
 }
 
 """
@@ -10485,7 +11091,7 @@ input SubcategoriesBoolExp {
   edition: EditionBoolExp
   editionId: BigintComparisonExp
   label: StringComparisonExp
-  maxPoints: Float8ComparisonExp
+  maxPoints: NumericComparisonExp
   ordinalNumber: IntComparisonExp
   points: PointsBoolExp
   pointsAggregate: PointsAggregateBoolExp
@@ -10511,7 +11117,7 @@ input type for incrementing numeric columns in table "subcategories"
 input SubcategoriesIncInput {
   categoryId: bigint
   editionId: bigint
-  maxPoints: float8
+  maxPoints: numeric
   ordinalNumber: Int
   subcategoryId: bigint
 }
@@ -10526,7 +11132,7 @@ input SubcategoriesInsertInput {
   edition: EditionObjRelInsertInput
   editionId: bigint
   label: String
-  maxPoints: float8
+  maxPoints: numeric
   ordinalNumber: Int
   points: PointsArrRelInsertInput
   pointsHistories: PointsHistoryArrRelInsertInput
@@ -10541,7 +11147,7 @@ type SubcategoriesMaxFields {
   categoryId: bigint
   editionId: bigint
   label: String
-  maxPoints: float8
+  maxPoints: numeric
   ordinalNumber: Int
   subcategoryId: bigint
   subcategoryName: String
@@ -10567,7 +11173,7 @@ type SubcategoriesMinFields {
   categoryId: bigint
   editionId: bigint
   label: String
-  maxPoints: float8
+  maxPoints: numeric
   ordinalNumber: Int
   subcategoryId: bigint
   subcategoryName: String
@@ -10688,93 +11294,13 @@ enum SubcategoriesSelectColumn {
 }
 
 """
-select "subcategoriesAggregateBoolExpAvgArgumentsColumns" columns of table "subcategories"
-"""
-enum SubcategoriesSelectColumnSubcategoriesAggregateBoolExpAvgArgumentsColumns {
-  """
-  column name
-  """
-  maxPoints
-}
-
-"""
-select "subcategoriesAggregateBoolExpCorrArgumentsColumns" columns of table "subcategories"
-"""
-enum SubcategoriesSelectColumnSubcategoriesAggregateBoolExpCorrArgumentsColumns {
-  """
-  column name
-  """
-  maxPoints
-}
-
-"""
-select "subcategoriesAggregateBoolExpCovar_sampArgumentsColumns" columns of table "subcategories"
-"""
-enum SubcategoriesSelectColumnSubcategoriesAggregateBoolExpCovar_sampArgumentsColumns {
-  """
-  column name
-  """
-  maxPoints
-}
-
-"""
-select "subcategoriesAggregateBoolExpMaxArgumentsColumns" columns of table "subcategories"
-"""
-enum SubcategoriesSelectColumnSubcategoriesAggregateBoolExpMaxArgumentsColumns {
-  """
-  column name
-  """
-  maxPoints
-}
-
-"""
-select "subcategoriesAggregateBoolExpMinArgumentsColumns" columns of table "subcategories"
-"""
-enum SubcategoriesSelectColumnSubcategoriesAggregateBoolExpMinArgumentsColumns {
-  """
-  column name
-  """
-  maxPoints
-}
-
-"""
-select "subcategoriesAggregateBoolExpStddev_sampArgumentsColumns" columns of table "subcategories"
-"""
-enum SubcategoriesSelectColumnSubcategoriesAggregateBoolExpStddev_sampArgumentsColumns {
-  """
-  column name
-  """
-  maxPoints
-}
-
-"""
-select "subcategoriesAggregateBoolExpSumArgumentsColumns" columns of table "subcategories"
-"""
-enum SubcategoriesSelectColumnSubcategoriesAggregateBoolExpSumArgumentsColumns {
-  """
-  column name
-  """
-  maxPoints
-}
-
-"""
-select "subcategoriesAggregateBoolExpVar_sampArgumentsColumns" columns of table "subcategories"
-"""
-enum SubcategoriesSelectColumnSubcategoriesAggregateBoolExpVar_sampArgumentsColumns {
-  """
-  column name
-  """
-  maxPoints
-}
-
-"""
 input type for updating data in table "subcategories"
 """
 input SubcategoriesSetInput {
   categoryId: bigint
   editionId: bigint
   label: String
-  maxPoints: float8
+  maxPoints: numeric
   ordinalNumber: Int
   subcategoryId: bigint
   subcategoryName: String
@@ -10868,7 +11394,7 @@ input SubcategoriesStreamCursorValueInput {
   categoryId: bigint
   editionId: bigint
   label: String
-  maxPoints: float8
+  maxPoints: numeric
   ordinalNumber: Int
   subcategoryId: bigint
   subcategoryName: String
@@ -10880,7 +11406,7 @@ aggregate sum on columns
 type SubcategoriesSumFields {
   categoryId: bigint
   editionId: bigint
-  maxPoints: float8
+  maxPoints: numeric
   ordinalNumber: Int
   subcategoryId: bigint
 }
@@ -11020,15 +11546,18 @@ input SubcategoriesVarianceOrderBy {
 }
 
 type SubcategoryPointsType {
+  createdAt: String!
   points: PurePointsType!
   subcategory: SubcategoryType!
+  teacher: UserType!
+  updatedAt: String!
 }
 
 type SubcategoryType {
   category: CategoryType!
   edition: EditionType!
   label: String!
-  maxPoints: Float!
+  maxPoints: String!
   ordinalNumber: Int!
   subcategoryId: ID!
   subcategoryName: String!
@@ -11475,11 +12004,14 @@ input UserGroupsVarianceOrderBy {
 columns and relationships of "user_level"
 """
 type UserLevel {
+  computedGrade: float8!
+
   """
   An object relationship
   """
   edition: Edition!
   editionId: bigint!
+  endOfLabsLevelsReached: Boolean!
   label: String!
 
   """
@@ -11487,6 +12019,7 @@ type UserLevel {
   """
   level: Levels!
   levelId: bigint!
+  projectPointsThresholdReached: Boolean!
 
   """
   An object relationship
@@ -11505,7 +12038,17 @@ type UserLevelAggregate {
 }
 
 input UserLevelAggregateBoolExp {
+  avg: userLevelAggregateBoolExpAvg
+  bool_and: userLevelAggregateBoolExpBool_and
+  bool_or: userLevelAggregateBoolExpBool_or
+  corr: userLevelAggregateBoolExpCorr
   count: userLevelAggregateBoolExpCount
+  covar_samp: userLevelAggregateBoolExpCovar_samp
+  max: userLevelAggregateBoolExpMax
+  min: userLevelAggregateBoolExpMin
+  stddev_samp: userLevelAggregateBoolExpStddev_samp
+  sum: userLevelAggregateBoolExpSum
+  var_samp: userLevelAggregateBoolExpVar_samp
 }
 
 """
@@ -11558,6 +12101,7 @@ input UserLevelArrRelInsertInput {
 aggregate avg on columns
 """
 type UserLevelAvgFields {
+  computedGrade: Float
   editionId: Float
   levelId: Float
   userId: Float
@@ -11568,6 +12112,7 @@ type UserLevelAvgFields {
 order by avg() on columns of table "user_level"
 """
 input UserLevelAvgOrderBy {
+  computedGrade: OrderBy
   editionId: OrderBy
   levelId: OrderBy
   userId: OrderBy
@@ -11581,11 +12126,14 @@ input UserLevelBoolExp {
   _and: [UserLevelBoolExp!]
   _not: UserLevelBoolExp
   _or: [UserLevelBoolExp!]
+  computedGrade: Float8ComparisonExp
   edition: EditionBoolExp
   editionId: BigintComparisonExp
+  endOfLabsLevelsReached: BooleanComparisonExp
   label: StringComparisonExp
   level: LevelsBoolExp
   levelId: BigintComparisonExp
+  projectPointsThresholdReached: BooleanComparisonExp
   user: UsersBoolExp
   userId: BigintComparisonExp
   userLevelId: BigintComparisonExp
@@ -11610,6 +12158,7 @@ enum UserLevelConstraint {
 input type for incrementing numeric columns in table "user_level"
 """
 input UserLevelIncInput {
+  computedGrade: float8
   editionId: bigint
   levelId: bigint
   userId: bigint
@@ -11620,11 +12169,14 @@ input UserLevelIncInput {
 input type for inserting data into table "user_level"
 """
 input UserLevelInsertInput {
+  computedGrade: float8
   edition: EditionObjRelInsertInput
   editionId: bigint
+  endOfLabsLevelsReached: Boolean
   label: String
   level: LevelsObjRelInsertInput
   levelId: bigint
+  projectPointsThresholdReached: Boolean
   user: UsersObjRelInsertInput
   userId: bigint
   userLevelId: bigint
@@ -11634,6 +12186,7 @@ input UserLevelInsertInput {
 aggregate max on columns
 """
 type UserLevelMaxFields {
+  computedGrade: float8
   editionId: bigint
   label: String
   levelId: bigint
@@ -11645,6 +12198,7 @@ type UserLevelMaxFields {
 order by max() on columns of table "user_level"
 """
 input UserLevelMaxOrderBy {
+  computedGrade: OrderBy
   editionId: OrderBy
   label: OrderBy
   levelId: OrderBy
@@ -11656,6 +12210,7 @@ input UserLevelMaxOrderBy {
 aggregate min on columns
 """
 type UserLevelMinFields {
+  computedGrade: float8
   editionId: bigint
   label: String
   levelId: bigint
@@ -11667,6 +12222,7 @@ type UserLevelMinFields {
 order by min() on columns of table "user_level"
 """
 input UserLevelMinOrderBy {
+  computedGrade: OrderBy
   editionId: OrderBy
   label: OrderBy
   levelId: OrderBy
@@ -11702,11 +12258,14 @@ input UserLevelOnConflict {
 Ordering options when selecting data from "user_level".
 """
 input UserLevelOrderBy {
+  computedGrade: OrderBy
   edition: EditionOrderBy
   editionId: OrderBy
+  endOfLabsLevelsReached: OrderBy
   label: OrderBy
   level: LevelsOrderBy
   levelId: OrderBy
+  projectPointsThresholdReached: OrderBy
   user: UsersOrderBy
   userId: OrderBy
   userLevelId: OrderBy
@@ -11727,7 +12286,17 @@ enum UserLevelSelectColumn {
   """
   column name
   """
+  computedGrade
+
+  """
+  column name
+  """
   editionId
+
+  """
+  column name
+  """
+  endOfLabsLevelsReached
 
   """
   column name
@@ -11742,6 +12311,11 @@ enum UserLevelSelectColumn {
   """
   column name
   """
+  projectPointsThresholdReached
+
+  """
+  column name
+  """
   userId
 
   """
@@ -11751,12 +12325,125 @@ enum UserLevelSelectColumn {
 }
 
 """
+select "userLevelAggregateBoolExpAvgArgumentsColumns" columns of table "user_level"
+"""
+enum UserLevelSelectColumnUserLevelAggregateBoolExpAvgArgumentsColumns {
+  """
+  column name
+  """
+  computedGrade
+}
+
+"""
+select "userLevelAggregateBoolExpBool_andArgumentsColumns" columns of table "user_level"
+"""
+enum UserLevelSelectColumnUserLevelAggregateBoolExpBool_andArgumentsColumns {
+  """
+  column name
+  """
+  endOfLabsLevelsReached
+
+  """
+  column name
+  """
+  projectPointsThresholdReached
+}
+
+"""
+select "userLevelAggregateBoolExpBool_orArgumentsColumns" columns of table "user_level"
+"""
+enum UserLevelSelectColumnUserLevelAggregateBoolExpBool_orArgumentsColumns {
+  """
+  column name
+  """
+  endOfLabsLevelsReached
+
+  """
+  column name
+  """
+  projectPointsThresholdReached
+}
+
+"""
+select "userLevelAggregateBoolExpCorrArgumentsColumns" columns of table "user_level"
+"""
+enum UserLevelSelectColumnUserLevelAggregateBoolExpCorrArgumentsColumns {
+  """
+  column name
+  """
+  computedGrade
+}
+
+"""
+select "userLevelAggregateBoolExpCovar_sampArgumentsColumns" columns of table "user_level"
+"""
+enum UserLevelSelectColumnUserLevelAggregateBoolExpCovar_sampArgumentsColumns {
+  """
+  column name
+  """
+  computedGrade
+}
+
+"""
+select "userLevelAggregateBoolExpMaxArgumentsColumns" columns of table "user_level"
+"""
+enum UserLevelSelectColumnUserLevelAggregateBoolExpMaxArgumentsColumns {
+  """
+  column name
+  """
+  computedGrade
+}
+
+"""
+select "userLevelAggregateBoolExpMinArgumentsColumns" columns of table "user_level"
+"""
+enum UserLevelSelectColumnUserLevelAggregateBoolExpMinArgumentsColumns {
+  """
+  column name
+  """
+  computedGrade
+}
+
+"""
+select "userLevelAggregateBoolExpStddev_sampArgumentsColumns" columns of table "user_level"
+"""
+enum UserLevelSelectColumnUserLevelAggregateBoolExpStddev_sampArgumentsColumns {
+  """
+  column name
+  """
+  computedGrade
+}
+
+"""
+select "userLevelAggregateBoolExpSumArgumentsColumns" columns of table "user_level"
+"""
+enum UserLevelSelectColumnUserLevelAggregateBoolExpSumArgumentsColumns {
+  """
+  column name
+  """
+  computedGrade
+}
+
+"""
+select "userLevelAggregateBoolExpVar_sampArgumentsColumns" columns of table "user_level"
+"""
+enum UserLevelSelectColumnUserLevelAggregateBoolExpVar_sampArgumentsColumns {
+  """
+  column name
+  """
+  computedGrade
+}
+
+"""
 input type for updating data in table "user_level"
 """
 input UserLevelSetInput {
+  computedGrade: float8
   editionId: bigint
+  endOfLabsLevelsReached: Boolean
   label: String
   levelId: bigint
+  projectPointsThresholdReached: Boolean
   userId: bigint
   userLevelId: bigint
 }
@@ -11765,6 +12452,7 @@ input UserLevelSetInput {
 aggregate stddev on columns
 """
 type UserLevelStddevFields {
+  computedGrade: Float
   editionId: Float
   levelId: Float
   userId: Float
@@ -11775,6 +12463,7 @@ type UserLevelStddevFields {
 order by stddev() on columns of table "user_level"
 """
 input UserLevelStddevOrderBy {
+  computedGrade: OrderBy
   editionId: OrderBy
   levelId: OrderBy
   userId: OrderBy
@@ -11785,6 +12474,7 @@ input UserLevelStddevOrderBy {
 aggregate stddevPop on columns
 """
 type UserLevelStddevPopFields {
+  computedGrade: Float
   editionId: Float
   levelId: Float
   userId: Float
@@ -11795,6 +12485,7 @@ type UserLevelStddevPopFields {
 order by stddevPop() on columns of table "user_level"
 """
 input UserLevelStddevPopOrderBy {
+  computedGrade: OrderBy
   editionId: OrderBy
   levelId: OrderBy
   userId: OrderBy
@@ -11805,6 +12496,7 @@ input UserLevelStddevPopOrderBy {
 aggregate stddevSamp on columns
 """
 type UserLevelStddevSampFields {
+  computedGrade: Float
   editionId: Float
   levelId: Float
   userId: Float
@@ -11815,6 +12507,7 @@ type UserLevelStddevSampFields {
 order by stddevSamp() on columns of table "user_level"
 """
 input UserLevelStddevSampOrderBy {
+  computedGrade: OrderBy
   editionId: OrderBy
   levelId: OrderBy
   userId: OrderBy
@@ -11840,9 +12533,12 @@ input UserLevelStreamCursorInput {
 Initial value of the column from where the streaming should start
 """
 input UserLevelStreamCursorValueInput {
+  computedGrade: float8
   editionId: bigint
+  endOfLabsLevelsReached: Boolean
   label: String
   levelId: bigint
+  projectPointsThresholdReached: Boolean
   userId: bigint
   userLevelId: bigint
 }
@@ -11851,6 +12547,7 @@ input UserLevelStreamCursorValueInput {
 aggregate sum on columns
 """
 type UserLevelSumFields {
+  computedGrade: float8
   editionId: bigint
   levelId: bigint
   userId: bigint
@@ -11861,6 +12558,7 @@ type UserLevelSumFields {
 order by sum() on columns of table "user_level"
 """
 input UserLevelSumOrderBy {
+  computedGrade: OrderBy
   editionId: OrderBy
   levelId: OrderBy
   userId: OrderBy
@@ -11868,9 +12566,12 @@ input UserLevelSumOrderBy {
 }
 
 type UserLevelType {
+  computed_grade: Float!
   edition: EditionType!
+  end_of_labs_levels_reached: Boolean!
   label: String!
   level: LevelType!
+  project_points_threshold_reached: Boolean!
   user: UserType!
   userLevelId: ID!
 }
@@ -11882,7 +12583,17 @@ enum UserLevelUpdateColumn {
   """
   column name
   """
+  computedGrade
+
+  """
+  column name
+  """
   editionId
+
+  """
+  column name
+  """
+  endOfLabsLevelsReached
 
   """
   column name
@@ -11893,6 +12604,11 @@ enum UserLevelUpdateColumn {
   column name
   """
   levelId
+
+  """
+  column name
+  """
+  projectPointsThresholdReached
 
   """
   column name
@@ -11926,6 +12642,7 @@ input UserLevelUpdates {
 aggregate varPop on columns
 """
 type UserLevelVarPopFields {
+  computedGrade: Float
   editionId: Float
   levelId: Float
   userId: Float
@@ -11936,6 +12653,7 @@ type UserLevelVarPopFields {
 order by varPop() on columns of table "user_level"
 """
 input UserLevelVarPopOrderBy {
+  computedGrade: OrderBy
   editionId: OrderBy
   levelId: OrderBy
   userId: OrderBy
@@ -11946,6 +12664,7 @@ input UserLevelVarPopOrderBy {
 aggregate varSamp on columns
 """
 type UserLevelVarSampFields {
+  computedGrade: Float
   editionId: Float
   levelId: Float
   userId: Float
@@ -11956,6 +12675,7 @@ type UserLevelVarSampFields {
 order by varSamp() on columns of table "user_level"
 """
 input UserLevelVarSampOrderBy {
+  computedGrade: OrderBy
   editionId: OrderBy
   levelId: OrderBy
   userId: OrderBy
@@ -11966,6 +12686,7 @@ input UserLevelVarSampOrderBy {
 aggregate variance on columns
 """
 type UserLevelVarianceFields {
+  computedGrade: Float
   editionId: Float
   levelId: Float
   userId: Float
@@ -11976,6 +12697,7 @@ type UserLevelVarianceFields {
 order by variance() on columns of table "user_level"
 """
 input UserLevelVarianceOrderBy {
+  computedGrade: OrderBy
   editionId: OrderBy
   levelId: OrderBy
   userId: OrderBy
@@ -11988,6 +12710,8 @@ type UserPointsType {
 }
 
 type UserType {
+  email: String!
+  firebaseUid: String
   firstName: String!
   imageFile: FileType
   indexNumber: Int!
@@ -12123,11 +12847,13 @@ type Users {
     """
     where: ChestHistoryBoolExp
   ): ChestHistoryAggregate!
+  email: String!
 
   """
   An object relationship
   """
   file: Files
+  firebaseUid: String
   firstName: String!
 
   """
@@ -12710,7 +13436,9 @@ input UsersBoolExp {
   chestHistoriesAggregate: ChestHistoryAggregateBoolExp
   chestHistoriesByTeacherId: ChestHistoryBoolExp
   chestHistoriesByTeacherIdAggregate: ChestHistoryAggregateBoolExp
+  email: StringComparisonExp
   file: FilesBoolExp
+  firebaseUid: StringComparisonExp
   firstName: StringComparisonExp
   fullName: StringComparisonExp
   groups: GroupsBoolExp
@@ -12773,7 +13501,9 @@ input type for inserting data into table "users"
 input UsersInsertInput {
   chestHistories: ChestHistoryArrRelInsertInput
   chestHistoriesByTeacherId: ChestHistoryArrRelInsertInput
+  email: String
   file: FilesObjRelInsertInput
+  firebaseUid: String
   firstName: String
   groups: GroupsArrRelInsertInput
   imageFileId: bigint
@@ -12796,6 +13526,8 @@ input UsersInsertInput {
 aggregate max on columns
 """
 type UsersMaxFields {
+  email: String
+  firebaseUid: String
   firstName: String
 
   """
@@ -12815,6 +13547,8 @@ type UsersMaxFields {
 order by max() on columns of table "users"
 """
 input UsersMaxOrderBy {
+  email: OrderBy
+  firebaseUid: OrderBy
   firstName: OrderBy
   imageFileId: OrderBy
   indexNumber: OrderBy
@@ -12829,6 +13563,8 @@ input UsersMaxOrderBy {
 aggregate min on columns
 """
 type UsersMinFields {
+  email: String
+  firebaseUid: String
   firstName: String
 
   """
@@ -12848,6 +13584,8 @@ type UsersMinFields {
 order by min() on columns of table "users"
 """
 input UsersMinOrderBy {
+  email: OrderBy
+  firebaseUid: OrderBy
   firstName: OrderBy
   imageFileId: OrderBy
   indexNumber: OrderBy
@@ -12900,7 +13638,9 @@ Ordering options when selecting data from "users".
 input UsersOrderBy {
   chestHistoriesAggregate: ChestHistoryAggregateOrderBy
   chestHistoriesByTeacherIdAggregate: ChestHistoryAggregateOrderBy
+  email: OrderBy
   file: FilesOrderBy
+  firebaseUid: OrderBy
   firstName: OrderBy
   fullName: OrderBy
   groupsAggregate: GroupsAggregateOrderBy
@@ -12937,6 +13677,16 @@ enum UsersRolesType {
 select columns of table "users"
 """
 enum UsersSelectColumn {
+  """
+  column name
+  """
+  email
+
+  """
+  column name
+  """
+  firebaseUid
+
   """
   column name
   """
@@ -12982,6 +13732,8 @@ enum UsersSelectColumn {
 input type for updating data in table "users"
 """
 input UsersSetInput {
+  email: String
+  firebaseUid: String
   firstName: String
   imageFileId: bigint
   indexNumber: Int
@@ -13065,6 +13817,8 @@ input UsersStreamCursorInput {
 Initial value of the column from where the streaming should start
 """
 input UsersStreamCursorValueInput {
+  email: String
+  firebaseUid: String
   firstName: String
   imageFileId: bigint
   indexNumber: Int
@@ -13097,6 +13851,16 @@ input UsersSumOrderBy {
 update columns of table "users"
 """
 enum UsersUpdateColumn {
+  """
+  column name
+  """
+  email
+
+  """
+  column name
+  """
+  firebaseUid
+
   """
   column name
   """
@@ -13617,77 +14381,11 @@ type _Service {
   sdl: String!
 }
 
-input awardAggregateBoolExpAvg {
-  arguments: AwardSelectColumnAwardAggregateBoolExpAvgArgumentsColumns!
-  distinct: Boolean
-  filter: AwardBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input awardAggregateBoolExpCorr {
-  arguments: awardAggregateBoolExpCorrArguments!
-  distinct: Boolean
-  filter: AwardBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input awardAggregateBoolExpCorrArguments {
-  X: AwardSelectColumnAwardAggregateBoolExpCorrArgumentsColumns!
-  Y: AwardSelectColumnAwardAggregateBoolExpCorrArgumentsColumns!
-}
-
 input awardAggregateBoolExpCount {
   arguments: [AwardSelectColumn!]
   distinct: Boolean
   filter: AwardBoolExp
   predicate: IntComparisonExp!
-}
-
-input awardAggregateBoolExpCovar_samp {
-  arguments: awardAggregateBoolExpCovar_sampArguments!
-  distinct: Boolean
-  filter: AwardBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input awardAggregateBoolExpCovar_sampArguments {
-  X: AwardSelectColumnAwardAggregateBoolExpCovar_sampArgumentsColumns!
-  Y: AwardSelectColumnAwardAggregateBoolExpCovar_sampArgumentsColumns!
-}
-
-input awardAggregateBoolExpMax {
-  arguments: AwardSelectColumnAwardAggregateBoolExpMaxArgumentsColumns!
-  distinct: Boolean
-  filter: AwardBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input awardAggregateBoolExpMin {
-  arguments: AwardSelectColumnAwardAggregateBoolExpMinArgumentsColumns!
-  distinct: Boolean
-  filter: AwardBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input awardAggregateBoolExpStddev_samp {
-  arguments: AwardSelectColumnAwardAggregateBoolExpStddev_sampArgumentsColumns!
-  distinct: Boolean
-  filter: AwardBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input awardAggregateBoolExpSum {
-  arguments: AwardSelectColumnAwardAggregateBoolExpSumArgumentsColumns!
-  distinct: Boolean
-  filter: AwardBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input awardAggregateBoolExpVar_samp {
-  arguments: AwardSelectColumnAwardAggregateBoolExpVar_sampArgumentsColumns!
-  distinct: Boolean
-  filter: AwardBoolExp
-  predicate: Float8ComparisonExp!
 }
 
 input awardEditionAggregateBoolExpCount {
@@ -13741,6 +14439,20 @@ input chestHistoryAggregateBoolExpCount {
   predicate: IntComparisonExp!
 }
 
+input chestsAggregateBoolExpBool_and {
+  arguments: ChestsSelectColumnChestsAggregateBoolExpBool_andArgumentsColumns!
+  distinct: Boolean
+  filter: ChestsBoolExp
+  predicate: BooleanComparisonExp!
+}
+
+input chestsAggregateBoolExpBool_or {
+  arguments: ChestsSelectColumnChestsAggregateBoolExpBool_orArgumentsColumns!
+  distinct: Boolean
+  filter: ChestsBoolExp
+  predicate: BooleanComparisonExp!
+}
+
 input chestsAggregateBoolExpCount {
   arguments: [ChestsSelectColumn!]
   distinct: Boolean
@@ -13752,18 +14464,84 @@ scalar date
 
 scalar float8
 
+input gradingChecksAggregateBoolExpAvg {
+  arguments: GradingChecksSelectColumnGradingChecksAggregateBoolExpAvgArgumentsColumns!
+  distinct: Boolean
+  filter: GradingChecksBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input gradingChecksAggregateBoolExpCorr {
+  arguments: gradingChecksAggregateBoolExpCorrArguments!
+  distinct: Boolean
+  filter: GradingChecksBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input gradingChecksAggregateBoolExpCorrArguments {
+  X: GradingChecksSelectColumnGradingChecksAggregateBoolExpCorrArgumentsColumns!
+  Y: GradingChecksSelectColumnGradingChecksAggregateBoolExpCorrArgumentsColumns!
+}
+
+input gradingChecksAggregateBoolExpCount {
+  arguments: [GradingChecksSelectColumn!]
+  distinct: Boolean
+  filter: GradingChecksBoolExp
+  predicate: IntComparisonExp!
+}
+
+input gradingChecksAggregateBoolExpCovar_samp {
+  arguments: gradingChecksAggregateBoolExpCovar_sampArguments!
+  distinct: Boolean
+  filter: GradingChecksBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input gradingChecksAggregateBoolExpCovar_sampArguments {
+  X: GradingChecksSelectColumnGradingChecksAggregateBoolExpCovar_sampArgumentsColumns!
+  Y: GradingChecksSelectColumnGradingChecksAggregateBoolExpCovar_sampArgumentsColumns!
+}
+
+input gradingChecksAggregateBoolExpMax {
+  arguments: GradingChecksSelectColumnGradingChecksAggregateBoolExpMaxArgumentsColumns!
+  distinct: Boolean
+  filter: GradingChecksBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input gradingChecksAggregateBoolExpMin {
+  arguments: GradingChecksSelectColumnGradingChecksAggregateBoolExpMinArgumentsColumns!
+  distinct: Boolean
+  filter: GradingChecksBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input gradingChecksAggregateBoolExpStddev_samp {
+  arguments: GradingChecksSelectColumnGradingChecksAggregateBoolExpStddev_sampArgumentsColumns!
+  distinct: Boolean
+  filter: GradingChecksBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input gradingChecksAggregateBoolExpSum {
+  arguments: GradingChecksSelectColumnGradingChecksAggregateBoolExpSumArgumentsColumns!
+  distinct: Boolean
+  filter: GradingChecksBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input gradingChecksAggregateBoolExpVar_samp {
+  arguments: GradingChecksSelectColumnGradingChecksAggregateBoolExpVar_sampArgumentsColumns!
+  distinct: Boolean
+  filter: GradingChecksBoolExp
+  predicate: Float8ComparisonExp!
+}
+
 input groupsAggregateBoolExpCount {
   arguments: [GroupsSelectColumn!]
   distinct: Boolean
   filter: GroupsBoolExp
   predicate: IntComparisonExp!
-}
-
-input levelsAggregateBoolExpAvg {
-  arguments: LevelsSelectColumnLevelsAggregateBoolExpAvgArgumentsColumns!
-  distinct: Boolean
-  filter: LevelsBoolExp
-  predicate: Float8ComparisonExp!
 }
 
 input levelsAggregateBoolExpBool_and {
@@ -13780,70 +14558,11 @@ input levelsAggregateBoolExpBool_or {
   predicate: BooleanComparisonExp!
 }
 
-input levelsAggregateBoolExpCorr {
-  arguments: levelsAggregateBoolExpCorrArguments!
-  distinct: Boolean
-  filter: LevelsBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input levelsAggregateBoolExpCorrArguments {
-  X: LevelsSelectColumnLevelsAggregateBoolExpCorrArgumentsColumns!
-  Y: LevelsSelectColumnLevelsAggregateBoolExpCorrArgumentsColumns!
-}
-
 input levelsAggregateBoolExpCount {
   arguments: [LevelsSelectColumn!]
   distinct: Boolean
   filter: LevelsBoolExp
   predicate: IntComparisonExp!
-}
-
-input levelsAggregateBoolExpCovar_samp {
-  arguments: levelsAggregateBoolExpCovar_sampArguments!
-  distinct: Boolean
-  filter: LevelsBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input levelsAggregateBoolExpCovar_sampArguments {
-  X: LevelsSelectColumnLevelsAggregateBoolExpCovar_sampArgumentsColumns!
-  Y: LevelsSelectColumnLevelsAggregateBoolExpCovar_sampArgumentsColumns!
-}
-
-input levelsAggregateBoolExpMax {
-  arguments: LevelsSelectColumnLevelsAggregateBoolExpMaxArgumentsColumns!
-  distinct: Boolean
-  filter: LevelsBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input levelsAggregateBoolExpMin {
-  arguments: LevelsSelectColumnLevelsAggregateBoolExpMinArgumentsColumns!
-  distinct: Boolean
-  filter: LevelsBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input levelsAggregateBoolExpStddev_samp {
-  arguments: LevelsSelectColumnLevelsAggregateBoolExpStddev_sampArgumentsColumns!
-  distinct: Boolean
-  filter: LevelsBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input levelsAggregateBoolExpSum {
-  arguments: LevelsSelectColumnLevelsAggregateBoolExpSumArgumentsColumns!
-  distinct: Boolean
-  filter: LevelsBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input levelsAggregateBoolExpVar_samp {
-  arguments: LevelsSelectColumnLevelsAggregateBoolExpVar_sampArgumentsColumns!
-  distinct: Boolean
-  filter: LevelsBoolExp
-  predicate: Float8ComparisonExp!
 }
 
 """
@@ -13855,9 +14574,11 @@ type mutation_root {
     awardType: String!
     awardValue: Float!
     categoryId: Int!
+    description: String!
     label: String = ""
     maxUsages: Int = -1
   ): AwardType
+  addAwardToChest(awardId: Int!, chestId: Int!): ChestAwardType
   addAwardToEdition(awardId: Int!, editionId: Int!): AwardEditionType
   addBonusMutation(
     awardId: Int!
@@ -13867,7 +14588,9 @@ type mutation_root {
   addCategory(
     canAddPoints: Boolean!
     categoryName: String!
+    darkColor: String = "#000000"
     label: String = ""
+    lightColor: String = "#FFFFFF"
   ): CategoryType
   addCategoryToEdition(categoryId: Int!, editionId: Int!): CategoryEditionType
   addChest(chestType: String!, editionId: Int!, label: String = ""): ChestType
@@ -13882,13 +14605,22 @@ type mutation_root {
     editionYear: Int!
     label: String = ""
   ): EditionType
+  addGradingCheck(
+    checkDates: Boolean = true
+    editionId: Int!
+    endOfLabsDate: String!
+    endOfLabsLevelsThreshold: Int!
+    projectId: Int!
+    projectPointsThreshold: Float!
+  ): GradingChecksType
   addGroup(
     editionId: Int!
     endTime: String!
-    groupName: String!
+    groupName: String = ""
     label: String = ""
     startTime: String!
     teacherId: Int!
+    usosId: Int!
     weekdayId: Int!
   ): GroupType
   addLevel(
@@ -13914,18 +14646,24 @@ type mutation_root {
     subcategoryName: String!
   ): SubcategoryType
   addUser(
+    createFirebaseUser: Boolean = false
+    email: String = "example@example.com"
     firstName: String!
     indexNumber: Int!
     label: String = ""
     nick: String!
     role: String!
     secondName: String!
+    sendEmail: Boolean = false
   ): UserType
+  addUserToGroup(groupId: Int!, userId: Int!): UserGroupType
+  addUsersFromCsv(editionId: Int!, fileId: Int!): [UserType]
   assignPhotoToAward(awardId: Int!, fileId: Int): Boolean
   assignPhotoToChest(chestId: Int!, fileId: Int): Boolean
   assignPhotoToLevel(fileId: Int, levelId: Int!): Boolean
   assignPhotoToUser(fileId: Int, userId: Int!): Boolean
   assignPhotosToGroups(editionId: Int!): Boolean
+  copyChest(chestId: Int!, editionId: Int!): ChestType
 
   """
   delete data from the table: "award"
@@ -14096,6 +14834,21 @@ type mutation_root {
   deleteFlywaySchemaHistoryByPk(installedRank: Int!): FlywaySchemaHistory
 
   """
+  delete data from the table: "grading_checks"
+  """
+  deleteGradingChecks(
+    """
+    filter the rows which have to be deleted
+    """
+    where: GradingChecksBoolExp!
+  ): GradingChecksMutationResponse
+
+  """
+  delete single row from the table: "grading_checks"
+  """
+  deleteGradingChecksByPk(gradingCheckId: bigint!): GradingChecks
+
+  """
   delete data from the table: "groups"
   """
   deleteGroups(
@@ -14229,6 +14982,86 @@ type mutation_root {
   delete single row from the table: "weekdays"
   """
   deleteWeekdaysByPk(weekdayId: bigint!): Weekdays
+  editAward(
+    awardId: Int!
+    awardName: String
+    awardType: String
+    awardValue: Float
+    categoryId: Int
+    description: String
+    label: String
+    maxUsages: Int
+  ): AwardType
+  editCategory(
+    canAddPoints: Boolean
+    categoryId: Int!
+    categoryName: String
+    darkColor: String
+    label: String
+    lightColor: String
+  ): CategoryType
+  editChest(
+    chestId: Int!
+    chestType: String
+    editionId: Int
+    label: String
+  ): ChestType
+  editChestHistory(
+    chestHistoryId: Int!
+    chestId: Int
+    label: String
+    subcategoryId: Int
+    teacherId: Int
+    userId: Int
+  ): ChestHistoryType
+  editEdition(
+    editionId: Int!
+    editionName: String
+    editionYear: Int
+    label: String
+  ): EditionType
+  editGradingCheck(
+    endOfLabsDate: String
+    endOfLabsLevelsThreshold: Int
+    gradingCheckId: Int!
+    projectId: Int
+    projectPointsThreshold: Float
+  ): GradingChecksType
+  editGroup(
+    endTime: String
+    groupId: Int!
+    groupName: String
+    label: String
+    startTime: String
+    teacherId: Int
+    usosId: Int
+    weekdayId: Int
+  ): GroupType
+  editLevel(
+    grade: Float
+    imageFileId: Int
+    label: String
+    levelId: Int!
+    maximumPoints: Float
+    name: String
+  ): LevelType
+  editPoints(pointsId: Int!, updatedById: Int!, value: Float): PointType
+  editSubcategory(
+    label: String
+    maxPoints: Float
+    ordinalNumber: Int
+    subcategoryId: Int!
+    subcategoryName: String
+  ): SubcategoryType
+  editUser(
+    firstName: String
+    indexNumber: Int
+    label: String
+    nick: String
+    role: String
+    secondName: String
+    userId: Int!
+  ): UserType
   generateSubcategories(
     categoryId: Int!
     editionId: Int!
@@ -14568,6 +15401,36 @@ type mutation_root {
   ): FlywaySchemaHistory
 
   """
+  insert data into the table: "grading_checks"
+  """
+  insertGradingChecks(
+    """
+    the rows to be inserted
+    """
+    objects: [GradingChecksInsertInput!]!
+
+    """
+    upsert condition
+    """
+    onConflict: GradingChecksOnConflict
+  ): GradingChecksMutationResponse
+
+  """
+  insert a single row into the table: "grading_checks"
+  """
+  insertGradingChecksOne(
+    """
+    the row to be inserted
+    """
+    object: GradingChecksInsertInput!
+
+    """
+    upsert condition
+    """
+    onConflict: GradingChecksOnConflict
+  ): GradingChecks
+
+  """
   insert data into the table: "groups"
   """
   insertGroups(
@@ -14836,6 +15699,21 @@ type mutation_root {
     """
     onConflict: WeekdaysOnConflict
   ): Weekdays
+  removeAwardFromChest(awardId: Int!, chestId: Int!): Boolean
+  removeAwardFromEdition(awardId: Int!, editionId: Int!): Boolean
+  removeCategory(categoryId: Int!): Boolean
+  removeCategoryFromEdition(categoryId: Int!, editionId: Int!): Boolean
+  removeChest(chestId: Int!): Boolean
+  removeChestFromUser(chestHistoryId: Int!): Boolean
+  removeEdition(editionId: Int!): Boolean
+  removeGradingCheck(gradingCheckId: Int!): Boolean
+  removeGroup(groupId: Int!): Boolean
+  removeLevel(levelId: Int!): Boolean
+  removePoints(pointsId: Int!): Boolean
+  removeSubcategory(subcategoryId: Int!): Boolean
+  removeUser(userId: Int!): Boolean
+  removeUserFromGroup(groupId: Int!, userId: Int!): Boolean
+  resetPassword(userId: Int!): Boolean
 
   """
   update data of the table: "award"
@@ -15344,6 +16222,52 @@ type mutation_root {
   ): [FlywaySchemaHistoryMutationResponse]
 
   """
+  update data of the table: "grading_checks"
+  """
+  updateGradingChecks(
+    """
+    increments the numeric columns with given value of the filtered values
+    """
+    _inc: GradingChecksIncInput
+
+    """
+    sets the columns of the filtered rows to the given values
+    """
+    _set: GradingChecksSetInput
+
+    """
+    filter the rows which have to be updated
+    """
+    where: GradingChecksBoolExp!
+  ): GradingChecksMutationResponse
+
+  """
+  update single row of the table: "grading_checks"
+  """
+  updateGradingChecksByPk(
+    """
+    increments the numeric columns with given value of the filtered values
+    """
+    _inc: GradingChecksIncInput
+
+    """
+    sets the columns of the filtered rows to the given values
+    """
+    _set: GradingChecksSetInput
+    pkColumns: GradingChecksPkColumnsInput!
+  ): GradingChecks
+
+  """
+  update multiples rows of table: "grading_checks"
+  """
+  updateGradingChecksMany(
+    """
+    updates to execute, in order
+    """
+    updates: [GradingChecksUpdates!]!
+  ): [GradingChecksMutationResponse]
+
+  """
   update data of the table: "groups"
   """
   updateGroups(
@@ -15758,24 +16682,7 @@ type mutation_root {
   ): [WeekdaysMutationResponse]
 }
 
-input pointsAggregateBoolExpAvg {
-  arguments: PointsSelectColumnPointsAggregateBoolExpAvgArgumentsColumns!
-  distinct: Boolean
-  filter: PointsBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input pointsAggregateBoolExpCorr {
-  arguments: pointsAggregateBoolExpCorrArguments!
-  distinct: Boolean
-  filter: PointsBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input pointsAggregateBoolExpCorrArguments {
-  X: PointsSelectColumnPointsAggregateBoolExpCorrArgumentsColumns!
-  Y: PointsSelectColumnPointsAggregateBoolExpCorrArgumentsColumns!
-}
+scalar numeric
 
 input pointsAggregateBoolExpCount {
   arguments: [PointsSelectColumn!]
@@ -15784,124 +16691,11 @@ input pointsAggregateBoolExpCount {
   predicate: IntComparisonExp!
 }
 
-input pointsAggregateBoolExpCovar_samp {
-  arguments: pointsAggregateBoolExpCovar_sampArguments!
-  distinct: Boolean
-  filter: PointsBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input pointsAggregateBoolExpCovar_sampArguments {
-  X: PointsSelectColumnPointsAggregateBoolExpCovar_sampArgumentsColumns!
-  Y: PointsSelectColumnPointsAggregateBoolExpCovar_sampArgumentsColumns!
-}
-
-input pointsAggregateBoolExpMax {
-  arguments: PointsSelectColumnPointsAggregateBoolExpMaxArgumentsColumns!
-  distinct: Boolean
-  filter: PointsBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input pointsAggregateBoolExpMin {
-  arguments: PointsSelectColumnPointsAggregateBoolExpMinArgumentsColumns!
-  distinct: Boolean
-  filter: PointsBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input pointsAggregateBoolExpStddev_samp {
-  arguments: PointsSelectColumnPointsAggregateBoolExpStddev_sampArgumentsColumns!
-  distinct: Boolean
-  filter: PointsBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input pointsAggregateBoolExpSum {
-  arguments: PointsSelectColumnPointsAggregateBoolExpSumArgumentsColumns!
-  distinct: Boolean
-  filter: PointsBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input pointsAggregateBoolExpVar_samp {
-  arguments: PointsSelectColumnPointsAggregateBoolExpVar_sampArgumentsColumns!
-  distinct: Boolean
-  filter: PointsBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input pointsHistoryAggregateBoolExpAvg {
-  arguments: PointsHistorySelectColumnPointsHistoryAggregateBoolExpAvgArgumentsColumns!
-  distinct: Boolean
-  filter: PointsHistoryBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input pointsHistoryAggregateBoolExpCorr {
-  arguments: pointsHistoryAggregateBoolExpCorrArguments!
-  distinct: Boolean
-  filter: PointsHistoryBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input pointsHistoryAggregateBoolExpCorrArguments {
-  X: PointsHistorySelectColumnPointsHistoryAggregateBoolExpCorrArgumentsColumns!
-  Y: PointsHistorySelectColumnPointsHistoryAggregateBoolExpCorrArgumentsColumns!
-}
-
 input pointsHistoryAggregateBoolExpCount {
   arguments: [PointsHistorySelectColumn!]
   distinct: Boolean
   filter: PointsHistoryBoolExp
   predicate: IntComparisonExp!
-}
-
-input pointsHistoryAggregateBoolExpCovar_samp {
-  arguments: pointsHistoryAggregateBoolExpCovar_sampArguments!
-  distinct: Boolean
-  filter: PointsHistoryBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input pointsHistoryAggregateBoolExpCovar_sampArguments {
-  X: PointsHistorySelectColumnPointsHistoryAggregateBoolExpCovar_sampArgumentsColumns!
-  Y: PointsHistorySelectColumnPointsHistoryAggregateBoolExpCovar_sampArgumentsColumns!
-}
-
-input pointsHistoryAggregateBoolExpMax {
-  arguments: PointsHistorySelectColumnPointsHistoryAggregateBoolExpMaxArgumentsColumns!
-  distinct: Boolean
-  filter: PointsHistoryBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input pointsHistoryAggregateBoolExpMin {
-  arguments: PointsHistorySelectColumnPointsHistoryAggregateBoolExpMinArgumentsColumns!
-  distinct: Boolean
-  filter: PointsHistoryBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input pointsHistoryAggregateBoolExpStddev_samp {
-  arguments: PointsHistorySelectColumnPointsHistoryAggregateBoolExpStddev_sampArgumentsColumns!
-  distinct: Boolean
-  filter: PointsHistoryBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input pointsHistoryAggregateBoolExpSum {
-  arguments: PointsHistorySelectColumnPointsHistoryAggregateBoolExpSumArgumentsColumns!
-  distinct: Boolean
-  filter: PointsHistoryBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input pointsHistoryAggregateBoolExpVar_samp {
-  arguments: PointsHistorySelectColumnPointsHistoryAggregateBoolExpVar_sampArgumentsColumns!
-  distinct: Boolean
-  filter: PointsHistoryBoolExp
-  predicate: Float8ComparisonExp!
 }
 
 type query_root {
@@ -16621,6 +17415,8 @@ type query_root {
   fetch data from the table: "flyway_schema_history" using primary key columns
   """
   flywaySchemaHistoryByPk(installedRank: Int!): FlywaySchemaHistory
+  getCurrentUser: UserType
+  getGroupsInEdition(editionId: Int!, teacherId: Int!): [GroupTeacherType!]!
   getNeighboringLevels(editionId: Int!, studentId: Int!): NeighboringLevelsType!
   getPossibleGroupDates(editionId: Int!): [GroupDateType!]!
   getPossibleGroupsTimeSpans(editionId: Int!): [TimeSpansType!]!
@@ -16631,6 +17427,71 @@ type query_root {
     studentId: Int!
   ): [CategoryPointsSumType!]!
   getUsersInGroupWithPoints(groupId: Int!): [UserPointsType]!
+
+  """
+  An array relationship
+  """
+  gradingChecks(
+    """
+    distinct select on columns
+    """
+    distinctOn: [GradingChecksSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [GradingChecksOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: GradingChecksBoolExp
+  ): [GradingChecks!]!
+
+  """
+  An aggregate relationship
+  """
+  gradingChecksAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [GradingChecksSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [GradingChecksOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: GradingChecksBoolExp
+  ): GradingChecksAggregate!
+
+  """
+  fetch data from the table: "grading_checks" using primary key columns
+  """
+  gradingChecksByPk(gradingCheckId: bigint!): GradingChecks
 
   """
   An array relationship
@@ -17278,77 +18139,11 @@ type query_root {
   weekdaysByPk(weekdayId: bigint!): Weekdays
 }
 
-input subcategoriesAggregateBoolExpAvg {
-  arguments: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpAvgArgumentsColumns!
-  distinct: Boolean
-  filter: SubcategoriesBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input subcategoriesAggregateBoolExpCorr {
-  arguments: subcategoriesAggregateBoolExpCorrArguments!
-  distinct: Boolean
-  filter: SubcategoriesBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input subcategoriesAggregateBoolExpCorrArguments {
-  X: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpCorrArgumentsColumns!
-  Y: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpCorrArgumentsColumns!
-}
-
 input subcategoriesAggregateBoolExpCount {
   arguments: [SubcategoriesSelectColumn!]
   distinct: Boolean
   filter: SubcategoriesBoolExp
   predicate: IntComparisonExp!
-}
-
-input subcategoriesAggregateBoolExpCovar_samp {
-  arguments: subcategoriesAggregateBoolExpCovar_sampArguments!
-  distinct: Boolean
-  filter: SubcategoriesBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input subcategoriesAggregateBoolExpCovar_sampArguments {
-  X: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpCovar_sampArgumentsColumns!
-  Y: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpCovar_sampArgumentsColumns!
-}
-
-input subcategoriesAggregateBoolExpMax {
-  arguments: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpMaxArgumentsColumns!
-  distinct: Boolean
-  filter: SubcategoriesBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input subcategoriesAggregateBoolExpMin {
-  arguments: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpMinArgumentsColumns!
-  distinct: Boolean
-  filter: SubcategoriesBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input subcategoriesAggregateBoolExpStddev_samp {
-  arguments: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpStddev_sampArgumentsColumns!
-  distinct: Boolean
-  filter: SubcategoriesBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input subcategoriesAggregateBoolExpSum {
-  arguments: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpSumArgumentsColumns!
-  distinct: Boolean
-  filter: SubcategoriesBoolExp
-  predicate: Float8ComparisonExp!
-}
-
-input subcategoriesAggregateBoolExpVar_samp {
-  arguments: SubcategoriesSelectColumnSubcategoriesAggregateBoolExpVar_sampArgumentsColumns!
-  distinct: Boolean
-  filter: SubcategoriesBoolExp
-  predicate: Float8ComparisonExp!
 }
 
 type subscription_root {
@@ -18290,6 +19085,91 @@ type subscription_root {
   """
   An array relationship
   """
+  gradingChecks(
+    """
+    distinct select on columns
+    """
+    distinctOn: [GradingChecksSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [GradingChecksOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: GradingChecksBoolExp
+  ): [GradingChecks!]!
+
+  """
+  An aggregate relationship
+  """
+  gradingChecksAggregate(
+    """
+    distinct select on columns
+    """
+    distinctOn: [GradingChecksSelectColumn!]
+
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+
+    """
+    sort the rows by one or more columns
+    """
+    orderBy: [GradingChecksOrderBy!]
+
+    """
+    filter the rows returned
+    """
+    where: GradingChecksBoolExp
+  ): GradingChecksAggregate!
+
+  """
+  fetch data from the table: "grading_checks" using primary key columns
+  """
+  gradingChecksByPk(gradingCheckId: bigint!): GradingChecks
+
+  """
+  fetch data from the table in a streaming manner: "grading_checks"
+  """
+  gradingChecksStream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batchSize: Int!
+
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [GradingChecksStreamCursorInput]!
+
+    """
+    filter the rows returned
+    """
+    where: GradingChecksBoolExp
+  ): [GradingChecks!]!
+
+  """
+  An array relationship
+  """
   groups(
     """
     distinct select on columns
@@ -19144,11 +20024,91 @@ input userGroupsAggregateBoolExpCount {
   predicate: IntComparisonExp!
 }
 
+input userLevelAggregateBoolExpAvg {
+  arguments: UserLevelSelectColumnUserLevelAggregateBoolExpAvgArgumentsColumns!
+  distinct: Boolean
+  filter: UserLevelBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input userLevelAggregateBoolExpBool_and {
+  arguments: UserLevelSelectColumnUserLevelAggregateBoolExpBool_andArgumentsColumns!
+  distinct: Boolean
+  filter: UserLevelBoolExp
+  predicate: BooleanComparisonExp!
+}
+
+input userLevelAggregateBoolExpBool_or {
+  arguments: UserLevelSelectColumnUserLevelAggregateBoolExpBool_orArgumentsColumns!
+  distinct: Boolean
+  filter: UserLevelBoolExp
+  predicate: BooleanComparisonExp!
+}
+
+input userLevelAggregateBoolExpCorr {
+  arguments: userLevelAggregateBoolExpCorrArguments!
+  distinct: Boolean
+  filter: UserLevelBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input userLevelAggregateBoolExpCorrArguments {
+  X: UserLevelSelectColumnUserLevelAggregateBoolExpCorrArgumentsColumns!
+  Y: UserLevelSelectColumnUserLevelAggregateBoolExpCorrArgumentsColumns!
+}
+
 input userLevelAggregateBoolExpCount {
   arguments: [UserLevelSelectColumn!]
   distinct: Boolean
   filter: UserLevelBoolExp
   predicate: IntComparisonExp!
+}
+
+input userLevelAggregateBoolExpCovar_samp {
+  arguments: userLevelAggregateBoolExpCovar_sampArguments!
+  distinct: Boolean
+  filter: UserLevelBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input userLevelAggregateBoolExpCovar_sampArguments {
+  X: UserLevelSelectColumnUserLevelAggregateBoolExpCovar_sampArgumentsColumns!
+  Y: UserLevelSelectColumnUserLevelAggregateBoolExpCovar_sampArgumentsColumns!
+}
+
+input userLevelAggregateBoolExpMax {
+  arguments: UserLevelSelectColumnUserLevelAggregateBoolExpMaxArgumentsColumns!
+  distinct: Boolean
+  filter: UserLevelBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input userLevelAggregateBoolExpMin {
+  arguments: UserLevelSelectColumnUserLevelAggregateBoolExpMinArgumentsColumns!
+  distinct: Boolean
+  filter: UserLevelBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input userLevelAggregateBoolExpStddev_samp {
+  arguments: UserLevelSelectColumnUserLevelAggregateBoolExpStddev_sampArgumentsColumns!
+  distinct: Boolean
+  filter: UserLevelBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input userLevelAggregateBoolExpSum {
+  arguments: UserLevelSelectColumnUserLevelAggregateBoolExpSumArgumentsColumns!
+  distinct: Boolean
+  filter: UserLevelBoolExp
+  predicate: Float8ComparisonExp!
+}
+
+input userLevelAggregateBoolExpVar_samp {
+  arguments: UserLevelSelectColumnUserLevelAggregateBoolExpVar_sampArgumentsColumns!
+  distinct: Boolean
+  filter: UserLevelBoolExp
+  predicate: Float8ComparisonExp!
 }
 
 input usersAggregateBoolExpCount {

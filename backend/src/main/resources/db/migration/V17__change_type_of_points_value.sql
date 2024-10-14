@@ -1,7 +1,7 @@
 DROP VIEW IF EXISTS hall_of_fame;
 
 ALTER TABLE points
-ALTER COLUMN value TYPE FLOAT;
+ALTER COLUMN value TYPE NUMERIC(10, 2);
 
 CREATE VIEW hall_of_fame AS
 WITH user_points AS (

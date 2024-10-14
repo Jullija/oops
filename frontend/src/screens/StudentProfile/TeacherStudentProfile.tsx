@@ -1,12 +1,166 @@
 import { Styles } from "../../utils/Styles";
 import { useParams } from "react-router-dom";
-import { PointsForm } from "../../components/StudentProfile/PointsForm/PointsForm";
-import { FormPoints } from "../../components/StudentProfile/PointsForm/types";
-import { useCreatePointsMutation } from "../../graphql/createPoints.graphql.types";
+import {
+  PointsForm,
+  PointsFormValues,
+} from "../../components/StudentProfile/PointsForm/PointsForm";
 import { useUser } from "../../hooks/common/useUser";
 import { useStudentProfileData } from "../../hooks/StudentProfile/useStudentProfileData";
 import { SideBar } from "../../components/StudentProfile/SideBar";
-import { PointsTableWithFilter } from "../../components/StudentProfile/table/PointsTableWithFilter";
+import { useFormCategories } from "../../hooks/common/useFormCategories";
+import { Dialog } from "@mui/material";
+import { StudentTableWithFilters } from "../../components/StudentProfile/table/StudentTableWithFilters";
+import { Button } from "../../components/Button";
+import { useTeacherActions } from "../../hooks/StudentProfile/useTeacherActions";
+import { useEditionSelection } from "../../hooks/common/useEditionSelection";
+import { Roles } from "../../router/paths";
+import { isEditionActive } from "../../utils/utils";
+import { NotEditableInfo } from "../../components/StudentProfile/NotEditableInfo";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+
+export function TeacherStudentProfile() {
+  const params = useParams();
+  const studentId = params.id;
+  const { user } = useUser();
+  const userId = user.userId;
+
+  const { selectedEdition } = useEditionSelection();
+
+  const {
+    categories,
+    studentData,
+    points,
+    prevLevel,
+    currLevel,
+    nextLevel,
+    bonuses,
+    filterHeaderNames,
+    loading,
+    error,
+    refetch,
+  } = useStudentProfileData(studentId);
+
+  const {
+    formCategories,
+    formInitialValues,
+    loading: formDataLoading,
+    error: formDataError,
+  } = useFormCategories();
+
+  const {
+    selectedPoints,
+    isAddDialogOpen,
+    openAddDialog,
+    closeAddDialog,
+    isEditDialogOpen,
+    openEditDialog,
+    closeEditDialog,
+    handleAddPointsConfirmation,
+    addPointsError,
+    handleEditPointsConfirmation,
+    editPointsError,
+    handleDeletePointsClick,
+  } = useTeacherActions(refetch, studentId as string, userId);
+
+  if (!studentId) return <p>StudentId is undefined</p>;
+  if (!userId) return <p>TeacherId is undefined</p>;
+
+  if (loading || formDataLoading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (formDataError) return <p>Error: {formDataError.message}</p>;
+
+  if (!studentData) return <p>Student is undefined</p>;
+  if (!currLevel) return <p>Curr level is undefined</p>;
+
+  const hasEditableRights =
+    studentData.group?.teacherId === userId || user.role === Roles.COORDINATOR;
+
+  const isSelectedEditionActive = Boolean(
+    selectedEdition && isEditionActive(selectedEdition),
+  );
+
+  const disableEditMode = !(isSelectedEditionActive && hasEditableRights);
+
+  const initialValues: PointsFormValues = selectedPoints
+    ? {
+        categoryId: selectedPoints?.subcategory.category.categoryId,
+        points: parseFloat(selectedPoints.points.purePoints?.value ?? "0"),
+        subcategoryId: selectedPoints?.subcategory.subcategoryId,
+      }
+    : formInitialValues;
+
+  return (
+    <div style={styles.container}>
+      <SideBar
+        student={studentData}
+        categoriesBarProps={categories}
+        currLevel={currLevel}
+        prevLevel={prevLevel}
+        nextLevel={nextLevel}
+        bonuses={bonuses}
+      />
+      <div style={styles.rightContainer}>
+        {disableEditMode && (
+          <NotEditableInfo
+            hasEditableRights={hasEditableRights}
+            isSelectedEditionActive={isSelectedEditionActive}
+          />
+        )}
+
+        <Dialog open={isAddDialogOpen}>
+          <IconButton onClick={closeAddDialog} style={styles.closeIcon}>
+            <CloseIcon />
+          </IconButton>
+
+          <PointsForm
+            categories={formCategories}
+            handleConfirmClick={handleAddPointsConfirmation}
+            mutationError={addPointsError?.message}
+            variant="add"
+            initialValues={initialValues}
+            disableCategoryAndSubcategory={!!selectedPoints}
+          />
+        </Dialog>
+
+        <Dialog open={isEditDialogOpen}>
+          <IconButton onClick={closeEditDialog} style={styles.closeIcon}>
+            <CloseIcon />
+          </IconButton>
+
+          <PointsForm
+            categories={formCategories}
+            handleConfirmClick={handleEditPointsConfirmation}
+            mutationError={editPointsError?.message}
+            initialValues={initialValues}
+            variant="edit"
+            disableCategoryAndSubcategory={true}
+          />
+        </Dialog>
+
+        <Button
+          onClick={openAddDialog}
+          color="lightblue"
+          disabled={disableEditMode}
+        >
+          Add Points
+        </Button>
+
+        <StudentTableWithFilters
+          points={points}
+          filterHeaderNames={filterHeaderNames}
+          editFunctions={{
+            handleDeleteClick: handleDeletePointsClick,
+            handleAddClick: openAddDialog,
+            handleEditClick: openEditDialog,
+          }}
+          showActionButtons={true}
+          blockActionButtons={disableEditMode}
+        />
+      </div>
+    </div>
+  );
+}
 
 const styles: Styles = {
   container: {
@@ -20,67 +174,9 @@ const styles: Styles = {
     flexDirection: "column",
     gap: 24,
   },
+  closeIcon: {
+    position: "absolute",
+    right: 8,
+    top: 8,
+  },
 };
-
-export function TeacherStudentProfile() {
-  const { user } = useUser();
-
-  const params = useParams();
-  const studentId = params.id;
-
-  const {
-    categories,
-    studentData,
-    points,
-    prevLevel,
-    currLevel,
-    nextLevel,
-    filterHeaderNames,
-    loading,
-    error,
-    refetch,
-  } = useStudentProfileData(studentId);
-
-  const [createPoints, { error: createPointsError }] =
-    useCreatePointsMutation();
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-  if (!studentData) return <p>Student is undefined</p>;
-  if (!currLevel) return <p>Curr level is undefined</p>;
-
-  const handleAdd = (formPoints: FormPoints) => {
-    createPoints({
-      variables: {
-        studentId: parseInt(studentId ?? "-1"),
-        subcategoryId: parseInt(formPoints.subcategoryId),
-        teacherId: parseInt(user.userId),
-        value: formPoints.points,
-      },
-    }).finally(() => {
-      refetch();
-    });
-  };
-
-  return (
-    <div style={styles.container}>
-      <SideBar
-        student={studentData}
-        categoriesBarProps={categories}
-        currLevel={currLevel}
-        prevLevel={prevLevel}
-        nextLevel={nextLevel}
-      />
-      <div style={styles.rightContainer}>
-        <PointsTableWithFilter
-          points={points}
-          filterHeaderNames={filterHeaderNames}
-        />
-        <PointsForm
-          handleAddPoints={handleAdd}
-          createError={createPointsError?.message}
-        />
-      </div>
-    </div>
-  );
-}

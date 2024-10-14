@@ -5,17 +5,8 @@ import { Styles } from "../../utils/Styles";
 import { StudentCardData } from "../../hooks/StudentProfile/useStudentData";
 import { AnimalCard } from "./cards/AnimalCard/AnimalCard";
 import { LevelType } from "../../__generated__/schema.graphql.types";
-
-const styles: Styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 20,
-    borderRight: "2px solid red",
-    paddingRight: 24,
-    width: 360,
-  },
-};
+import { BonusesCard } from "./cards/BonusesCard";
+import { Bonus } from "../../hooks/StudentProfile/useBonusesCardData";
 
 type SideBarProps = {
   student: StudentCardData;
@@ -23,6 +14,7 @@ type SideBarProps = {
   prevLevel?: LevelType;
   currLevel: LevelType;
   nextLevel?: LevelType;
+  bonuses: Bonus[];
 };
 
 export const SideBar = ({
@@ -31,6 +23,7 @@ export const SideBar = ({
   prevLevel,
   currLevel,
   nextLevel,
+  bonuses,
 }: SideBarProps) => {
   return (
     <div style={styles.container}>
@@ -42,6 +35,18 @@ export const SideBar = ({
         totalPoints={student.totalPoints}
       />
       <CategoriesCard categoriesBarProps={categoriesBarProps} />
+      <BonusesCard bonuses={bonuses} />
     </div>
   );
+};
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 20,
+    borderRight: "2px solid red",
+    paddingRight: 24,
+    width: 360,
+  },
 };

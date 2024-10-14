@@ -1,12 +1,5 @@
 import { Styles } from "../utils/Styles";
 
-const styles: Styles = {
-  button: {
-    padding: 12,
-    cursor: "pointer",
-  },
-};
-
 type FilterButtonProps = {
   option: string;
   isActive: boolean;
@@ -30,4 +23,11 @@ export const FilterButton = ({
       {option}
     </div>
   );
+};
+
+const styles: Styles = {
+  button: {
+    padding: 12,
+    cursor: "pointer",
+  },
 };
