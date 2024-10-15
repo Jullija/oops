@@ -25,7 +25,7 @@ export const AwardsCellContent = ({ points }: AwardsCellContentProps) => {
                 id: bonus?.bonuses.award.awardId ?? "",
                 name: bonus?.bonuses.award.awardName ?? "",
                 description: bonus?.bonuses.award.description ?? "",
-                value: parseFloat(bonus?.bonuses.award.awardValue ?? "-1"),
+                value: bonus?.partialValue ?? -1,
                 imgId: bonus?.bonuses.award.imageFile?.fileId ?? "",
               },
               updatedAt: bonus?.bonuses.updatedAt ?? "",
