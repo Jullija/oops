@@ -16,7 +16,7 @@ export type AllCategoriesQuery = {
       editionId: string;
       subcategoryId: string;
       subcategoryName: string;
-      maxPoints: number;
+      maxPoints: string;
     }>;
   }>;
 };
