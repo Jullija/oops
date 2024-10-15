@@ -4,7 +4,7 @@ import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
 const defaultOptions = {} as const;
 export type LevelsQueryVariables = Types.Exact<{
-  editionId?: Types.InputMaybe<Types.Scalars["bigint"]["input"]>;
+  editionId: Types.Scalars["Int"]["input"];
 }>;
 
 export type LevelsQuery = {
@@ -25,8 +25,11 @@ export type LevelsQuery = {
 };
 
 export const LevelsDocument = gql`
-  query Levels($editionId: bigint) {
-    levels(where: { editionId: { _eq: 2 } }, orderBy: { ordinalNumber: ASC }) {
+  query Levels($editionId: Int!) {
+    levels(
+      where: { editionId: { _eq: editionId } }
+      orderBy: { ordinalNumber: ASC }
+    ) {
       grade
       imageFileId
       levelId
@@ -58,7 +61,8 @@ export const LevelsDocument = gql`
  * });
  */
 export function useLevelsQuery(
-  baseOptions?: Apollo.QueryHookOptions<LevelsQuery, LevelsQueryVariables>,
+  baseOptions: Apollo.QueryHookOptions<LevelsQuery, LevelsQueryVariables> &
+    ({ variables: LevelsQueryVariables; skip?: boolean } | { skip: boolean }),
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<LevelsQuery, LevelsQueryVariables>(
