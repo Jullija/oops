@@ -1,6 +1,6 @@
-query Levels($editionId: Int!) {
+query Levels($editionId: bigint!) {
   levels(
-    where: { editionId: { _eq: editionId } }
+    where: { editionId: { _eq: $editionId } }
     orderBy: { ordinalNumber: ASC }
   ) {
     grade

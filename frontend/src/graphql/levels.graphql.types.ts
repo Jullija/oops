@@ -4,7 +4,7 @@ import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
 const defaultOptions = {} as const;
 export type LevelsQueryVariables = Types.Exact<{
-  editionId: Types.Scalars["Int"]["input"];
+  editionId: Types.Scalars["bigint"]["input"];
 }>;
 
 export type LevelsQuery = {
@@ -25,9 +25,9 @@ export type LevelsQuery = {
 };
 
 export const LevelsDocument = gql`
-  query Levels($editionId: Int!) {
+  query Levels($editionId: bigint!) {
     levels(
-      where: { editionId: { _eq: editionId } }
+      where: { editionId: { _eq: $editionId } }
       orderBy: { ordinalNumber: ASC }
     ) {
       grade

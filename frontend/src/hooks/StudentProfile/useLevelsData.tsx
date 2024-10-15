@@ -7,7 +7,7 @@ export const useLevelsData = () => {
   const editionId = selectedEdition?.editionId;
 
   const { data, error, loading } = useLevelsQuery({
-    variables: { editionId: editionId },
+    variables: { editionId: editionId as string },
     skip: !editionId,
   });
 
