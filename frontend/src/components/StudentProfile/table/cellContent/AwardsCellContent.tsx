@@ -1,4 +1,4 @@
-import { Points } from "../../../../hooks/StudentProfile/useStudentData";
+import { Points } from "../../../../hooks/StudentProfile";
 import { EMPTY_FIELD_STRING } from "../../../../utils/constants";
 import { Styles } from "../../../../utils/Styles";
 import { AwardWithTooltip } from "../../../images/AwardWithTooltip";
@@ -21,12 +21,11 @@ export const AwardsCellContent = ({ points }: AwardsCellContentProps) => {
         return (
           <AwardWithTooltip
             bonus={{
-              id: bonus?.bonuses.bonusId ?? "",
               award: {
                 id: bonus?.bonuses.award.awardId ?? "",
                 name: bonus?.bonuses.award.awardName ?? "",
                 description: bonus?.bonuses.award.description ?? "",
-                value: parseFloat(bonus?.bonuses.award.awardValue ?? "-1"),
+                value: bonus?.partialValue ?? -1,
                 imgId: bonus?.bonuses.award.imageFile?.fileId ?? "",
               },
               updatedAt: bonus?.bonuses.updatedAt ?? "",

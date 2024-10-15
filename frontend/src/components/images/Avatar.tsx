@@ -3,6 +3,7 @@ import { Image } from "./Image";
 type AvatarProps = {
   id: string | undefined;
   size: AvatarSize;
+  disabled?: boolean;
 };
 
 const sizeMap: Record<AvatarSize, number> = {
@@ -12,8 +13,8 @@ const sizeMap: Record<AvatarSize, number> = {
   l: 140,
 };
 
-type AvatarSize = "xs" | "s" | "m" | "l";
+export type AvatarSize = "xs" | "s" | "m" | "l";
 
-export const Avatar = ({ id, size }: AvatarProps) => {
-  return <Image id={id} size={sizeMap[size]} />;
+export const Avatar = ({ id, size, disabled = false }: AvatarProps) => {
+  return <Image id={id} size={sizeMap[size]} disabled={disabled} />;
 };
