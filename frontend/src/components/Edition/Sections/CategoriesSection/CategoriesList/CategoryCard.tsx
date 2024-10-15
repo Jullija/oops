@@ -4,13 +4,13 @@ import { Category } from "../CategoriesSection";
 type CategoryCardProps = {
   category: Category;
   isSelected: boolean;
-  onClick: () => void;
+  onSelectClick: () => void;
 };
 
 export const CategoryCard = ({
   category,
   isSelected,
-  onClick,
+  onSelectClick,
 }: CategoryCardProps) => {
   return (
     <div
@@ -18,9 +18,11 @@ export const CategoryCard = ({
         ...styles.card,
         backgroundColor: isSelected ? "pink" : undefined,
       }}
-      onClick={onClick}
     >
-      {category.categoryName}
+      <div>{category.categoryName}</div>
+      <button onClick={onSelectClick}>
+        {isSelected ? "unselect" : "select"}
+      </button>
     </div>
   );
 };

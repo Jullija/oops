@@ -36,7 +36,7 @@ export const CategoriesSection = () => {
     }
   };
 
-  const handleCategoryClick = (category: Category) => {
+  const handleSelectCategoryClick = (category: Category) => {
     const wasSelected = !!selectedCategories.find(
       (c) => c.categoryId === category.categoryId,
     );
@@ -49,12 +49,18 @@ export const CategoriesSection = () => {
   return (
     <div style={styles.container}>
       <button onClick={() => setIsOpen(true)}>add category</button>
-      <div>categories section</div>
-      <div>categories: </div>
+
+      <CategoriesList
+        categories={selectedCategories}
+        selectedCategories={selectedCategories}
+        handleSelectCategoryClick={handleSelectCategoryClick}
+        title={"Selected categories"}
+      />
       <CategoriesList
         categories={data?.categories ?? []}
         selectedCategories={selectedCategories}
-        handleCategoryClick={handleCategoryClick}
+        handleSelectCategoryClick={handleSelectCategoryClick}
+        title={"All categories"}
       />
 
       <Dialog open={isOpen}>
