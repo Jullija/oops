@@ -3,10 +3,26 @@ import { Category } from "../CategoriesSection";
 
 type CategoryCardProps = {
   category: Category;
+  isSelected: boolean;
+  onClick: () => void;
 };
 
-export const CategoryCard = ({ category }: CategoryCardProps) => {
-  return <div style={styles.card}>{category.categoryName}</div>;
+export const CategoryCard = ({
+  category,
+  isSelected,
+  onClick,
+}: CategoryCardProps) => {
+  return (
+    <div
+      style={{
+        ...styles.card,
+        backgroundColor: isSelected ? "pink" : undefined,
+      }}
+      onClick={onClick}
+    >
+      {category.categoryName}
+    </div>
+  );
 };
 
 const styles: Styles = {

@@ -17,6 +17,8 @@ export const CategoriesSection = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [addCategory, { error: addError, reset }] = useAddCategoryMutation();
 
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+
   if (loading) return <div>loading...</div>;
   if (error) return <div>ERROR: {error.message}</div>;
 
@@ -34,12 +36,26 @@ export const CategoriesSection = () => {
     }
   };
 
+  const handleCategoryClick = (category: Category) => {
+    const wasSelected = !!selectedCategories.find(
+      (c) => c.categoryId === category.categoryId,
+    );
+    const updatedSelectedCategories = wasSelected
+      ? selectedCategories.filter((c) => c.categoryId !== category.categoryId)
+      : [...selectedCategories, category];
+    setSelectedCategories(updatedSelectedCategories);
+  };
+
   return (
     <div style={styles.container}>
       <button onClick={() => setIsOpen(true)}>add category</button>
       <div>categories section</div>
       <div>categories: </div>
-      <CategoriesList categories={data?.categories ?? []} />
+      <CategoriesList
+        categories={data?.categories ?? []}
+        selectedCategories={selectedCategories}
+        handleCategoryClick={handleCategoryClick}
+      />
 
       <Dialog open={isOpen}>
         <CloseHeader onCloseClick={() => setIsOpen(false)} />
