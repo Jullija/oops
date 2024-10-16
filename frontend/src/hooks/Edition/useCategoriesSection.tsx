@@ -5,7 +5,7 @@ import {
 
 export type Category = AllCategoriesQuery["categories"][number];
 
-export const useCategorySection = (editionId: number) => {
+export const useCategoriesSection = (editionId: number) => {
   const { data, loading, error, refetch } = useAllCategoriesQuery();
 
   const categories: Category[] = data?.categories ?? [];

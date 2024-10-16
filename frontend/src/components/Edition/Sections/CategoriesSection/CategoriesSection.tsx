@@ -7,8 +7,8 @@ import { useState } from "react";
 import { CloseHeader } from "../../../dialogs/CloseHeader";
 import {
   Category,
-  useCategorySection,
-} from "../../../../hooks/Edition/useCategorySection";
+  useCategoriesSection,
+} from "../../../../hooks/Edition/useCategoriesSection";
 import { useSetupAddCategoryToEditionMutation } from "../../../../graphql/setupAddCategoryToEdition.graphql.types";
 
 type CategoriesSectionProps = {
@@ -23,7 +23,7 @@ export const CategoriesSection = ({ editionId }: CategoriesSectionProps) => {
     useSetupAddCategoryToEditionMutation();
 
   const { categories, selectedCategories, loading, error, refetch } =
-    useCategorySection(editionId);
+    useCategoriesSection(editionId);
 
   if (loading) return <div>loading...</div>;
   if (error) return <div>ERROR: {error.message}</div>;

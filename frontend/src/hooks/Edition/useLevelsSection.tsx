@@ -10,8 +10,6 @@ export const useLevelsSection = (editionId: number) => {
 
   const levels: Level[] = data?.levels ?? [];
 
-  console.log("LEVELSL ", data);
-
   const selectedLevels: Level[] = levels.filter(
     (l) => l.editionId === editionId.toString(),
   );

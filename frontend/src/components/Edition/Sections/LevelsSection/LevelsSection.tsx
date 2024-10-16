@@ -23,7 +23,6 @@ export const LevelsSection = ({ editionId }: LevelsSectionProps) => {
   // const [addCategoryToEdition, { error: addToEditionError }] =
   //   useSetupAddCategoryToEditionMutation();
 
-  console.log("here!!!");
   const { levels, selectedLevels, loading, error } =
     useLevelsSection(editionId);
 
