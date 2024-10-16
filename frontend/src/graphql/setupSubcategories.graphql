@@ -1,0 +1,11 @@
+query SetupSubcategories {
+  subcategories {
+    categoryId
+    editionId
+    label
+    maxPoints
+    ordinalNumber
+    subcategoryId
+    subcategoryName
+  }
+}

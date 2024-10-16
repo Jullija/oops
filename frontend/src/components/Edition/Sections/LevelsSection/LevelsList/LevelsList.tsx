@@ -41,6 +41,7 @@ const styles: Styles = {
     display: "flex",
     flexDirection: "row",
     gap: 12,
+    flexWrap: "wrap",
   },
   title: {
     color: "blue",

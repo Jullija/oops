@@ -42,6 +42,8 @@ const styles: Styles = {
   container: {
     display: "flex",
     flexDirection: "row",
+    flexWrap: "wrap",
+
     gap: 12,
   },
   title: {

@@ -6,24 +6,10 @@ import { useState } from "react";
 import { AwardsSection } from "../../components/Edition/Sections/AwardsSection/AwardsSection";
 import { CategoriesSection } from "../../components/Edition/Sections/CategoriesSection/CategoriesSection";
 import { GroupsSection } from "../../components/Edition/Sections/GroupSection/GroupsSection";
-import { SubcategoriesSection } from "../../components/Edition/Sections/SubcategoriesSection/SubcategoriesSection";
 import { LevelsSection } from "../../components/Edition/Sections/LevelsSection/LevelsSection";
 import { FilesSection } from "../../components/Edition/Sections/FilesSection/FilesSection";
 import { ChestsSection } from "../../components/Edition/Sections/ChestsSection/ChestsSection";
-
-const styles: Styles = {
-  screenContainer: {
-    margin: 12,
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-  },
-  header: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 12,
-  },
-};
+import { SubcategoriesSection } from "../../components/Edition/Sections/SubcategoriesSection/SubcategoriesSection";
 
 export type SectionTitle =
   | "awards"
@@ -93,4 +79,18 @@ export const EditionScreen = () => {
       {getSectionComponent()}
     </div>
   );
+};
+
+const styles: Styles = {
+  screenContainer: {
+    margin: 12,
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+  },
+  header: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 12,
+  },
 };
