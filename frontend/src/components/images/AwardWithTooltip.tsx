@@ -1,5 +1,5 @@
 import { AwardImage, AwardImageSize } from "./AwardImage";
-import { Bonus } from "../../hooks/StudentProfile/useBonusesCardData";
+import { Bonus } from "../../hooks/StudentProfile";
 import { TooltipWrapper } from "../TooltipWrapper";
 import { dateOptions } from "../../utils/constants";
 import { Styles } from "../../utils/Styles";

@@ -83,10 +83,6 @@ class PointsDataFetcher {
         if (studentPointsWithoutBonuses.isNotEmpty()) {
             throw IllegalArgumentException("This student already has points in this subcategory")
         }
-        val studentPointsSum = studentPoints.sumOf { it.value.toDouble() }.toFloat()
-        if ((studentPointsSum + value).toBigDecimal() > subcategory.maxPoints) {
-            throw IllegalArgumentException("Student cannot have more than ${subcategory.maxPoints} points in this subcategory")
-        }
 
         val points = Points(
             student = student,
@@ -99,12 +95,19 @@ class PointsDataFetcher {
         val savedPoints = pointsRepository.save(points)
 
 
-        val bonuses = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.MULTIPLICATIVE, student).filter{
-            bonus -> bonus.points.subcategory.edition == subcategory.edition
-        }
+        val bonusesMultiplicative = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.MULTIPLICATIVE, points.student)
+            .filter { bonus -> bonus.points.subcategory.edition == points.subcategory.edition }
+            .filter { bonus -> bonus.points.subcategory.category == points.subcategory.category }
 
-        bonuses.forEach { bonus ->
+        val bonusesAdditivePrev = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.ADDITIVE_PREV, points.student)
+            .filter { bonus -> bonus.points.subcategory.edition == points.subcategory.edition }
+            .filter { bonus -> bonus.points.subcategory.category == points.subcategory.category }
+
+        bonusesMultiplicative.forEach { bonus ->
             bonus.updateMultiplicativePoints(bonusRepository, pointsRepository)
+        }
+        bonusesAdditivePrev.forEach { bonus ->
+            bonus.updateAdditivePrevPoints(bonusRepository, pointsRepository)
         }
 
         return savedPoints
@@ -133,14 +136,11 @@ class PointsDataFetcher {
                 throw IllegalArgumentException("Value cannot be negative")
             }
 
-            val studentPointsSum = points.student.getPointsBySubcategory(points.subcategory.subcategoryId, pointsRepository)
-                .sumOf { p -> p.value.toDouble() }.toFloat()
-
-            if (studentPointsSum - points.value.toFloat() + newValue > points.subcategory.maxPoints.toFloat()) {
+            if (newValue > points.subcategory.maxPoints.toFloat()) {
                 throw IllegalArgumentException("Student cannot have more than ${points.subcategory.maxPoints} points in this subcategory")
             }
 
-            points.value = newValue.toBigDecimal()
+            points.value = newValue.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
         }
 
         updatedById.let {
@@ -156,13 +156,17 @@ class PointsDataFetcher {
 
         val bonusesMultiplicative = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.MULTIPLICATIVE, points.student)
             .filter { bonus -> bonus.points.subcategory.edition == points.subcategory.edition }
-        val bonusesAdditiveNext = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.ADDITIVE_NEXT, points.student)
+            .filter { bonus -> bonus.points.subcategory.category == points.subcategory.category }
+
+        val bonusesAdditivePrev = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.ADDITIVE_PREV, points.student)
             .filter { bonus -> bonus.points.subcategory.edition == points.subcategory.edition }
+            .filter { bonus -> bonus.points.subcategory.category == points.subcategory.category }
+
         bonusesMultiplicative.forEach { bonus ->
             bonus.updateMultiplicativePoints(bonusRepository, pointsRepository)
         }
-        bonusesAdditiveNext.forEach { bonus ->
-            bonus.updateAdditiveNextPoints(bonusRepository, pointsRepository)
+        bonusesAdditivePrev.forEach { bonus ->
+            bonus.updateAdditivePrevPoints(bonusRepository, pointsRepository)
         }
 
         return savedPoints
@@ -183,16 +187,18 @@ class PointsDataFetcher {
 
         val bonusesMultiplicative = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.MULTIPLICATIVE, points.student)
             .filter { bonus -> bonus.points.subcategory.edition == points.subcategory.edition }
-        val bonusesAdditiveNext = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.ADDITIVE_NEXT, points.student)
+            .filter { bonus -> bonus.points.subcategory.category == points.subcategory.category }
+        val bonusesAdditivePrev = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.ADDITIVE_PREV, points.student)
             .filter { bonus -> bonus.points.subcategory.edition == points.subcategory.edition }
+            .filter { bonus -> bonus.points.subcategory.category == points.subcategory.category }
 
         pointsRepository.delete(points)
 
         bonusesMultiplicative.forEach { bonus ->
             bonus.updateMultiplicativePoints(bonusRepository, pointsRepository)
         }
-        bonusesAdditiveNext.forEach { bonus ->
-            bonus.updateAdditiveNextPoints(bonusRepository, pointsRepository)
+        bonusesAdditivePrev.forEach { bonus ->
+            bonus.updateAdditivePrevPoints(bonusRepository, pointsRepository)
         }
         return true
     }

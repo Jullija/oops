@@ -50,13 +50,18 @@ class Bonuses(
             award.category, pointsRepository).filter{
                 point -> bonusRepository.findByPoints(point).isEmpty()
         }
+        if (pointsInAwardCategory.isEmpty()) {
+            points.value = BigDecimal.ZERO
+            pointsRepository.save(points)
+            return
+        }
         val totalPointsValue = pointsInAwardCategory.sumOf { it.value.toDouble() }.toFloat()
-        points.value = (totalPointsValue * award.awardValue.toFloat()).toBigDecimal()
+        points.value = (totalPointsValue * award.awardValue.toFloat()).toBigDecimal().setScale(2, RoundingMode.HALF_UP)
         pointsRepository.save(points)
     }
 
-    fun updateAdditiveNextPoints(bonusRepository: BonusesRepository, pointsRepository: PointsRepository) {
-        if (award.awardType != AwardType.ADDITIVE_NEXT) {
+    fun updateAdditivePrevPoints(bonusRepository: BonusesRepository, pointsRepository: PointsRepository) {
+        if (award.awardType != AwardType.ADDITIVE_PREV) {
             throw IllegalArgumentException("Award type is not ADDITIVE_NEXT")
         }
         val pointsInAwardCategory = points.student.getPointsByEditionAndCategory(points.subcategory.edition,
@@ -65,7 +70,9 @@ class Bonuses(
         }.sortedBy { it.subcategory.ordinalNumber }
 
         if (pointsInAwardCategory.isEmpty()) {
-            throw IllegalArgumentException("No previous points found in the specified category.")
+            points.value = BigDecimal.ZERO
+            pointsRepository.save(points)
+            return
         }
 
         var sum = 0f
@@ -78,6 +85,8 @@ class Bonuses(
         }
 
         points.value = BigDecimal(sum.toString()).setScale(2, RoundingMode.HALF_UP)
+
+
         pointsRepository.save(points)
     }
 }

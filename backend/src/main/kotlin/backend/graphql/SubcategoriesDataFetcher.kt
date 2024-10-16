@@ -13,6 +13,7 @@ import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.math.RoundingMode
 
 @DgsComponent
 class SubcategoriesDataFetcher {
@@ -64,7 +65,7 @@ class SubcategoriesDataFetcher {
         for (i in 0..<subcategoryCount) {
             val subcategory = Subcategories(
                 subcategoryName = "${subcategoryPrefix}_$i",
-                maxPoints = maxPoints.toBigDecimal(),
+                maxPoints = maxPoints.toBigDecimal().setScale(2, RoundingMode.HALF_UP),
                 ordinalNumber = i,
                 category = category,
                 edition = edition,
@@ -112,7 +113,7 @@ class SubcategoriesDataFetcher {
         }
         val subcategories = Subcategories(
             subcategoryName = subcategoryName,
-            maxPoints = maxPoints.toBigDecimal(),
+            maxPoints = maxPoints.toBigDecimal().setScale(2, RoundingMode.HALF_UP),
             ordinalNumber = ordinalNumber,
             category = category,
             edition = edition,
@@ -155,7 +156,7 @@ class SubcategoriesDataFetcher {
             if (it < 0) {
                 throw IllegalArgumentException("Max points must be greater than or equal to 0")
             }
-            subcategory.maxPoints = it.toBigDecimal()
+            subcategory.maxPoints = it.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
         }
 
         ordinalNumber?.let {
