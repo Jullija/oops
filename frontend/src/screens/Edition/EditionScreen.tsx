@@ -66,18 +66,17 @@ export const EditionScreen = () => {
 
   return (
     <div style={styles.screenContainer}>
-      <SectionsBar
-        sections={sections}
-        activeSection={activeSection}
-        onActiveChange={(section) => setActiveSection(section)}
-      />
-
       <div style={styles.header}>
         <button onClick={() => navigate(pathsGenerator.coordinator.Editions)}>
           go back to editions list
         </button>
         <div>params - edition id: {editionId}</div>
       </div>
+      <SectionsBar
+        sections={sections}
+        activeSection={activeSection}
+        onActiveChange={(section) => setActiveSection(section)}
+      />
       {getSectionComponent()}
     </div>
   );
