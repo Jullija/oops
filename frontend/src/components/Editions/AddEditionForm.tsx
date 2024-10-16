@@ -42,7 +42,7 @@ export const AddEditionForm = ({
 
   return (
     <div style={styles.container}>
-      <div style={styles.title}>Add Category</div>
+      <div style={styles.title}>Add Edition</div>
       <form onSubmit={formik.handleSubmit}>
         <div>
           <TextField
