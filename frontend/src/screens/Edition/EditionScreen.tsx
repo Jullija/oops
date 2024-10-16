@@ -6,8 +6,8 @@ import { useState } from "react";
 import { AwardsSection } from "../../components/Edition/Sections/AwardsSection";
 import { CategoriesSection } from "../../components/Edition/Sections/CategoriesSection/CategoriesSection";
 import { GroupsSection } from "../../components/Edition/Sections/GroupsSection";
-import { LevelsSection } from "../../components/Edition/Sections/LevelsSection";
 import { SubcategoriesSection } from "../../components/Edition/Sections/SubcategoriesSection";
+import { LevelsSection } from "../../components/Edition/Sections/LevelsSection/LevelsSection";
 
 const styles: Styles = {
   screenContainer: {
@@ -44,7 +44,7 @@ export const EditionScreen = () => {
     throw new Error("editionId cannot be undefined");
   }
 
-  const [activeSection, setActiveSection] = useState(sections[1]);
+  const [activeSection, setActiveSection] = useState(sections[3]);
 
   const getSectionComponent = () => {
     const title = activeSection.title;
@@ -56,7 +56,7 @@ export const EditionScreen = () => {
       case "grupy":
         return <GroupsSection />;
       case "levele":
-        return <LevelsSection />;
+        return <LevelsSection editionId={editionId} />;
       case "subkategorie":
         return <SubcategoriesSection />;
       default:
