@@ -14647,7 +14647,7 @@ type mutation_root {
   ): SubcategoryType
   addUser(
     createFirebaseUser: Boolean = false
-    email: String = "example@example.com"
+    email: String = ""
     firstName: String!
     indexNumber: Int!
     label: String = ""

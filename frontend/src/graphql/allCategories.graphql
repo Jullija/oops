@@ -2,6 +2,9 @@ query AllCategories {
   categories(orderBy: { categoryName: ASC }) {
     categoryId
     categoryName
+    categoryEditions {
+      editionId
+    }
     subcategories(orderBy: { subcategoryName: ASC }) {
       editionId
       subcategoryId

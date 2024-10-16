@@ -1,23 +1,29 @@
 import { Dialog } from "@mui/material";
 import { useAddCategoryMutation } from "../../../../graphql/addCategory.graphql.types";
-import {
-  AllCategoriesQuery,
-  useAllCategoriesQuery,
-} from "../../../../graphql/allCategories.graphql.types";
 import { Styles } from "../../../../utils/Styles";
 import { AddCategoryForm, CategoriesFormValues } from "./AddCategoryForm";
 import { CategoriesList } from "./CategoriesList/CategoriesList";
 import { useState } from "react";
 import { CloseHeader } from "../../../dialogs/CloseHeader";
+import {
+  Category,
+  useCategorySection,
+} from "../../../../hooks/Edition/useCategorySection";
+import { useSetupAddCategoryToEditionMutation } from "../../../../graphql/setupAddCategoryToEdition.graphql.types";
 
-export type Category = AllCategoriesQuery["categories"][number];
+type CategoriesSectionProps = {
+  editionId: number;
+};
 
-export const CategoriesSection = () => {
-  const { data, loading, error, refetch } = useAllCategoriesQuery();
+export const CategoriesSection = ({ editionId }: CategoriesSectionProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [addCategory, { error: addError, reset }] = useAddCategoryMutation();
+  const [addCategory, { error: addError, reset: resetAddCategoryError }] =
+    useAddCategoryMutation();
+  const [addCategoryToEdition, { error: addToEditionError }] =
+    useSetupAddCategoryToEditionMutation();
 
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+  const { categories, selectedCategories, loading, error, refetch } =
+    useCategorySection(editionId);
 
   if (loading) return <div>loading...</div>;
   if (error) return <div>ERROR: {error.message}</div>;
@@ -32,18 +38,21 @@ export const CategoriesSection = () => {
     if (!addError) {
       refetch();
       setIsOpen(false);
-      reset();
+      resetAddCategoryError();
     }
   };
 
-  const handleSelectCategoryClick = (category: Category) => {
-    const wasSelected = !!selectedCategories.find(
-      (c) => c.categoryId === category.categoryId,
-    );
-    const updatedSelectedCategories = wasSelected
-      ? selectedCategories.filter((c) => c.categoryId !== category.categoryId)
-      : [...selectedCategories, category];
-    setSelectedCategories(updatedSelectedCategories);
+  const handleSelectCategoryClick = async (category: Category) => {
+    await addCategoryToEdition({
+      variables: {
+        editionId,
+        categoryId: parseInt(category.categoryId),
+      },
+    });
+    if (!addToEditionError) {
+      refetch();
+      resetAddCategoryError();
+    }
   };
 
   return (
@@ -57,7 +66,7 @@ export const CategoriesSection = () => {
         title={"Selected categories"}
       />
       <CategoriesList
-        categories={data?.categories ?? []}
+        categories={categories}
         selectedCategories={selectedCategories}
         handleSelectCategoryClick={handleSelectCategoryClick}
         title={"All categories"}

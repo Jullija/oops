@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Styles } from "../../utils/Styles";
 import { pathsGenerator } from "../../router/paths";
 import { SectionsBar } from "../../components/Edition/SectionsBar";
-import { ReactElement, useState } from "react";
+import { useState } from "react";
 import { AwardsSection } from "../../components/Edition/Sections/AwardsSection";
 import { CategoriesSection } from "../../components/Edition/Sections/CategoriesSection/CategoriesSection";
 import { GroupsSection } from "../../components/Edition/Sections/GroupsSection";
@@ -25,15 +25,14 @@ const styles: Styles = {
 
 export type Section = {
   title: string;
-  component: ReactElement;
 };
 
 const sections: Section[] = [
-  { title: "nagrody", component: <AwardsSection /> },
-  { title: "kategories", component: <CategoriesSection /> },
-  { title: "grupy", component: <GroupsSection /> },
-  { title: "levele", component: <LevelsSection /> },
-  { title: "subkategorie", component: <SubcategoriesSection /> },
+  { title: "nagrody" },
+  { title: "kategories" },
+  { title: "grupy" },
+  { title: "levele" },
+  { title: "subkategorie" },
 ];
 
 export const EditionScreen = () => {
@@ -41,7 +40,29 @@ export const EditionScreen = () => {
   const params = useParams();
   const editionId = params.id ? parseInt(params.id) : undefined;
 
-  const [activeSection, setActiveSection] = useState(sections[2]);
+  if (editionId === undefined) {
+    throw new Error("editionId cannot be undefined");
+  }
+
+  const [activeSection, setActiveSection] = useState(sections[1]);
+
+  const getSectionComponent = () => {
+    const title = activeSection.title;
+    switch (title) {
+      case "nagrody":
+        return <AwardsSection />;
+      case "kategories":
+        return <CategoriesSection editionId={editionId} />;
+      case "grupy":
+        return <GroupsSection />;
+      case "levele":
+        return <LevelsSection />;
+      case "subkategorie":
+        return <SubcategoriesSection />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div style={styles.screenContainer}>
@@ -57,7 +78,7 @@ export const EditionScreen = () => {
         </button>
         <div>params - edition id: {editionId}</div>
       </div>
-      {activeSection.component}
+      {getSectionComponent()}
     </div>
   );
 };

@@ -11,6 +11,10 @@ export type AllCategoriesQuery = {
     __typename?: "Categories";
     categoryId: string;
     categoryName: string;
+    categoryEditions: Array<{
+      __typename?: "CategoryEdition";
+      editionId: string;
+    }>;
     subcategories: Array<{
       __typename?: "Subcategories";
       editionId: string;
@@ -26,6 +30,9 @@ export const AllCategoriesDocument = gql`
     categories(orderBy: { categoryName: ASC }) {
       categoryId
       categoryName
+      categoryEditions {
+        editionId
+      }
       subcategories(orderBy: { subcategoryName: ASC }) {
         editionId
         subcategoryId

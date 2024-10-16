@@ -20,11 +20,10 @@ export const AddEditionForm = ({
   handleAddEdition,
   createError,
 }: AddCategoryFormProps) => {
-  const currYear = new Date().getFullYear();
   const formik = useFormik({
     initialValues: {
-      name: `edycja ${currYear}/${currYear + 1}`,
-      year: currYear,
+      name: "",
+      year: 2022,
     },
     validate: (values: EditionFormValues) => {
       try {
