@@ -1,7 +1,7 @@
 import { Subcategory } from "../../../../../hooks/Edition/useSubcategoriesSection";
 import { EMPTY_FIELD_STRING } from "../../../../../utils/constants";
 import { Styles } from "../../../../../utils/Styles";
-import { SubcategoryCard } from "./CategoryCard";
+import { SubcategoryCard } from "./SubcategoryCard";
 
 type SubcategoriesListProps = {
   subcategories: Subcategory[];

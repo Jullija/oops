@@ -4,13 +4,13 @@ import {
   AddSubcategoryForm,
   SubcategoryFormValues,
 } from "./AddSubcategoryForm";
-import { SubcategoriesList } from "./CategoriesList/SubcategoriesList";
 import { useState } from "react";
 import { CloseHeader } from "../../../dialogs/CloseHeader";
 import {
   Subcategory,
   useSubcategoriesSection,
 } from "../../../../hooks/Edition/useSubcategoriesSection";
+import { SubcategoriesList } from "./SubcategoriesList/SubcategoriesList";
 
 type SubcategoriesSectionProps = {
   editionId: number;
@@ -93,7 +93,6 @@ const styles: Styles = {
   container: {
     display: "flex",
     flexDirection: "column",
-    flexWrap: "wrap",
     gap: 12,
   },
 };
