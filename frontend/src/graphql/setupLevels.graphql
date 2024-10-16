@@ -1,0 +1,14 @@
+query setupLevels {
+  levels {
+    editionId
+    grade
+    highest
+    imageFileId
+    label
+    levelId
+    maximumPoints
+    minimumPoints
+    name
+    ordinalNumber
+  }
+}

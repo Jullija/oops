@@ -1,0 +1,5 @@
+query Editions {
+  edition {
+    editionId
+  }
+}
