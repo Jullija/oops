@@ -1,5 +1,5 @@
+import { Category } from "../../../../../hooks/Edition/useCategorySection";
 import { Styles } from "../../../../../utils/Styles";
-import { Category } from "../CategoriesSection";
 
 type CategoryCardProps = {
   category: Category;

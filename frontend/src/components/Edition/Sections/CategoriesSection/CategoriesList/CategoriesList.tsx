@@ -1,6 +1,6 @@
+import { Category } from "../../../../../hooks/Edition/useCategorySection";
 import { EMPTY_FIELD_STRING } from "../../../../../utils/constants";
 import { Styles } from "../../../../../utils/Styles";
-import { Category } from "../CategoriesSection";
 import { CategoryCard } from "./CategoryCard";
 
 type CategoriesListProps = {
