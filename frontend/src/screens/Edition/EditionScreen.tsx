@@ -3,11 +3,13 @@ import { Styles } from "../../utils/Styles";
 import { pathsGenerator } from "../../router/paths";
 import { SectionsBar } from "../../components/Edition/SectionsBar";
 import { useState } from "react";
-import { AwardsSection } from "../../components/Edition/Sections/AwardsSection";
+import { AwardsSection } from "../../components/Edition/Sections/AwardsSection/AwardsSection";
 import { CategoriesSection } from "../../components/Edition/Sections/CategoriesSection/CategoriesSection";
-import { GroupsSection } from "../../components/Edition/Sections/GroupsSection";
-import { SubcategoriesSection } from "../../components/Edition/Sections/SubcategoriesSection";
+import { GroupsSection } from "../../components/Edition/Sections/GroupSection/GroupsSection";
+import { SubcategoriesSection } from "../../components/Edition/Sections/SubcategoriesSection/SubcategoriesSection";
 import { LevelsSection } from "../../components/Edition/Sections/LevelsSection/LevelsSection";
+import { FilesSection } from "../../components/Edition/Sections/FilesSection/FilesSection";
+import { ChestsSection } from "../../components/Edition/Sections/ChestsSection/ChestsSection";
 
 const styles: Styles = {
   screenContainer: {
@@ -23,16 +25,23 @@ const styles: Styles = {
   },
 };
 
-export type Section = {
-  title: string;
-};
+export type SectionTitle =
+  | "awards"
+  | "categories"
+  | "chests"
+  | "group"
+  | "levels"
+  | "subcategories"
+  | "files";
 
-const sections: Section[] = [
-  { title: "nagrody" },
-  { title: "kategories" },
-  { title: "grupy" },
-  { title: "levele" },
-  { title: "subkategorie" },
+const sectionTitles: SectionTitle[] = [
+  "awards",
+  "categories",
+  "chests",
+  "group",
+  "levels",
+  "subcategories",
+  "files",
 ];
 
 export const EditionScreen = () => {
@@ -44,21 +53,25 @@ export const EditionScreen = () => {
     throw new Error("editionId cannot be undefined");
   }
 
-  const [activeSection, setActiveSection] = useState(sections[3]);
+  const [activeSectionTitle, setActiveSectionTitle] =
+    useState<SectionTitle>("categories");
 
   const getSectionComponent = () => {
-    const title = activeSection.title;
-    switch (title) {
-      case "nagrody":
-        return <AwardsSection />;
-      case "kategories":
+    switch (activeSectionTitle) {
+      case "awards":
+        return <AwardsSection editionId={editionId} />;
+      case "categories":
         return <CategoriesSection editionId={editionId} />;
-      case "grupy":
-        return <GroupsSection />;
-      case "levele":
+      case "chests":
+        return <ChestsSection editionId={editionId} />;
+      case "group":
+        return <GroupsSection editionId={editionId} />;
+      case "levels":
         return <LevelsSection editionId={editionId} />;
-      case "subkategorie":
-        return <SubcategoriesSection />;
+      case "subcategories":
+        return <SubcategoriesSection editionId={editionId} />;
+      case "files":
+        return <FilesSection editionId={editionId} />;
       default:
         return null;
     }
@@ -73,9 +86,9 @@ export const EditionScreen = () => {
         <div>params - edition id: {editionId}</div>
       </div>
       <SectionsBar
-        sections={sections}
-        activeSection={activeSection}
-        onActiveChange={(section) => setActiveSection(section)}
+        sections={sectionTitles}
+        activeSectionTitle={activeSectionTitle}
+        onActiveChange={(section) => setActiveSectionTitle(section)}
       />
       {getSectionComponent()}
     </div>

@@ -1,28 +1,28 @@
 import { Styles } from "../../utils/Styles";
-import { Section } from "../../screens/Edition/EditionScreen";
+import { SectionTitle } from "../../screens/Edition/EditionScreen";
 
 type SectionBarProps = {
-  sections: Section[];
-  activeSection: Section;
-  onActiveChange: (section: Section) => void;
+  sections: SectionTitle[];
+  activeSectionTitle: SectionTitle;
+  onActiveChange: (section: SectionTitle) => void;
 };
 
 export const SectionsBar = ({
   sections,
-  activeSection,
+  activeSectionTitle,
   onActiveChange,
 }: SectionBarProps) => {
   return (
     <div style={styles.container}>
-      {sections.map((section) => (
+      {sections.map((sectionTitle) => (
         <div
-          onClick={() => onActiveChange(section)}
+          onClick={() => onActiveChange(sectionTitle)}
           style={{
             ...styles.section,
-            color: activeSection === section ? "red" : "grey",
+            color: activeSectionTitle === sectionTitle ? "red" : "grey",
           }}
         >
-          {section.title}
+          {sectionTitle}
         </div>
       ))}
     </div>
