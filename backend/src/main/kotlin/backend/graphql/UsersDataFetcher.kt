@@ -89,7 +89,7 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @Transactional
     fun assignPhotoToUser(@InputArgument userId: Long, @InputArgument fileId: Long?): Boolean {
         val currentUser = userMapper.getCurrentUser()
-        if (currentUser.role == UsersRoles.STUDENT && currentUser.userId != userId) {
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR) && currentUser.userId != userId) {
             throw IllegalArgumentException("Student can only assign a photo to themselves")
         }
 
@@ -165,7 +165,7 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
         val user = usersRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("User not found") }
 
-        if (currentUser.role == UsersRoles.STUDENT){
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)){
             if (currentUser.userId != userId){
                 throw IllegalArgumentException("Student can only edit themselves")
             }
@@ -240,11 +240,11 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @Transactional
     fun removeUser(@InputArgument userId: Long): Boolean {
         val currentUser = userMapper.getCurrentUser()
-        if (currentUser.userId == userId){
-            throw IllegalArgumentException("Cannot remove yourself")
-        }
         if (currentUser.role != UsersRoles.COORDINATOR){
             throw IllegalArgumentException("Only a coordinator can remove a user")
+        }
+        if (currentUser.userId == userId){
+            throw IllegalArgumentException("Cannot remove yourself")
         }
 
         val user = usersRepository.findById(userId)
@@ -274,7 +274,7 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @Transactional
     fun resetPassword(@InputArgument userId: Long): Boolean {
         val currentUser = userMapper.getCurrentUser()
-        if (currentUser.role == UsersRoles.STUDENT && currentUser.userId != userId) {
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR) && currentUser.userId != userId) {
             throw IllegalArgumentException("Student can only reset their own password")
         }
 
@@ -288,7 +288,7 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @Transactional
     fun getStudentPoints(@InputArgument studentId: Long, @InputArgument editionId: Long): StudentPointsType {
         val currentUser = userMapper.getCurrentUser()
-        if (currentUser.role == UsersRoles.STUDENT && currentUser.userId != studentId) {
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR) && currentUser.userId != studentId) {
             throw IllegalArgumentException("Student can only view their own points")
         }
 
@@ -376,7 +376,7 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @Transactional
     fun getSumOfPointsForStudentByCategory(@InputArgument studentId: Long, @InputArgument editionId: Long): List<CategoryPointsSumType> {
         val currentUser = userMapper.getCurrentUser()
-        if (currentUser.role == UsersRoles.STUDENT && currentUser.userId != studentId) {
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR) && currentUser.userId != studentId) {
             throw IllegalArgumentException("Student can only view their own points")
         }
 

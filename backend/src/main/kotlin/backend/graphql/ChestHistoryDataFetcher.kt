@@ -67,7 +67,7 @@ class ChestHistoryDataFetcher {
     fun addChestToUser(@InputArgument userId: Long, @InputArgument chestId: Long, @InputArgument teacherId: Long,
                        @InputArgument subcategoryId: Long): ChestHistory {
         val currentUser = userMapper.getCurrentUser()
-        if (currentUser.role == UsersRoles.STUDENT) {
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)) {
             throw IllegalArgumentException("User must be a teacher or coordinator")
         }
 
@@ -152,7 +152,7 @@ class ChestHistoryDataFetcher {
         @InputArgument label: String?
     ): ChestHistory {
         val currentUser = userMapper.getCurrentUser()
-        if (currentUser.role == UsersRoles.STUDENT) {
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)) {
             throw IllegalArgumentException("User must be a teacher or coordinator")
         }
 
@@ -266,7 +266,7 @@ class ChestHistoryDataFetcher {
     @Transactional
     fun removeChestFromUser(@InputArgument chestHistoryId: Long): Boolean {
         val currentUser = userMapper.getCurrentUser()
-        if (currentUser.role == UsersRoles.STUDENT) {
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)) {
             throw IllegalArgumentException("User must be a teacher or coordinator")
         }
 

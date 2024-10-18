@@ -168,7 +168,7 @@ class GroupsDataFetcher {
         @InputArgument label: String?
     ): Groups {
         val currentUser = userMapper.getCurrentUser()
-        if (currentUser.role == UsersRoles.STUDENT){
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)){
             throw IllegalArgumentException("Student cannot edit groups")
         }
 
@@ -273,7 +273,7 @@ class GroupsDataFetcher {
     @Transactional
     fun getPossibleGroupsWeekdays(@InputArgument editionId: Long): List<Weekdays> {
         val currentUser = userMapper.getCurrentUser()
-        if (currentUser.role == UsersRoles.STUDENT || currentUser.role == UsersRoles.TEACHER) {
+        if (currentUser.role != UsersRoles.COORDINATOR) {
             val userEditions = groupsRepository.findByUserGroups_User_UserId(currentUser.userId).map { it.edition }
             if (userEditions.none { it.editionId == editionId }) {
                 throw IllegalArgumentException("User is not in edition with ID $editionId")
@@ -292,7 +292,7 @@ class GroupsDataFetcher {
     @Transactional
     fun getPossibleGroupsTimeSpans(@InputArgument editionId: Long): List<TimeSpansType> {
         val currentUser = userMapper.getCurrentUser()
-        if (currentUser.role == UsersRoles.STUDENT || currentUser.role == UsersRoles.TEACHER) {
+        if (currentUser.role != UsersRoles.COORDINATOR) {
             val userEditions = groupsRepository.findByUserGroups_User_UserId(currentUser.userId).map { it.edition }
             if (userEditions.none { it.editionId == editionId }) {
                 throw IllegalArgumentException("User is not in edition with ID $editionId")
@@ -312,7 +312,7 @@ class GroupsDataFetcher {
     @Transactional
     fun getPossibleGroupDates(@InputArgument editionId: Long): List<GroupDateType> {
         val currentUser = userMapper.getCurrentUser()
-        if (currentUser.role == UsersRoles.STUDENT || currentUser.role == UsersRoles.TEACHER) {
+        if (currentUser.role != UsersRoles.COORDINATOR) {
             val userEditions = groupsRepository.findByUserGroups_User_UserId(currentUser.userId).map { it.edition }
             if (userEditions.none { it.editionId == editionId }) {
                 throw IllegalArgumentException("User is not in edition with ID $editionId")
@@ -330,7 +330,7 @@ class GroupsDataFetcher {
     @Transactional
     fun getUsersInGroupWithPoints(@InputArgument groupId: Long): List<UserPointsType> {
         val currentUser = userMapper.getCurrentUser()
-        if (currentUser.role == UsersRoles.STUDENT){
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)){
             throw IllegalArgumentException("Student cannot view users in groups")
         }
         if (currentUser.role == UsersRoles.TEACHER){
@@ -411,7 +411,7 @@ class GroupsDataFetcher {
     @Transactional
     fun getGroupsInEdition(@InputArgument editionId: Long, @InputArgument teacherId: Long): List<GroupTeacherType> {
         val currentUser = userMapper.getCurrentUser()
-        if (currentUser.role == UsersRoles.STUDENT){
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)){
             throw IllegalArgumentException("Student cannot view groups")
         }
         if (currentUser.role == UsersRoles.TEACHER){

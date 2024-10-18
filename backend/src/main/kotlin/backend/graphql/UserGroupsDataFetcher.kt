@@ -61,14 +61,8 @@ class UserGroupsDataFetcher {
     @Transactional
     fun addUserToGroup(@InputArgument userId: Long, @InputArgument groupId: Long): UserGroups {
         val currentUser = userMapper.getCurrentUser()
-        if (currentUser.role == UsersRoles.STUDENT){
-            throw IllegalArgumentException("Student cannot add users to groups")
-        }
-        if (currentUser.role == UsersRoles.TEACHER){
-            val group = groupsRepository.findById(groupId).orElseThrow { throw IllegalArgumentException("Group not found") }
-            if (group.teacher.userId != currentUser.userId){
-                throw IllegalArgumentException("Teacher can only add users to their groups")
-            }
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can add users to groups")
         }
 
         val user = usersRepository.findById(userId).orElseThrow { throw IllegalArgumentException("User not found") }
@@ -76,6 +70,10 @@ class UserGroupsDataFetcher {
 
         if (userGroupsRepository.existsByUserAndGroup(user, group)){
             throw IllegalArgumentException("This User already exists in this Group")
+        }
+
+        if (userGroupsRepository.existsByUserAndGroup_Edition(user, group.edition)){
+            throw IllegalArgumentException("This User already exists in this Edition")
         }
 
         if (group.edition.endDate.isBefore(java.time.LocalDate.now())){
@@ -93,7 +91,7 @@ class UserGroupsDataFetcher {
     @Transactional
     fun removeUserFromGroup(@InputArgument userId: Long, @InputArgument groupId: Long): Boolean {
         val currentUser = userMapper.getCurrentUser()
-        if (currentUser.role == UsersRoles.STUDENT){
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)){
             throw IllegalArgumentException("Student cannot remove users from groups")
         }
         if (currentUser.role == UsersRoles.TEACHER){

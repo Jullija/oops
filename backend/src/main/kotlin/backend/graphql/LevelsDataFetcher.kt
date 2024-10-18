@@ -249,7 +249,7 @@ class LevelsDataFetcher {
     @Transactional
     fun getNeighboringLevels(@InputArgument studentId: Long, @InputArgument editionId: Long): NeighboringLevelsType {
         val currentUser = userMapper.getCurrentUser()
-        if (currentUser.role == UsersRoles.STUDENT){
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)){
             if (currentUser.userId != studentId){
                 throw IllegalArgumentException("Student can only get neighboring levels for themselves")
             }
