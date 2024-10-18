@@ -13,6 +13,8 @@ import backend.chestHistory.ChestHistory
 import backend.edition.Edition
 import backend.groups.GroupsRepository
 import backend.subcategories.SubcategoriesRepository
+import backend.users.UsersRoles
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -24,6 +26,9 @@ import kotlin.math.min
 
 @DgsComponent
 class BonusDataFetcher {
+
+    @Autowired
+    private lateinit var userMapper: UserMapper
 
     @Autowired
     lateinit var bonusRepository: BonusesRepository
@@ -50,6 +55,11 @@ class BonusDataFetcher {
     @Transactional
     fun addBonusMutation(@InputArgument chestHistoryId: Long, @InputArgument awardId: Long,
                          @InputArgument checkDates: Boolean = true): AddBonusReturnType {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.STUDENT && currentUser.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("Only students (and a coordinator) can open chests.")
+        }
+
         val chestHistory = chestHistoryRepository.findById(chestHistoryId)
             .orElseThrow { IllegalArgumentException("Invalid chest history ID") }
 

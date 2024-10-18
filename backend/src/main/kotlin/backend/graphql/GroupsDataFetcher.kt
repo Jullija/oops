@@ -18,6 +18,7 @@ import backend.userGroups.UserGroupsRepository
 import backend.users.UsersRepository
 import backend.users.Users
 import backend.users.UsersRoles
+import backend.utils.UserMapper
 import backend.weekdays.Weekdays
 import backend.weekdays.WeekdaysRepository
 import com.netflix.graphql.dgs.DgsComponent
@@ -34,6 +35,8 @@ import kotlin.math.min
 
 @DgsComponent
 class GroupsDataFetcher {
+    @Autowired
+    private lateinit var userMapper: UserMapper
 
     @Autowired
     private lateinit var bonusesRepository: BonusesRepository
@@ -68,6 +71,11 @@ class GroupsDataFetcher {
     @DgsMutation
     @Transactional
     fun assignPhotosToGroups(@InputArgument editionId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("Only coordinators can assign photos to groups")
+        }
+
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
         if (edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Edition has already ended")
@@ -97,6 +105,11 @@ class GroupsDataFetcher {
                  @InputArgument weekdayId: Long, @InputArgument startTime: Time,
                  @InputArgument endTime: Time, @InputArgument teacherId: Long, @InputArgument label: String = "",
                  @InputArgument groupName: String = ""): Groups {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("Only coordinators can add groups")
+        }
+
         val edition = editionRepository.findById(editionId).orElseThrow() { IllegalArgumentException("Invalid edition ID") }
         if (edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Edition has already ended")
@@ -154,8 +167,22 @@ class GroupsDataFetcher {
         @InputArgument teacherId: Long?,
         @InputArgument label: String?
     ): Groups {
+        val currentUser = userMapper.getCurrentUser()
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)){
+            throw IllegalArgumentException("Student cannot edit groups")
+        }
+
         val group = groupsRepository.findById(groupId)
             .orElseThrow { IllegalArgumentException("Invalid group ID") }
+
+        if (currentUser.role == UsersRoles.TEACHER){
+            if (group.teacher.userId != currentUser.userId){
+                throw IllegalArgumentException("Teacher can only edit their groups")
+            }
+            if (usosId != null || weekdayId != null || startTime != null || endTime != null || teacherId != null){
+                throw IllegalArgumentException("Teacher can only edit groupName and label")
+            }
+        }
 
         if (group.edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Edition has already ended")
@@ -222,6 +249,11 @@ class GroupsDataFetcher {
     @DgsMutation
     @Transactional
     fun removeGroup(@InputArgument groupId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("Only coordinators can remove groups")
+        }
+
         val group = groupsRepository.findById(groupId)
             .orElseThrow { IllegalArgumentException("Invalid group ID") }
 
@@ -240,6 +272,14 @@ class GroupsDataFetcher {
     @DgsQuery
     @Transactional
     fun getPossibleGroupsWeekdays(@InputArgument editionId: Long): List<Weekdays> {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            val userEditions = groupsRepository.findByUserGroups_User_UserId(currentUser.userId).map { it.edition }
+            if (userEditions.none { it.editionId == editionId }) {
+                throw IllegalArgumentException("User is not in edition with ID $editionId")
+            }
+        }
+
         val edition = editionRepository
             .findById(editionId)
             .orElseThrow { IllegalArgumentException("Invalid edition ID") }
@@ -251,6 +291,14 @@ class GroupsDataFetcher {
     @DgsQuery
     @Transactional
     fun getPossibleGroupsTimeSpans(@InputArgument editionId: Long): List<TimeSpansType> {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            val userEditions = groupsRepository.findByUserGroups_User_UserId(currentUser.userId).map { it.edition }
+            if (userEditions.none { it.editionId == editionId }) {
+                throw IllegalArgumentException("User is not in edition with ID $editionId")
+            }
+        }
+
         val edition = editionRepository
             .findById(editionId)
             .orElseThrow { IllegalArgumentException("Invalid edition ID") }
@@ -263,6 +311,14 @@ class GroupsDataFetcher {
     @DgsQuery
     @Transactional
     fun getPossibleGroupDates(@InputArgument editionId: Long): List<GroupDateType> {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            val userEditions = groupsRepository.findByUserGroups_User_UserId(currentUser.userId).map { it.edition }
+            if (userEditions.none { it.editionId == editionId }) {
+                throw IllegalArgumentException("User is not in edition with ID $editionId")
+            }
+        }
+
         val edition = editionRepository
             .findById(editionId)
             .orElseThrow { IllegalArgumentException("Invalid edition ID") }
@@ -273,6 +329,18 @@ class GroupsDataFetcher {
     @DgsQuery
     @Transactional
     fun getUsersInGroupWithPoints(@InputArgument groupId: Long): List<UserPointsType> {
+        val currentUser = userMapper.getCurrentUser()
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)){
+            throw IllegalArgumentException("Student cannot view users in groups")
+        }
+        if (currentUser.role == UsersRoles.TEACHER){
+            val groupEdition = groupsRepository.findById(groupId).orElseThrow { IllegalArgumentException("Invalid group ID") }.edition
+            val userEditions = groupsRepository.findByUserGroups_User_UserId(currentUser.userId).map { it.edition }
+            if (userEditions.none { it.editionId == groupEdition.editionId }) {
+                throw IllegalArgumentException("User is not in edition with ID ${groupEdition.editionId}")
+            }
+        }
+
         val group = groupsRepository.findById(groupId).orElseThrow { IllegalArgumentException("Invalid group ID") }
         val users = usersRepository.findByUserGroups_Group_GroupsId(groupId).filter { it.role == UsersRoles.STUDENT }
         val userIds = users.map { it.userId }
@@ -342,6 +410,17 @@ class GroupsDataFetcher {
     @DgsQuery
     @Transactional
     fun getGroupsInEdition(@InputArgument editionId: Long, @InputArgument teacherId: Long): List<GroupTeacherType> {
+        val currentUser = userMapper.getCurrentUser()
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)){
+            throw IllegalArgumentException("Student cannot view groups")
+        }
+        if (currentUser.role == UsersRoles.TEACHER){
+            val userEditions = groupsRepository.findByUserGroups_User_UserId(currentUser.userId).map { it.edition }
+            if (userEditions.none { it.editionId == editionId }) {
+                throw IllegalArgumentException("User is not in edition with ID $editionId")
+            }
+        }
+
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
         val teacher = usersRepository.findById(teacherId).orElseThrow { IllegalArgumentException("Invalid teacher ID") }
         if (teacher.role != UsersRoles.TEACHER && teacher.role != UsersRoles.COORDINATOR) {

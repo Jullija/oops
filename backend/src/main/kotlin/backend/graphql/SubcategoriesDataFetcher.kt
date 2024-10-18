@@ -8,6 +8,8 @@ import backend.levels.LevelsRepository
 import backend.points.PointsRepository
 import backend.subcategories.Subcategories
 import backend.subcategories.SubcategoriesRepository
+import backend.users.UsersRoles
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -17,6 +19,8 @@ import java.math.RoundingMode
 
 @DgsComponent
 class SubcategoriesDataFetcher {
+    @Autowired
+    private lateinit var userMapper: UserMapper
 
     @Autowired
     private lateinit var subcategoriesRepository: SubcategoriesRepository
@@ -41,6 +45,11 @@ class SubcategoriesDataFetcher {
     fun generateSubcategories(@InputArgument editionId: Long, @InputArgument categoryId: Long,
                               @InputArgument subcategoryPrefix: String,
                               @InputArgument subcategoryCount: Int, @InputArgument maxPoints: Float): List<Subcategories> {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can generate subcategories")
+        }
+
         val edition = editionRepository.findById(editionId).orElseThrow { throw Exception("Edition not found") }
         if (edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Edition has already ended")
@@ -81,6 +90,11 @@ class SubcategoriesDataFetcher {
     fun addSubcategory(@InputArgument subcategoryName: String, @InputArgument maxPoints: Float,
                        @InputArgument ordinalNumber: Int, @InputArgument categoryId: Long,
                        @InputArgument editionId: Long, @InputArgument label: String): Subcategories {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can add subcategories")
+        }
+
         val category = categoriesRepository.findById(categoryId).orElseThrow { throw Exception("Category not found") }
         val edition = editionRepository.findById(editionId).orElseThrow { throw Exception("Edition not found") }
         if (edition.endDate.isBefore(java.time.LocalDate.now())){
@@ -131,6 +145,11 @@ class SubcategoriesDataFetcher {
         @InputArgument ordinalNumber: Int?,
         @InputArgument label: String?
     ): Subcategories {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can edit subcategories")
+        }
+
         val subcategory = subcategoriesRepository.findById(subcategoryId)
             .orElseThrow { IllegalArgumentException("Subcategory not found") }
 
@@ -187,6 +206,11 @@ class SubcategoriesDataFetcher {
     @DgsMutation
     @Transactional
     fun removeSubcategory(@InputArgument subcategoryId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can remove subcategories")
+        }
+
         val subcategory = subcategoriesRepository.findById(subcategoryId)
             .orElseThrow { IllegalArgumentException("Subcategory not found") }
 
