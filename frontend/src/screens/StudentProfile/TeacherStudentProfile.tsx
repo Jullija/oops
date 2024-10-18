@@ -16,8 +16,7 @@ import { useEditionSelection } from "../../hooks/common/useEditionSelection";
 import { Roles } from "../../router/paths";
 import { isEditionActive } from "../../utils/utils";
 import { NotEditableInfo } from "../../components/StudentProfile/NotEditableInfo";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
+import { CloseHeader } from "../../components/dialogs/CloseHeader";
 
 export function TeacherStudentProfile() {
   const params = useParams();
@@ -109,10 +108,7 @@ export function TeacherStudentProfile() {
         )}
 
         <Dialog open={isAddDialogOpen}>
-          <IconButton onClick={closeAddDialog} style={styles.closeIcon}>
-            <CloseIcon />
-          </IconButton>
-
+          <CloseHeader onCloseClick={closeAddDialog} />
           <PointsForm
             categories={formCategories}
             handleConfirmClick={handleAddPointsConfirmation}
@@ -124,10 +120,7 @@ export function TeacherStudentProfile() {
         </Dialog>
 
         <Dialog open={isEditDialogOpen}>
-          <IconButton onClick={closeEditDialog} style={styles.closeIcon}>
-            <CloseIcon />
-          </IconButton>
-
+          <CloseHeader onCloseClick={closeEditDialog} />
           <PointsForm
             categories={formCategories}
             handleConfirmClick={handleEditPointsConfirmation}
@@ -173,10 +166,5 @@ const styles: Styles = {
     display: "flex",
     flexDirection: "column",
     gap: 24,
-  },
-  closeIcon: {
-    position: "absolute",
-    right: 8,
-    top: 8,
   },
 };

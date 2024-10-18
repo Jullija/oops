@@ -1,0 +1,8 @@
+mutation AddCategory($canAddPoints: Boolean!, $categoryName: String!) {
+  addCategory(canAddPoints: $canAddPoints, categoryName: $categoryName) {
+    categoryId
+    categoryName
+    darkColor
+    lightColor
+  }
+}

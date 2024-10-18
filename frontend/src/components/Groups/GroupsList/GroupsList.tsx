@@ -4,6 +4,7 @@ import { pathsGenerator } from "../../../router/paths";
 import { Styles } from "../../../utils/Styles";
 import { GroupCard } from "./GroupCard";
 import { Group } from "../../../hooks/common/useGroupsData";
+import { Roles } from "../../../utils/types";
 
 type GroupsProps = {
   groups: Group[];
@@ -20,7 +21,10 @@ export const GroupsList = ({ groups }: GroupsProps) => {
           key={group.id}
           group={group}
           onClick={() => navigate(pathsGenerator.teacher.Group(group.id))}
-          withEditableRights={group.teacher.id === user.user.userId}
+          withEditableRights={
+            group.teacher.id === user.user.userId ||
+            user.user.role === Roles.COORDINATOR
+          }
         />
       ))}
     </div>
