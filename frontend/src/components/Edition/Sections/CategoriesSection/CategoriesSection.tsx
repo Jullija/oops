@@ -51,24 +51,22 @@ export const CategoriesSection = ({ editionId }: CategoriesSectionProps) => {
     const isCategorySelected = !!selectedCategories.find(
       (c) => c.categoryId === category.categoryId,
     );
+
+    const variables = {
+      variables: {
+        editionId,
+        categoryId: parseInt(category.categoryId),
+      },
+    };
+
     if (isCategorySelected) {
-      await removeCategoryFromEdition({
-        variables: {
-          editionId,
-          categoryId: parseInt(category.categoryId),
-        },
-      });
+      await removeCategoryFromEdition(variables);
       if (!removeError) {
         refetch();
         removeErrorReset();
       }
     } else {
-      await addCategoryToEdition({
-        variables: {
-          editionId,
-          categoryId: parseInt(category.categoryId),
-        },
-      });
+      await addCategoryToEdition(variables);
       if (!addToEditionError) {
         refetch();
         resetAddCategoryError();
