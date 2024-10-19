@@ -5,11 +5,12 @@ query AllCategories {
     categoryEditions {
       editionId
     }
-    subcategories(orderBy: { subcategoryName: ASC }) {
+    subcategories(orderBy: { ordinalNumber: ASC }) {
       editionId
       subcategoryId
       subcategoryName
       maxPoints
+      ordinalNumber
     }
   }
 }

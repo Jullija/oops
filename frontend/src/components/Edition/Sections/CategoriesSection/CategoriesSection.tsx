@@ -10,6 +10,7 @@ import {
   useCategoriesSection,
 } from "../../../../hooks/Edition/useCategoriesSection";
 import { useSetupAddCategoryToEditionMutation } from "../../../../graphql/setupAddCategoryToEdition.graphql.types";
+import { useSetupRemoveCategoryFormEditionMutation } from "../../../../graphql/setupRemoveCategoryFromEdition.graphql.types";
 
 type CategoriesSectionProps = {
   editionId: number;
@@ -21,6 +22,10 @@ export const CategoriesSection = ({ editionId }: CategoriesSectionProps) => {
     useAddCategoryMutation();
   const [addCategoryToEdition, { error: addToEditionError }] =
     useSetupAddCategoryToEditionMutation();
+  const [
+    removeCategoryFromEdition,
+    { error: removeError, reset: removeErrorReset },
+  ] = useSetupRemoveCategoryFormEditionMutation();
 
   const { categories, selectedCategories, loading, error, refetch } =
     useCategoriesSection(editionId);
@@ -43,15 +48,31 @@ export const CategoriesSection = ({ editionId }: CategoriesSectionProps) => {
   };
 
   const handleSelectCategoryClick = async (category: Category) => {
-    await addCategoryToEdition({
-      variables: {
-        editionId,
-        categoryId: parseInt(category.categoryId),
-      },
-    });
-    if (!addToEditionError) {
-      refetch();
-      resetAddCategoryError();
+    const isCategorySelected = !!selectedCategories.find(
+      (c) => c.categoryId === category.categoryId,
+    );
+    if (isCategorySelected) {
+      await removeCategoryFromEdition({
+        variables: {
+          editionId,
+          categoryId: parseInt(category.categoryId),
+        },
+      });
+      if (!removeError) {
+        refetch();
+        removeErrorReset();
+      }
+    } else {
+      await addCategoryToEdition({
+        variables: {
+          editionId,
+          categoryId: parseInt(category.categoryId),
+        },
+      });
+      if (!addToEditionError) {
+        refetch();
+        resetAddCategoryError();
+      }
     }
   };
 

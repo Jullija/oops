@@ -21,6 +21,7 @@ export type AllCategoriesQuery = {
       subcategoryId: string;
       subcategoryName: string;
       maxPoints: string;
+      ordinalNumber: number;
     }>;
   }>;
 };
@@ -33,11 +34,12 @@ export const AllCategoriesDocument = gql`
       categoryEditions {
         editionId
       }
-      subcategories(orderBy: { subcategoryName: ASC }) {
+      subcategories(orderBy: { ordinalNumber: ASC }) {
         editionId
         subcategoryId
         subcategoryName
         maxPoints
+        ordinalNumber
       }
     }
   }
