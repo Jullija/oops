@@ -21,6 +21,9 @@ import org.springframework.transaction.annotation.Transactional
 class CategoryEditionDataFetcher {
 
     @Autowired
+    private lateinit var subcategoriesRepository: SubcategoriesRepository
+
+    @Autowired
     private lateinit var userMapper: UserMapper
 
     @Autowired
@@ -31,6 +34,9 @@ class CategoryEditionDataFetcher {
 
     @Autowired
     lateinit var categoriesRepository: CategoriesRepository
+
+    @Autowired
+    lateinit var subcategoriesDataFetcher: SubcategoriesDataFetcher
 
     @DgsMutation
     @Transactional
@@ -56,7 +62,27 @@ class CategoryEditionDataFetcher {
             edition = edition,
             label = ""
         )
-        return categoryEditionRepository.save(categoryEdition)
+
+        val resultCategoryEdition = categoryEditionRepository.save(categoryEdition)
+
+        val subcategoriesFromOneEdition = subcategoriesRepository.findByCategory(category)
+        if (subcategoriesFromOneEdition.isNotEmpty()){
+            val sampleEdition = subcategoriesFromOneEdition[0].edition
+            subcategoriesFromOneEdition.filter { it.edition == sampleEdition }
+                .forEach {
+                    val input = SubcategoryInput(
+                        subcategoryName = it.subcategoryName,
+                        maxPoints = it.maxPoints.toFloat(),
+                        ordinalNumber = it.ordinalNumber,
+                        categoryId = it.category.categoryId,
+                        editionId = editionId,
+                        label = it.label
+                    )
+                    subcategoriesDataFetcher.addSubcategoryHelper(input)
+                }
+        }
+
+        return resultCategoryEdition
     }
 
     @DgsMutation
@@ -82,6 +108,10 @@ class CategoryEditionDataFetcher {
             throw IllegalArgumentException("Edition has already started")
         }
 
+        val subcategoriesFromEdition = subcategoriesRepository.findByCategoryAndEdition(category, edition)
+        subcategoriesFromEdition.forEach {
+            subcategoriesRepository.delete(it)
+        }
         categoryEditionRepository.deleteByCategoryAndEdition(category, edition)
         return true
     }

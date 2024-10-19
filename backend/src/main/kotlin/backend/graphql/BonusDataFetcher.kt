@@ -135,7 +135,10 @@ class BonusDataFetcher {
     }
 
     private fun createAdditivePoints(chestHistory: ChestHistory, award: Award): Points {
-        if (chestHistory.subcategory.edition.editionId !in getAwardEditions(award).map { it.editionId }) {
+        if (chestHistory.subcategory.edition == null){
+            throw IllegalArgumentException("Subcategory's edition is not set.")
+        }
+        if (chestHistory.subcategory.edition?.editionId !in getAwardEditions(award).map { it.editionId }) {
             throw IllegalArgumentException("Subcategory's edition does not match the award's edition.")
         }
 
