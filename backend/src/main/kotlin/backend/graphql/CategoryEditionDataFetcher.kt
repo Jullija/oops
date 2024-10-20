@@ -109,8 +109,12 @@ class CategoryEditionDataFetcher {
         }
 
         val subcategoriesFromEdition = subcategoriesRepository.findByCategoryAndEdition(category, edition)
-        subcategoriesFromEdition.forEach {
-            subcategoriesRepository.delete(it)
+        val subcategoriesFromOtherEditions = subcategoriesRepository.findByCategory(category)
+            .filter { it.edition != edition }
+        if (subcategoriesFromOtherEditions.isNotEmpty()){
+            subcategoriesFromEdition.forEach {
+                subcategoriesRepository.delete(it)
+            }
         }
         categoryEditionRepository.deleteByCategoryAndEdition(category, edition)
         return true
