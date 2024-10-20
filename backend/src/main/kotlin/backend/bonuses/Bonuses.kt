@@ -46,7 +46,11 @@ class Bonuses(
         if (award.awardType != AwardType.MULTIPLICATIVE) {
             throw IllegalArgumentException("Award type is not MULTIPLICATIVE")
         }
-        val pointsInAwardCategory = points.student.getPointsByEditionAndCategory(points.subcategory.edition,
+        if (points.subcategory.edition == null) {
+            throw IllegalArgumentException("Points edition is null")
+        }
+        val pointsInAwardCategory = points.student.getPointsByEditionAndCategory(
+            points.subcategory.edition!!,
             award.category, pointsRepository).filter{
                 point -> bonusRepository.findByPoints(point).isEmpty()
         }
@@ -64,7 +68,11 @@ class Bonuses(
         if (award.awardType != AwardType.ADDITIVE_PREV) {
             throw IllegalArgumentException("Award type is not ADDITIVE_NEXT")
         }
-        val pointsInAwardCategory = points.student.getPointsByEditionAndCategory(points.subcategory.edition,
+        if (points.subcategory.edition == null){
+            throw IllegalArgumentException("Points edition is null")
+        }
+        val pointsInAwardCategory = points.student.getPointsByEditionAndCategory(
+            points.subcategory.edition!!,
             award.category, pointsRepository).filter{
                 point -> bonusRepository.findByPoints(point).isEmpty()
         }.sortedBy { it.subcategory.ordinalNumber }

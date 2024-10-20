@@ -60,13 +60,15 @@ class PointsDataFetcher {
 
         val subcategory = subcategoriesRepository.findById(subcategoryId)
             .orElseThrow { IllegalArgumentException("Invalid subcategory ID") }
-
+        if (subcategory.edition == null){
+            throw IllegalArgumentException("Subcategory has no edition")
+        }
 
         if (checkDates){
-            if (subcategory.edition.startDate.isAfter(java.time.LocalDate.now())){
+            if (subcategory.edition?.startDate?.isAfter(java.time.LocalDate.now()) == true){
                 throw IllegalArgumentException("Subcategory's edition has not started yet")
             }
-            if (subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
+            if (subcategory.edition?.endDate?.isBefore(java.time.LocalDate.now()) == true){
                 throw IllegalArgumentException("Subcategory's edition has already ended")
             }
         }
@@ -145,6 +147,10 @@ class PointsDataFetcher {
         val points = pointsRepository.findById(pointsId)
             .orElseThrow { IllegalArgumentException("Invalid points ID") }
 
+        if (points.subcategory.edition == null){
+            throw IllegalArgumentException("Subcategory has no edition")
+        }
+
         if (currentUser.role == UsersRoles.TEACHER){
             if (points.student.userGroups.none { it.group.teacher.userId == currentUser.userId }){
                 throw IllegalArgumentException("Teacher can only edit points for students from their groups")
@@ -153,7 +159,7 @@ class PointsDataFetcher {
 
         val updatedById = currentUser.userId
 
-        if (points.subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
+        if (points.subcategory.edition?.endDate?.isBefore(java.time.LocalDate.now()) == true){
             throw IllegalArgumentException("Subcategory's edition has already ended")
         }
 
@@ -213,13 +219,17 @@ class PointsDataFetcher {
         val points = pointsRepository.findById(pointsId)
             .orElseThrow { IllegalArgumentException("Invalid points ID") }
 
+        if (points.subcategory.edition == null){
+            throw IllegalArgumentException("Subcategory has no edition")
+        }
+
         if (currentUser.role == UsersRoles.TEACHER){
             if (points.student.userGroups.none { it.group.teacher.userId == currentUser.userId }){
                 throw IllegalArgumentException("Teacher can only remove points for students from their groups")
             }
         }
 
-        if (points.subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
+        if (points.subcategory.edition?.endDate?.isBefore(java.time.LocalDate.now()) == true){
             throw IllegalArgumentException("Subcategory's edition has already ended")
         }
         if (bonusRepository.findByPoints(points).isNotEmpty()) {
