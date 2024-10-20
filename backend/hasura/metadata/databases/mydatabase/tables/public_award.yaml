@@ -40,6 +40,7 @@ select_permissions:
         - award_value
         - category_id
         - image_file_id
+        - description
         - label
         - max_usages
       filter: {}
@@ -54,6 +55,7 @@ select_permissions:
         - award_value
         - category_id
         - image_file_id
+        - description
         - label
         - max_usages
       filter:
@@ -74,6 +76,7 @@ select_permissions:
         - award_value
         - category_id
         - image_file_id
+        - description
         - label
         - max_usages
       filter:
@@ -94,6 +97,7 @@ update_permissions:
         - award_value
         - category_id
         - image_file_id
+        - description
         - label
         - max_usages
       filter:

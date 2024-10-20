@@ -7,14 +7,19 @@ import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
 import backend.award.AwardType
 import backend.users.UsersRoles
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 @DgsComponent
 class PointsDataFetcher {
+    @Autowired
+    private lateinit var userMapper: UserMapper
 
     @Autowired
     lateinit var pointsRepository: PointsRepository
@@ -32,21 +37,38 @@ class PointsDataFetcher {
     @Transactional
     fun addPointsMutation(@InputArgument studentId: Long, @InputArgument teacherId: Long, value: Float,
                           @InputArgument subcategoryId: Long, @InputArgument checkDates: Boolean = true): Points {
+        val currentUser = userMapper.getCurrentUser()
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)){
+            throw IllegalArgumentException("Only teachers and coordinators can add points")
+        }
+
         val student = usersRepository.findByUserId(studentId)
             .orElseThrow { IllegalArgumentException("Invalid user ID") }
+
+        if (currentUser.role == UsersRoles.TEACHER){
+            if (teacherId != currentUser.userId){
+                throw IllegalArgumentException("Teacher can only add points as themselves")
+            }
+            val studentTeachers = student.userGroups.map { it.group.teacher }.distinct()
+            if (!studentTeachers.contains(currentUser)){
+                throw IllegalArgumentException("Teacher can only add points to students from their groups")
+            }
+        }
 
         val teacher = usersRepository.findByUserId(teacherId)
             .orElseThrow { IllegalArgumentException("Invalid user ID") }
 
         val subcategory = subcategoriesRepository.findById(subcategoryId)
             .orElseThrow { IllegalArgumentException("Invalid subcategory ID") }
-
+        if (subcategory.edition == null){
+            throw IllegalArgumentException("Subcategory has no edition")
+        }
 
         if (checkDates){
-            if (subcategory.edition.startDate.isAfter(java.time.LocalDate.now())){
+            if (subcategory.edition?.startDate?.isAfter(java.time.LocalDate.now()) == true){
                 throw IllegalArgumentException("Subcategory's edition has not started yet")
             }
-            if (subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
+            if (subcategory.edition?.endDate?.isBefore(java.time.LocalDate.now()) == true){
                 throw IllegalArgumentException("Subcategory's edition has already ended")
             }
         }
@@ -81,28 +103,31 @@ class PointsDataFetcher {
         if (studentPointsWithoutBonuses.isNotEmpty()) {
             throw IllegalArgumentException("This student already has points in this subcategory")
         }
-        val studentPointsSum = studentPoints.sumOf { it.value.toDouble() }.toFloat()
-        if (studentPointsSum + value > subcategory.maxPoints) {
-            throw IllegalArgumentException("Student cannot have more than ${subcategory.maxPoints} points in this subcategory")
-        }
 
         val points = Points(
             student = student,
             teacher = teacher,
             updatedBy = teacher,
-            value = value,
+            value = BigDecimal(value.toString()).setScale(2, RoundingMode.HALF_UP),
             subcategory = subcategory,
             label = ""
         )
         val savedPoints = pointsRepository.save(points)
 
 
-        val bonuses = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.MULTIPLICATIVE, student).filter{
-            bonus -> bonus.points.subcategory.edition == subcategory.edition
-        }
+        val bonusesMultiplicative = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.MULTIPLICATIVE, points.student)
+            .filter { bonus -> bonus.points.subcategory.edition == points.subcategory.edition }
+            .filter { bonus -> bonus.points.subcategory.category == points.subcategory.category }
 
-        bonuses.forEach { bonus ->
+        val bonusesAdditivePrev = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.ADDITIVE_PREV, points.student)
+            .filter { bonus -> bonus.points.subcategory.edition == points.subcategory.edition }
+            .filter { bonus -> bonus.points.subcategory.category == points.subcategory.category }
+
+        bonusesMultiplicative.forEach { bonus ->
             bonus.updateMultiplicativePoints(bonusRepository, pointsRepository)
+        }
+        bonusesAdditivePrev.forEach { bonus ->
+            bonus.updateAdditivePrevPoints(bonusRepository, pointsRepository)
         }
 
         return savedPoints
@@ -112,13 +137,29 @@ class PointsDataFetcher {
     @Transactional
     fun editPoints(
         @InputArgument pointsId: Long,
-        @InputArgument updatedById: Long,
         @InputArgument value: Float?
     ): Points {
+        val currentUser = userMapper.getCurrentUser()
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)){
+            throw IllegalArgumentException("Only teachers and coordinators can edit points")
+        }
+
         val points = pointsRepository.findById(pointsId)
             .orElseThrow { IllegalArgumentException("Invalid points ID") }
 
-        if (points.subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
+        if (points.subcategory.edition == null){
+            throw IllegalArgumentException("Subcategory has no edition")
+        }
+
+        if (currentUser.role == UsersRoles.TEACHER){
+            if (points.student.userGroups.none { it.group.teacher.userId == currentUser.userId }){
+                throw IllegalArgumentException("Teacher can only edit points for students from their groups")
+            }
+        }
+
+        val updatedById = currentUser.userId
+
+        if (points.subcategory.edition?.endDate?.isBefore(java.time.LocalDate.now()) == true){
             throw IllegalArgumentException("Subcategory's edition has already ended")
         }
 
@@ -131,14 +172,11 @@ class PointsDataFetcher {
                 throw IllegalArgumentException("Value cannot be negative")
             }
 
-            val studentPointsSum = points.student.getPointsBySubcategory(points.subcategory.subcategoryId, pointsRepository)
-                .sumOf { p -> p.value.toDouble() }.toFloat()
-
-            if (studentPointsSum - points.value + newValue > points.subcategory.maxPoints) {
+            if (newValue > points.subcategory.maxPoints.toFloat()) {
                 throw IllegalArgumentException("Student cannot have more than ${points.subcategory.maxPoints} points in this subcategory")
             }
 
-            points.value = newValue
+            points.value = newValue.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
         }
 
         updatedById.let {
@@ -154,13 +192,17 @@ class PointsDataFetcher {
 
         val bonusesMultiplicative = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.MULTIPLICATIVE, points.student)
             .filter { bonus -> bonus.points.subcategory.edition == points.subcategory.edition }
-        val bonusesAdditiveNext = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.ADDITIVE_NEXT, points.student)
+            .filter { bonus -> bonus.points.subcategory.category == points.subcategory.category }
+
+        val bonusesAdditivePrev = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.ADDITIVE_PREV, points.student)
             .filter { bonus -> bonus.points.subcategory.edition == points.subcategory.edition }
+            .filter { bonus -> bonus.points.subcategory.category == points.subcategory.category }
+
         bonusesMultiplicative.forEach { bonus ->
             bonus.updateMultiplicativePoints(bonusRepository, pointsRepository)
         }
-        bonusesAdditiveNext.forEach { bonus ->
-            bonus.updateAdditiveNextPoints(bonusRepository, pointsRepository)
+        bonusesAdditivePrev.forEach { bonus ->
+            bonus.updateAdditivePrevPoints(bonusRepository, pointsRepository)
         }
 
         return savedPoints
@@ -169,10 +211,25 @@ class PointsDataFetcher {
     @DgsMutation
     @Transactional
     fun removePoints(@InputArgument pointsId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)){
+            throw IllegalArgumentException("Only teachers and coordinators can remove points")
+        }
+
         val points = pointsRepository.findById(pointsId)
             .orElseThrow { IllegalArgumentException("Invalid points ID") }
 
-        if (points.subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
+        if (points.subcategory.edition == null){
+            throw IllegalArgumentException("Subcategory has no edition")
+        }
+
+        if (currentUser.role == UsersRoles.TEACHER){
+            if (points.student.userGroups.none { it.group.teacher.userId == currentUser.userId }){
+                throw IllegalArgumentException("Teacher can only remove points for students from their groups")
+            }
+        }
+
+        if (points.subcategory.edition?.endDate?.isBefore(java.time.LocalDate.now()) == true){
             throw IllegalArgumentException("Subcategory's edition has already ended")
         }
         if (bonusRepository.findByPoints(points).isNotEmpty()) {
@@ -181,16 +238,18 @@ class PointsDataFetcher {
 
         val bonusesMultiplicative = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.MULTIPLICATIVE, points.student)
             .filter { bonus -> bonus.points.subcategory.edition == points.subcategory.edition }
-        val bonusesAdditiveNext = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.ADDITIVE_NEXT, points.student)
+            .filter { bonus -> bonus.points.subcategory.category == points.subcategory.category }
+        val bonusesAdditivePrev = bonusRepository.findByAward_AwardTypeAndPoints_Student(AwardType.ADDITIVE_PREV, points.student)
             .filter { bonus -> bonus.points.subcategory.edition == points.subcategory.edition }
+            .filter { bonus -> bonus.points.subcategory.category == points.subcategory.category }
 
         pointsRepository.delete(points)
 
         bonusesMultiplicative.forEach { bonus ->
             bonus.updateMultiplicativePoints(bonusRepository, pointsRepository)
         }
-        bonusesAdditiveNext.forEach { bonus ->
-            bonus.updateAdditiveNextPoints(bonusRepository, pointsRepository)
+        bonusesAdditivePrev.forEach { bonus ->
+            bonus.updateAdditivePrevPoints(bonusRepository, pointsRepository)
         }
         return true
     }

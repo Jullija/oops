@@ -9,30 +9,26 @@ import {
   TableRow,
   ThemeProvider,
 } from "@mui/material";
-import { Points } from "../../../hooks/StudentProfile/useStudentData";
+import { Points } from "../../../hooks/StudentProfile";
 import { CategoryTag } from "../../CategoryTag";
 import { Styles } from "../../../utils/Styles";
-import { AwardImage } from "../../images/AwardImage";
 import { ActionButton } from "./ActionButton";
+import { PointsCellContent } from "./cellContent/PointsCellContent";
+import { AwardsCellContent } from "./cellContent/AwardsCellContent";
+import { DateCellContent } from "./cellContent/DateCellContent";
 
 type StudentTableProps = {
   points: Points[];
-  handleEditClick?: (points: Points) => void;
-  handleDeleteClick?: (pointsId: string) => void;
+  editFunctions?: EditFunctions;
   showActionButtons: boolean;
   blockActionButtons: boolean;
 };
 
-const dateOptions: Intl.DateTimeFormatOptions = {
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
-  second: "2-digit",
+export type EditFunctions = {
+  handleEditClick: (points: Points) => void;
+  handleDeleteClick: (pointsId: string) => void;
+  handleAddClick: (points: Points) => void;
 };
-
-const EMPTY_FIELD = "---";
 
 type HeaderTitle = {
   name: string;
@@ -51,8 +47,7 @@ const headerTitles: HeaderTitle[] = [
 
 export const StudentTable = ({
   points,
-  handleEditClick,
-  handleDeleteClick,
+  editFunctions,
   showActionButtons,
   blockActionButtons,
 }: StudentTableProps) => {
@@ -62,49 +57,7 @@ export const StudentTable = ({
     },
   });
 
-  const getPointsValueString = (points: Points): string => {
-    const pure = points.points.purePoints?.value ?? 0;
-    let totalBonus = 0;
-    points.points.partialBonusType.forEach(
-      (bonus) => (totalBonus += bonus?.partialValue ?? 0),
-    );
-    if (totalBonus === 0 && pure === 0) {
-      return "0.0";
-    }
-    if (totalBonus === 0) {
-      return pure.toFixed(1);
-    }
-    // TODO must be a better way than tofixed
-    return `${pure.toFixed(1)} + ${totalBonus.toFixed(1)} = ${(pure + totalBonus).toFixed(1)}`;
-  };
-
-  const getDisplayDateString = (points: Points): string => {
-    const date = new Date(points.updatedAt ?? points.createdAt);
-    return date.toLocaleDateString("pl-PL", dateOptions);
-  };
-
-  const getAwardsPhotos = (points: Points) => {
-    const bonuses = points.points.partialBonusType;
-    if (bonuses.length === 0) {
-      return EMPTY_FIELD;
-    }
-
-    return (
-      <div style={styles.awardsContainer}>
-        {bonuses.map((bonus, index) => {
-          return (
-            <AwardImage
-              key={index}
-              id={bonus?.bonuses.award.imageFile?.fileId}
-              size="s"
-            />
-          );
-        })}
-      </div>
-    );
-  };
-
-  if (showActionButtons && (!handleEditClick || !handleDeleteClick)) {
+  if (showActionButtons && !editFunctions) {
     throw new Error(
       "Invalid arguments passed - handleEditClick or handleDeleteClick is undefined.",
     );
@@ -131,8 +84,12 @@ export const StudentTable = ({
                   <TableCell>
                     <div style={styles.buttonsContainer}>
                       <ActionButton
-                        type="edit"
-                        onClick={() => handleEditClick?.(p)}
+                        type={p.points.purePoints ? "edit" : "add"}
+                        onClick={
+                          p.points.purePoints
+                            ? () => editFunctions?.handleEditClick(p)
+                            : () => editFunctions?.handleAddClick(p)
+                        }
                         isDisabled={blockActionButtons}
                       />
 
@@ -140,10 +97,11 @@ export const StudentTable = ({
                         type="delete"
                         onClick={() => {
                           if (p.points.purePoints?.pointsId) {
-                            handleDeleteClick?.(p.points.purePoints?.pointsId);
+                            editFunctions?.handleDeleteClick(
+                              p.points.purePoints?.pointsId,
+                            );
                           }
                         }}
-                        // TODO disable if pure points is empty
                         isDisabled={
                           blockActionButtons || !p.points.purePoints?.pointsId
                         }
@@ -154,16 +112,22 @@ export const StudentTable = ({
                 <TableCell align="center">
                   {p.subcategory.subcategoryName}
                 </TableCell>
-                <TableCell align="center">{getAwardsPhotos(p)}</TableCell>
+                <TableCell align="center">
+                  <AwardsCellContent points={p} />
+                </TableCell>
                 <TableCell align="center">
                   <CategoryTag
                     id={p.subcategory.category.categoryId}
                     name={p.subcategory.category.categoryName}
                   />
                 </TableCell>
-                <TableCell align="center">{getPointsValueString(p)}</TableCell>
+                <TableCell align="center">
+                  <PointsCellContent points={p} />
+                </TableCell>
                 <TableCell align="center">{p.subcategory.maxPoints}</TableCell>
-                <TableCell align="center">{getDisplayDateString(p)}</TableCell>
+                <TableCell align="center">
+                  <DateCellContent points={p} />
+                </TableCell>
                 <TableCell align="center">
                   {p.teacher.firstName} {p.teacher.secondName}
                 </TableCell>
@@ -180,11 +144,6 @@ const styles: Styles = {
   header: {
     fontWeight: "bold",
     fontSize: 16,
-  },
-  awardsContainer: {
-    display: "flex",
-    justifyContent: "center",
-    gap: 8,
   },
   buttonsContainer: {
     display: "flex",

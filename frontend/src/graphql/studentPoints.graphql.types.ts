@@ -55,16 +55,23 @@ export type StudentPointsQuery = {
         purePoints?: {
           __typename?: "PointType";
           pointsId: string;
-          value: number;
+          value: string;
         } | null;
         partialBonusType: Array<{
           __typename?: "PartialBonusType";
           partialValue: number;
           bonuses: {
             __typename?: "BonusType";
+            bonusId: string;
+            createdAt: string;
+            updatedAt: string;
             award: {
               __typename?: "AwardType";
               awardName: string;
+              awardId: string;
+              awardType: Types.AwardTypeType;
+              awardValue: string;
+              description: string;
               imageFile?: { __typename?: "FileType"; fileId: string } | null;
             };
           };
@@ -74,7 +81,7 @@ export type StudentPointsQuery = {
         __typename?: "SubcategoryType";
         subcategoryId: string;
         subcategoryName: string;
-        maxPoints: number;
+        maxPoints: string;
         category: {
           __typename?: "CategoryType";
           categoryId: string;
@@ -133,12 +140,19 @@ export const StudentPointsDocument = gql`
           partialBonusType {
             partialValue
             bonuses {
+              bonusId
               award {
                 awardName
                 imageFile {
                   fileId
                 }
+                awardId
+                awardType
+                awardValue
+                description
               }
+              createdAt
+              updatedAt
             }
           }
         }

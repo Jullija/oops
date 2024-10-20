@@ -30,6 +30,7 @@ type Mutation {
     awardValue: Float!
     categoryId: Int!
     maxUsages: Int = -1
+    description: String!
     label: String = ""
   ): AwardType
   addAwardToEdition(awardId: Int!, editionId: Int!): AwardEditionType
@@ -43,6 +44,7 @@ type Mutation {
   addCategory(
     categoryName: String!
     canAddPoints: Boolean!
+    subcategories: [SubcategoryInputType!]!
     lightColor: String = "#FFFFFF"
     darkColor: String = "#000000"
     label: String = ""
@@ -53,6 +55,24 @@ type Mutation {
     editionYear: Int!
     label: String = ""
   ): EditionType
+  addGradingCheck(
+    editionId: Int!
+    endOfLabsDate: String!
+    endOfLabsLevelsThreshold: Int!
+    projectPointsThreshold: Float!
+    projectId: Int!
+    checkDates: Boolean = true
+  ): GradingChecksType
+  editGradingCheck(
+    gradingCheckId: Int!,
+    endOfLabsDate: String,
+    endOfLabsLevelsThreshold: Int,
+    projectPointsThreshold: Float,
+    projectId: Int
+  ): GradingChecksType
+  removeGradingCheck(
+    gradingCheckId: Int!
+  ): Boolean
   addGroup(
     editionId: Int!
     usosId: Int!
@@ -64,12 +84,7 @@ type Mutation {
     groupName: String = ""
   ): GroupType
   addSubcategory(
-    subcategoryName: String!
-    maxPoints: Float!
-    ordinalNumber: Int!
-    categoryId: Int!
-    editionId: Int!
-    label: String = ""
+    subcategory: SubcategoryInputType!
   ): SubcategoryType
   addUser(
     indexNumber: Int!
@@ -77,7 +92,7 @@ type Mutation {
     firstName: String!
     secondName: String!
     role: String!
-    email: String = "example@example.com"
+    email: String = ""
     label: String = ""
     createFirebaseUser: Boolean = false
     sendEmail: Boolean = false
@@ -107,6 +122,7 @@ type Mutation {
     awardValue: Float,
     categoryId: Int,
     maxUsages: Int,
+    description: String,
     label: String
   ): AwardType
 
@@ -118,6 +134,7 @@ type Mutation {
     categoryId: Int!,
     categoryName: String,
     canAddPoints: Boolean,
+    subcategories: [SubcategoryInputType!]
     lightColor: String,
     darkColor: String,
     label: String
@@ -271,9 +288,10 @@ type AwardType {
   awardId: ID!
   awardName: String!
   awardType: AwardTypeType!
+  description: String!
   label: String!
   maxUsages: Int!
-  awardValue: Float!
+  awardValue: String!
   category: CategoryType
   imageFile: FileType
   awardEditions: [AwardEditionType]
@@ -357,6 +375,15 @@ type FileType {
   label: String!
 }
 
+type GradingChecksType {
+  gradingCheckId: ID!
+  edition: EditionType!
+  endOfLabsDate: String!
+  endOfLabsLevelsThreshold: LevelType!
+  projectPointsThreshold: Float!
+  project: CategoryType!
+}
+
 type GroupType {
   groupsId: ID!
   groupName: String
@@ -375,9 +402,9 @@ type GroupType {
 type LevelType {
   levelId: ID!
   levelName: String!
-  minimumPoints: Float!
-  maximumPoints: Float!
-  grade: Float!
+  minimumPoints: String!
+  maximumPoints: String!
+  grade: String!
   ordinalNumber: Int!
   label: String!
   edition: EditionType!
@@ -391,7 +418,7 @@ type PointType {
   student: UserType!
   teacher: UserType!
   updatedBy: UserType!
-  value: Float!
+  value: String!
   subcategory: SubcategoryType!
   label: String!
   createdAt: String!
@@ -404,7 +431,7 @@ type PointsHistoryType {
   student: UserType!
   teacher: UserType!
   updatedBy: UserType!
-  value: Float!
+  value: String!
   subcategory: SubcategoryType!
   label: String!
   createdAt: String!
@@ -417,8 +444,8 @@ type SubcategoryType {
   subcategoryName: String!
   category: CategoryType!
   label: String!
-  edition: EditionType!
-  maxPoints: Float!
+  edition: EditionType
+  maxPoints: String!
   ordinalNumber: Int!
 }
 
@@ -432,6 +459,9 @@ type UserLevelType {
   user: UserType!
   level: LevelType!
   edition: EditionType!
+  end_of_labs_levels_reached: Boolean!,
+  project_points_threshold_reached: Boolean!,
+  computed_grade: Float!
   label: String!
   userLevelId: ID!
 }
@@ -554,3 +584,14 @@ type GroupTeacherType {
   owns: Boolean!
   canEdit: Boolean!
 }
+
+input SubcategoryInputType {
+  subcategoryId: ID
+  subcategoryName: String!
+  maxPoints: String!
+  ordinalNumber: Int!
+  categoryId: Int
+  editionId: Int
+  label: String!
+}
+

@@ -86,6 +86,10 @@ class FirebaseUserService (
         }
     }
 
+    fun getUserByEmail(email: String): UserRecord {
+        return FirebaseAuth.getInstance().getUserByEmail(email)
+    }
+
     // Send password reset email to the user
     private fun sendResetPasswordEmail(email: String, resetPasswordLink: String) {
         val message = mailSender.createMimeMessage()

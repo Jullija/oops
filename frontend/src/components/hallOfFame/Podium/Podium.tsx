@@ -2,19 +2,6 @@ import { Styles } from "../../../utils/Styles";
 import { HallOfFameStudentData } from "../HallOfFameStudentCard";
 import { PodiumItem } from "./PodiumItem";
 
-const styles: Styles = {
-  container: {
-    display: "flex",
-    height: "60%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  podium: {
-    display: "flex",
-    alignItems: "flex-end",
-  },
-};
-
 type PodiumProps = {
   students: HallOfFameStudentData[];
 };
@@ -40,4 +27,17 @@ export const Podium = ({ students }: PodiumProps) => {
       </div>
     </div>
   );
+};
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    height: "60%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  podium: {
+    display: "flex",
+    alignItems: "flex-end",
+  },
 };

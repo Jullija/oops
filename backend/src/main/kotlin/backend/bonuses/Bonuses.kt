@@ -7,6 +7,8 @@ import backend.points.Points
 import backend.points.PointsRepository
 import backend.utils.TimestampModel
 import jakarta.persistence.*
+import java.math.BigDecimal
+import java.math.RoundingMode
 import kotlin.math.min
 
 @Entity
@@ -44,38 +46,55 @@ class Bonuses(
         if (award.awardType != AwardType.MULTIPLICATIVE) {
             throw IllegalArgumentException("Award type is not MULTIPLICATIVE")
         }
-        val pointsInAwardCategory = points.student.getPointsByEditionAndCategory(points.subcategory.edition,
+        if (points.subcategory.edition == null) {
+            throw IllegalArgumentException("Points edition is null")
+        }
+        val pointsInAwardCategory = points.student.getPointsByEditionAndCategory(
+            points.subcategory.edition!!,
             award.category, pointsRepository).filter{
                 point -> bonusRepository.findByPoints(point).isEmpty()
         }
+        if (pointsInAwardCategory.isEmpty()) {
+            points.value = BigDecimal.ZERO
+            pointsRepository.save(points)
+            return
+        }
         val totalPointsValue = pointsInAwardCategory.sumOf { it.value.toDouble() }.toFloat()
-        points.value = (totalPointsValue * award.awardValue)
+        points.value = (totalPointsValue * award.awardValue.toFloat()).toBigDecimal().setScale(2, RoundingMode.HALF_UP)
         pointsRepository.save(points)
     }
 
-    fun updateAdditiveNextPoints(bonusRepository: BonusesRepository, pointsRepository: PointsRepository) {
-        if (award.awardType != AwardType.ADDITIVE_NEXT) {
+    fun updateAdditivePrevPoints(bonusRepository: BonusesRepository, pointsRepository: PointsRepository) {
+        if (award.awardType != AwardType.ADDITIVE_PREV) {
             throw IllegalArgumentException("Award type is not ADDITIVE_NEXT")
         }
-        val pointsInAwardCategory = points.student.getPointsByEditionAndCategory(points.subcategory.edition,
+        if (points.subcategory.edition == null){
+            throw IllegalArgumentException("Points edition is null")
+        }
+        val pointsInAwardCategory = points.student.getPointsByEditionAndCategory(
+            points.subcategory.edition!!,
             award.category, pointsRepository).filter{
                 point -> bonusRepository.findByPoints(point).isEmpty()
         }.sortedBy { it.subcategory.ordinalNumber }
 
         if (pointsInAwardCategory.isEmpty()) {
-            throw IllegalArgumentException("No previous points found in the specified category.")
+            points.value = BigDecimal.ZERO
+            pointsRepository.save(points)
+            return
         }
 
         var sum = 0f
         var i = pointsInAwardCategory.size - 1
-        while (sum < award.awardValue || i >= 0) {
+        while (sum < award.awardValue.toFloat() || i >= 0) {
             val lastPoints = pointsInAwardCategory.getOrNull(i--)
                 ?: break
-            val pointsToAdd = min(award.awardValue - sum, lastPoints.subcategory.maxPoints - lastPoints.value)
+            val pointsToAdd = min(award.awardValue.toFloat() - sum, lastPoints.subcategory.maxPoints.toFloat() - lastPoints.value.toFloat())
             sum += pointsToAdd
         }
 
-        points.value = sum
+        points.value = BigDecimal(sum.toString()).setScale(2, RoundingMode.HALF_UP)
+
+
         pointsRepository.save(points)
     }
 }

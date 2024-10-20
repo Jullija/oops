@@ -5,15 +5,21 @@ import backend.files.FileEntityRepository
 import backend.levels.Levels
 import backend.levels.LevelsRepository
 import backend.users.UsersRepository
+import backend.users.UsersRoles
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.DgsQuery
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 @DgsComponent
 class LevelsDataFetcher {
+    @Autowired
+    private lateinit var userMapper: UserMapper
 
     @Autowired
     lateinit var editionRepository: EditionRepository
@@ -34,6 +40,11 @@ class LevelsDataFetcher {
     @Transactional
     fun addLevel(@InputArgument editionId: Long, @InputArgument name: String, @InputArgument maximumPoints: Double,
                     @InputArgument grade: Double, @InputArgument imageFileId: Long? = null): Levels {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can add levels")
+        }
+
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
         if (edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Edition has already ended")
@@ -58,9 +69,9 @@ class LevelsDataFetcher {
         if (levelsInEdition.isEmpty()){
             val level = Levels(
                 levelName = name,
-                minimumPoints = 0.0,
-                maximumPoints = maximumPoints,
-                grade = grade,
+                minimumPoints = BigDecimal.ZERO,
+                maximumPoints = maximumPoints.toBigDecimal().setScale(2, RoundingMode.HALF_UP),
+                grade = grade.toBigDecimal().setScale(2, RoundingMode.HALF_UP),
                 label = "",
                 edition = edition
             )
@@ -73,10 +84,10 @@ class LevelsDataFetcher {
 
         val highestLevel = levelsInEdition.maxByOrNull { it.ordinalNumber }!!
 
-        if (highestLevel.maximumPoints >= maximumPoints){
+        if (highestLevel.maximumPoints >= maximumPoints.toBigDecimal()){
             throw IllegalArgumentException("Maximum points must be higher than the highest level in the edition")
         }
-        if (highestLevel.grade > grade){
+        if (highestLevel.grade > grade.toBigDecimal()){
             throw IllegalArgumentException("Grade must be higher or equal to the highest level in the edition")
         }
         if (levelsInEdition.any { it.levelName == name }){
@@ -87,8 +98,8 @@ class LevelsDataFetcher {
         val level = Levels(
             levelName = name,
             minimumPoints = highestLevel.maximumPoints,
-            maximumPoints = maximumPoints,
-            grade = grade,
+            maximumPoints = maximumPoints.toBigDecimal().setScale(2, RoundingMode.HALF_UP),
+            grade = grade.toBigDecimal().setScale(2, RoundingMode.HALF_UP),
             label = "",
             edition = edition
         )
@@ -110,6 +121,11 @@ class LevelsDataFetcher {
         @InputArgument imageFileId: Long?,
         @InputArgument label: String?
     ): Levels {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can edit levels")
+        }
+
         val level = levelsRepository.findById(levelId)
             .orElseThrow { IllegalArgumentException("Invalid level ID") }
 
@@ -138,26 +154,26 @@ class LevelsDataFetcher {
             if (it <= 0) {
                 throw IllegalArgumentException("Maximum points must be a positive value")
             }
-            if (previousLevel != null && previousLevel.maximumPoints >= it){
+            if (previousLevel != null && previousLevel.maximumPoints >= it.toBigDecimal()){
                 throw IllegalArgumentException("Maximum points must be higher than the previous level")
             }
-            if (nextLevel != null && nextLevel.maximumPoints <= it){
+            if (nextLevel != null && nextLevel.maximumPoints <= it.toBigDecimal()){
                 throw IllegalArgumentException("Maximum points must be lower than the next level")
             }
-            level.maximumPoints = it
+            level.maximumPoints = it.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
         }
 
         grade?.let {
             if (it < 0) {
                 throw IllegalArgumentException("Grade must be a non-negative value")
             }
-            if (previousLevel != null && previousLevel.grade > it){
+            if (previousLevel != null && previousLevel.grade > it.toBigDecimal()){
                 throw IllegalArgumentException("Grade must be higher or equal to the previous level")
             }
-            if (nextLevel != null && nextLevel.grade < it){
+            if (nextLevel != null && nextLevel.grade < it.toBigDecimal()){
                 throw IllegalArgumentException("Grade must be lower or equal to the next level")
             }
-            level.grade = it
+            level.grade = it.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
         }
 
         imageFileId?.let {
@@ -187,6 +203,11 @@ class LevelsDataFetcher {
     @DgsMutation
     @Transactional
     fun removeLevel(@InputArgument levelId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can remove levels")
+        }
+
         val level = levelsRepository.findById(levelId)
             .orElseThrow { IllegalArgumentException("Invalid level ID") }
 
@@ -212,6 +233,11 @@ class LevelsDataFetcher {
     @DgsMutation
     @Transactional
     fun assignPhotoToLevel(@InputArgument levelId: Long, @InputArgument fileId: Long?): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can assign photos to levels")
+        }
+
         val level = levelsRepository.findById(levelId).orElseThrow { IllegalArgumentException("Invalid level ID") }
         if (level.edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Edition has already ended")
@@ -222,6 +248,22 @@ class LevelsDataFetcher {
     @DgsQuery
     @Transactional
     fun getNeighboringLevels(@InputArgument studentId: Long, @InputArgument editionId: Long): NeighboringLevelsType {
+        val currentUser = userMapper.getCurrentUser()
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)){
+            if (currentUser.userId != studentId){
+                throw IllegalArgumentException("Student can only get neighboring levels for themselves")
+            }
+        }
+        if (currentUser.role == UsersRoles.TEACHER){
+            val student = usersRepository.findById(studentId)
+                .orElseThrow { IllegalArgumentException("Invalid student ID") }
+            val teacherEditions = currentUser.userGroups.map { it.group.edition }
+            val studentEditions = student.userGroups.map { it.group.edition }
+            if (teacherEditions.intersect(studentEditions.toSet()).isEmpty()){
+                throw IllegalArgumentException("Teacher can only get neighboring levels for students in their editions")
+            }
+        }
+
         val edition = editionRepository.findById(editionId)
             .orElseThrow { IllegalArgumentException("Invalid edition ID") }
         val student = usersRepository.findById(studentId)

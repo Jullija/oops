@@ -1,14 +1,5 @@
 import { Styles } from "../utils/Styles";
 
-const styles: Styles = {
-  container: {
-    padding: 4,
-    borderRadius: 4,
-    display: "inline-block",
-    color: "black",
-  },
-};
-
 type Colors = {
   [key: string]: string;
 };
@@ -31,4 +22,13 @@ export const CategoryTag = ({ id, name }: CategoryTagProps) => {
   const backgroundColor = colors[id] || "grey";
 
   return <div style={{ ...styles.container, backgroundColor }}>{name}</div>;
+};
+
+const styles: Styles = {
+  container: {
+    padding: 4,
+    borderRadius: 4,
+    display: "inline-block",
+    color: "black",
+  },
 };

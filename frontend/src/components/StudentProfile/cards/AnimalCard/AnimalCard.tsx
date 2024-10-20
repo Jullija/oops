@@ -1,8 +1,38 @@
 import { Styles } from "../../../../utils/Styles";
-import { PointsBar } from "../../../PointsBar";
 import { Avatar } from "../../../images/Avatar";
-import { LevelMiniature } from "./LevelMiniature";
-import { LevelType } from "../../../../__generated__/schema.graphql.types";
+import { LevelsSection } from "./LevelsSection";
+import { Level } from "../../../../hooks/StudentProfile";
+import { LevelProgressBar } from "../../../bars/LevelProgressBar/LevelProgressBar";
+
+type AnimalCardProps = {
+  prevLevel: Level | undefined;
+  currLevel: Level;
+  nextLevel: Level | undefined;
+  totalPoints: number;
+};
+
+export const AnimalCard = ({
+  currLevel,
+  prevLevel,
+  nextLevel,
+  totalPoints,
+}: AnimalCardProps) => {
+  return (
+    <div style={styles.card}>
+      <Avatar id={currLevel.imageId} size="l" />
+      <div style={styles.title}>
+        obecny level: {currLevel.name} - lvl. {currLevel.realLevelNumber}
+      </div>
+      <LevelProgressBar
+        totalPoints={totalPoints + 10}
+        prevLevel={prevLevel}
+        currLevel={currLevel}
+        nextLevel={nextLevel}
+      />
+      <LevelsSection studentLevel={currLevel} />
+    </div>
+  );
+};
 
 const styles: Styles = {
   card: {
@@ -15,52 +45,4 @@ const styles: Styles = {
   title: {
     fontWeight: "bold",
   },
-  levelMiniaturesContainer: {
-    display: "flex",
-    flexDirection: "row",
-  },
-  levelMiniatureSpaceWrapper: {
-    flex: 1,
-  },
-};
-
-type AnimalCardProps = {
-  prevLevel?: LevelType;
-  currLevel: LevelType;
-  nextLevel?: LevelType;
-  totalPoints: number;
-};
-
-export const AnimalCard = ({
-  currLevel,
-  prevLevel,
-  nextLevel,
-  totalPoints,
-}: AnimalCardProps) => {
-  return (
-    <div style={styles.card}>
-      <Avatar id={currLevel.imageFile?.fileId} size="l" />
-      <div style={styles.title}>
-        obecny level: {currLevel.levelName} - lvl. {currLevel.ordinalNumber}
-      </div>
-      <PointsBar
-        points={totalPoints}
-        bounds={{
-          lower: currLevel.minimumPoints,
-          upper: currLevel.maximumPoints,
-        }}
-        showPoints
-      />
-
-      {/* // TODO maybe separate component */}
-      <div style={styles.levelMiniaturesContainer}>
-        <div style={styles.levelMiniatureSpaceWrapper}>
-          {prevLevel && <LevelMiniature level={prevLevel} />}
-        </div>
-        <div style={styles.levelMiniatureSpaceWrapper}>
-          {nextLevel && <LevelMiniature level={nextLevel} withOpacity />}
-        </div>
-      </div>
-    </div>
-  );
 };

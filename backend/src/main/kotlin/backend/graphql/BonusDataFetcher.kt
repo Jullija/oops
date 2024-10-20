@@ -13,15 +13,22 @@ import backend.chestHistory.ChestHistory
 import backend.edition.Edition
 import backend.groups.GroupsRepository
 import backend.subcategories.SubcategoriesRepository
+import backend.users.UsersRoles
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
+import java.math.RoundingMode
 import kotlin.math.min
 
 @DgsComponent
 class BonusDataFetcher {
+
+    @Autowired
+    private lateinit var userMapper: UserMapper
 
     @Autowired
     lateinit var bonusRepository: BonusesRepository
@@ -48,6 +55,11 @@ class BonusDataFetcher {
     @Transactional
     fun addBonusMutation(@InputArgument chestHistoryId: Long, @InputArgument awardId: Long,
                          @InputArgument checkDates: Boolean = true): AddBonusReturnType {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.STUDENT && currentUser.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("Only students (and a coordinator) can open chests.")
+        }
+
         val chestHistory = chestHistoryRepository.findById(chestHistoryId)
             .orElseThrow { IllegalArgumentException("Invalid chest history ID") }
 
@@ -123,7 +135,10 @@ class BonusDataFetcher {
     }
 
     private fun createAdditivePoints(chestHistory: ChestHistory, award: Award): Points {
-        if (chestHistory.subcategory.edition.editionId !in getAwardEditions(award).map { it.editionId }) {
+        if (chestHistory.subcategory.edition == null){
+            throw IllegalArgumentException("Subcategory's edition is not set.")
+        }
+        if (chestHistory.subcategory.edition?.editionId !in getAwardEditions(award).map { it.editionId }) {
             throw IllegalArgumentException("Subcategory's edition does not match the award's edition.")
         }
 
@@ -164,7 +179,7 @@ class BonusDataFetcher {
             student = chestHistory.user,
             teacher = chestHistory.teacher,
             updatedBy = chestHistory.teacher,
-            value = min(award.awardValue, nextSubcategory.maxPoints),
+            value = min(award.awardValue.toFloat(), nextSubcategory.maxPoints.toFloat()).toBigDecimal().setScale(2, RoundingMode.HALF_UP),
             subcategory = nextSubcategory,
             label = "Points awarded for ${award.awardName}"
         )
@@ -181,10 +196,10 @@ class BonusDataFetcher {
 
         var sum = 0f
         var i = pointsInAwardCategory.size - 1
-        while (sum < award.awardValue && i >= 0) {
+        while (sum < award.awardValue.toFloat() && i >= 0) {
             val lastPoints = pointsInAwardCategory.getOrNull(i--)
                 ?: break
-            val pointsToAdd = min(award.awardValue - sum, lastPoints.subcategory.maxPoints - lastPoints.value)
+            val pointsToAdd = min(award.awardValue.toFloat() - sum, lastPoints.subcategory.maxPoints.toFloat() - lastPoints.value.toFloat())
             sum += pointsToAdd
         }
 
@@ -192,7 +207,7 @@ class BonusDataFetcher {
             student = chestHistory.user,
             teacher = chestHistory.teacher,
             updatedBy = chestHistory.teacher,
-            value = sum,
+            value = BigDecimal(sum.toString()).setScale(2, RoundingMode.HALF_UP),
             subcategory = pointsInAwardCategory.last().subcategory,
             label = "Points awarded for ${award.awardName}"
         )
@@ -213,7 +228,7 @@ class BonusDataFetcher {
             student = chestHistory.user,
             teacher = chestHistory.teacher,
             updatedBy = chestHistory.teacher,
-            value = totalPointsValue * award.awardValue,
+            value = (totalPointsValue * award.awardValue.toFloat()).toBigDecimal().setScale(2, RoundingMode.HALF_UP),
             subcategory = subcategory,
             label = "Points awarded for ${award.awardName}"
         )

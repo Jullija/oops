@@ -1,28 +1,19 @@
-import { PointsBarProps } from "../PointsBar";
+import { ProgressBarProps } from "../bars/ProgressBar";
 import { StudentCard } from "./cards/StudentCard";
 import { CategoriesCard } from "./cards/CategoriesCard";
 import { Styles } from "../../utils/Styles";
-import { StudentCardData } from "../../hooks/StudentProfile/useStudentData";
+import { StudentCardData } from "../../hooks/StudentProfile/useStudentProfileData/useStudentData";
 import { AnimalCard } from "./cards/AnimalCard/AnimalCard";
-import { LevelType } from "../../__generated__/schema.graphql.types";
-
-const styles: Styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 20,
-    borderRight: "2px solid red",
-    paddingRight: 24,
-    width: 360,
-  },
-};
+import { BonusesCard } from "./cards/BonusesCard";
+import { Bonus, Level } from "../../hooks/StudentProfile";
 
 type SideBarProps = {
   student: StudentCardData;
-  categoriesBarProps: PointsBarProps[];
-  prevLevel?: LevelType;
-  currLevel: LevelType;
-  nextLevel?: LevelType;
+  categoriesBarProps: ProgressBarProps[];
+  prevLevel: Level | undefined;
+  currLevel: Level;
+  nextLevel: Level | undefined;
+  bonuses: Bonus[];
 };
 
 export const SideBar = ({
@@ -31,6 +22,7 @@ export const SideBar = ({
   prevLevel,
   currLevel,
   nextLevel,
+  bonuses,
 }: SideBarProps) => {
   return (
     <div style={styles.container}>
@@ -42,6 +34,18 @@ export const SideBar = ({
         totalPoints={student.totalPoints}
       />
       <CategoriesCard categoriesBarProps={categoriesBarProps} />
+      <BonusesCard bonuses={bonuses} />
     </div>
   );
+};
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 20,
+    borderRight: "2px solid red",
+    paddingRight: 24,
+    width: 360,
+  },
 };

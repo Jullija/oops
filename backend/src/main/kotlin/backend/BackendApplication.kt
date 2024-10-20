@@ -19,6 +19,7 @@ import org.springframework.context.annotation.PropertySource
 		"backend.edition",
 		"backend.files",
 		"backend.firebase",
+    "backend.gradingChecks",
 		"backend.graphql",
 		"backend.groups",
 		"backend.levels",
@@ -32,7 +33,7 @@ import org.springframework.context.annotation.PropertySource
 	]
 )
 @EnableJpaAuditing
-@PropertySource("classpath:application-secrets.properties") // Add secrets properties file
+@PropertySource("classpath:application-secrets.properties")
 class BackendApplication
 
 fun main(args: Array<String>) {

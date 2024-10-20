@@ -7,24 +7,7 @@ import { NumberInput } from "../../inputs/NumberInput";
 import { SelectInput } from "../../inputs/SelectInput";
 import { Category } from "../../../utils/utils";
 
-const styles: Styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-    padding: 12,
-    border: "1px solid black",
-    width: 500,
-  },
-  title: {
-    fontWeight: "bold",
-  },
-  error: {
-    color: "red",
-  },
-};
-
-type PointsFormValues = z.infer<typeof ValidationSchema>;
+export type PointsFormValues = z.infer<typeof ValidationSchema>;
 
 const ValidationSchema = z.object({
   categoryId: z.string().min(1, "required"),
@@ -36,22 +19,18 @@ type PointFormProps = {
   categories: Category[];
   handleConfirmClick: (formPoints: FormPoints) => void;
   mutationError?: string;
-  initialValues?: PointsFormValues;
+  initialValues: PointsFormValues;
   variant: "add" | "edit";
-};
-
-const emptyValues = {
-  categoryId: "",
-  subcategoryId: "",
-  points: 0,
+  disableCategoryAndSubcategory?: boolean;
 };
 
 export const PointsForm = ({
   categories,
   handleConfirmClick,
   mutationError,
-  initialValues = emptyValues,
+  initialValues,
   variant,
+  disableCategoryAndSubcategory,
 }: PointFormProps) => {
   const formik = useFormik({
     initialValues: initialValues,
@@ -95,10 +74,7 @@ export const PointsForm = ({
   });
 
   const [subcategories, setSubcategories] = useState(
-    (initialValues.subcategoryId === emptyValues.subcategoryId
-      ? categories[0]
-      : categories.find((c) => c.id === initialValues.categoryId)
-    )?.subcategories,
+    categories.find((c) => c.id === initialValues.categoryId)?.subcategories,
   );
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -131,6 +107,7 @@ export const PointsForm = ({
             title: category.name,
           }))}
           label="Category"
+          disabled={disableCategoryAndSubcategory}
         />
         <SelectInput
           handleChange={formik.handleChange}
@@ -144,6 +121,7 @@ export const PointsForm = ({
             title: subcategory.name,
           }))}
           label="Subcategory"
+          disabled={disableCategoryAndSubcategory}
         />
         <NumberInput
           handleChange={formik.handleChange}
@@ -154,9 +132,26 @@ export const PointsForm = ({
           name="points"
           label="Points"
         />
-        <button type="submit">{variant === "edit" ? "edit" : "add"}</button>
+        <button type="submit">confirm</button>
       </form>
       {mutationError && <p style={styles.error}>Error: {mutationError}</p>}
     </div>
   );
+};
+
+const styles: Styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+    padding: 12,
+    border: "1px solid black",
+    width: 500,
+  },
+  title: {
+    fontWeight: "bold",
+  },
+  error: {
+    color: "red",
+  },
 };

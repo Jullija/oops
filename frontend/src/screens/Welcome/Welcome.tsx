@@ -47,4 +47,34 @@ const styles: Styles = {
     margin: 20,
     flex: 1,
   },
+  container: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  userList: {
+    flex: 1,
+  },
+  searchInput: {
+    marginBottom: "10px",
+    padding: "8px",
+    width: "100%",
+    boxSizing: "border-box",
+  },
+  table: {
+    width: "100%",
+    borderCollapse: "collapse",
+  },
+  tableRow: {
+    cursor: "pointer",
+  },
+  selectedUser: {
+    flex: 1,
+    marginLeft: "20px",
+  },
+  loginForm: {
+    marginTop: "20px",
+    padding: "10px",
+    border: "1px solid #ddd",
+    borderRadius: "5px",
+  },
 };

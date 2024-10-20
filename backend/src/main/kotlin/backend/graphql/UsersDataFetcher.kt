@@ -14,23 +14,34 @@ import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
 import backend.userGroups.UserGroups
 import backend.userGroups.UserGroupsRepository
+import backend.userLevel.UserLevelRepository
 import backend.users.FirebaseUserService
 import backend.users.UsersRepository
 import backend.users.Users
 import backend.users.UsersRoles
 import backend.utils.CsvReader
 import backend.utils.UserMapper
+import com.google.firebase.ErrorCode
+import com.google.firebase.auth.FirebaseAuthException
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.DgsQuery
 import com.netflix.graphql.dgs.InputArgument
+import org.apache.catalina.User
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.LocalDateTime
+import kotlin.math.exp
 import kotlin.math.min
 
 @DgsComponent
 class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
+
+    @Autowired
+    private lateinit var userLevelRepository: UserLevelRepository
 
     @Autowired
     private lateinit var groupsRepository: GroupsRepository
@@ -71,9 +82,23 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @Autowired
     lateinit var csvReader: CsvReader
 
+    @Value("\${constants.emailDomain}")
+    lateinit var emailDomain: String
+
     @DgsMutation
     @Transactional
     fun assignPhotoToUser(@InputArgument userId: Long, @InputArgument fileId: Long?): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR) && currentUser.userId != userId) {
+            throw IllegalArgumentException("Student can only assign a photo to themselves")
+        }
+
+        val user = usersRepository.findById(userId).orElseThrow { IllegalArgumentException("Invalid user ID") }
+
+        if (currentUser.role == UsersRoles.TEACHER && user.role == UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("Teacher cannot assign a photo to a coordinator")
+        }
+
         return photoAssigner.assignPhotoToAssignee(usersRepository, "image/user", userId, fileId)
     }
 
@@ -81,7 +106,7 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @Transactional
     fun addUser(@InputArgument indexNumber: Int, @InputArgument nick: String,
                 @InputArgument firstName: String, @InputArgument secondName: String,
-                @InputArgument role: String, @InputArgument email: String = "example@example.com",
+                @InputArgument role: String, @InputArgument email: String = "",
                 @InputArgument label: String = "", @InputArgument createFirebaseUser: Boolean = false,
                 @InputArgument sendEmail: Boolean = false): Users {
         return addUserHelper(indexNumber, nick, firstName, secondName, role, email, label, createFirebaseUser, sendEmail)
@@ -90,6 +115,12 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsMutation
     @Transactional
     fun addUsersFromCsv(@InputArgument fileId: Long, @InputArgument editionId: Long): List<Users> {
+        val currentUser = userMapper.getCurrentUser()
+
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("Only a coordinator can add users from a CSV file")
+        }
+
         val file = fileEntityRepository.findById(fileId).orElseThrow { IllegalArgumentException("File not found") }
         if (file.fileType != "text/csv") {
             throw IllegalArgumentException("Invalid file type")
@@ -129,8 +160,43 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
         @InputArgument role: String?,
         @InputArgument label: String?
     ): Users {
+        val currentUser = userMapper.getCurrentUser()
+
         val user = usersRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("User not found") }
+
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)){
+            if (currentUser.userId != userId){
+                throw IllegalArgumentException("Student can only edit themselves")
+            }
+            if (indexNumber != null || firstName != null || secondName != null || role != null || label != null){
+                throw IllegalArgumentException("Student can only edit their own nick")
+            }
+        }
+        if (currentUser.role == UsersRoles.TEACHER){
+            if (currentUser.userId != userId && user.role != UsersRoles.STUDENT){
+                throw IllegalArgumentException("Teacher can only edit students or themselves")
+            }
+            if (currentUser.userId == userId){
+                if (role != null){
+                    throw IllegalArgumentException("Teacher cannot change their own role")
+                }
+            }
+
+            val activeUserEditions = user.userGroups.map { it.group.edition }.filter { it.endDate.isAfter(java.time.LocalDate.now()) }
+            if (activeUserEditions.isEmpty()){
+                throw IllegalArgumentException("Teacher can only edit students that are in an active edition")
+            }
+
+            val userGroups = groupsRepository.findByUserGroups_User_UserId(userId)
+            if (userGroups.none { it.teacher == currentUser }){
+                throw IllegalArgumentException("Teacher can only edit students that are in their groups")
+            }
+            if (role != null){
+                throw IllegalArgumentException("Teacher cannot edit role of a student")
+            }
+        }
+
 
         indexNumber?.let {
             if (usersRepository.existsByIndexNumber(it) && it != user.indexNumber) {
@@ -173,6 +239,14 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsMutation
     @Transactional
     fun removeUser(@InputArgument userId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only a coordinator can remove a user")
+        }
+        if (currentUser.userId == userId){
+            throw IllegalArgumentException("Cannot remove yourself")
+        }
+
         val user = usersRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("User not found") }
 
@@ -183,7 +257,15 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
         if (user.userGroups.isNotEmpty()){
             throw IllegalArgumentException("Cannot remove user that is in a group")
         }
-        user.firebaseUid?.let { firebaseUserService.deleteFirebaseUser(it) }
+
+        userLevelRepository.deleteAllByUser_UserId(userId)
+        try {
+            user.firebaseUid?.let { firebaseUserService.deleteFirebaseUser(it) }
+            } catch (e: FirebaseAuthException) {
+                if (e.errorCode != ErrorCode.NOT_FOUND) {
+                    throw e
+                }
+            }
         usersRepository.delete(user)
         return true
     }
@@ -191,6 +273,11 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsMutation
     @Transactional
     fun resetPassword(@InputArgument userId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR) && currentUser.userId != userId) {
+            throw IllegalArgumentException("Student can only reset their own password")
+        }
+
         val user = usersRepository.findByUserId(userId)
             .orElseThrow { IllegalArgumentException("User not found") }
         return firebaseUserService.resetPassword(user.email)
@@ -200,10 +287,24 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsQuery
     @Transactional
     fun getStudentPoints(@InputArgument studentId: Long, @InputArgument editionId: Long): StudentPointsType {
+        val currentUser = userMapper.getCurrentUser()
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR) && currentUser.userId != studentId) {
+            throw IllegalArgumentException("Student can only view their own points")
+        }
+
         val user = usersRepository.findById(studentId).orElseThrow { IllegalArgumentException("Invalid student ID") }
         if (user.role != UsersRoles.STUDENT) {
             throw IllegalArgumentException("User is not a student")
         }
+
+        if (currentUser.role == UsersRoles.TEACHER){
+            val userGroupsEditions = groupsRepository.findByUserGroups_User_UserId(studentId).map { it.edition }
+            val teacherGroupsEditions = groupsRepository.findByTeacher_UserId(currentUser.userId).map { it.edition }
+            if (userGroupsEditions.intersect(teacherGroupsEditions).isEmpty()){
+                throw IllegalArgumentException("Teacher can only view points of students that are in their editions")
+            }
+        }
+
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
         if (user.userGroups.none { it.group.edition == edition }) {
             throw IllegalArgumentException("Student is not participating in this edition")
@@ -226,16 +327,16 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
                     PartialBonusType(
                         bonuses = bonus,
                         partialValue = if (bonus.award.awardType == AwardType.MULTIPLICATIVE) {
-                            purePoints?.value?.times(bonus.award.awardValue) ?: 0f
+                            purePoints?.value?.times(bonus.award.awardValue)?.toFloat() ?: 0f
                         } else if (bonus.award.awardType == AwardType.ADDITIVE_PREV) {
                             val contribution = min(
-                                additivePrevBonusesMap[bonus] ?: 0f,
-                                purePoints?.value?.let { (purePoints.subcategory.maxPoints).minus(it) } ?: 0f
+                                additivePrevBonusesMap[bonus]?.toFloat() ?: 0f,
+                                purePoints?.value?.let { (purePoints.subcategory.maxPoints.toFloat()).minus(it.toFloat()) } ?: 0f
                             )
-                            additivePrevBonusesMap[bonus] = (additivePrevBonusesMap[bonus] ?: 0f) - contribution
+                            additivePrevBonusesMap[bonus] = BigDecimal(((additivePrevBonusesMap[bonus]?.toFloat() ?: 0f) - contribution).toString()).setScale(2, RoundingMode.HALF_UP)
                             contribution
                         } else {
-                            bonus.points.value
+                            bonus.points.value.toFloat()
                         }
                     )
                 }
@@ -254,10 +355,11 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
                 )
             }
 
-        val sumOfPurePoints = subcategoryPoints.sumOf { it.points.purePoints?.value?.toDouble() ?: 0.0 }.toFloat()
-        val sumOfBonuses = subcategoryPoints.sumOf { it.points.partialBonusType.sumOf { it.partialValue.toDouble() } }
-            .toFloat()
-        val sumOfAll = sumOfPurePoints + sumOfBonuses
+        val sumOfPurePoints = BigDecimal(subcategoryPoints.sumOf { it.points.purePoints?.value?.toDouble() ?: 0.0 }.toString())
+            .setScale(2, RoundingMode.HALF_UP).toFloat()
+        val sumOfBonuses = BigDecimal(subcategoryPoints.sumOf { it.points.partialBonusType.sumOf { it.partialValue.toDouble() } })
+            .setScale(2, RoundingMode.HALF_UP).toFloat()
+        val sumOfAll = BigDecimal((sumOfPurePoints + sumOfBonuses).toString()).setScale(2, RoundingMode.HALF_UP).toFloat()
 
         return StudentPointsType(
             user = user,
@@ -273,10 +375,24 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsQuery
     @Transactional
     fun getSumOfPointsForStudentByCategory(@InputArgument studentId: Long, @InputArgument editionId: Long): List<CategoryPointsSumType> {
+        val currentUser = userMapper.getCurrentUser()
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR) && currentUser.userId != studentId) {
+            throw IllegalArgumentException("Student can only view their own points")
+        }
+
         val user = usersRepository.findById(studentId).orElseThrow { IllegalArgumentException("Invalid student ID") }
         if (user.role != UsersRoles.STUDENT) {
             throw IllegalArgumentException("User is not a student")
         }
+
+        if (currentUser.role == UsersRoles.TEACHER){
+            val userGroupsEditions = groupsRepository.findByUserGroups_User_UserId(studentId).map { it.edition }
+            val teacherGroupsEditions = groupsRepository.findByTeacher_UserId(currentUser.userId).map { it.edition }
+            if (userGroupsEditions.intersect(teacherGroupsEditions).isEmpty()){
+                throw IllegalArgumentException("Teacher can only view points of students that are in their editions")
+            }
+        }
+
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
         if (user.userGroups.none { it.group.edition == edition }) {
             throw IllegalArgumentException("Student is not participating in this edition")
@@ -308,8 +424,7 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsQuery
     @Transactional
     fun getCurrentUser(): Users {
-        val user = userMapper.getUserFromToken() ?: throw IllegalArgumentException("User not authenticated")
-        return user
+        return userMapper.getCurrentUser()
     }
 
     fun isValidEmail(email: String): Boolean {
@@ -319,9 +434,35 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     
     private fun addUserHelper(indexNumber: Int,  nick: String,
                                firstName: String,  secondName: String,
-                               role: String,  email: String = "example@example.com",
+                               role: String,  email: String,
                                label: String = "",  createFirebaseUser: Boolean = false,
                                sendEmail: Boolean = false): Users {
+        val currentUser = userMapper.getCurrentUser()
+
+        if (currentUser.userId != 0L && (currentUser.role != UsersRoles.COORDINATOR && currentUser.role != UsersRoles.TEACHER)) {
+            throw IllegalArgumentException("Only a coordinator or a teacher can add a user")
+        }
+
+        // TODO: Find a better way to handle adding a first coordinator
+        if (currentUser.userId == 0L ) {
+            if (UsersRoles.valueOf(role.uppercase()) != UsersRoles.COORDINATOR) {
+                throw IllegalArgumentException("Only a coordinator can be added with this bypass")
+            }
+        }
+
+        if (UsersRoles.valueOf(role.uppercase()) == UsersRoles.COORDINATOR) {
+            if (currentUser.role != UsersRoles.COORDINATOR || currentUser.userId != 0L) {
+                throw IllegalArgumentException("Only a coordinator can add a coordinator")
+            }
+        }
+
+        if (UsersRoles.valueOf(role.uppercase()) == UsersRoles.TEACHER) {
+            if (currentUser.role != UsersRoles.COORDINATOR) {
+                throw IllegalArgumentException("Only a coordinator can add a teacher")
+            }
+        }
+
+
         if (usersRepository.existsByIndexNumber(indexNumber)) {
             throw IllegalArgumentException("User with index number $indexNumber already exists")
         }
@@ -333,8 +474,15 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Invalid role")
         }
-        if (!isValidEmail(email)) {
+        var userEmail = email
+        if (email.isEmpty()) {
+            userEmail = "$indexNumber@$emailDomain"
+        } else if (!isValidEmail(userEmail)) {
             throw IllegalArgumentException("Invalid email")
+        }
+
+        if (usersRepository.existsByEmail(userEmail)) {
+            throw IllegalArgumentException("User with email $userEmail already exists")
         }
         val user = Users(
             indexNumber = indexNumber,
@@ -342,12 +490,20 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
             firstName = firstName,
             secondName = secondName,
             role = userRole1,
-            email = email,
+            email = userEmail,
             label = label
         )
         usersRepository.save(user)
         if (createFirebaseUser) {
-            val firebaseUid = firebaseUserService.createFirebaseUser(user, sendEmail)
+            val firebaseUid = try {
+                firebaseUserService.createFirebaseUser(user, sendEmail)
+            } catch (e: FirebaseAuthException) {
+                if (e.errorCode == ErrorCode.ALREADY_EXISTS) {
+                    firebaseUserService.getUserByEmail(user.email).uid
+                } else {
+                    throw e
+                }
+            }
             user.firebaseUid = firebaseUid
         }
         return user

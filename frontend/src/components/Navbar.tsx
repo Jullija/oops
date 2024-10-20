@@ -9,25 +9,6 @@ import { useLogin } from "../hooks/auth/useLogin";
 
 export const NAV_BAR_HEIGHT = 100;
 
-const styles: Styles = {
-  container: {
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    borderBottom: "1px solid black",
-    height: NAV_BAR_HEIGHT,
-  },
-  navbarItem: {
-    border: "1px solid black",
-    padding: 12,
-    cursor: "pointer",
-  },
-  editionName: {
-    marginLeft: "auto",
-    padding: 12,
-  },
-};
-
 export const Navbar = () => {
   const navigate = useNavigate();
   const { selectedEdition } = useEditionSelection();
@@ -62,4 +43,23 @@ export const Navbar = () => {
       )}
     </div>
   );
+};
+
+const styles: Styles = {
+  container: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    borderBottom: "1px solid black",
+    height: NAV_BAR_HEIGHT,
+  },
+  navbarItem: {
+    border: "1px solid black",
+    padding: 12,
+    cursor: "pointer",
+  },
+  editionName: {
+    marginLeft: "auto",
+    padding: 12,
+  },
 };

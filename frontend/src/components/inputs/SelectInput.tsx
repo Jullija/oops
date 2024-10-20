@@ -9,6 +9,7 @@ type SelectInputProps = {
   name: string;
   label?: string;
   optionItems?: SelectOptionItem[];
+  disabled?: boolean;
 };
 
 export type SelectOptionItem = {
@@ -25,6 +26,7 @@ export const SelectInput = ({
   name,
   label,
   optionItems,
+  disabled,
 }: SelectInputProps) => {
   return (
     <div>
@@ -34,6 +36,7 @@ export const SelectInput = ({
         onChange={handleChange}
         onBlur={handleBlur}
         value={value}
+        disabled={disabled}
       >
         {optionItems?.map((item, index) => (
           <option value={item.value} key={index}>

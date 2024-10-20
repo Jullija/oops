@@ -1,15 +1,113 @@
 import requests
+import random  # Ensure you import random if you're using it for generating data
 
-def insert_categories(hasura_url, headers, category_data):
+def insert_categories(hasura_url, headers, category_data, editions):
     categories = {}
     category_editions_type_map = {}
 
-    for category_name, _, _, _, can_add_points, lightColor, darkColor, editions_type in category_data:
+    # Mapping of editions types to their IDs
+    editions_type_id_map = {
+        "all": [id for id in editions.values()],
+        "odd": [id for id in editions.values() if int(id) % 2 != 0],
+        "even": [id for id in editions.values() if int(id) % 2 == 0],
+        "first": [min(editions.values())],
+        "last": [max(editions.values())],
+        "random": random.sample(list(editions.values()), len(editions.values()))
+    }
+
+    event_names = ["Spooky Spring", "Constructor Christmas", "Polymorphism Presents",
+                   "Inheritance Invites", "Encapsulation Extravaganza", "Abstraction Awards", "Recursion Rendezvous",
+                   "Iteration Invitations", "Collections Celebration", "Generics Gala", "Concurrency Convention",
+                   "Streams Soiree", "Lambda Luncheon", "Modules Mixer", "Patterns Party", "Testing Tournament",
+                   "Debugging Dance"]
+    special_event_names = ["Gitowe Dziady"]
+
+    for category in category_data:
+
+        # "name": "LABORATORY",
+        # "number_of_subcategories": 14,
+        # "subcategory_prefix": "lab_",
+        # "max_points_per_subcategory": 10,
+        # "can_add_points": true,
+        # "light_color": "#a58bce",
+        # "dark_color": "#242263",
+        # "editions": "all"
+        category_name = category[0]
+        number_of_subcategories = category[1]
+        subcategory_prefix = category[2] if category[2] is not None else ""
+        max_points_per_subcategory = category[3]
+        can_add_points = category[4] if category[4] is not None else False
+        lightColor = category[5] if category[5] is not None else "#FFFFFF"
+        darkColor = category[6] if category[6] is not None else "#000000"
+        editions_type = category[7] if category[7] is not None else "all"
+        label = ""
+        subcategories_list = []
+
+        # Generate subcategories for this category
+        editions_to_assign = editions_type_id_map.get(editions_type, [])
+        if not editions_to_assign:
+            print(f"No editions found for edition type '{editions_type}'")
+            continue
+
+        # Prepare subcategories data
+        if subcategory_prefix and max_points_per_subcategory is not None:
+            subcategories_data = [
+                {
+                    "subcategoryName": f"{subcategory_prefix}{i}",
+                    "maxPoints": max_points_per_subcategory,
+                    "ordinalNumber": i - 1,
+                    "categoryId": None,  # Will be set in the mutation
+                    "editionId": None,   # Not needed here
+                    "label": ""
+                }
+                for i in range(1, number_of_subcategories + 1)
+            ]
+        elif subcategory_prefix and max_points_per_subcategory is None:
+            subcategories_data = [
+                {
+                    "subcategoryName": f"{subcategory_prefix}{i}",
+                    "maxPoints": random.randint(1, 20) * 10,
+                    "ordinalNumber": i - 1,
+                    "categoryId": None,
+                    "editionId": None,
+                    "label": ""
+                }
+                for i in range(1, number_of_subcategories + 1)
+            ]
+        else:
+            all_event_names = special_event_names + random.sample(event_names, number_of_subcategories - len(special_event_names))
+            if max_points_per_subcategory:
+                subcategories_data = [
+                    {
+                        "subcategoryName": name,
+                        "maxPoints": max_points_per_subcategory,
+                        "ordinalNumber": idx,
+                        "categoryId": None,
+                        "editionId": None,
+                        "label": ""
+                    }
+                    for idx, name in enumerate(all_event_names)
+                ]
+            else:
+                subcategories_data = [
+                    {
+                        "subcategoryName": name,
+                        "maxPoints": random.randint(1, 20) * 10,
+                        "ordinalNumber": idx,
+                        "categoryId": None,
+                        "editionId": None,
+                        "label": ""
+                    }
+                    for idx, name in enumerate(all_event_names)
+                ]
+
+        # Now, include subcategories in the mutation
         mutation = """
-        mutation addCategory($categoryName: String!, $canAddPoints: Boolean!, $lightColor: String = "#FFFFFF", $darkColor: String = "#000000", $label: String = "") {
+        mutation addCategory($categoryName: String!, $canAddPoints: Boolean!, $subcategories: [SubcategoryInputType!]!, $lightColor: String = "#FFFFFF", $darkColor: String = "#000000", $label: String = "") {
             addCategory(
                 categoryName: $categoryName,
                 canAddPoints: $canAddPoints,
+                subcategories: $subcategories,
                 lightColor: $lightColor,
                 darkColor: $darkColor,
                 label: $label
@@ -20,7 +118,15 @@ def insert_categories(hasura_url, headers, category_data):
             }
         }
         """
-        variables = {"categoryName": category_name, "canAddPoints": can_add_points, "lightColor": lightColor, "darkColor": darkColor}
+
+        variables = {
+            "categoryName": category_name,
+            "canAddPoints": can_add_points,
+            "subcategories": subcategories_data,
+            "lightColor": lightColor,
+            "darkColor": darkColor,
+            "label": label
+        }
 
         print(f"Attempting to insert category: {category_name}")
         response = requests.post(

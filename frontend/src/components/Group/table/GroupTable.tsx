@@ -12,6 +12,7 @@ import {
 import { GroupTableRow } from "../../../hooks/Group/useGroupScreenData";
 import { Styles } from "../../../utils/Styles";
 import { Subcategory } from "../../../utils/utils";
+import { EMPTY_FIELD_STRING } from "../../../utils/constants";
 
 type GroupTableProps = {
   rows: GroupTableRow[];
@@ -50,7 +51,7 @@ export const GroupTable = ({ rows, subcategories }: GroupTableProps) => {
                   <TableCell
                     key={`${row.student.id}-${subcategory.subcategoryId}`}
                   >
-                    {subcategory.pure ?? "---"}
+                    {subcategory.pure ?? EMPTY_FIELD_STRING}
                   </TableCell>
                 ))}
               </TableRow>

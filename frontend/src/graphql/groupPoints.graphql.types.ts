@@ -32,13 +32,13 @@ export type GroupPointsQuery = {
         updatedAt: string;
         subcategory: {
           __typename?: "SubcategoryType";
-          maxPoints: number;
+          maxPoints: string;
           subcategoryId: string;
           subcategoryName: string;
         };
         points: {
           __typename?: "PurePointsType";
-          purePoints?: { __typename?: "PointType"; value: number } | null;
+          purePoints?: { __typename?: "PointType"; value: string } | null;
         };
       }>;
     }>;
