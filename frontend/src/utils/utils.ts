@@ -1,5 +1,5 @@
-import { Edition } from "../contexts/userEditionsContext";
-import { Roles } from "./types";
+import { Edition } from "../contexts/userContext";
+import { UsersRolesType } from "../__generated__/schema.graphql.types";
 
 type User = {
   role: string;
@@ -17,8 +17,8 @@ export type Subcategory = {
   maxPoints: number;
 };
 
-export const hasRole = (user: User, allowedRoles: Roles[]) => {
-  return allowedRoles.includes(user.role as Roles);
+export const hasRole = (user: User, allowedRoles: UsersRolesType[]) => {
+  return allowedRoles.includes(user.role as UsersRolesType);
 };
 
 export const isEditionActive = (edition: Edition) => {

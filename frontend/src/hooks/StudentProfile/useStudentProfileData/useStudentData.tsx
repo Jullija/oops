@@ -24,7 +24,6 @@ export const useStudentData = (props: {
   studentId: string | undefined;
 }) => {
   const { editionId, studentId } = props;
-
   const { data, loading, error, refetch } = useStudentPointsQuery({
     variables: {
       editionId: parseInt(editionId as string),

@@ -13,7 +13,7 @@ import { StudentTableWithFilters } from "../../components/StudentProfile/table/S
 import { Button } from "../../components/Button";
 import { useTeacherActions } from "../../hooks/StudentProfile";
 import { useEditionSelection } from "../../hooks/common/useEditionSelection";
-import { Roles } from "../../router/paths";
+import { Roles, RolesToUsersRolesTypeMap } from "../../utils/types";
 import { isEditionActive } from "../../utils/utils";
 import { NotEditableInfo } from "../../components/StudentProfile/NotEditableInfo";
 import IconButton from "@mui/material/IconButton";
@@ -74,7 +74,8 @@ export function TeacherStudentProfile() {
   if (!currLevel) return <p>Curr level is undefined</p>;
 
   const hasEditableRights =
-    studentData.group?.teacherId === userId || user.role === Roles.COORDINATOR;
+    studentData.group?.teacherId === userId ||
+    user.role === RolesToUsersRolesTypeMap[Roles.COORDINATOR];
 
   const isSelectedEditionActive = Boolean(
     selectedEdition && isEditionActive(selectedEdition),

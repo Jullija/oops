@@ -3,5 +3,17 @@ query CurrentUser {
     nick
     role
     userId
+    userGroups {
+      group {
+        edition {
+          editionId
+          editionName
+          editionYear
+          endDate
+          label
+          startDate
+        }
+      }
+    }
   }
 }
