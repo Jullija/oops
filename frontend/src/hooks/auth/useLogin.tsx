@@ -8,6 +8,7 @@ import { auth } from "../../../firebaseConfig";
 import Cookies from "js-cookie";
 import { useUser } from "../common/useUser";
 import { useApolloClient } from "@apollo/client";
+import { UserFromList } from "../../components/Welcome/UsersListWithFilter/UsersListWithFilter";
 
 export const cookiesStrings = {
   token: "token",
@@ -26,13 +27,29 @@ export const useLogin = () => {
 
   const [fetchCurrentUser] = useCurrentUserLazyQuery();
 
-  const loginWithUserSelect = (user: User) => {
-    const token = getBypassToken(user.userId);
+  const loginWithUserSelect = async (userFromList: UserFromList) => {
+    const token = getBypassToken(userFromList.userId);
     Cookies.set(cookiesStrings.token, token);
+
+    // fetch currently logged in user data
+    const { data, error } = await fetchCurrentUser();
+    const user: User | undefined = data?.getCurrentUser
+      ? {
+          nick: data?.getCurrentUser.nick,
+          role: data?.getCurrentUser.role,
+          userId: data?.getCurrentUser.userId,
+          userGroups: data?.getCurrentUser.userGroups,
+        }
+      : undefined;
+
+    if (error || !user) {
+      await logout();
+      throw new Error(error?.message ?? "Fetched current user is undefined");
+    }
+
     Cookies.set(cookiesStrings.user, JSON.stringify(user));
 
     setUser(user);
-    // TODO why tf user.role is not typed
     navigateToStartScreen(user);
   };
 
@@ -56,8 +73,9 @@ export const useLogin = () => {
     const user: User | undefined = data?.getCurrentUser
       ? {
           nick: data?.getCurrentUser.nick,
-          role: data?.getCurrentUser.role.toLocaleLowerCase(),
+          role: data?.getCurrentUser.role,
           userId: data?.getCurrentUser.userId,
+          userGroups: data?.getCurrentUser.userGroups,
         }
       : undefined;
 
@@ -93,7 +111,6 @@ export const useLogin = () => {
         navigate(pathsGenerator.teacher.Groups);
         break;
       case Roles.STUDENT:
-      case Roles.ADMIN:
         navigate(pathsGenerator.student.StudentProfile);
         break;
       default:

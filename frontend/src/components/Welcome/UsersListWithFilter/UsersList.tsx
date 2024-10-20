@@ -1,13 +1,13 @@
-import { User } from "../../../contexts/userContext";
 import { Styles } from "../../../utils/Styles";
+import { UserFromList } from "./UsersListWithFilter";
 
 type UsersListProps = {
-  users: User[];
-  handleUserClick: (user: User) => void;
+  users: UserFromList[];
+  handleUserClick: (user: UserFromList) => void;
 };
 
 export const UsersList = ({ users, handleUserClick }: UsersListProps) => {
-  const getRoleColorStyle = (user: User) => {
+  const getRoleColorStyle = (user: UserFromList) => {
     let color = "black";
     if (user.role === "teacher") {
       color = "red";

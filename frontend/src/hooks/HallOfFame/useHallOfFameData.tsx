@@ -1,6 +1,6 @@
 import { HallOfFameStudentData } from "../../components/hallOfFame/HallOfFameStudentCard";
 import { useHallOfFameQuery } from "../../graphql/hallOfFame.graphql.types";
-import { Roles } from "../../router/paths";
+import { Roles, RolesToUsersRolesTypeMap } from "../../utils/types";
 import { useEditionSelection } from "../common/useEditionSelection";
 import { useUser } from "../common/useUser";
 
@@ -35,10 +35,12 @@ export const useHallOfFameData = () => {
   });
 
   return {
-    isUserRoleStudent: user.role === Roles.STUDENT,
+    isUserRoleStudent: user.role === RolesToUsersRolesTypeMap[Roles.STUDENT],
     students,
     highlightedStudent:
-      user.role === Roles.STUDENT ? highlightedStudent : undefined,
+      user.role === RolesToUsersRolesTypeMap[Roles.STUDENT]
+        ? highlightedStudent
+        : undefined,
     loading,
     error,
   };

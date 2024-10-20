@@ -10,7 +10,7 @@ import { StudentTableWithFilters } from "../../components/StudentProfile/table/S
 import { Button } from "../../components/Button";
 import { useTeacherActions } from "../../hooks/StudentProfile/useTeacherActions";
 import { useEditionSelection } from "../../hooks/common/useEditionSelection";
-import { Roles } from "../../router/paths";
+import { Roles, RolesToUsersRolesTypeMap } from "../../utils/types";
 import { isEditionActive } from "../../utils/utils";
 
 export function TeacherStudentProfile() {
@@ -66,7 +66,8 @@ export function TeacherStudentProfile() {
   if (!currLevel) return <p>Curr level is undefined</p>;
 
   const hasEditableRights =
-    studentData.group?.teacherId === userId || user.role === Roles.COORDINATOR;
+    studentData.group?.teacherId === userId ||
+    user.role === RolesToUsersRolesTypeMap[Roles.COORDINATOR];
 
   const isSelectedEditionActive =
     selectedEdition && isEditionActive(selectedEdition);

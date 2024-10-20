@@ -7,12 +7,27 @@ export type CurrentUserQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type CurrentUserQuery = {
   __typename?: "query_root";
-  getCurrentUser?: {
+  getCurrentUser: {
     __typename?: "UserType";
     nick: string;
     role: Types.UsersRolesType;
     userId: string;
-  } | null;
+    userGroups: Array<{
+      __typename?: "UserGroupType";
+      group: {
+        __typename?: "GroupType";
+        edition: {
+          __typename?: "EditionType";
+          editionId: string;
+          editionName: string;
+          editionYear: number;
+          endDate: string;
+          label: string;
+          startDate: string;
+        };
+      };
+    } | null>;
+  };
 };
 
 export const CurrentUserDocument = gql`
@@ -21,6 +36,18 @@ export const CurrentUserDocument = gql`
       nick
       role
       userId
+      userGroups {
+        group {
+          edition {
+            editionId
+            editionName
+            editionYear
+            endDate
+            label
+            startDate
+          }
+        }
+      }
     }
   }
 `;

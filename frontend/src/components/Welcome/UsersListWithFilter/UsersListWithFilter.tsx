@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { Styles } from "../../../utils/Styles";
 import { UsersList } from "./UsersList";
 import { AllUsersQuery } from "../../../graphql/allUsers.graphql.types";
-import { User } from "../../../contexts/userContext";
+
+export type UserFromList = AllUsersQuery["users"][number];
 
 type UsersListWithFilterProps = {
   data: AllUsersQuery | undefined;
-  handleUserSelect: (user: User) => void;
+  handleUserSelect: (user: UserFromList) => void;
 };
 
 export const UsersListWithFilter = ({
@@ -14,7 +15,7 @@ export const UsersListWithFilter = ({
   handleUserSelect,
 }: UsersListWithFilterProps) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<UserFromList[]>([]);
 
   useEffect(() => {
     if (data) {
@@ -37,7 +38,7 @@ export const UsersListWithFilter = ({
       />
       <UsersList
         users={filteredUsers}
-        handleUserClick={(user: User) => handleUserSelect(user)}
+        handleUserClick={(user: UserFromList) => handleUserSelect(user)}
       />
     </div>
   );
