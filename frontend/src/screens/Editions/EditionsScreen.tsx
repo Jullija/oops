@@ -10,51 +10,86 @@ import {
   AddEditionForm,
   EditionFormValues,
 } from "../../components/Editions/AddEditionForm";
+import { useDeleteEditionMutation } from "../../graphql/deleteEdition.graphql.types";
 
 export const EditionsScreen = () => {
   const navigate = useNavigate();
   const { data, loading, error, refetch } = useEditionsQuery();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [setupEdition, { error: addError, reset }] = useSetupEditionMutation();
+  const [setupEdition] = useSetupEditionMutation();
+  const [formError, setFormError] = useState<string>();
+
+  const [deleteEdition] = useDeleteEditionMutation();
 
   if (loading) return <div>loading...</div>;
   if (error) return <div>ERROR: {error?.message}</div>;
 
+  const closeDialog = () => {
+    setFormError(undefined);
+    setIsOpen(false);
+  };
+
   const handleAddEdition = async (values: EditionFormValues) => {
-    await setupEdition({
-      variables: {
-        editionName: values.name,
-        editionYear: values.year,
-      },
-    });
-    if (!addError) {
+    try {
+      await setupEdition({
+        variables: {
+          editionName: values.name,
+          editionYear: values.year,
+        },
+      });
+
       refetch();
-      setIsOpen(false);
-      reset();
+      closeDialog();
+    } catch (error: unknown) {
+      console.error(error);
+
+      if (error instanceof Error) {
+        setFormError(error.message);
+      } else {
+        setFormError("Unexpected error received.");
+      }
+    }
+  };
+
+  const handleDeleteClick = async (id: string) => {
+    try {
+      await deleteEdition({ variables: { editionId: parseInt(id) } });
+      refetch();
+    } catch (error) {
+      // TODO some kind of global error ?
+      console.error(error);
     }
   };
 
   return (
     <div style={styles.container}>
       <Dialog open={isOpen}>
-        <CloseHeader onCloseClick={() => setIsOpen(false)} />
+        <CloseHeader onCloseClick={closeDialog} />
         <AddEditionForm
-          createError={addError?.message}
+          createError={formError}
           handleAddEdition={handleAddEdition}
         />
       </Dialog>
 
       <button onClick={() => setIsOpen(true)}>dodaj edycje</button>
       {data?.edition.map((edition) => (
-        <div
-          style={styles.card}
-          key={edition.editionId}
-          onClick={() =>
-            navigate(pathsGenerator.coordinator.Edition(edition.editionId))
-          }
-        >
-          edition {edition.editionId}
+        <div style={styles.card} key={edition.editionId}>
+          <div>edition {edition.editionId}</div>
+          <button
+            style={styles.showButton}
+            onClick={() =>
+              navigate(pathsGenerator.coordinator.Edition(edition.editionId))
+            }
+          >
+            show
+          </button>
+          <button
+            style={styles.deleteButton}
+            onClick={() => handleDeleteClick(edition.editionId)}
+          >
+            x
+          </button>
         </div>
       ))}
     </div>
@@ -71,5 +106,15 @@ const styles: Styles = {
   card: {
     border: "1px solid black",
     padding: 12,
+  },
+  showButton: {
+    backgroundColor: "green",
+    padding: 4,
+    cursor: "pointer",
+  },
+  deleteButton: {
+    backgroundColor: "red",
+    padding: 4,
+    cursor: "pointer",
   },
 };
