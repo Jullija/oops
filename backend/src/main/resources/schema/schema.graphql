@@ -282,6 +282,8 @@ type Query {
   getNeighboringLevels(studentId: Int!, editionId: Int!): NeighboringLevelsType!
   getGroupsInEdition(editionId: Int!, teacherId: Int!): [GroupTeacherType!]!
   getCurrentUser: UserType
+  getFilesGroupedByType: [FileGroupType!]!
+  getFilesGroupedByTypeBySelectedTypes(fileTypes: [String!]!): [FileGroupType!]!
 }
 
 type AwardType {
@@ -582,6 +584,11 @@ type GroupTeacherType {
   group: GroupType!
   owns: Boolean!
   canEdit: Boolean!
+}
+
+type FileGroupType {
+  fileType: String!
+  files: [FileType!]!
 }
 
 input SubcategoryInputType {
