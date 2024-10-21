@@ -3,7 +3,7 @@ import { Styles } from "../../../../utils/Styles";
 import { AddCategoryForm } from "./AddCategoryForm/AddCategoryForm";
 import { CategoriesList } from "./CategoriesList/CategoriesList";
 import { CloseHeader } from "../../../dialogs/CloseHeader";
-import { useCategoriesSection } from "../../../../hooks/Edition/useCategoriesSection";
+import { useCategoriesSection } from "../../../../hooks/Edition/categories/useCategoriesSection";
 
 type CategoriesSectionProps = {
   editionId: number;

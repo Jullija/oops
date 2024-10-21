@@ -3,12 +3,12 @@ import { useState } from "react";
 import {
   SetupCategoriesQuery,
   useSetupCategoriesQuery,
-} from "../../graphql/setupCategories.graphql.types";
-import { useSetupCategoryEditionAddMutation } from "../../graphql/setupCategoryEditionAdd.graphql.types";
-import { useSetupCategoryEditionRemoveMutation } from "../../graphql/setupCategoryEditionRemove.graphql.types";
-import { CategoriesFormValues } from "../../components/Edition/Sections/CategoriesSection/AddCategoryForm/AddCategoryForm";
-import { Row } from "../../components/Edition/Sections/CategoriesSection/AddCategoryForm/SubcategoryRows";
-import { useSetupCategoryCreateMutation } from "../../graphql/setupCategoryCreate.graphql.types";
+} from "../../../graphql/setupCategories.graphql.types";
+import { useSetupCategoryEditionAddMutation } from "../../../graphql/setupCategoryEditionAdd.graphql.types";
+import { useSetupCategoryEditionRemoveMutation } from "../../../graphql/setupCategoryEditionRemove.graphql.types";
+import { CategoriesFormValues } from "../../../components/Edition/Sections/CategoriesSection/AddCategoryForm/AddCategoryForm";
+import { FormSubcategory } from "../../../components/Edition/Sections/CategoriesSection/AddCategoryForm/SubcategoryRows";
+import { useSetupCategoryCreateMutation } from "../../../graphql/setupCategoryCreate.graphql.types";
 
 export type Category = SetupCategoriesQuery["categories"][number];
 
@@ -39,13 +39,16 @@ export const useCategoriesSection = (editionId: number) => {
     setCreateCategoryError(undefined);
   };
 
-  const handleCreate = async (values: CategoriesFormValues, rows: Row[]) => {
+  const handleCreate = async (
+    values: CategoriesFormValues,
+    subcategories: FormSubcategory[],
+  ) => {
     try {
       await createCategory({
         variables: {
           categoryName: values.categoryName,
           canAddPoints: values.canAddPoints,
-          subcategories: rows.map((row, index) => {
+          subcategories: subcategories.map((row, index) => {
             return {
               label: "",
               maxPoints: row.max.toString(),

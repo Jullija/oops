@@ -1,4 +1,4 @@
-import { Category } from "../../../../../hooks/Edition/useCategoriesSection";
+import { Category } from "../../../../../hooks/Edition/categories/useCategoriesSection";
 import { EMPTY_FIELD_STRING } from "../../../../../utils/constants";
 import { Styles } from "../../../../../utils/Styles";
 import { CategoryCard } from "./CategoryCard";

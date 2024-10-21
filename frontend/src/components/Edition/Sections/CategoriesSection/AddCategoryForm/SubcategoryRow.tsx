@@ -2,6 +2,7 @@ import { z } from "zod";
 import { Styles } from "../../../../../utils/Styles";
 import { TextField } from "@mui/material";
 import { useState } from "react";
+import { useSubcategories } from "../../../../../hooks/Edition/categories/useSubcategories";
 
 export type SubcategoriesFormValues = z.infer<typeof ValidationSchema>;
 
@@ -13,10 +14,6 @@ const ValidationSchema = z.object({
 
 type SubcategoryRowProps = {
   initialValues: SubcategoriesFormValues;
-  handleAdd: (s: SubcategoriesFormValues) => void;
-  handleDelete: (ordinal: number) => void;
-  handleUp: (ordinal: number) => void;
-  handleDown: (ordinal: number) => void;
   disabled?: boolean;
   blockUp?: boolean;
   blockDown?: boolean;
@@ -24,18 +21,14 @@ type SubcategoryRowProps = {
 
 export const SubcategoryRow = ({
   initialValues,
-  handleAdd,
-  handleDelete,
   disabled = true,
-  handleUp,
-  handleDown,
   blockUp = false,
   blockDown = false,
 }: SubcategoryRowProps) => {
   const [maxPoints, setMaxPoints] = useState<number>(initialValues.maxPoints);
   const [name, setName] = useState<string>(initialValues.name);
 
-  console.log("INITIAL VALUES: ", initialValues);
+  const { handleAdd, handleDelete, handleUp, handleDown } = useSubcategories();
 
   return (
     <div style={styles.innerContainer}>
