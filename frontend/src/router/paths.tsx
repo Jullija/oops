@@ -1,41 +1,30 @@
-// TODO duplicate enum
-export enum Roles {
-  ADMIN = "admin",
-  COORDINATOR = "coordinator",
-  STUDENT = "student",
-  TEACHER = "teacher",
-  UNAUTHENTICATED_USER = "unauthenticated_user",
-}
+import { UsersRolesType } from "../__generated__/schema.graphql.types";
 
 const commonPaths = {
   Default: {
     path: "/",
     allowedRoles: [
-      Roles.UNAUTHENTICATED_USER,
-      Roles.STUDENT,
-      Roles.TEACHER,
-      Roles.ADMIN,
-      Roles.COORDINATOR,
+      UsersRolesType.UnauthenticatedUser,
+      UsersRolesType.Student,
+      UsersRolesType.Teacher,
+      UsersRolesType.Coordinator,
     ],
   },
   Welcome: {
     path: "/welcome",
     allowedRoles: [
-      Roles.UNAUTHENTICATED_USER,
-      Roles.STUDENT,
-      Roles.TEACHER,
-      Roles.ADMIN,
-      Roles.COORDINATOR,
+      UsersRolesType.UnauthenticatedUser,
+      UsersRolesType.Student,
+      UsersRolesType.Teacher,
+      UsersRolesType.Coordinator,
     ],
   },
   HallOfFame: {
     path: "/hall-of-fame",
     allowedRoles: [
-      Roles.UNAUTHENTICATED_USER,
-      Roles.STUDENT,
-      Roles.TEACHER,
-      Roles.ADMIN,
-      Roles.COORDINATOR,
+      UsersRolesType.Student,
+      UsersRolesType.Teacher,
+      UsersRolesType.Coordinator,
     ],
   },
 };
@@ -43,37 +32,37 @@ const commonPaths = {
 const studentPaths = {
   StudentProfile: {
     path: "/student-profile",
-    allowedRoles: [Roles.STUDENT],
+    allowedRoles: [UsersRolesType.Student],
   },
 };
 
 const teacherPaths = {
   StudentProfile: {
     path: "/teacher/student-profile/:id",
-    allowedRoles: [Roles.TEACHER, Roles.ADMIN, Roles.COORDINATOR],
+    allowedRoles: [UsersRolesType.Teacher, UsersRolesType.Coordinator],
   },
   Groups: {
     path: "/groups",
-    allowedRoles: [Roles.TEACHER, Roles.ADMIN, Roles.COORDINATOR],
+    allowedRoles: [UsersRolesType.Teacher, UsersRolesType.Coordinator],
   },
   Group: {
     path: "/group/:id",
-    allowedRoles: [Roles.TEACHER, Roles.ADMIN, Roles.COORDINATOR],
+    allowedRoles: [UsersRolesType.Teacher, UsersRolesType.Coordinator],
   },
   Students: {
     path: "/students",
-    allowedRoles: [Roles.TEACHER, Roles.ADMIN, Roles.COORDINATOR],
+    allowedRoles: [UsersRolesType.Teacher, UsersRolesType.Coordinator],
   },
 };
 
 const coordinatorPaths = {
   Editions: {
     path: "/coordinator/editions",
-    allowedRoles: [Roles.COORDINATOR],
+    allowedRoles: [UsersRolesType.Coordinator],
   },
   Edition: {
     path: "/coordinator/edition/:id",
-    allowedRoles: [Roles.COORDINATOR],
+    allowedRoles: [UsersRolesType.Coordinator],
   },
 };
 
@@ -108,7 +97,7 @@ export const pathsGenerator = {
 type NavigationItem = {
   title: string;
   path: string;
-  allowedRoles: Roles[];
+  allowedRoles: UsersRolesType[];
 };
 
 export const navigationItems: NavigationItem[] = [

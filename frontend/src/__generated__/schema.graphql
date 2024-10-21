@@ -13681,6 +13681,7 @@ enum UsersRolesType {
   COORDINATOR
   STUDENT
   TEACHER
+  UNAUTHENTICATED_USER
 }
 
 """
@@ -17420,7 +17421,7 @@ type query_root {
   fetch data from the table: "flyway_schema_history" using primary key columns
   """
   flywaySchemaHistoryByPk(installedRank: Int!): FlywaySchemaHistory
-  getCurrentUser: UserType
+  getCurrentUser: UserType!
   getGroupsInEdition(editionId: Int!, teacherId: Int!): [GroupTeacherType!]!
   getNeighboringLevels(editionId: Int!, studentId: Int!): NeighboringLevelsType!
   getPossibleGroupDates(editionId: Int!): [GroupDateType!]!

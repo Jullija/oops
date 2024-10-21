@@ -4,7 +4,7 @@ import { pathsGenerator } from "../../router/paths";
 import { Styles } from "../../utils/Styles";
 import { StudentsListCard } from "./StudentsListCard";
 import { Group } from "../../hooks/common/useGroupsData";
-import { Roles } from "../../utils/types";
+import { UsersRolesType } from "../../__generated__/schema.graphql.types";
 
 // TODO name to clean up after group screen is ready
 export type StudentFromList = {
@@ -34,7 +34,7 @@ export const StudentsList = ({ students: groups }: StudentsListProps) => {
           }
           withEditableRights={
             student.group.teacher.id === user.user.userId ||
-            user.user.role === Roles.COORDINATOR
+            user.user.role === UsersRolesType.Coordinator
           }
         />
       ))}
