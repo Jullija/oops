@@ -22,14 +22,14 @@ type CategoriesSectionProps = {
 
 export const CategoriesSection = ({ editionId }: CategoriesSectionProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [addCategory, { error: addError, reset: resetAddCategoryError }] =
-    useSetupAddCategoryMutation();
-  const [addCategoryToEdition, { error: addToEditionError }] =
-    useSetupAddCategoryToEditionMutation();
-  const [
-    removeCategoryFromEdition,
-    { error: removeError, reset: removeErrorReset },
-  ] = useSetupRemoveCategoryFormEditionMutation();
+
+  const [createCategory] = useSetupAddCategoryMutation();
+  const [createCategoryError, setCreateCategoryError] = useState<
+    string | undefined
+  >(undefined);
+
+  const [addCategory] = useSetupAddCategoryToEditionMutation();
+  const [removeCategory] = useSetupRemoveCategoryFormEditionMutation();
 
   const { categories, selectedCategories, loading, error, refetch } =
     useCategoriesSection(editionId);
@@ -37,32 +37,40 @@ export const CategoriesSection = ({ editionId }: CategoriesSectionProps) => {
   if (loading) return <div>loading...</div>;
   if (error) return <div>ERROR: {error.message}</div>;
 
-  const handleAddCategory = async (
-    values: CategoriesFormValues,
-    rows: Row[],
-  ) => {
-    await addCategory({
-      variables: {
-        categoryName: values.categoryName,
-        canAddPoints: values.canAddPoints,
-        subcategories: rows.map((row, index) => {
-          return {
-            label: "",
-            maxPoints: row.max.toString(),
-            ordinalNumber: index,
-            subcategoryName: row.name,
-          };
-        }),
-      },
-    });
-    if (!addError) {
+  const closeDialog = () => {
+    setIsOpen(false);
+    setCreateCategoryError(undefined);
+  };
+
+  const handleCreate = async (values: CategoriesFormValues, rows: Row[]) => {
+    try {
+      await createCategory({
+        variables: {
+          categoryName: values.categoryName,
+          canAddPoints: values.canAddPoints,
+          subcategories: rows.map((row, index) => {
+            return {
+              label: "",
+              maxPoints: row.max.toString(),
+              ordinalNumber: index,
+              subcategoryName: row.name,
+            };
+          }),
+        },
+      });
+
       refetch();
-      setIsOpen(false);
-      resetAddCategoryError();
+      closeDialog();
+    } catch (error) {
+      console.error(error);
+
+      setCreateCategoryError(
+        error instanceof Error ? error.message : "Unexpected error received.",
+      );
     }
   };
 
-  const handleSelectCategoryClick = async (category: Category) => {
+  const handleSelectClick = async (category: Category) => {
     const isCategorySelected = !!selectedCategories.find(
       (c) => c.categoryId === category.categoryId,
     );
@@ -74,19 +82,16 @@ export const CategoriesSection = ({ editionId }: CategoriesSectionProps) => {
       },
     };
 
-    if (isCategorySelected) {
-      await removeCategoryFromEdition(variables);
-      if (!removeError) {
-        console.log("REFETCH FORM REMOVE");
-        refetch();
-        removeErrorReset();
+    try {
+      // TODO add some kind of global error
+      if (isCategorySelected) {
+        await removeCategory(variables);
+      } else {
+        await addCategory(variables);
       }
-    } else {
-      await addCategoryToEdition(variables);
-      if (!addToEditionError) {
-        refetch();
-        resetAddCategoryError();
-      }
+      refetch();
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -97,21 +102,21 @@ export const CategoriesSection = ({ editionId }: CategoriesSectionProps) => {
       <CategoriesList
         categories={selectedCategories}
         selectedCategories={selectedCategories}
-        handleSelectCategoryClick={handleSelectCategoryClick}
+        handleSelectCategoryClick={handleSelectClick}
         title={"Selected categories"}
       />
       <CategoriesList
         categories={categories}
         selectedCategories={selectedCategories}
-        handleSelectCategoryClick={handleSelectCategoryClick}
+        handleSelectCategoryClick={handleSelectClick}
         title={"All categories"}
       />
 
       <Dialog open={isOpen}>
-        <CloseHeader onCloseClick={() => setIsOpen(false)} />
+        <CloseHeader onCloseClick={closeDialog} />
         <AddCategoryForm
-          createError={addError?.message}
-          handleAddCategory={handleAddCategory}
+          createError={createCategoryError}
+          handleAddCategory={handleCreate}
         />
       </Dialog>
     </div>

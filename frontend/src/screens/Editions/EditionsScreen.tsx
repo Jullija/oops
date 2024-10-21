@@ -44,11 +44,9 @@ export const EditionsScreen = () => {
     } catch (error: unknown) {
       console.error(error);
 
-      if (error instanceof Error) {
-        setFormError(error.message);
-      } else {
-        setFormError("Unexpected error received.");
-      }
+      setFormError(
+        error instanceof Error ? error.message : "Unexpected error received.",
+      );
     }
   };
 

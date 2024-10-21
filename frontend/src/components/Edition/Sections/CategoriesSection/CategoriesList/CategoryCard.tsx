@@ -12,6 +12,11 @@ export const CategoryCard = ({
   isSelected,
   onSelectClick,
 }: CategoryCardProps) => {
+  const getSubcategoriesString = (category: Category) => {
+    return category.subcategories
+      .map((subcategory) => subcategory.subcategoryName)
+      .join(", ");
+  };
   return (
     <div
       style={{
@@ -23,6 +28,7 @@ export const CategoryCard = ({
       <button onClick={onSelectClick}>
         {isSelected ? "unselect" : "select"}
       </button>
+      <div>subcategories: {getSubcategoriesString(category)}</div>
     </div>
   );
 };
