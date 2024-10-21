@@ -43,7 +43,6 @@ const styles: Styles = {
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
-
     gap: 12,
   },
   title: {

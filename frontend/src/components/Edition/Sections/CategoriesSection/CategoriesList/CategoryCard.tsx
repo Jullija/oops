@@ -13,10 +13,13 @@ export const CategoryCard = ({
   onSelectClick,
 }: CategoryCardProps) => {
   const getSubcategoriesString = (category: Category) => {
-    return category.subcategories
-      .map((subcategory) => subcategory.subcategoryName)
-      .join(", ");
+    const subcategoryNames = category.subcategories.map(
+      (subcategory) => subcategory.subcategoryName,
+    );
+    const n = subcategoryNames.length;
+    return `(${n}) ${subcategoryNames.splice(0, Math.min(2, n)).join(", ")}${n > 2 ? "..." : ""}`;
   };
+
   return (
     <div
       style={{
