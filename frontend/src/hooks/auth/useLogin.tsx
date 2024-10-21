@@ -2,13 +2,14 @@ import { useNavigate } from "react-router-dom";
 import { User } from "../../contexts/userContext";
 import { useCurrentUserLazyQuery } from "../../graphql/currentUser.graphql.types";
 import { pathsGenerator } from "../../router/paths";
-import { defaultUnauthenticatedUser, Roles } from "../../utils/types";
+import { defaultUnauthenticatedUser } from "../../utils/types";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../firebaseConfig";
 import Cookies from "js-cookie";
 import { useUser } from "../common/useUser";
 import { useApolloClient } from "@apollo/client";
 import { UserFromList } from "../../components/Welcome/UsersListWithFilter/UsersListWithFilter";
+import { UsersRolesType } from "../../__generated__/schema.graphql.types";
 
 export const cookiesStrings = {
   token: "token",
@@ -31,14 +32,23 @@ export const useLogin = () => {
     const token = getBypassToken(userFromList.userId);
     Cookies.set(cookiesStrings.token, token);
 
-    // fetch currently logged in user data
     const { data, error } = await fetchCurrentUser();
     const user: User | undefined = data?.getCurrentUser
       ? {
           nick: data?.getCurrentUser.nick,
-          role: data?.getCurrentUser.role,
+          role: data?.getCurrentUser.role.toUpperCase() as UsersRolesType,
           userId: data?.getCurrentUser.userId,
-          userGroups: data?.getCurrentUser.userGroups,
+          editions:
+            data?.getCurrentUser.userGroups.map((group) => {
+              return {
+                name: group?.group.edition.editionName as string,
+                editionId: group?.group.edition.editionId as string,
+                editionYear: group?.group.edition.editionYear as number,
+                endDate: group?.group.edition.endDate as string,
+                label: group?.group.edition.label as string,
+                startDate: group?.group.edition.startDate as string,
+              };
+            }) ?? [],
         }
       : undefined;
 
@@ -73,9 +83,19 @@ export const useLogin = () => {
     const user: User | undefined = data?.getCurrentUser
       ? {
           nick: data?.getCurrentUser.nick,
-          role: data?.getCurrentUser.role,
+          role: data?.getCurrentUser.role.toUpperCase() as UsersRolesType,
           userId: data?.getCurrentUser.userId,
-          userGroups: data?.getCurrentUser.userGroups,
+          editions:
+            data?.getCurrentUser.userGroups.map((group) => {
+              return {
+                name: group?.group.edition.editionName as string,
+                editionId: group?.group.edition.editionId as string,
+                editionYear: group?.group.edition.editionYear as number,
+                endDate: group?.group.edition.endDate as string,
+                label: group?.group.edition.label as string,
+                startDate: group?.group.edition.startDate as string,
+              };
+            }) ?? [],
         }
       : undefined;
 
@@ -105,12 +125,12 @@ export const useLogin = () => {
 
   const navigateToStartScreen = (user: User) => {
     // TODO frontend and backend enums do not match
-    switch (user.role.toLocaleLowerCase()) {
-      case Roles.COORDINATOR:
-      case Roles.TEACHER:
+    switch (user.role) {
+      case UsersRolesType.Coordinator:
+      case UsersRolesType.Teacher:
         navigate(pathsGenerator.teacher.Groups);
         break;
-      case Roles.STUDENT:
+      case UsersRolesType.Student:
         navigate(pathsGenerator.student.StudentProfile);
         break;
       default:

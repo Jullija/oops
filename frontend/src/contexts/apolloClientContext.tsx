@@ -6,10 +6,10 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { ReactNode } from "react";
-import { Roles } from "../utils/types";
 import { GRAPHQL_URI } from "../utils/constants";
 import Cookies from "js-cookie";
 import { cookiesStrings } from "../hooks/auth/useLogin";
+import { UsersRolesType } from "../__generated__/schema.graphql.types";
 
 const httpLink = createHttpLink({
   uri: GRAPHQL_URI,
@@ -27,7 +27,7 @@ const createAuthLink = () =>
           "x-hasura-role": parsedUser.role.toLowerCase(),
         }
       : {
-          "x-hasura-role": Roles.UNAUTHENTICATED_USER,
+          "x-hasura-role": UsersRolesType.UnauthenticatedUser.toLowerCase(),
         };
 
     return {

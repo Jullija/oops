@@ -3,8 +3,8 @@ import {
   useUserEditionsQuery,
   UserEditionsQuery,
 } from "../graphql/userEditions.graphql.types";
-import { Roles, RolesToUsersRolesTypeMap } from "../utils/types";
 import { useUser } from "../hooks/common/useUser";
+import { UsersRolesType } from "../__generated__/schema.graphql.types";
 
 export type Edition = UserEditionsQuery["edition"][number];
 
@@ -27,7 +27,7 @@ export const UserEditionsProvider = ({ children }: { children: ReactNode }) => {
   const [editions, setEditions] = useState<Edition[]>([]);
 
   const { data } = useUserEditionsQuery({
-    skip: user.role === RolesToUsersRolesTypeMap[Roles.UNAUTHENTICATED_USER],
+    skip: user.role === UsersRolesType.UnauthenticatedUser,
   });
 
   useEffect(() => {

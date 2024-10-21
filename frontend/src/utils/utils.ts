@@ -1,5 +1,5 @@
-import { Edition } from "../contexts/userContext";
 import { UsersRolesType } from "../__generated__/schema.graphql.types";
+import { Edition } from "../contexts/userEditionsContext";
 
 type User = {
   role: string;
@@ -23,6 +23,5 @@ export const hasRole = (user: User, allowedRoles: UsersRolesType[]) => {
 
 export const isEditionActive = (edition: Edition) => {
   const now = new Date();
-  // TODO where to put <=
   return new Date(edition.startDate) < now && now < new Date(edition.endDate);
 };
