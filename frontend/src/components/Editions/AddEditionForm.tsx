@@ -8,6 +8,7 @@ export type EditionFormValues = z.infer<typeof ValidationSchema>;
 
 const ValidationSchema = z.object({
   name: z.string().min(1, "required"),
+  // TODO validation
   year: z.number().min(2000).max(2500),
 });
 
@@ -23,7 +24,8 @@ export const AddEditionForm = ({
   const formik = useFormik({
     initialValues: {
       name: "",
-      year: 2022,
+      // TODO initial value
+      year: 0,
     },
     validate: (values: EditionFormValues) => {
       try {
@@ -83,6 +85,10 @@ const styles: Styles = {
     border: "1px solid black",
     width: 500,
   },
-  title: { fontWeight: "bold" },
-  error: { color: "red" },
+  title: {
+    fontWeight: "bold",
+  },
+  error: {
+    color: "red",
+  },
 };

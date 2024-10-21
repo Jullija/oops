@@ -39,6 +39,8 @@ export const AddCategoryForm = ({
           return error.formErrors.fieldErrors;
         }
       }
+
+      // TODO create subcategories validation
     },
     onSubmit: (values: CategoriesFormValues) => {
       handleAddCategory(values, subcategories);

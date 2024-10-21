@@ -19,6 +19,8 @@ type SubcategoryRowProps = {
   blockDown?: boolean;
 };
 
+// TODO make all row editable -> support error messages
+
 export const SubcategoryRow = ({
   initialValues,
   disabled = true,
