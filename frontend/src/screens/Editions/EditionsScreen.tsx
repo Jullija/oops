@@ -22,7 +22,7 @@ export const EditionsScreen = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [createEdition] = useCreateEditionMutation();
-  const [formError, setFormError] = useState<string>();
+  const [createError, setCreateError] = useState<string>();
 
   const [deleteEdition] = useDeleteEditionMutation();
 
@@ -30,11 +30,11 @@ export const EditionsScreen = () => {
   if (error) return <div>ERROR: {error?.message}</div>;
 
   const closeDialog = () => {
-    setFormError(undefined);
+    setCreateError(undefined);
     setIsOpen(false);
   };
 
-  const handleAddEdition = async (values: EditionFormValues) => {
+  const handleCreateClick = async (values: EditionFormValues) => {
     try {
       await createEdition({
         variables: {
@@ -48,7 +48,7 @@ export const EditionsScreen = () => {
     } catch (error: unknown) {
       console.error(error);
 
-      setFormError(
+      setCreateError(
         error instanceof Error ? error.message : "Unexpected error received.",
       );
     }
@@ -69,8 +69,8 @@ export const EditionsScreen = () => {
       <Dialog open={isOpen}>
         <CloseHeader onCloseClick={closeDialog} />
         <AddEditionForm
-          createError={formError}
-          handleAddEdition={handleAddEdition}
+          createError={createError}
+          handleAddEdition={handleCreateClick}
         />
       </Dialog>
 
