@@ -3,7 +3,8 @@ import { useFormik } from "formik";
 import { Styles } from "../../../../../utils/Styles";
 import { FormControlLabel, Switch, TextField } from "@mui/material";
 import { FormSubcategory, SubcategoryRows } from "./SubcategoryRows";
-import { useSubcategories } from "../../../../../hooks/Edition/categories/useSubcategories";
+import { useState } from "react";
+import { SubcategoriesFormValues } from "./SubcategoryRow";
 
 export type CategoriesFormValues = z.infer<typeof ValidationSchema>;
 
@@ -24,8 +25,6 @@ export const AddCategoryForm = ({
   handleAddCategory,
   createError,
 }: AddCategoryFormProps) => {
-  const { subcategories } = useSubcategories();
-
   const formik = useFormik({
     initialValues: {
       categoryName: "",
@@ -46,6 +45,52 @@ export const AddCategoryForm = ({
       handleAddCategory(values, subcategories);
     },
   });
+
+  const [subcategories, setSubcategories] = useState<FormSubcategory[]>([]);
+
+  const handleAdd = (subcategory: SubcategoriesFormValues) => {
+    setSubcategories((prev) => [
+      ...prev,
+      {
+        name: subcategory.name,
+        ordinal: subcategory.ordinal,
+        max: subcategory.maxPoints,
+      },
+    ]);
+  };
+
+  const handleDelete = (ordinal: number) => {
+    const updatedRows = subcategories
+      .filter((_, index) => index + 1 !== ordinal)
+      .map((row, index) => {
+        return { ...row, ordinal: index + 1 };
+      });
+    setSubcategories(updatedRows);
+  };
+
+  const handleUp = (ordinal: number) => {
+    const index = ordinal - 1;
+
+    const updated = subcategories.map((row, i) => {
+      if (i === index - 1) return subcategories[index];
+      if (i === index) return subcategories[index - 1];
+      return row;
+    });
+
+    setSubcategories(updated);
+  };
+
+  const handleDown = (ordinal: number) => {
+    const index = ordinal - 1;
+
+    const updated = subcategories.map((row, i) => {
+      if (i === index) return subcategories[index + 1];
+      if (i === index + 1) return subcategories[index];
+      return row;
+    });
+
+    setSubcategories(updated);
+  };
 
   return (
     <div style={styles.container}>
@@ -82,7 +127,13 @@ export const AddCategoryForm = ({
             label="dodawanie punktów"
           />
 
-          <SubcategoryRows subcategories={subcategories} />
+          <SubcategoryRows
+            subcategories={subcategories}
+            handleAdd={handleAdd}
+            handleDelete={handleDelete}
+            handleUp={handleUp}
+            handleDown={handleDown}
+          />
         </div>
 
         <button type="submit">add category</button>

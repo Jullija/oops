@@ -1,7 +1,11 @@
-import { SubcategoryRow } from "./SubcategoryRow";
+import { SubcategoriesFormValues, SubcategoryRow } from "./SubcategoryRow";
 
 type SubcategoryRowsProps = {
   subcategories: FormSubcategory[];
+  handleAdd: (subcategory: SubcategoriesFormValues) => void;
+  handleDelete: (ordinal: number) => void;
+  handleUp: (ordinal: number) => void;
+  handleDown: (ordinal: number) => void;
 };
 
 export type FormSubcategory = {
@@ -9,7 +13,13 @@ export type FormSubcategory = {
   max: number;
 };
 
-export const SubcategoryRows = ({ subcategories }: SubcategoryRowsProps) => {
+export const SubcategoryRows = ({
+  subcategories,
+  handleAdd,
+  handleDelete,
+  handleUp,
+  handleDown,
+}: SubcategoryRowsProps) => {
   return (
     <div>
       {subcategories.map((row, index) => (
@@ -22,6 +32,10 @@ export const SubcategoryRows = ({ subcategories }: SubcategoryRowsProps) => {
           }}
           blockDown={index === subcategories.length - 1}
           blockUp={index === 0}
+          handleAdd={handleAdd}
+          handleDelete={handleDelete}
+          handleUp={handleUp}
+          handleDown={handleDown}
         />
       ))}
       <SubcategoryRow
@@ -31,6 +45,10 @@ export const SubcategoryRows = ({ subcategories }: SubcategoryRowsProps) => {
           ordinal: subcategories.length + 1,
         }}
         disabled={false}
+        handleAdd={handleAdd}
+        handleDelete={handleDelete}
+        handleUp={() => {}}
+        handleDown={() => {}}
       />
     </div>
   );

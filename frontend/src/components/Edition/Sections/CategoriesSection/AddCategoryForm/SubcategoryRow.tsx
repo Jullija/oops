@@ -2,7 +2,6 @@ import { z } from "zod";
 import { Styles } from "../../../../../utils/Styles";
 import { TextField } from "@mui/material";
 import { useState } from "react";
-import { useSubcategories } from "../../../../../hooks/Edition/categories/useSubcategories";
 
 export type SubcategoriesFormValues = z.infer<typeof ValidationSchema>;
 
@@ -17,6 +16,10 @@ type SubcategoryRowProps = {
   disabled?: boolean;
   blockUp?: boolean;
   blockDown?: boolean;
+  handleAdd: (subcategory: SubcategoriesFormValues) => void;
+  handleDelete: (ordinal: number) => void;
+  handleUp: (ordinal: number) => void;
+  handleDown: (ordinal: number) => void;
 };
 
 // TODO make all row editable -> support error messages
@@ -26,11 +29,13 @@ export const SubcategoryRow = ({
   disabled = true,
   blockUp = false,
   blockDown = false,
+  handleAdd,
+  handleDelete,
+  handleUp,
+  handleDown,
 }: SubcategoryRowProps) => {
   const [maxPoints, setMaxPoints] = useState<number>(initialValues.maxPoints);
   const [name, setName] = useState<string>(initialValues.name);
-
-  const { handleAdd, handleDelete, handleUp, handleDown } = useSubcategories();
 
   return (
     <div style={styles.innerContainer}>
@@ -102,7 +107,7 @@ export const SubcategoryRow = ({
             handleAdd({
               ordinal: initialValues.ordinal,
               maxPoints,
-              name: name,
+              name,
             });
           }}
         >
