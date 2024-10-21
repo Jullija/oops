@@ -1,103 +1,34 @@
 import { Dialog } from "@mui/material";
 import { Styles } from "../../../../utils/Styles";
-import {
-  AddCategoryForm,
-  CategoriesFormValues,
-} from "./AddCategoryForm/AddCategoryForm";
+import { AddCategoryForm } from "./AddCategoryForm/AddCategoryForm";
 import { CategoriesList } from "./CategoriesList/CategoriesList";
-import { useState } from "react";
 import { CloseHeader } from "../../../dialogs/CloseHeader";
-import {
-  Category,
-  useCategoriesSection,
-} from "../../../../hooks/Edition/useCategoriesSection";
-import { useSetupCategoryEditionAddMutation } from "../../../../graphql/setupCategoryEditionAdd.graphql.types";
-import { useSetupCategoryEditionRemoveMutation } from "../../../../graphql/setupCategoryEditionRemove.graphql.types";
-import { Row } from "./AddCategoryForm/SubcategoryRows";
-import { useSetupCategoryCreateMutation } from "../../../../graphql/setupCategoryCreate.graphql.types";
+import { useCategoriesSection } from "../../../../hooks/Edition/useCategoriesSection";
 
 type CategoriesSectionProps = {
   editionId: number;
 };
 
 export const CategoriesSection = ({ editionId }: CategoriesSectionProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const [createCategory] = useSetupCategoryCreateMutation();
-  const [createCategoryError, setCreateCategoryError] = useState<
-    string | undefined
-  >(undefined);
-
-  const [addCategory] = useSetupCategoryEditionAddMutation();
-  const [removeCategory] = useSetupCategoryEditionRemoveMutation();
-
-  const { categories, selectedCategories, loading, error, refetch } =
-    useCategoriesSection(editionId);
+  const {
+    categories,
+    selectedCategories,
+    loading,
+    error,
+    handleSelectClick,
+    handleCreate,
+    createCategoryError,
+    isOpen,
+    closeDialog,
+    openDialog,
+  } = useCategoriesSection(editionId);
 
   if (loading) return <div>loading...</div>;
   if (error) return <div>ERROR: {error.message}</div>;
 
-  const closeDialog = () => {
-    setIsOpen(false);
-    setCreateCategoryError(undefined);
-  };
-
-  const handleCreate = async (values: CategoriesFormValues, rows: Row[]) => {
-    try {
-      await createCategory({
-        variables: {
-          categoryName: values.categoryName,
-          canAddPoints: values.canAddPoints,
-          subcategories: rows.map((row, index) => {
-            return {
-              label: "",
-              maxPoints: row.max.toString(),
-              ordinalNumber: index,
-              subcategoryName: row.name,
-            };
-          }),
-        },
-      });
-
-      refetch();
-      closeDialog();
-    } catch (error) {
-      console.error(error);
-
-      setCreateCategoryError(
-        error instanceof Error ? error.message : "Unexpected error received.",
-      );
-    }
-  };
-
-  const handleSelectClick = async (category: Category) => {
-    const isCategorySelected = !!selectedCategories.find(
-      (c) => c.categoryId === category.categoryId,
-    );
-
-    const variables = {
-      variables: {
-        editionId,
-        categoryId: parseInt(category.categoryId),
-      },
-    };
-
-    try {
-      // TODO add some kind of global error
-      if (isCategorySelected) {
-        await removeCategory(variables);
-      } else {
-        await addCategory(variables);
-      }
-      refetch();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <div style={styles.container}>
-      <button onClick={() => setIsOpen(true)}>add category</button>
+      <button onClick={openDialog}>add category</button>
 
       <CategoriesList
         categories={selectedCategories}
