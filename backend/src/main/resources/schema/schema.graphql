@@ -44,6 +44,7 @@ type Mutation {
   addCategory(
     categoryName: String!
     canAddPoints: Boolean!
+    subcategories: [SubcategoryInputType!]!
     lightColor: String = "#FFFFFF"
     darkColor: String = "#000000"
     label: String = ""
@@ -83,12 +84,7 @@ type Mutation {
     groupName: String = ""
   ): GroupType
   addSubcategory(
-    subcategoryName: String!
-    maxPoints: Float!
-    ordinalNumber: Int!
-    categoryId: Int!
-    editionId: Int!
-    label: String = ""
+    subcategory: SubcategoryInputType!
   ): SubcategoryType
   addUser(
     indexNumber: Int!
@@ -138,6 +134,7 @@ type Mutation {
     categoryId: Int!,
     categoryName: String,
     canAddPoints: Boolean,
+    subcategories: [SubcategoryInputType!]
     lightColor: String,
     darkColor: String,
     label: String
@@ -447,7 +444,7 @@ type SubcategoryType {
   subcategoryName: String!
   category: CategoryType!
   label: String!
-  edition: EditionType!
+  edition: EditionType
   maxPoints: String!
   ordinalNumber: Int!
 }
@@ -586,3 +583,14 @@ type GroupTeacherType {
   owns: Boolean!
   canEdit: Boolean!
 }
+
+input SubcategoryInputType {
+  subcategoryId: ID
+  subcategoryName: String!
+  maxPoints: String!
+  ordinalNumber: Int!
+  categoryId: Int
+  editionId: Int
+  label: String!
+}
+
