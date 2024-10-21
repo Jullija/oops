@@ -27,12 +27,14 @@ import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.DgsQuery
 import com.netflix.graphql.dgs.InputArgument
+import org.apache.catalina.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDateTime
+import kotlin.math.exp
 import kotlin.math.min
 
 @DgsComponent
@@ -86,6 +88,17 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsMutation
     @Transactional
     fun assignPhotoToUser(@InputArgument userId: Long, @InputArgument fileId: Long?): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR) && currentUser.userId != userId) {
+            throw IllegalArgumentException("Student can only assign a photo to themselves")
+        }
+
+        val user = usersRepository.findById(userId).orElseThrow { IllegalArgumentException("Invalid user ID") }
+
+        if (currentUser.role == UsersRoles.TEACHER && user.role == UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("Teacher cannot assign a photo to a coordinator")
+        }
+
         return photoAssigner.assignPhotoToAssignee(usersRepository, "image/user", userId, fileId)
     }
 
@@ -102,6 +115,12 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsMutation
     @Transactional
     fun addUsersFromCsv(@InputArgument fileId: Long, @InputArgument editionId: Long): List<Users> {
+        val currentUser = userMapper.getCurrentUser()
+
+        if (currentUser.role != UsersRoles.COORDINATOR) {
+            throw IllegalArgumentException("Only a coordinator can add users from a CSV file")
+        }
+
         val file = fileEntityRepository.findById(fileId).orElseThrow { IllegalArgumentException("File not found") }
         if (file.fileType != "text/csv") {
             throw IllegalArgumentException("Invalid file type")
@@ -141,8 +160,43 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
         @InputArgument role: String?,
         @InputArgument label: String?
     ): Users {
+        val currentUser = userMapper.getCurrentUser()
+
         val user = usersRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("User not found") }
+
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)){
+            if (currentUser.userId != userId){
+                throw IllegalArgumentException("Student can only edit themselves")
+            }
+            if (indexNumber != null || firstName != null || secondName != null || role != null || label != null){
+                throw IllegalArgumentException("Student can only edit their own nick")
+            }
+        }
+        if (currentUser.role == UsersRoles.TEACHER){
+            if (currentUser.userId != userId && user.role != UsersRoles.STUDENT){
+                throw IllegalArgumentException("Teacher can only edit students or themselves")
+            }
+            if (currentUser.userId == userId){
+                if (role != null){
+                    throw IllegalArgumentException("Teacher cannot change their own role")
+                }
+            }
+
+            val activeUserEditions = user.userGroups.map { it.group.edition }.filter { it.endDate.isAfter(java.time.LocalDate.now()) }
+            if (activeUserEditions.isEmpty()){
+                throw IllegalArgumentException("Teacher can only edit students that are in an active edition")
+            }
+
+            val userGroups = groupsRepository.findByUserGroups_User_UserId(userId)
+            if (userGroups.none { it.teacher == currentUser }){
+                throw IllegalArgumentException("Teacher can only edit students that are in their groups")
+            }
+            if (role != null){
+                throw IllegalArgumentException("Teacher cannot edit role of a student")
+            }
+        }
+
 
         indexNumber?.let {
             if (usersRepository.existsByIndexNumber(it) && it != user.indexNumber) {
@@ -185,6 +239,14 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsMutation
     @Transactional
     fun removeUser(@InputArgument userId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only a coordinator can remove a user")
+        }
+        if (currentUser.userId == userId){
+            throw IllegalArgumentException("Cannot remove yourself")
+        }
+
         val user = usersRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("User not found") }
 
@@ -211,6 +273,11 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsMutation
     @Transactional
     fun resetPassword(@InputArgument userId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR) && currentUser.userId != userId) {
+            throw IllegalArgumentException("Student can only reset their own password")
+        }
+
         val user = usersRepository.findByUserId(userId)
             .orElseThrow { IllegalArgumentException("User not found") }
         return firebaseUserService.resetPassword(user.email)
@@ -220,10 +287,24 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsQuery
     @Transactional
     fun getStudentPoints(@InputArgument studentId: Long, @InputArgument editionId: Long): StudentPointsType {
+        val currentUser = userMapper.getCurrentUser()
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR) && currentUser.userId != studentId) {
+            throw IllegalArgumentException("Student can only view their own points")
+        }
+
         val user = usersRepository.findById(studentId).orElseThrow { IllegalArgumentException("Invalid student ID") }
         if (user.role != UsersRoles.STUDENT) {
             throw IllegalArgumentException("User is not a student")
         }
+
+        if (currentUser.role == UsersRoles.TEACHER){
+            val userGroupsEditions = groupsRepository.findByUserGroups_User_UserId(studentId).map { it.edition }
+            val teacherGroupsEditions = groupsRepository.findByTeacher_UserId(currentUser.userId).map { it.edition }
+            if (userGroupsEditions.intersect(teacherGroupsEditions).isEmpty()){
+                throw IllegalArgumentException("Teacher can only view points of students that are in their editions")
+            }
+        }
+
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
         if (user.userGroups.none { it.group.edition == edition }) {
             throw IllegalArgumentException("Student is not participating in this edition")
@@ -294,10 +375,24 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsQuery
     @Transactional
     fun getSumOfPointsForStudentByCategory(@InputArgument studentId: Long, @InputArgument editionId: Long): List<CategoryPointsSumType> {
+        val currentUser = userMapper.getCurrentUser()
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR) && currentUser.userId != studentId) {
+            throw IllegalArgumentException("Student can only view their own points")
+        }
+
         val user = usersRepository.findById(studentId).orElseThrow { IllegalArgumentException("Invalid student ID") }
         if (user.role != UsersRoles.STUDENT) {
             throw IllegalArgumentException("User is not a student")
         }
+
+        if (currentUser.role == UsersRoles.TEACHER){
+            val userGroupsEditions = groupsRepository.findByUserGroups_User_UserId(studentId).map { it.edition }
+            val teacherGroupsEditions = groupsRepository.findByTeacher_UserId(currentUser.userId).map { it.edition }
+            if (userGroupsEditions.intersect(teacherGroupsEditions).isEmpty()){
+                throw IllegalArgumentException("Teacher can only view points of students that are in their editions")
+            }
+        }
+
         val edition = editionRepository.findById(editionId).orElseThrow { IllegalArgumentException("Invalid edition ID") }
         if (user.userGroups.none { it.group.edition == edition }) {
             throw IllegalArgumentException("Student is not participating in this edition")
@@ -329,8 +424,7 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
     @DgsQuery
     @Transactional
     fun getCurrentUser(): Users {
-        val user = userMapper.getUserFromToken() ?: throw IllegalArgumentException("User not authenticated")
-        return user
+        return userMapper.getCurrentUser()
     }
 
     fun isValidEmail(email: String): Boolean {
@@ -343,6 +437,32 @@ class UsersDataFetcher (private val fileRetrievalService: FileRetrievalService){
                                role: String,  email: String,
                                label: String = "",  createFirebaseUser: Boolean = false,
                                sendEmail: Boolean = false): Users {
+        val currentUser = userMapper.getCurrentUser()
+
+        if (currentUser.userId != 0L && (currentUser.role != UsersRoles.COORDINATOR && currentUser.role != UsersRoles.TEACHER)) {
+            throw IllegalArgumentException("Only a coordinator or a teacher can add a user")
+        }
+
+        // TODO: Find a better way to handle adding a first coordinator
+        if (currentUser.userId == 0L ) {
+            if (UsersRoles.valueOf(role.uppercase()) != UsersRoles.COORDINATOR) {
+                throw IllegalArgumentException("Only a coordinator can be added with this bypass")
+            }
+        }
+
+        if (UsersRoles.valueOf(role.uppercase()) == UsersRoles.COORDINATOR) {
+            if (currentUser.role != UsersRoles.COORDINATOR || currentUser.userId != 0L) {
+                throw IllegalArgumentException("Only a coordinator can add a coordinator")
+            }
+        }
+
+        if (UsersRoles.valueOf(role.uppercase()) == UsersRoles.TEACHER) {
+            if (currentUser.role != UsersRoles.COORDINATOR) {
+                throw IllegalArgumentException("Only a coordinator can add a teacher")
+            }
+        }
+
+
         if (usersRepository.existsByIndexNumber(indexNumber)) {
             throw IllegalArgumentException("User with index number $indexNumber already exists")
         }

@@ -6,6 +6,8 @@ import backend.awardEdition.AwardEditionRepository
 import backend.edition.EditionRepository
 import backend.points.PointsRepository
 import backend.subcategories.SubcategoriesRepository
+import backend.users.UsersRoles
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -16,7 +18,10 @@ import org.springframework.transaction.annotation.Transactional
 class AwardEditionDataFetcher {
 
     @Autowired
-    lateinit var awardEditionRepository: AwardEditionRepository
+    private lateinit var userMapper: UserMapper
+
+    @Autowired
+    private lateinit var awardEditionRepository: AwardEditionRepository
 
     @Autowired
     lateinit var pointsRepository: PointsRepository
@@ -33,6 +38,11 @@ class AwardEditionDataFetcher {
     @DgsMutation
     @Transactional
     fun addAwardToEdition(@InputArgument awardId: Long, @InputArgument editionId: Long): AwardEdition {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can add awards to editions")
+        }
+
         val award = awardRepository.findById(awardId).orElseThrow { throw IllegalArgumentException("Award not found") }
         val edition = editionRepository.findById(editionId).orElseThrow { throw IllegalArgumentException("Edition not found") }
 
@@ -59,6 +69,11 @@ class AwardEditionDataFetcher {
     @DgsMutation
     @Transactional
     fun removeAwardFromEdition(@InputArgument awardId: Long, @InputArgument editionId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+        if (currentUser.role != UsersRoles.COORDINATOR){
+            throw IllegalArgumentException("Only coordinators can remove awards from editions")
+        }
+
         val award = awardRepository.findById(awardId).orElseThrow { throw IllegalArgumentException("Award not found") }
         val edition = editionRepository.findById(editionId).orElseThrow { throw IllegalArgumentException("Edition not found") }
 

@@ -7,6 +7,7 @@ import backend.subcategories.SubcategoriesRepository
 import backend.users.UsersRepository
 import backend.award.AwardType
 import backend.users.UsersRoles
+import backend.utils.UserMapper
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -17,6 +18,8 @@ import java.math.RoundingMode
 
 @DgsComponent
 class PointsDataFetcher {
+    @Autowired
+    private lateinit var userMapper: UserMapper
 
     @Autowired
     lateinit var pointsRepository: PointsRepository
@@ -34,21 +37,38 @@ class PointsDataFetcher {
     @Transactional
     fun addPointsMutation(@InputArgument studentId: Long, @InputArgument teacherId: Long, value: Float,
                           @InputArgument subcategoryId: Long, @InputArgument checkDates: Boolean = true): Points {
+        val currentUser = userMapper.getCurrentUser()
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)){
+            throw IllegalArgumentException("Only teachers and coordinators can add points")
+        }
+
         val student = usersRepository.findByUserId(studentId)
             .orElseThrow { IllegalArgumentException("Invalid user ID") }
+
+        if (currentUser.role == UsersRoles.TEACHER){
+            if (teacherId != currentUser.userId){
+                throw IllegalArgumentException("Teacher can only add points as themselves")
+            }
+            val studentTeachers = student.userGroups.map { it.group.teacher }.distinct()
+            if (!studentTeachers.contains(currentUser)){
+                throw IllegalArgumentException("Teacher can only add points to students from their groups")
+            }
+        }
 
         val teacher = usersRepository.findByUserId(teacherId)
             .orElseThrow { IllegalArgumentException("Invalid user ID") }
 
         val subcategory = subcategoriesRepository.findById(subcategoryId)
             .orElseThrow { IllegalArgumentException("Invalid subcategory ID") }
-
+        if (subcategory.edition == null){
+            throw IllegalArgumentException("Subcategory has no edition")
+        }
 
         if (checkDates){
-            if (subcategory.edition.startDate.isAfter(java.time.LocalDate.now())){
+            if (subcategory.edition?.startDate?.isAfter(java.time.LocalDate.now()) == true){
                 throw IllegalArgumentException("Subcategory's edition has not started yet")
             }
-            if (subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
+            if (subcategory.edition?.endDate?.isBefore(java.time.LocalDate.now()) == true){
                 throw IllegalArgumentException("Subcategory's edition has already ended")
             }
         }
@@ -117,13 +137,29 @@ class PointsDataFetcher {
     @Transactional
     fun editPoints(
         @InputArgument pointsId: Long,
-        @InputArgument updatedById: Long,
         @InputArgument value: Float?
     ): Points {
+        val currentUser = userMapper.getCurrentUser()
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)){
+            throw IllegalArgumentException("Only teachers and coordinators can edit points")
+        }
+
         val points = pointsRepository.findById(pointsId)
             .orElseThrow { IllegalArgumentException("Invalid points ID") }
 
-        if (points.subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
+        if (points.subcategory.edition == null){
+            throw IllegalArgumentException("Subcategory has no edition")
+        }
+
+        if (currentUser.role == UsersRoles.TEACHER){
+            if (points.student.userGroups.none { it.group.teacher.userId == currentUser.userId }){
+                throw IllegalArgumentException("Teacher can only edit points for students from their groups")
+            }
+        }
+
+        val updatedById = currentUser.userId
+
+        if (points.subcategory.edition?.endDate?.isBefore(java.time.LocalDate.now()) == true){
             throw IllegalArgumentException("Subcategory's edition has already ended")
         }
 
@@ -175,10 +211,25 @@ class PointsDataFetcher {
     @DgsMutation
     @Transactional
     fun removePoints(@InputArgument pointsId: Long): Boolean {
+        val currentUser = userMapper.getCurrentUser()
+        if (!(currentUser.role == UsersRoles.TEACHER || currentUser.role == UsersRoles.COORDINATOR)){
+            throw IllegalArgumentException("Only teachers and coordinators can remove points")
+        }
+
         val points = pointsRepository.findById(pointsId)
             .orElseThrow { IllegalArgumentException("Invalid points ID") }
 
-        if (points.subcategory.edition.endDate.isBefore(java.time.LocalDate.now())){
+        if (points.subcategory.edition == null){
+            throw IllegalArgumentException("Subcategory has no edition")
+        }
+
+        if (currentUser.role == UsersRoles.TEACHER){
+            if (points.student.userGroups.none { it.group.teacher.userId == currentUser.userId }){
+                throw IllegalArgumentException("Teacher can only remove points for students from their groups")
+            }
+        }
+
+        if (points.subcategory.edition?.endDate?.isBefore(java.time.LocalDate.now()) == true){
             throw IllegalArgumentException("Subcategory's edition has already ended")
         }
         if (bonusRepository.findByPoints(points).isNotEmpty()) {

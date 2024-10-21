@@ -1,19 +1,18 @@
-import { PointsBarProps } from "../PointsBar";
+import { ProgressBarProps } from "../bars/ProgressBar";
 import { StudentCard } from "./cards/StudentCard";
 import { CategoriesCard } from "./cards/CategoriesCard";
 import { Styles } from "../../utils/Styles";
-import { StudentCardData } from "../../hooks/StudentProfile/useStudentData";
+import { StudentCardData } from "../../hooks/StudentProfile/useStudentProfileData/useStudentData";
 import { AnimalCard } from "./cards/AnimalCard/AnimalCard";
-import { LevelType } from "../../__generated__/schema.graphql.types";
 import { BonusesCard } from "./cards/BonusesCard";
-import { Bonus } from "../../hooks/StudentProfile/useBonusesCardData";
+import { Bonus, Level } from "../../hooks/StudentProfile";
 
 type SideBarProps = {
   student: StudentCardData;
-  categoriesBarProps: PointsBarProps[];
-  prevLevel?: LevelType;
-  currLevel: LevelType;
-  nextLevel?: LevelType;
+  categoriesBarProps: ProgressBarProps[];
+  prevLevel: Level | undefined;
+  currLevel: Level;
+  nextLevel: Level | undefined;
   bonuses: Bonus[];
 };
 

@@ -27,8 +27,8 @@ class Subcategories(
     var category: Categories,
 
     @ManyToOne
-    @JoinColumn(name = "edition_id", referencedColumnName = "edition_id")
-    var edition: Edition,
+    @JoinColumn(name = "edition_id", referencedColumnName = "edition_id", nullable = true)
+    var edition: Edition? = null,
 
     @Column(name = "label", nullable = false, length = 256)
     var label: String
@@ -38,7 +38,7 @@ class Subcategories(
         maxPoints = BigDecimal.ZERO,
         ordinalNumber = 1,
         category = Categories(),
-        edition = Edition(),
+        edition = null,
         label = ""
     )
 }

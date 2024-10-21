@@ -11,7 +11,8 @@
         "headers": {
             "Content-Type": "application/json",
             "x-hasura-role": "admin",
-            "x-hasura-admin-secret": "admin_secret"
+            "x-hasura-admin-secret": "admin_secret",
+            "Authorization": "Bearer Bypass1"
         }
     },
     "base_url": "http://localhost:9090",

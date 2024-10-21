@@ -1,4 +1,4 @@
-import { Bonus } from "../../../hooks/StudentProfile/useBonusesCardData";
+import { Bonus } from "../../../hooks/StudentProfile";
 import { EMPTY_FIELD_STRING } from "../../../utils/constants";
 import { Styles } from "../../../utils/Styles";
 import { AwardWithTooltip } from "../../images/AwardWithTooltip";
@@ -14,7 +14,7 @@ export const BonusesCard = ({ bonuses }: BonusesCardProps) => {
       <div style={styles.bonusesContainer}>
         {bonuses.length === 0 && <div>{EMPTY_FIELD_STRING}</div>}
         {bonuses.map((bonus) => (
-          <AwardWithTooltip key={bonus.id} bonus={bonus} size="s" />
+          <AwardWithTooltip key={bonus.award.id} bonus={bonus} size="s" />
         ))}
       </div>
     </div>
