@@ -5650,6 +5650,11 @@ type EditionVarianceFields {
   editionYear: Float
 }
 
+type FileGroupType {
+  fileType: String!
+  files: [FileType!]!
+}
+
 type FileType {
   fileId: ID!
   fileName: String!
@@ -17422,6 +17427,8 @@ type query_root {
   """
   flywaySchemaHistoryByPk(installedRank: Int!): FlywaySchemaHistory
   getCurrentUser: UserType!
+  getFilesGroupedByType: [FileGroupType!]!
+  getFilesGroupedByTypeBySelectedTypes(fileTypes: [String!]!): [FileGroupType!]!
   getGroupsInEdition(editionId: Int!, teacherId: Int!): [GroupTeacherType!]!
   getNeighboringLevels(editionId: Int!, studentId: Int!): NeighboringLevelsType!
   getPossibleGroupDates(editionId: Int!): [GroupDateType!]!

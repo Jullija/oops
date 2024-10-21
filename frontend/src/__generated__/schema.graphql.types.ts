@@ -3951,6 +3951,12 @@ export type EditionVarianceFields = {
   editionYear?: Maybe<Scalars["Float"]["output"]>;
 };
 
+export type FileGroupType = {
+  __typename?: "FileGroupType";
+  fileType: Scalars["String"]["output"];
+  files: Array<FileType>;
+};
+
 export type FileType = {
   __typename?: "FileType";
   fileId: Scalars["ID"]["output"];
@@ -11958,6 +11964,8 @@ export type Query_Root = {
   /** fetch data from the table: "flyway_schema_history" using primary key columns */
   flywaySchemaHistoryByPk?: Maybe<FlywaySchemaHistory>;
   getCurrentUser: UserType;
+  getFilesGroupedByType: Array<FileGroupType>;
+  getFilesGroupedByTypeBySelectedTypes: Array<FileGroupType>;
   getGroupsInEdition: Array<GroupTeacherType>;
   getNeighboringLevels: NeighboringLevelsType;
   getPossibleGroupDates: Array<GroupDateType>;
@@ -12252,6 +12260,10 @@ export type Query_RootFlywaySchemaHistoryAggregateArgs = {
 
 export type Query_RootFlywaySchemaHistoryByPkArgs = {
   installedRank: Scalars["Int"]["input"];
+};
+
+export type Query_RootGetFilesGroupedByTypeBySelectedTypesArgs = {
+  fileTypes: Array<Scalars["String"]["input"]>;
 };
 
 export type Query_RootGetGroupsInEditionArgs = {
