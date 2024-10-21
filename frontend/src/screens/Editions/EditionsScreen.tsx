@@ -1,6 +1,7 @@
-import { useNavigate } from "react-router-dom";
-import { useEditionsQuery } from "../../graphql/editions.graphql.types";
-import { pathsGenerator } from "../../router/paths";
+import {
+  EditionsQuery,
+  useEditionsQuery,
+} from "../../graphql/editions.graphql.types";
 import { Styles } from "../../utils/Styles";
 import { useState } from "react";
 import { Dialog } from "@mui/material";
@@ -11,10 +12,13 @@ import {
 } from "../../components/Editions/AddEditionForm";
 import { useCreateEditionMutation } from "../../graphql/createEdition.graphql.types";
 import { useDeleteEditionMutation } from "../../graphql/deleteEdition.graphql.types";
+import { EditionsList } from "../../components/Editions/EditionsList/EditionsList";
+
+export type Edition = EditionsQuery["edition"][number];
 
 export const EditionsScreen = () => {
-  const navigate = useNavigate();
   const { data, loading, error, refetch } = useEditionsQuery();
+  const editions: Edition[] = data?.edition ?? [];
 
   const [isOpen, setIsOpen] = useState(false);
   const [createEdition] = useCreateEditionMutation();
@@ -71,28 +75,8 @@ export const EditionsScreen = () => {
       </Dialog>
 
       <button onClick={() => setIsOpen(true)}>dodaj edycje</button>
-      {data?.edition.map((edition) => (
-        <div style={styles.card} key={edition.editionId}>
-          <div>
-            edition {edition.editionId},{" "}
-            {`${edition.startDate.slice(0, 4)}/${edition.endDate.slice(0, 4)}`}
-          </div>
-          <button
-            style={styles.showButton}
-            onClick={() =>
-              navigate(pathsGenerator.coordinator.Edition(edition.editionId))
-            }
-          >
-            show
-          </button>
-          <button
-            style={styles.deleteButton}
-            onClick={() => handleDeleteClick(edition.editionId)}
-          >
-            x
-          </button>
-        </div>
-      ))}
+
+      <EditionsList editions={editions} handleDeleteClick={handleDeleteClick} />
     </div>
   );
 };
@@ -101,21 +85,7 @@ const styles: Styles = {
   container: {
     display: "flex",
     gap: 12,
-    flexDirection: "row",
+    flexDirection: "column",
     margin: 12,
-  },
-  card: {
-    border: "1px solid black",
-    padding: 12,
-  },
-  showButton: {
-    backgroundColor: "green",
-    padding: 4,
-    cursor: "pointer",
-  },
-  deleteButton: {
-    backgroundColor: "red",
-    padding: 4,
-    cursor: "pointer",
   },
 };

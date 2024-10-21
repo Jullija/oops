@@ -12,7 +12,7 @@ export const useCategoriesSection = (editionId: number) => {
 
   const selectedCategories: Category[] = categories.filter((c: Category) => {
     const found = c.categoryEditions.find(
-      (ca) => ca.editionId === editionId.toString(),
+      (category) => category.editionId === editionId.toString(),
     );
     return !!found;
   });
