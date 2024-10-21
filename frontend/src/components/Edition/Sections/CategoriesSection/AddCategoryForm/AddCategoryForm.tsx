@@ -14,7 +14,7 @@ const ValidationSchema = z.object({
 });
 
 type AddCategoryFormProps = {
-  handleAddCategory: (values: CategoriesFormValues) => void;
+  handleAddCategory: (values: CategoriesFormValues, rows: Row[]) => void;
   createError?: string;
 };
 
@@ -37,7 +37,7 @@ export const AddCategoryForm = ({
       }
     },
     onSubmit: (values: CategoriesFormValues) => {
-      handleAddCategory(values);
+      handleAddCategory(values, rows);
     },
   });
 

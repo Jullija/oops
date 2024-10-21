@@ -1,5 +1,4 @@
 import { Dialog } from "@mui/material";
-import { useAddCategoryMutation } from "../../../../graphql/addCategory.graphql.types";
 import { Styles } from "../../../../utils/Styles";
 import {
   AddCategoryForm,
@@ -14,6 +13,8 @@ import {
 } from "../../../../hooks/Edition/useCategoriesSection";
 import { useSetupAddCategoryToEditionMutation } from "../../../../graphql/setupAddCategoryToEdition.graphql.types";
 import { useSetupRemoveCategoryFormEditionMutation } from "../../../../graphql/setupRemoveCategoryFromEdition.graphql.types";
+import { Row } from "./AddCategoryForm/SubcategoryRows";
+import { useSetupAddCategoryMutation } from "../../../../graphql/setupAddCategory.graphql.types";
 
 type CategoriesSectionProps = {
   editionId: number;
@@ -22,7 +23,7 @@ type CategoriesSectionProps = {
 export const CategoriesSection = ({ editionId }: CategoriesSectionProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [addCategory, { error: addError, reset: resetAddCategoryError }] =
-    useAddCategoryMutation();
+    useSetupAddCategoryMutation();
   const [addCategoryToEdition, { error: addToEditionError }] =
     useSetupAddCategoryToEditionMutation();
   const [
@@ -36,11 +37,22 @@ export const CategoriesSection = ({ editionId }: CategoriesSectionProps) => {
   if (loading) return <div>loading...</div>;
   if (error) return <div>ERROR: {error.message}</div>;
 
-  const handleAddCategory = async (values: CategoriesFormValues) => {
+  const handleAddCategory = async (
+    values: CategoriesFormValues,
+    rows: Row[],
+  ) => {
     await addCategory({
       variables: {
         categoryName: values.categoryName,
         canAddPoints: values.canAddPoints,
+        subcategories: rows.map((row, index) => {
+          return {
+            label: "",
+            maxPoints: row.max.toString(),
+            ordinalNumber: index + 1,
+            subcategoryName: row.name,
+          };
+        }),
       },
     });
     if (!addError) {

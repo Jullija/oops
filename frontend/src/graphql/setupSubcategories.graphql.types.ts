@@ -12,7 +12,7 @@ export type SetupSubcategoriesQuery = {
   subcategories: Array<{
     __typename?: "Subcategories";
     categoryId: string;
-    editionId: string;
+    editionId?: string | null;
     label: string;
     maxPoints: string;
     ordinalNumber: number;
