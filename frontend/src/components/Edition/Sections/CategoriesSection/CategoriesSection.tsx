@@ -1,7 +1,10 @@
 import { Dialog } from "@mui/material";
 import { useAddCategoryMutation } from "../../../../graphql/addCategory.graphql.types";
 import { Styles } from "../../../../utils/Styles";
-import { AddCategoryForm, CategoriesFormValues } from "./AddCategoryForm";
+import {
+  AddCategoryForm,
+  CategoriesFormValues,
+} from "./AddCategoryForm/AddCategoryForm";
 import { CategoriesList } from "./CategoriesList/CategoriesList";
 import { useState } from "react";
 import { CloseHeader } from "../../../dialogs/CloseHeader";

@@ -1,7 +1,10 @@
 import { z, ZodError } from "zod";
 import { useFormik } from "formik";
-import { Styles } from "../../../../utils/Styles";
+import { Styles } from "../../../../../utils/Styles";
 import { FormControlLabel, Switch, TextField } from "@mui/material";
+import { Row, SubcategoryRows } from "./SubcategoryRows";
+import { useState } from "react";
+import { SubcategoriesFormValues } from "./SubcategoryRow";
 
 export type CategoriesFormValues = z.infer<typeof ValidationSchema>;
 
@@ -38,6 +41,52 @@ export const AddCategoryForm = ({
     },
   });
 
+  const [rows, setRows] = useState<Row[]>([]);
+
+  const handleAddSubcategory = (subcategory: SubcategoriesFormValues) => {
+    setRows((prev) => [
+      ...prev,
+      {
+        name: subcategory.name,
+        ordinal: subcategory.ordinal,
+        max: subcategory.maxPoints,
+      },
+    ]);
+  };
+
+  const handleDeleteCategory = (ordinal: number) => {
+    const updatedRows = rows
+      .filter((_, index) => index + 1 !== ordinal)
+      .map((row, index) => {
+        return { ...row, ordinal: index + 1 };
+      });
+    setRows(updatedRows);
+  };
+
+  const handleUp = (ordinal: number) => {
+    const index = ordinal - 1;
+
+    const updated = rows.map((row, i) => {
+      if (i === index - 1) return rows[index];
+      if (i === index) return rows[index - 1];
+      return row;
+    });
+
+    setRows(updated);
+  };
+
+  const handleDown = (ordinal: number) => {
+    const index = ordinal - 1;
+
+    const updated = rows.map((row, i) => {
+      if (i === index) return rows[index + 1];
+      if (i === index + 1) return rows[index];
+      return row;
+    });
+
+    setRows(updated);
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.title}>Add Category</div>
@@ -72,6 +121,14 @@ export const AddCategoryForm = ({
             }
             label="dodawanie punktów"
           />
+
+          <SubcategoryRows
+            rows={rows}
+            handleSubcategoryAdd={handleAddSubcategory}
+            handleDeleteCategory={handleDeleteCategory}
+            handleUp={handleUp}
+            handleDown={handleDown}
+          />
         </div>
 
         <button type="submit">add category</button>
@@ -89,7 +146,6 @@ const styles: Styles = {
     gap: 12,
     padding: 12,
     border: "1px solid black",
-    width: 500,
   },
   title: { fontWeight: "bold" },
   error: { color: "red" },
