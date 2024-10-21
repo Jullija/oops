@@ -1,4 +1,4 @@
-query AllCategories {
+query SetupCategories {
   categories(orderBy: { categoryName: ASC }) {
     categoryId
     categoryName

@@ -1,3 +1,0 @@
-mutation SetupRemoveCategoryFormEdition($categoryId: Int!, $editionId: Int!) {
-  removeCategoryFromEdition(categoryId: $categoryId, editionId: $editionId)
-}

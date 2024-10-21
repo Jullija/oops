@@ -3,13 +3,13 @@ import * as Types from "../__generated__/schema.graphql.types";
 import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
 const defaultOptions = {} as const;
-export type SetupAddCategoryMutationVariables = Types.Exact<{
+export type SetupCategoryCreateMutationVariables = Types.Exact<{
   canAddPoints: Types.Scalars["Boolean"]["input"];
   categoryName: Types.Scalars["String"]["input"];
   subcategories: Array<Types.SubcategoryInputType> | Types.SubcategoryInputType;
 }>;
 
-export type SetupAddCategoryMutation = {
+export type SetupCategoryCreateMutation = {
   __typename?: "mutation_root";
   addCategory?: {
     __typename?: "CategoryType";
@@ -20,8 +20,8 @@ export type SetupAddCategoryMutation = {
   } | null;
 };
 
-export const SetupAddCategoryDocument = gql`
-  mutation SetupAddCategory(
+export const SetupCategoryCreateDocument = gql`
+  mutation SetupCategoryCreate(
     $canAddPoints: Boolean!
     $categoryName: String!
     $subcategories: [SubcategoryInputType!]!
@@ -38,23 +38,23 @@ export const SetupAddCategoryDocument = gql`
     }
   }
 `;
-export type SetupAddCategoryMutationFn = Apollo.MutationFunction<
-  SetupAddCategoryMutation,
-  SetupAddCategoryMutationVariables
+export type SetupCategoryCreateMutationFn = Apollo.MutationFunction<
+  SetupCategoryCreateMutation,
+  SetupCategoryCreateMutationVariables
 >;
 
 /**
- * __useSetupAddCategoryMutation__
+ * __useSetupCategoryCreateMutation__
  *
- * To run a mutation, you first call `useSetupAddCategoryMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSetupAddCategoryMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useSetupCategoryCreateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetupCategoryCreateMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [setupAddCategoryMutation, { data, loading, error }] = useSetupAddCategoryMutation({
+ * const [setupCategoryCreateMutation, { data, loading, error }] = useSetupCategoryCreateMutation({
  *   variables: {
  *      canAddPoints: // value for 'canAddPoints'
  *      categoryName: // value for 'categoryName'
@@ -62,24 +62,24 @@ export type SetupAddCategoryMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useSetupAddCategoryMutation(
+export function useSetupCategoryCreateMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    SetupAddCategoryMutation,
-    SetupAddCategoryMutationVariables
+    SetupCategoryCreateMutation,
+    SetupCategoryCreateMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    SetupAddCategoryMutation,
-    SetupAddCategoryMutationVariables
-  >(SetupAddCategoryDocument, options);
+    SetupCategoryCreateMutation,
+    SetupCategoryCreateMutationVariables
+  >(SetupCategoryCreateDocument, options);
 }
-export type SetupAddCategoryMutationHookResult = ReturnType<
-  typeof useSetupAddCategoryMutation
+export type SetupCategoryCreateMutationHookResult = ReturnType<
+  typeof useSetupCategoryCreateMutation
 >;
-export type SetupAddCategoryMutationResult =
-  Apollo.MutationResult<SetupAddCategoryMutation>;
-export type SetupAddCategoryMutationOptions = Apollo.BaseMutationOptions<
-  SetupAddCategoryMutation,
-  SetupAddCategoryMutationVariables
+export type SetupCategoryCreateMutationResult =
+  Apollo.MutationResult<SetupCategoryCreateMutation>;
+export type SetupCategoryCreateMutationOptions = Apollo.BaseMutationOptions<
+  SetupCategoryCreateMutation,
+  SetupCategoryCreateMutationVariables
 >;

@@ -3,9 +3,11 @@ import * as Types from "../__generated__/schema.graphql.types";
 import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
 const defaultOptions = {} as const;
-export type AllCategoriesQueryVariables = Types.Exact<{ [key: string]: never }>;
+export type SetupCategoriesQueryVariables = Types.Exact<{
+  [key: string]: never;
+}>;
 
-export type AllCategoriesQuery = {
+export type SetupCategoriesQuery = {
   __typename?: "query_root";
   categories: Array<{
     __typename?: "Categories";
@@ -26,8 +28,8 @@ export type AllCategoriesQuery = {
   }>;
 };
 
-export const AllCategoriesDocument = gql`
-  query AllCategories {
+export const SetupCategoriesDocument = gql`
+  query SetupCategories {
     categories(orderBy: { categoryName: ASC }) {
       categoryId
       categoryName
@@ -46,66 +48,66 @@ export const AllCategoriesDocument = gql`
 `;
 
 /**
- * __useAllCategoriesQuery__
+ * __useSetupCategoriesQuery__
  *
- * To run a query within a React component, call `useAllCategoriesQuery` and pass it any options that fit your needs.
- * When your component renders, `useAllCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useSetupCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSetupCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useAllCategoriesQuery({
+ * const { data, loading, error } = useSetupCategoriesQuery({
  *   variables: {
  *   },
  * });
  */
-export function useAllCategoriesQuery(
+export function useSetupCategoriesQuery(
   baseOptions?: Apollo.QueryHookOptions<
-    AllCategoriesQuery,
-    AllCategoriesQueryVariables
+    SetupCategoriesQuery,
+    SetupCategoriesQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<AllCategoriesQuery, AllCategoriesQueryVariables>(
-    AllCategoriesDocument,
+  return Apollo.useQuery<SetupCategoriesQuery, SetupCategoriesQueryVariables>(
+    SetupCategoriesDocument,
     options,
   );
 }
-export function useAllCategoriesLazyQuery(
+export function useSetupCategoriesLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    AllCategoriesQuery,
-    AllCategoriesQueryVariables
+    SetupCategoriesQuery,
+    SetupCategoriesQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<AllCategoriesQuery, AllCategoriesQueryVariables>(
-    AllCategoriesDocument,
-    options,
-  );
+  return Apollo.useLazyQuery<
+    SetupCategoriesQuery,
+    SetupCategoriesQueryVariables
+  >(SetupCategoriesDocument, options);
 }
-export function useAllCategoriesSuspenseQuery(
+export function useSetupCategoriesSuspenseQuery(
   baseOptions?: Apollo.SuspenseQueryHookOptions<
-    AllCategoriesQuery,
-    AllCategoriesQueryVariables
+    SetupCategoriesQuery,
+    SetupCategoriesQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<
-    AllCategoriesQuery,
-    AllCategoriesQueryVariables
-  >(AllCategoriesDocument, options);
+    SetupCategoriesQuery,
+    SetupCategoriesQueryVariables
+  >(SetupCategoriesDocument, options);
 }
-export type AllCategoriesQueryHookResult = ReturnType<
-  typeof useAllCategoriesQuery
+export type SetupCategoriesQueryHookResult = ReturnType<
+  typeof useSetupCategoriesQuery
 >;
-export type AllCategoriesLazyQueryHookResult = ReturnType<
-  typeof useAllCategoriesLazyQuery
+export type SetupCategoriesLazyQueryHookResult = ReturnType<
+  typeof useSetupCategoriesLazyQuery
 >;
-export type AllCategoriesSuspenseQueryHookResult = ReturnType<
-  typeof useAllCategoriesSuspenseQuery
+export type SetupCategoriesSuspenseQueryHookResult = ReturnType<
+  typeof useSetupCategoriesSuspenseQuery
 >;
-export type AllCategoriesQueryResult = Apollo.QueryResult<
-  AllCategoriesQuery,
-  AllCategoriesQueryVariables
+export type SetupCategoriesQueryResult = Apollo.QueryResult<
+  SetupCategoriesQuery,
+  SetupCategoriesQueryVariables
 >;

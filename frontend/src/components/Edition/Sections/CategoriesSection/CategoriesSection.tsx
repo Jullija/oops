@@ -11,10 +11,10 @@ import {
   Category,
   useCategoriesSection,
 } from "../../../../hooks/Edition/useCategoriesSection";
-import { useSetupAddCategoryToEditionMutation } from "../../../../graphql/setupAddCategoryToEdition.graphql.types";
-import { useSetupRemoveCategoryFormEditionMutation } from "../../../../graphql/setupRemoveCategoryFromEdition.graphql.types";
+import { useSetupCategoryEditionAddMutation } from "../../../../graphql/setupCategoryEditionAdd.graphql.types";
+import { useSetupCategoryEditionRemoveMutation } from "../../../../graphql/setupCategoryEditionRemove.graphql.types";
 import { Row } from "./AddCategoryForm/SubcategoryRows";
-import { useSetupAddCategoryMutation } from "../../../../graphql/setupAddCategory.graphql.types";
+import { useSetupCategoryCreateMutation } from "../../../../graphql/setupCategoryCreate.graphql.types";
 
 type CategoriesSectionProps = {
   editionId: number;
@@ -23,13 +23,13 @@ type CategoriesSectionProps = {
 export const CategoriesSection = ({ editionId }: CategoriesSectionProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const [createCategory] = useSetupAddCategoryMutation();
+  const [createCategory] = useSetupCategoryCreateMutation();
   const [createCategoryError, setCreateCategoryError] = useState<
     string | undefined
   >(undefined);
 
-  const [addCategory] = useSetupAddCategoryToEditionMutation();
-  const [removeCategory] = useSetupRemoveCategoryFormEditionMutation();
+  const [addCategory] = useSetupCategoryEditionAddMutation();
+  const [removeCategory] = useSetupCategoryEditionRemoveMutation();
 
   const { categories, selectedCategories, loading, error, refetch } =
     useCategoriesSection(editionId);

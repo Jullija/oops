@@ -5,11 +5,11 @@ import { Styles } from "../../utils/Styles";
 import { useState } from "react";
 import { Dialog } from "@mui/material";
 import { CloseHeader } from "../../components/dialogs/CloseHeader";
-import { useSetupEditionMutation } from "../../graphql/setupEdition.graphql.types";
 import {
   AddEditionForm,
   EditionFormValues,
 } from "../../components/Editions/AddEditionForm";
+import { useCreateEditionMutation } from "../../graphql/createEdition.graphql.types";
 import { useDeleteEditionMutation } from "../../graphql/deleteEdition.graphql.types";
 
 export const EditionsScreen = () => {
@@ -17,7 +17,7 @@ export const EditionsScreen = () => {
   const { data, loading, error, refetch } = useEditionsQuery();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [setupEdition] = useSetupEditionMutation();
+  const [createEdition] = useCreateEditionMutation();
   const [formError, setFormError] = useState<string>();
 
   const [deleteEdition] = useDeleteEditionMutation();
@@ -32,7 +32,7 @@ export const EditionsScreen = () => {
 
   const handleAddEdition = async (values: EditionFormValues) => {
     try {
-      await setupEdition({
+      await createEdition({
         variables: {
           editionName: values.name,
           editionYear: values.year,

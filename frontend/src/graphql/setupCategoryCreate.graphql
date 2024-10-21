@@ -1,4 +1,4 @@
-mutation SetupAddCategory(
+mutation SetupCategoryCreate(
   $canAddPoints: Boolean!
   $categoryName: String!
   $subcategories: [SubcategoryInputType!]!

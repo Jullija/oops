@@ -1,12 +1,12 @@
 import {
-  AllCategoriesQuery,
-  useAllCategoriesQuery,
-} from "../../graphql/allCategories.graphql.types";
+  SetupCategoriesQuery,
+  useSetupCategoriesQuery,
+} from "../../graphql/setupCategories.graphql.types";
 
-export type Category = AllCategoriesQuery["categories"][number];
+export type Category = SetupCategoriesQuery["categories"][number];
 
 export const useCategoriesSection = (editionId: number) => {
-  const { data, loading, error, refetch } = useAllCategoriesQuery();
+  const { data, loading, error, refetch } = useSetupCategoriesQuery();
 
   const categories: Category[] = data?.categories ?? [];
 

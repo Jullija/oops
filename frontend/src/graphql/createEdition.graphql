@@ -1,4 +1,4 @@
-mutation SetupEdition(
+mutation CreateEdition(
   $editionName: String!
   $editionYear: Int!
   $label: String
