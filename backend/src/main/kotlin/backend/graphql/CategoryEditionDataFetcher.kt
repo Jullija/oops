@@ -52,6 +52,10 @@ class CategoryEditionDataFetcher {
         if (edition.endDate.isBefore(java.time.LocalDate.now())){
             throw IllegalArgumentException("Edition has already ended")
         }
+        // TODO: Delete userId check
+        if (edition.startDate.isBefore(java.time.LocalDate.now()) && currentUser.userId != 0L){
+            throw IllegalArgumentException("Edition has already started")
+        }
 
         if (categoryEditionRepository.existsByCategory_CategoryNameAndEdition(category.categoryName, edition)){
             throw IllegalArgumentException("Category with this name already exists in this edition")

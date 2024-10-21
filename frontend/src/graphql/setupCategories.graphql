@@ -1,0 +1,16 @@
+query SetupCategories {
+  categories(orderBy: { categoryName: ASC }) {
+    categoryId
+    categoryName
+    categoryEditions {
+      editionId
+    }
+    subcategories(orderBy: { ordinalNumber: ASC }) {
+      editionId
+      subcategoryId
+      subcategoryName
+      maxPoints
+      ordinalNumber
+    }
+  }
+}

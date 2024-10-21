@@ -9,10 +9,13 @@ import { Group } from "../screens/Group/Group";
 import { Welcome } from "../screens/Welcome/Welcome";
 import { ProtectedRoute } from "./protectedRoute";
 import { StudentsScreen } from "../screens/Students/StudentsScreen";
+import { EditionsScreen } from "../screens/Editions/EditionsScreen";
+import { EditionScreen } from "../screens/Edition/EditionScreen";
 
 const commonPaths = pathsWithParameters.common;
 const studentPaths = pathsWithParameters.student;
 const teacherPaths = pathsWithParameters.teacher;
+const coordinatorPaths = pathsWithParameters.coordinator;
 
 export const routes = createBrowserRouter([
   {
@@ -84,6 +87,24 @@ export const routes = createBrowserRouter([
           <ProtectedRoute
             element={<StudentsScreen />}
             allowedRoles={teacherPaths.Students.allowedRoles}
+          />
+        ),
+      },
+      {
+        path: coordinatorPaths.Editions.path,
+        element: (
+          <ProtectedRoute
+            element={<EditionsScreen />}
+            allowedRoles={coordinatorPaths.Editions.allowedRoles}
+          />
+        ),
+      },
+      {
+        path: coordinatorPaths.Edition.path,
+        element: (
+          <ProtectedRoute
+            element={<EditionScreen />}
+            allowedRoles={coordinatorPaths.Edition.allowedRoles}
           />
         ),
       },

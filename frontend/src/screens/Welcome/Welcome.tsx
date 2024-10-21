@@ -133,7 +133,14 @@ export const Welcome = () => {
                 style={styles.tableRow}
               >
                 <td
-                  style={{ color: user.role === "teacher" ? "red" : "black" }}
+                  style={{
+                    color:
+                      user.role === "teacher"
+                        ? "red"
+                        : user.role === "coordinator"
+                          ? "green"
+                          : "black",
+                  }}
                 >
                   {user.nick}
                 </td>
