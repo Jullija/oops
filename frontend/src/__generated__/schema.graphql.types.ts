@@ -9621,6 +9621,7 @@ export enum UsersRolesType {
   Coordinator = "COORDINATOR",
   Student = "STUDENT",
   Teacher = "TEACHER",
+  UnauthenticatedUser = "UNAUTHENTICATED_USER",
 }
 
 /** select columns of table "users" */
@@ -11956,7 +11957,7 @@ export type Query_Root = {
   flywaySchemaHistoryAggregate: FlywaySchemaHistoryAggregate;
   /** fetch data from the table: "flyway_schema_history" using primary key columns */
   flywaySchemaHistoryByPk?: Maybe<FlywaySchemaHistory>;
-  getCurrentUser?: Maybe<UserType>;
+  getCurrentUser: UserType;
   getGroupsInEdition: Array<GroupTeacherType>;
   getNeighboringLevels: NeighboringLevelsType;
   getPossibleGroupDates: Array<GroupDateType>;

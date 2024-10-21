@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { useUserEditions } from "./useUserEditions";
 import { isEditionActive } from "../../utils/utils";
+import { useUser } from "./useUser";
 
 // TODO refactor this to has editionId ?
 export function useEditionSelection() {
-  const { editions, selectedEdition, setSelectedEdition } = useUserEditions();
+  const { editions, selectedEdition, setSelectedEdition } = useUser();
 
   useEffect(() => {
     const activeEdition = editions.find(isEditionActive);

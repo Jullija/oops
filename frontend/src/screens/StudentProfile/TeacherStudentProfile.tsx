@@ -13,11 +13,11 @@ import { StudentTableWithFilters } from "../../components/StudentProfile/table/S
 import { Button } from "../../components/Button";
 import { useTeacherActions } from "../../hooks/StudentProfile";
 import { useEditionSelection } from "../../hooks/common/useEditionSelection";
-import { Roles } from "../../router/paths";
 import { isEditionActive } from "../../utils/utils";
 import { NotEditableInfo } from "../../components/StudentProfile/NotEditableInfo";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import { UsersRolesType } from "../../__generated__/schema.graphql.types";
 
 export function TeacherStudentProfile() {
   const params = useParams();
@@ -74,7 +74,8 @@ export function TeacherStudentProfile() {
   if (!currLevel) return <p>Curr level is undefined</p>;
 
   const hasEditableRights =
-    studentData.group?.teacherId === userId || user.role === Roles.COORDINATOR;
+    studentData.group?.teacherId === userId ||
+    user.role === UsersRolesType.Coordinator;
 
   const isSelectedEditionActive = Boolean(
     selectedEdition && isEditionActive(selectedEdition),

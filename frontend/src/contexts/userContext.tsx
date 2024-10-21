@@ -4,23 +4,27 @@ import {
   ReactNode,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from "react";
-import { AllUsersQuery } from "../graphql/allUsers.graphql.types";
+import { defaultUnauthenticatedUser } from "../utils/types";
+import Cookies from "js-cookie";
+import { Edition } from "../hooks/common/useGroupsData";
+import { UsersRolesType } from "../__generated__/schema.graphql.types";
 
-export type User = AllUsersQuery["users"][number];
-
-type UserContextType = {
-  // TODO: remove token from here, only needed for bypass
-  token?: string;
-  user: User;
-  setUser: Dispatch<SetStateAction<User>>;
-  setToken: (token?: string) => void;
+export type User = {
+  nick: string;
+  role: UsersRolesType;
+  userId: string;
+  editions: Edition[];
 };
 
-const defaultUnauthenticatedUser: User = {
-  nick: "Guest",
-  role: "unauthenticated_user",
-  userId: "unauthenticated",
+type UserContextType = {
+  user: User;
+  setUser: Dispatch<SetStateAction<User>>;
+  selectedEdition?: Edition;
+  setSelectedEdition: Dispatch<SetStateAction<Edition | undefined>>;
+  editions: Edition[];
+  setEditions: Dispatch<SetStateAction<Edition[]>>;
 };
 
 export const UserContext = createContext<UserContextType | undefined>(
@@ -28,11 +32,40 @@ export const UserContext = createContext<UserContextType | undefined>(
 );
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User>(defaultUnauthenticatedUser);
-  const [token, setToken] = useState<string | undefined>(undefined);
+  const [user, setUser] = useState<User>(() => {
+    const userCookie = Cookies.get("user");
+    return userCookie ? JSON.parse(userCookie) : defaultUnauthenticatedUser;
+  });
+
+  const [editions, setEditions] = useState<Edition[]>([]);
+  const [selectedEdition, setSelectedEdition] = useState<Edition | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    if (user.role === UsersRolesType.UnauthenticatedUser) {
+      setEditions([]);
+      setSelectedEdition(undefined);
+    } else {
+      setEditions(user.editions);
+      if (user.editions.length > 0) {
+        // TODO change to active edition
+        setSelectedEdition(user.editions[0]);
+      }
+    }
+  }, [user, selectedEdition]);
 
   return (
-    <UserContext.Provider value={{ user, token, setUser, setToken }}>
+    <UserContext.Provider
+      value={{
+        user,
+        setUser,
+        selectedEdition,
+        setSelectedEdition,
+        editions,
+        setEditions,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
