@@ -7700,8 +7700,8 @@ export type Subcategories = {
   /** An aggregate relationship */
   chestHistoriesAggregate: ChestHistoryAggregate;
   /** An object relationship */
-  edition?: Maybe<Edition>;
-  editionId?: Maybe<Scalars["bigint"]["output"]>;
+  edition: Edition;
+  editionId: Scalars["bigint"]["output"];
   label: Scalars["String"]["output"];
   maxPoints: Scalars["numeric"]["output"];
   ordinalNumber: Scalars["Int"]["output"];
@@ -8196,16 +8196,6 @@ export type SubcategoriesVarianceOrderBy = {
   subcategoryId?: InputMaybe<OrderBy>;
 };
 
-export type SubcategoryInputType = {
-  categoryId?: InputMaybe<Scalars["Int"]["input"]>;
-  editionId?: InputMaybe<Scalars["Int"]["input"]>;
-  label: Scalars["String"]["input"];
-  maxPoints: Scalars["String"]["input"];
-  ordinalNumber: Scalars["Int"]["input"];
-  subcategoryId?: InputMaybe<Scalars["ID"]["input"]>;
-  subcategoryName: Scalars["String"]["input"];
-};
-
 export type SubcategoryPointsType = {
   __typename?: "SubcategoryPointsType";
   createdAt: Scalars["String"]["output"];
@@ -8218,7 +8208,7 @@ export type SubcategoryPointsType = {
 export type SubcategoryType = {
   __typename?: "SubcategoryType";
   category: CategoryType;
-  edition?: Maybe<EditionType>;
+  edition: EditionType;
   label: Scalars["String"]["output"];
   maxPoints: Scalars["String"]["output"];
   ordinalNumber: Scalars["Int"]["output"];
@@ -10677,7 +10667,6 @@ export type Mutation_RootAddCategoryArgs = {
   darkColor?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   lightColor?: InputMaybe<Scalars["String"]["input"]>;
-  subcategories: Array<SubcategoryInputType>;
 };
 
 /** mutation root */
@@ -10750,7 +10739,12 @@ export type Mutation_RootAddPointsMutationArgs = {
 
 /** mutation root */
 export type Mutation_RootAddSubcategoryArgs = {
-  subcategory: SubcategoryInputType;
+  categoryId: Scalars["Int"]["input"];
+  editionId: Scalars["Int"]["input"];
+  label?: InputMaybe<Scalars["String"]["input"]>;
+  maxPoints: Scalars["Float"]["input"];
+  ordinalNumber: Scalars["Int"]["input"];
+  subcategoryName: Scalars["String"]["input"];
 };
 
 /** mutation root */
@@ -11047,7 +11041,6 @@ export type Mutation_RootEditCategoryArgs = {
   darkColor?: InputMaybe<Scalars["String"]["input"]>;
   label?: InputMaybe<Scalars["String"]["input"]>;
   lightColor?: InputMaybe<Scalars["String"]["input"]>;
-  subcategories?: InputMaybe<Array<SubcategoryInputType>>;
 };
 
 /** mutation root */

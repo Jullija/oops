@@ -10868,8 +10868,8 @@ type Subcategories {
   """
   An object relationship
   """
-  edition: Edition
-  editionId: bigint
+  edition: Edition!
+  editionId: bigint!
   label: String!
   maxPoints: numeric!
   ordinalNumber: Int!
@@ -11545,16 +11545,6 @@ input SubcategoriesVarianceOrderBy {
   subcategoryId: OrderBy
 }
 
-input SubcategoryInputType {
-  categoryId: Int
-  editionId: Int
-  label: String!
-  maxPoints: String!
-  ordinalNumber: Int!
-  subcategoryId: ID
-  subcategoryName: String!
-}
-
 type SubcategoryPointsType {
   createdAt: String!
   points: PurePointsType!
@@ -11565,7 +11555,7 @@ type SubcategoryPointsType {
 
 type SubcategoryType {
   category: CategoryType!
-  edition: EditionType
+  edition: EditionType!
   label: String!
   maxPoints: String!
   ordinalNumber: Int!
@@ -14601,7 +14591,6 @@ type mutation_root {
     darkColor: String = "#000000"
     label: String = ""
     lightColor: String = "#FFFFFF"
-    subcategories: [SubcategoryInputType!]!
   ): CategoryType
   addCategoryToEdition(categoryId: Int!, editionId: Int!): CategoryEditionType
   addChest(chestType: String!, editionId: Int!, label: String = ""): ChestType
@@ -14648,7 +14637,14 @@ type mutation_root {
     teacherId: Int!
     value: Float!
   ): PointType
-  addSubcategory(subcategory: SubcategoryInputType!): SubcategoryType
+  addSubcategory(
+    categoryId: Int!
+    editionId: Int!
+    label: String = ""
+    maxPoints: Float!
+    ordinalNumber: Int!
+    subcategoryName: String!
+  ): SubcategoryType
   addUser(
     createFirebaseUser: Boolean = false
     email: String = ""
@@ -15003,7 +14999,6 @@ type mutation_root {
     darkColor: String
     label: String
     lightColor: String
-    subcategories: [SubcategoryInputType!]
   ): CategoryType
   editChest(
     chestId: Int!

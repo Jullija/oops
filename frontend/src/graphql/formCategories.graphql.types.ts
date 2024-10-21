@@ -16,7 +16,7 @@ export type FormCategoriesQuery = {
     canAddPoints: boolean;
     subcategories: Array<{
       __typename?: "Subcategories";
-      editionId?: string | null;
+      editionId: string;
       subcategoryId: string;
       subcategoryName: string;
       maxPoints: string;
