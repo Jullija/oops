@@ -7,13 +7,20 @@ export type EditionsQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type EditionsQuery = {
   __typename?: "query_root";
-  edition: Array<{ __typename?: "Edition"; editionId: string }>;
+  edition: Array<{
+    __typename?: "Edition";
+    editionId: string;
+    startDate: string;
+    endDate: string;
+  }>;
 };
 
 export const EditionsDocument = gql`
   query Editions {
     edition {
       editionId
+      startDate
+      endDate
     }
   }
 `;

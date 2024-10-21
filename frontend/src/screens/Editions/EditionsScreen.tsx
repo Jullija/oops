@@ -75,7 +75,10 @@ export const EditionsScreen = () => {
       <button onClick={() => setIsOpen(true)}>dodaj edycje</button>
       {data?.edition.map((edition) => (
         <div style={styles.card} key={edition.editionId}>
-          <div>edition {edition.editionId}</div>
+          <div>
+            edition {edition.editionId},{" "}
+            {`${edition.startDate.slice(0, 4)}/${edition.endDate.slice(0, 4)}`}
+          </div>
           <button
             style={styles.showButton}
             onClick={() =>
