@@ -49,7 +49,7 @@ export const CategoriesSection = ({ editionId }: CategoriesSectionProps) => {
           return {
             label: "",
             maxPoints: row.max.toString(),
-            ordinalNumber: index + 1,
+            ordinalNumber: index,
             subcategoryName: row.name,
           };
         }),
@@ -77,6 +77,7 @@ export const CategoriesSection = ({ editionId }: CategoriesSectionProps) => {
     if (isCategorySelected) {
       await removeCategoryFromEdition(variables);
       if (!removeError) {
+        console.log("REFETCH FORM REMOVE");
         refetch();
         removeErrorReset();
       }
