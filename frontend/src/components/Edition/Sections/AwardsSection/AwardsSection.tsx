@@ -28,7 +28,7 @@ export const AwardsSection = ({ editionId }: AwardsSectionProps) => {
 
   return (
     <div style={styles.container}>
-      <button onClick={openDialog}>add category</button>
+      <button onClick={openDialog}>add award</button>
 
       <AwardsList
         awards={selectedAwards}

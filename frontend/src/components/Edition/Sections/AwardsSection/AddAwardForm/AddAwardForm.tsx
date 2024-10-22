@@ -1,15 +1,23 @@
 import { z, ZodError } from "zod";
 import { useFormik } from "formik";
 import { Styles } from "../../../../../utils/Styles";
-import { TextField } from "@mui/material";
+import {
+  TextField,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
+} from "@mui/material";
+import { AwardTypeType } from "../../../../../__generated__/schema.graphql.types";
 
 const ValidationSchema = z.object({
   awardName: z.string().min(1),
-  awardType: z.string().min(1),
+  awardType: z.string(),
   awardValue: z.number().min(0),
   categoryId: z.string().min(1),
   description: z.string(),
   maxUsages: z.number().min(0),
+  imageId: z.number(),
 });
 
 export type AwardFormValues = z.infer<typeof ValidationSchema>;
@@ -18,6 +26,9 @@ type AddAwardFormProps = {
   handleAddAward: (values: AwardFormValues) => void;
   createError?: string;
 };
+
+// Get all possible values from AwardTypeType
+const awardTypes = Object.values(AwardTypeType);
 
 export const AddAwardForm = ({
   handleAddAward,
@@ -31,6 +42,7 @@ export const AddAwardForm = ({
       categoryId: "",
       description: "",
       maxUsages: 0,
+      imageId: 0,
     },
     validate: (values: AwardFormValues) => {
       try {
@@ -64,17 +76,27 @@ export const AddAwardForm = ({
             helperText={formik.touched.awardName && formik.errors.awardName}
           />
 
-          <TextField
-            fullWidth
-            name="awardType"
-            label="Award Type"
-            variant="outlined"
-            value={formik.values.awardType}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={Boolean(formik.touched.awardType && formik.errors.awardType)}
-            helperText={formik.touched.awardType && formik.errors.awardType}
-          />
+          <FormControl fullWidth>
+            <InputLabel>Award Type</InputLabel>
+            <Select
+              name="awardType"
+              value={formik.values.awardType}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={Boolean(
+                formik.touched.awardType && formik.errors.awardType,
+              )}
+            >
+              {awardTypes.map((type) => (
+                <MenuItem key={type} value={type}>
+                  {type}
+                </MenuItem>
+              ))}
+            </Select>
+            {formik.touched.awardType && formik.errors.awardType && (
+              <div style={{ color: "red" }}>{formik.errors.awardType}</div>
+            )}
+          </FormControl>
 
           <TextField
             fullWidth
@@ -130,6 +152,19 @@ export const AddAwardForm = ({
             onBlur={formik.handleBlur}
             error={Boolean(formik.touched.maxUsages && formik.errors.maxUsages)}
             helperText={formik.touched.maxUsages && formik.errors.maxUsages}
+          />
+
+          <TextField
+            fullWidth
+            name="imageId"
+            label="imageId"
+            type="number"
+            variant="outlined"
+            value={formik.values.imageId}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={Boolean(formik.touched.imageId && formik.errors.imageId)}
+            helperText={formik.touched.maxUsages && formik.errors.imageId}
           />
         </div>
 

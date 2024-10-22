@@ -1,5 +1,6 @@
 import { Award } from "../../../../../hooks/Edition/useAwardsSection";
 import { Styles } from "../../../../../utils/Styles";
+import { AwardImage } from "../../../../images/AwardImage";
 
 type AwardCardProps = {
   award: Award;
@@ -19,11 +20,13 @@ export const AwardCard = ({
         backgroundColor: isSelected ? "pink" : undefined,
       }}
     >
+      <AwardImage id={award.imageFileId ?? undefined} size="l" />
       <div>{award.awardName}</div>
+      <div style={styles.subtitle}>{award.awardType}</div>
+
       <button onClick={onSelectClick}>
         {isSelected ? "unselect" : "select"}
       </button>
-      <div>{award.awardType}</div>
     </div>
   );
 };
@@ -32,5 +35,8 @@ const styles: Styles = {
   card: {
     border: "1px solid black",
     padding: 12,
+  },
+  subtitle: {
+    color: "grey",
   },
 };
