@@ -55,10 +55,22 @@ const teacherPaths = {
   },
 };
 
+const coordinatorPaths = {
+  Editions: {
+    path: "/coordinator/editions",
+    allowedRoles: [UsersRolesType.Coordinator],
+  },
+  Edition: {
+    path: "/coordinator/edition/:id",
+    allowedRoles: [UsersRolesType.Coordinator],
+  },
+};
+
 export const pathsWithParameters = {
   common: commonPaths,
   student: studentPaths,
   teacher: teacherPaths,
+  coordinator: coordinatorPaths,
 };
 
 export const pathsGenerator = {
@@ -74,6 +86,11 @@ export const pathsGenerator = {
     StudentProfile: (id: string) =>
       `${teacherPaths.StudentProfile.path.replace(":id", id)}`,
     Students: teacherPaths.Students.path,
+  },
+  coordinator: {
+    Editions: coordinatorPaths.Editions.path,
+    Edition: (id: string) =>
+      `${coordinatorPaths.Edition.path.replace(":id", id)}`,
   },
 };
 
@@ -108,5 +125,10 @@ export const navigationItems: NavigationItem[] = [
     title: "Studenci",
     path: pathsWithParameters.teacher.Students.path,
     allowedRoles: pathsWithParameters.teacher.Students.allowedRoles,
+  },
+  {
+    title: "Edycje",
+    path: pathsWithParameters.coordinator.Editions.path,
+    allowedRoles: pathsWithParameters.coordinator.Editions.allowedRoles,
   },
 ];
