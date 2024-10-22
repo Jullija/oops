@@ -4,49 +4,24 @@ import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
 const defaultOptions = {} as const;
 export type SetupAwardEditionAddMutationVariables = Types.Exact<{
-  awardName: Types.Scalars["String"]["input"];
-  awardType: Types.Scalars["String"]["input"];
-  awardValue: Types.Scalars["Float"]["input"];
-  categoryId: Types.Scalars["Int"]["input"];
-  description: Types.Scalars["String"]["input"];
+  editionId: Types.Scalars["Int"]["input"];
+  awardId: Types.Scalars["Int"]["input"];
 }>;
 
 export type SetupAwardEditionAddMutation = {
   __typename?: "mutation_root";
-  addAward?: {
-    __typename?: "AwardType";
-    awardId: string;
-    awardName: string;
-    awardType: Types.AwardTypeType;
-    awardValue: string;
-    description: string;
-    label: string;
-    maxUsages: number;
+  addAwardToEdition?: {
+    __typename?: "AwardEditionType";
+    award: { __typename?: "AwardType"; awardId: string };
   } | null;
 };
 
 export const SetupAwardEditionAddDocument = gql`
-  mutation SetupAwardEditionAdd(
-    $awardName: String!
-    $awardType: String!
-    $awardValue: Float!
-    $categoryId: Int!
-    $description: String!
-  ) {
-    addAward(
-      awardName: $awardName
-      awardType: $awardType
-      awardValue: $awardValue
-      categoryId: $categoryId
-      description: $description
-    ) {
-      awardId
-      awardName
-      awardType
-      awardValue
-      description
-      label
-      maxUsages
+  mutation SetupAwardEditionAdd($editionId: Int!, $awardId: Int!) {
+    addAwardToEdition(editionId: $editionId, awardId: $awardId) {
+      award {
+        awardId
+      }
     }
   }
 `;
@@ -68,11 +43,8 @@ export type SetupAwardEditionAddMutationFn = Apollo.MutationFunction<
  * @example
  * const [setupAwardEditionAddMutation, { data, loading, error }] = useSetupAwardEditionAddMutation({
  *   variables: {
- *      awardName: // value for 'awardName'
- *      awardType: // value for 'awardType'
- *      awardValue: // value for 'awardValue'
- *      categoryId: // value for 'categoryId'
- *      description: // value for 'description'
+ *      editionId: // value for 'editionId'
+ *      awardId: // value for 'awardId'
  *   },
  * });
  */

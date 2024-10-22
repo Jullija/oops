@@ -1,23 +1,7 @@
-mutation SetupAwardEditionAdd(
-  $awardName: String!
-  $awardType: String!
-  $awardValue: Float!
-  $categoryId: Int!
-  $description: String!
-) {
-  addAward(
-    awardName: $awardName
-    awardType: $awardType
-    awardValue: $awardValue
-    categoryId: $categoryId
-    description: $description
-  ) {
-    awardId
-    awardName
-    awardType
-    awardValue
-    description
-    label
-    maxUsages
+mutation SetupAwardEditionAdd($editionId: Int!, $awardId: Int!) {
+  addAwardToEdition(editionId: $editionId, awardId: $awardId) {
+    award {
+      awardId
+    }
   }
 }
