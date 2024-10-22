@@ -35,7 +35,7 @@ export const useEditionsScreen = () => {
 
       refetch();
       closeDialog();
-    } catch (error: unknown) {
+    } catch (error) {
       console.error(error);
 
       setCreateError(
