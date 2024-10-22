@@ -4,16 +4,12 @@ import { Styles } from "../../../../../utils/Styles";
 import { TextField } from "@mui/material";
 
 const ValidationSchema = z.object({
-  awardName: z.string().min(1, { message: "Award name is required" }),
-  awardType: z.string().min(1, { message: "Award type is required" }),
-  awardValue: z
-    .number()
-    .min(0, { message: "Award value must be a positive number" }),
-  categoryId: z.string().min(1, { message: "Category ID is required" }),
+  awardName: z.string().min(1),
+  awardType: z.string().min(1),
+  awardValue: z.number().min(0),
+  categoryId: z.string().min(1),
   description: z.string(),
-  maxUsages: z
-    .number()
-    .min(0, { message: "Max usages must be a positive number" }),
+  maxUsages: z.number().min(0),
 });
 
 export type AwardFormValues = z.infer<typeof ValidationSchema>;
@@ -34,7 +30,7 @@ export const AddAwardForm = ({
       awardValue: 0,
       categoryId: "",
       description: "",
-      maxUsages: 0, // Default to 0
+      maxUsages: 0,
     },
     validate: (values: AwardFormValues) => {
       try {
@@ -44,7 +40,7 @@ export const AddAwardForm = ({
           return error.formErrors.fieldErrors;
         }
       }
-      return {}; // No errors
+      return {};
     },
     onSubmit: (values: AwardFormValues) => {
       handleAddAward(values);
@@ -56,7 +52,6 @@ export const AddAwardForm = ({
       <div style={styles.title}>Add Award</div>
       <form onSubmit={formik.handleSubmit}>
         <div>
-          {/* Award Name */}
           <TextField
             fullWidth
             name="awardName"
@@ -69,7 +64,6 @@ export const AddAwardForm = ({
             helperText={formik.touched.awardName && formik.errors.awardName}
           />
 
-          {/* Award Type */}
           <TextField
             fullWidth
             name="awardType"
@@ -82,7 +76,6 @@ export const AddAwardForm = ({
             helperText={formik.touched.awardType && formik.errors.awardType}
           />
 
-          {/* Award Value */}
           <TextField
             fullWidth
             name="awardValue"
@@ -98,7 +91,6 @@ export const AddAwardForm = ({
             helperText={formik.touched.awardValue && formik.errors.awardValue}
           />
 
-          {/* Category ID */}
           <TextField
             fullWidth
             name="categoryId"
@@ -113,7 +105,6 @@ export const AddAwardForm = ({
             helperText={formik.touched.categoryId && formik.errors.categoryId}
           />
 
-          {/* Description */}
           <TextField
             fullWidth
             name="description"
@@ -128,7 +119,6 @@ export const AddAwardForm = ({
             helperText={formik.touched.description && formik.errors.description}
           />
 
-          {/* Max Usages */}
           <TextField
             fullWidth
             name="maxUsages"
