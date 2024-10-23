@@ -64,11 +64,20 @@ const coordinatorPaths = {
     path: "/coordinator/edition/:id",
     allowedRoles: [UsersRolesType.Coordinator],
     children: {
+      Awards: {
+        path: "awards",
+      },
+      Chests: {
+        path: "chests",
+      },
       Categories: {
         path: "categories",
       },
       Files: {
         path: "files",
+      },
+      Levels: {
+        path: "levels",
       },
     },
   },
@@ -99,10 +108,16 @@ export const pathsGenerator = {
     Editions: coordinatorPaths.Editions.path,
     Edition: (id: string) =>
       `${coordinatorPaths.Edition.path.replace(":id", id)}/`,
+    EditionAwards: (id: string) =>
+      `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Awards.path}`,
+    EditionChests: (id: string) =>
+      `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Chests.path}`,
     EditionCategories: (id: string) =>
       `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Categories.path}`,
     EditionFiles: (id: string) =>
       `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Files.path}`,
+    EditionLevels: (id: string) =>
+      `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Levels.path}`,
   },
 };
 

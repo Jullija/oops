@@ -13,6 +13,9 @@ import { EditionsScreen } from "../screens/Editions/EditionsScreen";
 import { EditionScreen } from "../screens/Edition/EditionScreen";
 import { CategoriesSection } from "../components/Edition/Sections/CategoriesSection/CategoriesSection";
 import { FilesSection } from "../components/Edition/Sections/FilesSection/FilesSection";
+import { AwardsSection } from "../components/Edition/Sections/AwardsSection/AwardsSection";
+import { ChestsSection } from "../components/Edition/Sections/ChestsSection/ChestsSection";
+import { LevelsSection } from "../components/Edition/Sections/LevelsSection/LevelsSection";
 
 const commonPaths = pathsWithParameters.common;
 const studentPaths = pathsWithParameters.student;
@@ -133,6 +136,33 @@ export const routes = createBrowserRouter([
             element: (
               <ProtectedRoute
                 element={<FilesSection />}
+                allowedRoles={coordinatorPaths.Edition.allowedRoles}
+              />
+            ),
+          },
+          {
+            path: coordinatorPaths.Edition.children.Awards.path,
+            element: (
+              <ProtectedRoute
+                element={<AwardsSection />}
+                allowedRoles={coordinatorPaths.Edition.allowedRoles}
+              />
+            ),
+          },
+          {
+            path: coordinatorPaths.Edition.children.Chests.path,
+            element: (
+              <ProtectedRoute
+                element={<ChestsSection />}
+                allowedRoles={coordinatorPaths.Edition.allowedRoles}
+              />
+            ),
+          },
+          {
+            path: coordinatorPaths.Edition.children.Levels.path,
+            element: (
+              <ProtectedRoute
+                element={<LevelsSection />}
                 allowedRoles={coordinatorPaths.Edition.allowedRoles}
               />
             ),

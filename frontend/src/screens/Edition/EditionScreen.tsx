@@ -8,7 +8,8 @@ export type SectionTitle =
   | "awards"
   | "categories"
   | "chests"
-  | "group"
+  // TODO
+  // | "group"
   | "levels"
   | "files";
 
@@ -16,7 +17,8 @@ const sectionTitles: SectionTitle[] = [
   "awards",
   "categories",
   "chests",
-  "group",
+  // TODO
+  // "group",
   "levels",
   "files",
 ];
@@ -34,13 +36,30 @@ export const EditionScreen = () => {
     useState<SectionTitle>("categories");
 
   useEffect(() => {
-    console.log("active: ", activeSectionTitle);
-    if (activeSectionTitle === "files") {
-      navigate(pathsGenerator.coordinator.EditionFiles(editionId.toString()));
-    } else if (activeSectionTitle === "categories") {
-      navigate(
-        pathsGenerator.coordinator.EditionCategories(editionId.toString()),
-      );
+    switch (activeSectionTitle) {
+      case "awards":
+        navigate(
+          pathsGenerator.coordinator.EditionAwards(editionId.toString()),
+        );
+        break;
+      case "categories":
+        navigate(
+          pathsGenerator.coordinator.EditionCategories(editionId.toString()),
+        );
+        break;
+      case "chests":
+        navigate(
+          pathsGenerator.coordinator.EditionChests(editionId.toString()),
+        );
+        break;
+      case "levels":
+        navigate(
+          pathsGenerator.coordinator.EditionLevels(editionId.toString()),
+        );
+        break;
+      case "files":
+        navigate(pathsGenerator.coordinator.EditionFiles(editionId.toString()));
+        break;
     }
   }, [activeSectionTitle, editionId, navigate]);
 
