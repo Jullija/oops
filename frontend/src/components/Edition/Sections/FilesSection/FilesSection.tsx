@@ -1,16 +1,11 @@
 import { useEffect, useState } from "react";
 import { useFilesLazyQuery } from "../../../../graphql/files.graphql.types";
-import { FolderCard } from "./FolderCard";
-import { Image } from "../../../images/Image";
 import { Styles } from "../../../../utils/Styles";
 import { useParams } from "react-router-dom";
+import { Folder, FolderNavbar } from "./FolderNavbar/FolderNavbar";
+import { ImagesList } from "./ImagesList/ImagesList";
 
-type FilesProps = {
-  title: string;
-  pathPrefix: string;
-};
-
-const sections: FilesProps[] = [
+const folders: Folder[] = [
   { title: "award", pathPrefix: `image/award` },
   { title: "chest", pathPrefix: `image/chest` },
   { title: "group", pathPrefix: `image/group` },
@@ -22,59 +17,56 @@ export const FilesSection = () => {
   const params = useParams();
   const editionId = params.id ? parseInt(params.id) : -1;
 
-  const [active, setActive] = useState<FilesProps>(sections[0]);
-  const [photoIds, setPhotoIds] = useState<string[]>([]);
-
+  const [activeFolder, setActiveFolder] = useState<Folder>(folders[0]);
   const [fetchFiles, { loading, error, data }] = useFilesLazyQuery();
 
-  useEffect(() => {
-    fetchFiles({ variables: { paths: [active.pathPrefix] } });
-  }, [active, fetchFiles, editionId]);
+  const fileIds: string[] =
+    data?.getFilesGroupedByTypeBySelectedTypes.flatMap((a) =>
+      a.files.map((f) => f.fileId),
+    ) ?? [];
+
+  // TODO
+  const selectedFileIds: string[] = [];
+
+  // TODO
+  const handleSelectClick = (fileId: string) => {
+    console.log("selected file: ", fileId);
+  };
 
   useEffect(() => {
-    setPhotoIds(
-      data?.getFilesGroupedByTypeBySelectedTypes.flatMap((a) =>
-        a.files.map((f) => f.fileId),
-      ) ?? [],
-    );
-  }, [data, active]);
+    fetchFiles({ variables: { paths: [activeFolder.pathPrefix] } });
+  }, [activeFolder, fetchFiles, editionId]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>ERROR: {error.message}</div>;
 
   return (
-    <div>
-      <div>Files Section {editionId}</div>
-      <div>
-        {sections.map((section) => (
-          <FolderCard
-            title={section.title}
-            onClick={() => setActive(section)}
-            isSelected={active.title === section.title}
-          />
-        ))}
-      </div>
-
-      <div>
-        {photoIds.length > 0 ? (
-          <div style={styles.photosContainer}>
-            {photoIds.map((id) => (
-              <Image id={id} size={128} disabled={false} />
-            ))}
-          </div>
-        ) : (
-          <div>No files found for {active.title}</div>
-        )}
-      </div>
+    <div style={styles.container}>
+      <FolderNavbar
+        folders={folders}
+        active={activeFolder}
+        setActive={setActiveFolder}
+      />
+      <ImagesList
+        imageIds={selectedFileIds}
+        selectedImageIds={selectedFileIds}
+        handleSelectImageClick={handleSelectClick}
+        title={`Selected ${activeFolder.title} files`}
+      />
+      <ImagesList
+        imageIds={fileIds}
+        selectedImageIds={selectedFileIds}
+        handleSelectImageClick={handleSelectClick}
+        title={`All ${activeFolder.title} files`}
+      />
     </div>
   );
 };
 
 const styles: Styles = {
-  photosContainer: {
+  container: {
     display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: "column",
     gap: 12,
   },
 };
