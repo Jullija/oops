@@ -108,16 +108,18 @@ export const pathsGenerator = {
     Editions: coordinatorPaths.Editions.path,
     Edition: (id: string) =>
       `${coordinatorPaths.Edition.path.replace(":id", id)}/`,
-    EditionAwards: (id: string) =>
-      `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Awards.path}`,
-    EditionChests: (id: string) =>
-      `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Chests.path}`,
-    EditionCategories: (id: string) =>
-      `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Categories.path}`,
-    EditionFiles: (id: string) =>
-      `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Files.path}`,
-    EditionLevels: (id: string) =>
-      `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Levels.path}`,
+    EditionChildren: {
+      Awards: (id: string) =>
+        `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Awards.path}`,
+      Chests: (id: string) =>
+        `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Chests.path}`,
+      Categories: (id: string) =>
+        `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Categories.path}`,
+      Files: (id: string) =>
+        `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Files.path}`,
+      Levels: (id: string) =>
+        `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Levels.path}`,
+    },
   },
 };
 
