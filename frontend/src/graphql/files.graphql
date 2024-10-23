@@ -1,0 +1,8 @@
+query Files($paths: [String!]!) {
+  getFilesGroupedByTypeBySelectedTypes(fileTypes: $paths) {
+    fileType
+    files {
+      fileId
+    }
+  }
+}
