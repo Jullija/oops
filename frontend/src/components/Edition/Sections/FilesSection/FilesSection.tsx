@@ -3,15 +3,13 @@ import { useFilesLazyQuery } from "../../../../graphql/files.graphql.types";
 import { FolderCard } from "./FolderCard";
 import { Image } from "../../../images/Image";
 import { Styles } from "../../../../utils/Styles";
-
-type FilesSectionProps = {
-  editionId: number;
-};
+import { useParams } from "react-router-dom";
 
 type FilesProps = {
   title: string;
   pathPrefix: string;
 };
+
 const sections: FilesProps[] = [
   { title: "award", pathPrefix: `image/award` },
   { title: "chest", pathPrefix: `image/chest` },
@@ -20,7 +18,10 @@ const sections: FilesProps[] = [
   { title: "users", pathPrefix: `image/users` },
 ];
 
-export const FilesSection = ({ editionId }: FilesSectionProps) => {
+export const FilesSection = () => {
+  const params = useParams();
+  const editionId = params.id ? parseInt(params.id) : -1;
+
   const [active, setActive] = useState<FilesProps>(sections[0]);
   const [photoIds, setPhotoIds] = useState<string[]>([]);
 

@@ -11,6 +11,8 @@ import { ProtectedRoute } from "./protectedRoute";
 import { StudentsScreen } from "../screens/Students/StudentsScreen";
 import { EditionsScreen } from "../screens/Editions/EditionsScreen";
 import { EditionScreen } from "../screens/Edition/EditionScreen";
+import { CategoriesSection } from "../components/Edition/Sections/CategoriesSection/CategoriesSection";
+import { FilesSection } from "../components/Edition/Sections/FilesSection/FilesSection";
 
 const commonPaths = pathsWithParameters.common;
 const studentPaths = pathsWithParameters.student;
@@ -107,6 +109,35 @@ export const routes = createBrowserRouter([
             allowedRoles={coordinatorPaths.Edition.allowedRoles}
           />
         ),
+        children: [
+          {
+            index: true,
+            element: (
+              <ProtectedRoute
+                element={<CategoriesSection />}
+                allowedRoles={coordinatorPaths.Edition.allowedRoles}
+              />
+            ),
+          },
+          {
+            path: coordinatorPaths.Edition.children.Categories.path,
+            element: (
+              <ProtectedRoute
+                element={<CategoriesSection />}
+                allowedRoles={coordinatorPaths.Edition.allowedRoles}
+              />
+            ),
+          },
+          {
+            path: coordinatorPaths.Edition.children.Files.path,
+            element: (
+              <ProtectedRoute
+                element={<FilesSection />}
+                allowedRoles={coordinatorPaths.Edition.allowedRoles}
+              />
+            ),
+          },
+        ],
       },
     ],
   },

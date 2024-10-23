@@ -1,14 +1,8 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { Styles } from "../../utils/Styles";
 import { pathsGenerator } from "../../router/paths";
 import { SectionsBar } from "../../components/Edition/SectionsBar";
-import { useState } from "react";
-import { AwardsSection } from "../../components/Edition/Sections/AwardsSection/AwardsSection";
-import { CategoriesSection } from "../../components/Edition/Sections/CategoriesSection/CategoriesSection";
-import { GroupsSection } from "../../components/Edition/Sections/GroupSection/GroupsSection";
-import { LevelsSection } from "../../components/Edition/Sections/LevelsSection/LevelsSection";
-import { FilesSection } from "../../components/Edition/Sections/FilesSection/FilesSection";
-import { ChestsSection } from "../../components/Edition/Sections/ChestsSection/ChestsSection";
+import { useEffect, useState } from "react";
 
 export type SectionTitle =
   | "awards"
@@ -30,7 +24,7 @@ const sectionTitles: SectionTitle[] = [
 export const EditionScreen = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const editionId = params.id ? parseInt(params.id) : undefined;
+  const editionId = params.id ? parseInt(params.id) : -1;
 
   if (editionId === undefined) {
     throw new Error("editionId cannot be undefined");
@@ -39,24 +33,16 @@ export const EditionScreen = () => {
   const [activeSectionTitle, setActiveSectionTitle] =
     useState<SectionTitle>("categories");
 
-  const getSectionComponent = () => {
-    switch (activeSectionTitle) {
-      case "awards":
-        return <AwardsSection editionId={editionId} />;
-      case "categories":
-        return <CategoriesSection editionId={editionId} />;
-      case "chests":
-        return <ChestsSection editionId={editionId} />;
-      case "group":
-        return <GroupsSection editionId={editionId} />;
-      case "levels":
-        return <LevelsSection editionId={editionId} />;
-      case "files":
-        return <FilesSection editionId={editionId} />;
-      default:
-        return null;
+  useEffect(() => {
+    console.log("active: ", activeSectionTitle);
+    if (activeSectionTitle === "files") {
+      navigate(pathsGenerator.coordinator.EditionFiles(editionId.toString()));
+    } else if (activeSectionTitle === "categories") {
+      navigate(
+        pathsGenerator.coordinator.EditionCategories(editionId.toString()),
+      );
     }
-  };
+  }, [activeSectionTitle, editionId, navigate]);
 
   return (
     <div style={styles.screenContainer}>
@@ -71,7 +57,7 @@ export const EditionScreen = () => {
         activeSectionTitle={activeSectionTitle}
         onActiveChange={(section) => setActiveSectionTitle(section)}
       />
-      {getSectionComponent()}
+      <Outlet />
     </div>
   );
 };
