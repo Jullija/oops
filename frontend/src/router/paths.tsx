@@ -63,6 +63,23 @@ const coordinatorPaths = {
   Edition: {
     path: "/coordinator/edition/:id",
     allowedRoles: [UsersRolesType.Coordinator],
+    children: {
+      Awards: {
+        path: "awards",
+      },
+      Chests: {
+        path: "chests",
+      },
+      Categories: {
+        path: "categories",
+      },
+      Files: {
+        path: "files",
+      },
+      Levels: {
+        path: "levels",
+      },
+    },
   },
 };
 
@@ -90,7 +107,19 @@ export const pathsGenerator = {
   coordinator: {
     Editions: coordinatorPaths.Editions.path,
     Edition: (id: string) =>
-      `${coordinatorPaths.Edition.path.replace(":id", id)}`,
+      `${coordinatorPaths.Edition.path.replace(":id", id)}/`,
+    EditionChildren: {
+      Awards: (id: string) =>
+        `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Awards.path}`,
+      Chests: (id: string) =>
+        `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Chests.path}`,
+      Categories: (id: string) =>
+        `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Categories.path}`,
+      Files: (id: string) =>
+        `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Files.path}`,
+      Levels: (id: string) =>
+        `${coordinatorPaths.Edition.path.replace(":id", id)}/${coordinatorPaths.Edition.children.Levels.path}`,
+    },
   },
 };
 
@@ -101,11 +130,6 @@ type NavigationItem = {
 };
 
 export const navigationItems: NavigationItem[] = [
-  {
-    title: "Witaj",
-    path: pathsWithParameters.common.Welcome.path,
-    allowedRoles: pathsWithParameters.common.Welcome.allowedRoles,
-  },
   {
     title: "Profil studenta",
     path: pathsWithParameters.student.StudentProfile.path,

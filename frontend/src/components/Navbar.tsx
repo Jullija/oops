@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { navigationItems } from "../router/paths";
 import { Styles } from "../utils/Styles";
 import { useEditionSelection } from "../hooks/common/useEditionSelection";
@@ -7,13 +7,14 @@ import { hasRole, isEditionActive } from "../utils/utils";
 import { useLogin } from "../hooks/auth/useLogin";
 import { UsersRolesType } from "../__generated__/schema.graphql.types";
 
-export const NAV_BAR_HEIGHT = 100;
+export const NAV_BAR_HEIGHT = 52;
 
 export const Navbar = () => {
   const navigate = useNavigate();
   const { selectedEdition } = useEditionSelection();
   const { user } = useUser();
   const { logout } = useLogin();
+  const location = useLocation();
 
   return (
     <div style={styles.container}>
@@ -23,16 +24,15 @@ export const Navbar = () => {
           <div
             key={index}
             onClick={() => navigate(item.path)}
-            style={styles.navbarItem}
+            style={{
+              ...styles.navbarItem,
+              backgroundColor: item.path === location.pathname ? "#ddd" : "",
+            }}
           >
             {item.title}
           </div>
         ))}
-      {user.role !== UsersRolesType.UnauthenticatedUser && (
-        <div onClick={async () => await logout()} style={styles.navbarItem}>
-          Logout
-        </div>
-      )}
+
       {selectedEdition ? (
         <div style={styles.editionName}>
           edition: {selectedEdition.editionId},{" "}
@@ -40,6 +40,12 @@ export const Navbar = () => {
         </div>
       ) : (
         <div>no edition selected</div>
+      )}
+
+      {user.role !== UsersRolesType.UnauthenticatedUser && (
+        <div onClick={async () => await logout()} style={styles.navbarItem}>
+          Logout
+        </div>
       )}
     </div>
   );
@@ -52,6 +58,7 @@ const styles: Styles = {
     alignItems: "center",
     borderBottom: "1px solid black",
     height: NAV_BAR_HEIGHT,
+    justifyContent: "center",
   },
   navbarItem: {
     border: "1px solid black",
