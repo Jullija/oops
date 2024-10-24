@@ -7,7 +7,7 @@ import { hasRole, isEditionActive } from "../utils/utils";
 import { useLogin } from "../hooks/auth/useLogin";
 import { UsersRolesType } from "../__generated__/schema.graphql.types";
 
-export const NAV_BAR_HEIGHT = 100;
+export const NAV_BAR_HEIGHT = 52;
 
 export const Navbar = () => {
   const navigate = useNavigate();
