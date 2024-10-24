@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useFilesLazyQuery } from "../../../../graphql/files.graphql.types";
 import { Styles } from "../../../../utils/Styles";
 import { useParams } from "react-router-dom";
@@ -25,10 +25,8 @@ export const FilesSection = () => {
       a.files.map((f) => f.fileId),
     ) ?? [];
 
-  // TODO
   const selectedFileIds: string[] = [];
 
-  // TODO
   const handleSelectClick = (fileId: string) => {
     console.log("selected file: ", fileId);
   };
@@ -37,6 +35,45 @@ export const FilesSection = () => {
     fetchFiles({ variables: { paths: [activeFolder.pathPrefix] } });
   }, [activeFolder, fetchFiles, editionId]);
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      console.log("Uploaded file:", file);
+
+      const formData = new FormData();
+      formData.append("file", files[0]);
+      formData.append("fileType", activeFolder.pathPrefix);
+
+      await handleFileUpload(formData);
+    }
+  };
+
+  const handleFileUpload = async (form: FormData) => {
+    try {
+      const response = await fetch("http://localhost:9090/files/upload", {
+        method: "POST",
+        body: form,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      fetchFiles({ variables: { paths: [activeFolder.pathPrefix] } });
+    } catch (error) {
+      // TODO
+      console.error("Failed to upload file", error);
+    }
+  };
   if (loading) return <div>Loading...</div>;
   if (error) return <div>ERROR: {error.message}</div>;
 
@@ -47,6 +84,15 @@ export const FilesSection = () => {
         active={activeFolder}
         setActive={setActiveFolder}
       />
+      <button onClick={handleUploadClick}>Upload file</button>
+      <input
+        type="file"
+        accept="image/*"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        style={{ display: "none" }}
+      />
+
       <ImagesList
         imageIds={selectedFileIds}
         selectedImageIds={selectedFileIds}
