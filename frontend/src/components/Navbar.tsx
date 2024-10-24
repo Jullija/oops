@@ -32,11 +32,7 @@ export const Navbar = () => {
             {item.title}
           </div>
         ))}
-      {user.role !== UsersRolesType.UnauthenticatedUser && (
-        <div onClick={async () => await logout()} style={styles.navbarItem}>
-          Logout
-        </div>
-      )}
+
       {selectedEdition ? (
         <div style={styles.editionName}>
           edition: {selectedEdition.editionId},{" "}
@@ -44,6 +40,12 @@ export const Navbar = () => {
         </div>
       ) : (
         <div>no edition selected</div>
+      )}
+
+      {user.role !== UsersRolesType.UnauthenticatedUser && (
+        <div onClick={async () => await logout()} style={styles.navbarItem}>
+          Logout
+        </div>
       )}
     </div>
   );
@@ -56,6 +58,7 @@ const styles: Styles = {
     alignItems: "center",
     borderBottom: "1px solid black",
     height: NAV_BAR_HEIGHT,
+    justifyContent: "center",
   },
   navbarItem: {
     border: "1px solid black",

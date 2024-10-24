@@ -131,11 +131,6 @@ type NavigationItem = {
 
 export const navigationItems: NavigationItem[] = [
   {
-    title: "Witaj",
-    path: pathsWithParameters.common.Welcome.path,
-    allowedRoles: pathsWithParameters.common.Welcome.allowedRoles,
-  },
-  {
     title: "Profil studenta",
     path: pathsWithParameters.student.StudentProfile.path,
     allowedRoles: pathsWithParameters.student.StudentProfile.allowedRoles,
