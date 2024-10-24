@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { navigationItems } from "../router/paths";
 import { Styles } from "../utils/Styles";
 import { useEditionSelection } from "../hooks/common/useEditionSelection";
@@ -14,6 +14,7 @@ export const Navbar = () => {
   const { selectedEdition } = useEditionSelection();
   const { user } = useUser();
   const { logout } = useLogin();
+  const location = useLocation();
 
   return (
     <div style={styles.container}>
@@ -23,7 +24,10 @@ export const Navbar = () => {
           <div
             key={index}
             onClick={() => navigate(item.path)}
-            style={styles.navbarItem}
+            style={{
+              ...styles.navbarItem,
+              backgroundColor: item.path === location.pathname ? "#ddd" : "",
+            }}
           >
             {item.title}
           </div>

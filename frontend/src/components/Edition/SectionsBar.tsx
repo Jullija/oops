@@ -1,7 +1,6 @@
-import { useState } from "react";
 import { Styles } from "../../utils/Styles";
 import { pathsGenerator } from "../../router/paths";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 type SectionBarProps = {
   editionId: number;
@@ -44,13 +43,22 @@ const sections: Section[] = [
 
 export const SectionsBar = ({ editionId }: SectionBarProps) => {
   const navigate = useNavigate();
-  const [activeSectionTitle, setActiveSectionTitle] = useState<string>(
-    sections[2].title,
-  );
+  const location = useLocation();
+
+  const isSectionActive = (section: Section) => {
+    const activeSection = sections.find(
+      (s) => location.pathname === s.path(editionId.toString()),
+    );
+    if (section.title !== "categories") {
+      return activeSection?.title === section.title;
+    }
+    return !activeSection || activeSection.title === section.title;
+  };
+
   const handleSectionChange = (section: Section) => {
-    setActiveSectionTitle(section.title);
     navigate(section.path(editionId.toString()));
   };
+
   return (
     <div style={styles.container}>
       {sections.map((section) => (
@@ -58,7 +66,7 @@ export const SectionsBar = ({ editionId }: SectionBarProps) => {
           onClick={() => handleSectionChange(section)}
           style={{
             ...styles.section,
-            color: activeSectionTitle === section.title ? "red" : "grey",
+            color: isSectionActive(section) ? "red" : "grey",
           }}
         >
           {section.title}
