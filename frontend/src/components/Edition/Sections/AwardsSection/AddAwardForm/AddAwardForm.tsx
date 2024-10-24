@@ -9,6 +9,7 @@ import {
   Select,
 } from "@mui/material";
 import { AwardTypeType } from "../../../../../__generated__/schema.graphql.types";
+import { Category } from "../../../../../hooks/Edition/categories/useCategoriesSection";
 
 const ValidationSchema = z.object({
   awardName: z.string().min(1),
@@ -25,6 +26,7 @@ export type AwardFormValues = z.infer<typeof ValidationSchema>;
 type AddAwardFormProps = {
   handleAddAward: (values: AwardFormValues) => void;
   createError?: string;
+  categories: Category[];
 };
 
 // Get all possible values from AwardTypeType
@@ -32,6 +34,7 @@ const awardTypes = Object.values(AwardTypeType);
 
 export const AddAwardForm = ({
   handleAddAward,
+  categories,
   createError,
 }: AddAwardFormProps) => {
   const formik = useFormik({
@@ -77,6 +80,28 @@ export const AddAwardForm = ({
           />
 
           <FormControl fullWidth>
+            <InputLabel>Category</InputLabel>
+            <Select
+              name="categoryId"
+              value={formik.values.categoryId}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={Boolean(
+                formik.touched.categoryId && formik.errors.categoryId,
+              )}
+            >
+              {categories.map((cat) => (
+                <MenuItem key={cat.categoryId} value={cat.categoryId}>
+                  {cat.categoryName}
+                </MenuItem>
+              ))}
+            </Select>
+            {formik.touched.categoryId && formik.errors.categoryId && (
+              <div style={{ color: "red" }}>{formik.errors.categoryId}</div>
+            )}
+          </FormControl>
+
+          <FormControl fullWidth>
             <InputLabel>Award Type</InputLabel>
             <Select
               name="awardType"
@@ -111,20 +136,6 @@ export const AddAwardForm = ({
               formik.touched.awardValue && formik.errors.awardValue,
             )}
             helperText={formik.touched.awardValue && formik.errors.awardValue}
-          />
-
-          <TextField
-            fullWidth
-            name="categoryId"
-            label="Category ID"
-            variant="outlined"
-            value={formik.values.categoryId}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={Boolean(
-              formik.touched.categoryId && formik.errors.categoryId,
-            )}
-            helperText={formik.touched.categoryId && formik.errors.categoryId}
           />
 
           <TextField

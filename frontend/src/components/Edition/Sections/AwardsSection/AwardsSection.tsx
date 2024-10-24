@@ -13,6 +13,7 @@ export const AwardsSection = ({ editionId }: AwardsSectionProps) => {
   const {
     awards,
     selectedAwards,
+    formCategories,
     loading,
     error,
     handleSelectClick,
@@ -48,6 +49,7 @@ export const AwardsSection = ({ editionId }: AwardsSectionProps) => {
         <AddAwardForm
           createError={createAwardError}
           handleAddAward={handleCreate}
+          categories={formCategories}
         />
       </Dialog>
     </div>

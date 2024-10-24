@@ -8,11 +8,23 @@ import { useSetupAwardCreateMutation } from "../../graphql/setupAwardCreate.grap
 import { useSetupAwardEditionAddMutation } from "../../graphql/setupAwardEditionAdd.graphql.types";
 import { useSetupAwardEditionRemoveMutation } from "../../graphql/setupAwardEditionRemove.graphql.types";
 import { AwardFormValues } from "../../components/Edition/Sections/AwardsSection/AddAwardForm/AddAwardForm";
+import { useCategoriesSection } from "./categories/useCategoriesSection";
 
 export type Award = SetupAwardsQuery["award"][number];
 
 export const useAwardsSection = (editionId: number) => {
-  const { data, loading, error, refetch } = useSetupAwardsQuery();
+  const {
+    data,
+    loading: awardsLoading,
+    error: awardsError,
+    refetch,
+  } = useSetupAwardsQuery();
+
+  const {
+    selectedCategories,
+    loading: categoriesLoading,
+    error: categoriesError,
+  } = useCategoriesSection(editionId);
 
   const awards: Award[] = data?.award ?? [];
 
@@ -94,8 +106,9 @@ export const useAwardsSection = (editionId: number) => {
   return {
     awards,
     selectedAwards,
-    loading,
-    error,
+    formCategories: selectedCategories,
+    loading: awardsLoading || categoriesLoading,
+    error: awardsError || categoriesError,
     handleSelectClick,
     handleCreate,
     createAwardError,
